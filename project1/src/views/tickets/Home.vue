@@ -151,7 +151,7 @@ export default {
     },
     onSubmit() {
       console.log("submit!");
-      this.$router.replace("/about");
+      this.$router.replace("/tickets/detail");
     },
     querySearch(queryString, cb) {
       var city = this.city;
