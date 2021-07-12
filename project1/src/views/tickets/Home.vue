@@ -9,6 +9,7 @@
         backgroundRepeat: 'no-repeat',
       }"
     >
+    <div class="welcome">开启旅途</div>
       <div class="search">
         <el-form :model="formInline">
           <el-row>
@@ -88,6 +89,15 @@
 </template>
 
 <style scoped>
+.welcome{
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 135px;
+  margin-top: 150px;
+  width:100%;
+  height: 15px;
+  float: left;
+}
 .pic {
   width: 100%;
   height: 500px;
