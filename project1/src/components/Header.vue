@@ -1,12 +1,36 @@
 <template>
-  <el-header height="120px">
+  <el-header height="121px">
     <div class="upheader">
       <div class="logo margin1">LVDAO</div>
       <div class="nav1">
         <ul>
-          <li><a href="#">帮助</a></li>
-          <li><a href="#">登录</a></li>
-          <li><a href="#">注册</a></li>
+          <li><div class="el-icon-question questionMark"></div></li>
+          <li>
+            <div
+              class="profile"
+              :style="{
+                backgroundImage:
+                  'url(' + (coverImgUrl ? coverImgUrl : baseImg) + ')',
+                backgroundSize: '100% 100%',
+                backgroundRepeat: 'no-repeat',
+              }"
+            ></div>
+          </li>
+          <li>
+            <div class="pull">
+              <el-dropdown>
+                <span class="el-dropdown-link"
+                  ><i class="el-icon-arrow-down"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>管理账户</el-dropdown-item>
+                  <el-dropdown-item>订单</el-dropdown-item>
+                  <el-dropdown-item>收藏</el-dropdown-item>
+                  <el-dropdown-item divided>退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
@@ -71,7 +95,7 @@ body,
 
 .nav1 {
   float: left;
-  margin-left: 51%;
+  margin-left: 60%;
 }
 
 .nav1 ul li {
@@ -101,12 +125,36 @@ a:visited {
 .margin1 {
   margin-left: 6%;
 }
+
+.questionMark {
+  font-size: 30px;
+}
+
+.profile {
+  margin-left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+}
+.pull {
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  padding-top: 10px;
+}
 </style>
 
 <script>
 export default {
   props: {
     activeIndex: "1",
+  },
+  data() {
+    return {
+      baseImg:
+        "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80",
+      coverImgUrl: "",
+    };
   },
 };
 </script>

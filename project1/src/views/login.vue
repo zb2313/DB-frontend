@@ -1,18 +1,35 @@
 <template>
-  <el-container direction="vertical">
-    <content-list-item />
-  </el-container>
+  <div>
+    <h1>Bitcoin Price Index</h1>
+    <div v-for="currency in info">
+      {{ currency.code }}:
+      <span>
+        <span v-html="currency.symbol"></span
+        >{{ currency.rate_float | currencydecimal }}
+      </span>
+    </div>
+  </div>
 </template>
 
+<style scoped>
+</style>
+
 <script>
-import contentListItem from "@/components/contentListItem.vue";
-import ContentListItem from "../components/contentListItem.vue";
-
 export default {
-  components: {
-    contentListItem,
-
-    ContentListItem,
+  data() {
+    return {
+      info: null,
+    };
+  },
+  mounted() {
+    this.$axios
+      .get("https://api.coindesk.com/v1/bpi/currentprice.json")
+      .then((response) => (this.info = response.data.bpi));
+  },
+  filters: {
+    currencydecimal(value) {
+      return value.toFixed(2);
+    },
   },
 };
 </script>

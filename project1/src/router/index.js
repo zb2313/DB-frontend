@@ -6,17 +6,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/login' //重定向
+    redirect: '/hotel' //重定向
   },
   {
     path: '/login',
     name: 'login',
     component: () => import('../views/login.vue')
-  },
-  {
-    path: '/home',
-    name: 'home',
-    component: () => import('../views/home/index.vue')
   },
   {
     path: '/hotel',

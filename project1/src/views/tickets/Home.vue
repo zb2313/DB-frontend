@@ -135,7 +135,7 @@ export default {
       state1: "",
       state2: "",
       baseImg:
-        "https://media.cntraveler.com/photos/5fd26c4ddf72876c320b8001/16:9/w_2560%2Cc_limit/952456172",
+        "https://tse1-mm.cn.bing.net/th/id/R-C.00c0fcb56d11f58ee2f172191eefa476?rik=U79UiqqhgYmd8Q&riu=http%3a%2f%2ffile06.16sucai.com%2f2016%2f0603%2f91c401949dae819c4f08213f78b63916.jpg&ehk=5bAmiltNduhHMDU%2fKDLJIGdIUjZNwpmZgrqRWRtzgjU%3d&risl=&pid=ImgRaw",
     };
   },
 
@@ -143,10 +143,10 @@ export default {
     typechange(val) {
       if (val == "2") {
         this.baseImg =
-          "https://images.unsplash.com/photo-1442570468985-f63ed5de9086?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1393&q=80";
+          "https://tse1-mm.cn.bing.net/th/id/R-C.8e1e176979168b67722ff769656f1b10?rik=oipr3IDM2TztAQ&riu=http%3a%2f%2fimg.ivsky.com%2fimg%2ftupian%2fpre%2f201711%2f28%2fxingshizhongdezhengqihuochetupian-004.jpg&ehk=VgMty5004CTtVyOfLYqURK%2b2hEsUjFvs8qwtTGJsXoY%3d&risl=&pid=ImgRaw";
       } else {
         this.baseImg =
-          "https://media.cntraveler.com/photos/5fd26c4ddf72876c320b8001/16:9/w_2560%2Cc_limit/952456172";
+          "https://tse1-mm.cn.bing.net/th/id/R-C.00c0fcb56d11f58ee2f172191eefa476?rik=U79UiqqhgYmd8Q&riu=http%3a%2f%2ffile06.16sucai.com%2f2016%2f0603%2f91c401949dae819c4f08213f78b63916.jpg&ehk=5bAmiltNduhHMDU%2fKDLJIGdIUjZNwpmZgrqRWRtzgjU%3d&risl=&pid=ImgRaw";
       }
     },
     onSubmit() {

@@ -2,7 +2,7 @@
   <div class="order2">
     <Header activeIndex="2" />
     <div class="main">
-      <div class="bg2 box2 block1">
+      <div class="bg2 box2">
         <h1>{{ ATTRACTION_NAME }}</h1>
       </div>
       <div class="infoPay clearfix">
@@ -70,7 +70,7 @@
         </div>
       </div>
 
-      <div class="horse block1">
+      <div class="horse">
         <el-carousel height="150px">
           <el-carousel-item v-for="item in items" :key="item.message">
             <h3>{{ item.message }} {{ item.add }}</h3>
