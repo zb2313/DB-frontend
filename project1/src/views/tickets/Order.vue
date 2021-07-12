@@ -55,6 +55,7 @@
           </div>
         </div>
         <div class="divide"></div>
+        <div style="font-size:14px; float:left;margin-top:10px;margin-left:10px">{{seat_type}} &nbsp; {{seat_id}}</div>
         <div class="price">￥{{ price }}</div>
       </el-card>
     </div>
@@ -162,6 +163,8 @@ export default {
       start_time: "7:00",
       end_time: "9:15",
       price: "666",
+      seat_id: '45C',
+      seat_type: '经济舱'
     };
   },
   methods: {
