@@ -57,7 +57,39 @@ const routes = [
     path: '/tickets/Order',
     name: 'ticketsOrder',
     component: () => import('../views/tickets/Order.vue')
-  }
+  },
+  {
+    path: '/Personalpage',
+    name: 'Personalpage',
+    component: () => import('../views/Administrator/Personalpage')
+  },
+  {
+    path: '/SendMail',
+    name: '',
+    component: () => import('../views/Administrator/SendMail.vue')
+  },
+  {
+    path: '/UpdateQA',
+    name: '',
+    component: () => import('../views/Administrator/UpdateQA.vue')
+  },
+  {
+    path: '/UploadQA',
+    name: '',
+    component: () => import('../views/Administrator/UploadQA.vue')
+  },
+  {
+    path: '/User',
+    name: '',
+    component: () => import('../views/User/Home.vue')
+  },
+  {
+    path: '/User/Publish',
+    name: '',
+    component: () => import('../views/User/Publish.vue')
+  },
+
+
 ]
 
 const router = new VueRouter({

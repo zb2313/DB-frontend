@@ -44,10 +44,6 @@ a:visited {
   float: left;
 }
 
-.left1 {
-  text-align: left;
-}
-
 .right {
   float: left;
   width: 800px;

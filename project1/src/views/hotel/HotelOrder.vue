@@ -1,15 +1,15 @@
 <template>
-  <div class="order1">
+  <div class="hotelOrder">
     <Header activeIndex="1" />
     <div class="main">
-      <div class="bg2 box2">
+      <div class="hotelOrderBg">
         <h1>{{ HOTEL_NAME }}</h1>
       </div>
       <div>
         <div class="infoPay clearfix">
-          <div class="box3">
-            <div class="left1">
-              <h2 class="headThird">{{ HOTEL_NAME }}</h2>
+          <div class="infoBox">
+            <div class="orderLeft">
+              <h2 class="hotelName">{{ HOTEL_NAME }}</h2>
 
               <h3><i class="el-icon-position"></i> 地址</h3>
               <p>{{ LOCATION }}</p>
@@ -28,7 +28,7 @@
               </div>
             </div>
           </div>
-          <div class="orderForm box4">
+          <div class="orderBox payBox">
             <el-row type="flex" justify="space-around">
               <el-col :span="3"><span>时间</span></el-col>
               <el-col :span="16"
@@ -107,11 +107,9 @@
 .clearfix {
   *zoom: 1;
 }
-.order1 .bg2 {
+.hotelOrderBg {
   background: no-repeat center/100%
     url(https://tse1-mm.cn.bing.net/th/id/R-C.f79fd9e6223bc5658d329a5d5093114b?rik=EqFkznLcD%2bW1pw&riu=http%3a%2f%2fimg.mp.itc.cn%2fupload%2f20170103%2f6c44acfb4cdc49da98da2556b141bf48_th.jpg&ehk=9kvZqZf1mrI16XNH84PrHtJ1xu9n%2bJR572cGDsYvX7o%3d&risl=&pid=ImgRaw);
-}
-.box2 {
   margin-top: 20px;
   margin-bottom: 20px;
   height: 395px;
@@ -120,27 +118,29 @@
   text-align: center;
 }
 
-.headThird {
+.hotelName {
   margin-top: 10px;
 }
-.order1 .infoPay {
+.hotelOrder .infoPay {
   width: 100%;
   height: 250px;
   margin: 0 auto;
 }
-.order1 .box3 {
+.hotelOrder .infoBox {
   width: 300px;
   height: 250px;
   margin: 5px;
   float: left;
 }
-.order1 .box4 {
+.hotelOrder .payBox {
   width: 500px;
   height: 250px;
   margin: 5px;
   float: right;
 }
-
+.orderLeft {
+  text-align: left;
+}
 .star {
   width: 400px;
   height: 30px;
@@ -152,11 +152,9 @@ ul {
 }
 ul li {
   float: left;
-}
-
-li {
   list-style: none;
 }
+
 
 .yellow {
   color: #f7ba2a;
@@ -192,7 +190,7 @@ li {
   background-color: #d3dce6;
 }
 
-.orderForm {
+.orderBox {
   border-radius: 4px;
   border: 1px solid black;
 }

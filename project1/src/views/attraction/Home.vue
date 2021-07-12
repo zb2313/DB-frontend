@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="attrHome">
     <Header activeIndex="2" />
     <div class="search">
       <div class="block">
@@ -13,9 +13,9 @@
     <div class="main">
       <h3>热门目的地</h3>
       <div class="mainDest">
-        <div class="bg1 box">北京</div>
-        <div class="bg1 box">上海</div>
-        <div class="bg1 box">南京</div>
+        <div class="attrBox">北京</div>
+        <div class="attrBox">上海</div>
+        <div class="attrBox">南京</div>
       </div>
     </div>
   </div>
@@ -29,6 +29,7 @@ body,
   margin: 0px;
   padding: 0px;
 }
+
 .search {
   background: #f2f2f2;
   padding: 64px 32px;
@@ -37,14 +38,14 @@ body,
 .main h3 {
   text-indent: 5px;
 }
+
 .mainDest div {
   float: left;
 }
-.bg1 {
+
+.attrBox {
   background: no-repeat center/100%
     url(https://tse1-mm.cn.bing.net/th/id/R-C.f79fd9e6223bc5658d329a5d5093114b?rik=EqFkznLcD%2bW1pw&riu=http%3a%2f%2fimg.mp.itc.cn%2fupload%2f20170103%2f6c44acfb4cdc49da98da2556b141bf48_th.jpg&ehk=9kvZqZf1mrI16XNH84PrHtJ1xu9n%2bJR572cGDsYvX7o%3d&risl=&pid=ImgRaw);
-}
-.box {
   width: 350px;
   height: 200px;
   margin: 5px;
@@ -56,18 +57,6 @@ body,
 .block {
   margin: 0 auto;
   width: 61.8%;
-}
-.block1 {
-  margin: 0 auto;
-  width: 70%;
-}
-
-.left {
-  text-align: left;
-}
-
-.indent {
-  text-indent: 2em;
 }
 </style>
 

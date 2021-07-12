@@ -1,14 +1,14 @@
 <template>
-  <div class="order2">
+  <div class=" attrOrder">
     <Header activeIndex="2" />
     <div class="main">
-      <div class="bg2 box2">
+      <div class="attrOrderBg">
         <h1>{{ ATTRACTION_NAME }}</h1>
       </div>
       <div class="infoPay clearfix">
-        <div class="box3">
-          <div class="left1">
-            <h2 class="headThird">{{ ATTRACTION_NAME }}</h2>
+        <div class="infoBox">
+          <div class="orderLeft">
+            <h2 class=" attrName">{{ ATTRACTION_NAME }}</h2>
 
             <h3><i class="el-icon-position"></i> 地址</h3>
             <p>{{ LOCATION }}</p>
@@ -27,7 +27,7 @@
             </el-row>
           </div>
         </div>
-        <div class="orderForm box4">
+        <div class="orderBorder payBox">
           <el-row type="flex" justify="space-around">
             <el-col :span="3"><span>时间</span></el-col>
             <el-col :span="16"
@@ -37,7 +37,7 @@
           <el-row type="flex" justify="space-around">
             <el-col :span="3"><span>单价</span></el-col>
             <el-col :span="16"
-              ><span>{{ price }}</span></el-col
+              ><span>{{ PRICE }}</span></el-col
             >
           </el-row>
           <el-row type="flex" justify="space-around">
@@ -56,7 +56,7 @@
           <el-row type="flex" justify="space-around">
             <el-col :span="3"><span>总计</span></el-col>
             <el-col :span="16"
-              ><span>{{ priceSum }}</span></el-col
+              ><span>{{ PRICESum }}</span></el-col
             >
           </el-row>
           <el-row type="flex" justify="space-around">
@@ -83,9 +83,6 @@
 
 
 <style>
-.el-col {
-  text-align: center;
-}
 .clearfix:before,
 .clearfix:after {
   content: "";
@@ -97,11 +94,9 @@
 .clearfix {
   *zoom: 1;
 }
-.bg2 {
+.attrOrderBg {
   background: no-repeat center/100%
     url(https://tse1-mm.cn.bing.net/th/id/R-C.f79fd9e6223bc5658d329a5d5093114b?rik=EqFkznLcD%2bW1pw&riu=http%3a%2f%2fimg.mp.itc.cn%2fupload%2f20170103%2f6c44acfb4cdc49da98da2556b141bf48_th.jpg&ehk=9kvZqZf1mrI16XNH84PrHtJ1xu9n%2bJR572cGDsYvX7o%3d&risl=&pid=ImgRaw);
-}
-.box2 {
   margin-top: 20px;
   margin-bottom: 20px;
   height: 395px;
@@ -109,31 +104,39 @@
   line-height: 395px;
   text-align: center;
 }
-.headThird {
+
+.attrName {
   margin-top: 10px;
 }
+
 .infoPay {
   width: 100%;
   height: 250px;
 }
-.order2 .box3 {
+
+.attrOrder .infoBox {
   width: 400px;
   height: 250px;
   margin: 5px;
   float: left;
 }
-.order2 .box4 {
+
+.attrOrder .payBox {
   width: 400px;
   height: 220px;
   margin: 5px;
   float: right;
 }
-
+.el-col {
+  text-align: center;
+}
 .el-row {
   margin-bottom: 10px;
   margin-top: 10px;
 }
-
+.orderLeft {
+  text-align: left;
+}
 .el-carousel__item h3 {
   color: #475669;
   font-size: 14px;
@@ -150,17 +153,20 @@
   background-color: #d3dce6;
 }
 
-.orderForm {
+.orderBorder {
   border-radius: 4px;
   border: 1px solid black;
 }
+
 li {
   list-style: none;
 }
+
 .horse {
   margin: 30px auto 0 auto;
   text-align: center;
 }
+
 </style>
 
 
@@ -175,8 +181,8 @@ export default {
     return {
       currentDate: new Date(),
       num: 1,
-      priceSum: 100000,
-      price: 1000,
+      PRICESum: 100000,
+      PRICE: 1000,
       LOCATION: "北京城外",
       ATTRACTION_NAME: "北京长城",
       CLOSE_TIME: "17:00",
