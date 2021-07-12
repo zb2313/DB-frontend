@@ -48,6 +48,7 @@
                     <el-select
                       v-model="formInline.ticket_type"
                       placeholder="机票"
+                      @change="typechange"
                     >
                       <el-option label="机票" value="1"></el-option>
                       <el-option label="火车票" value="2"></el-option>
@@ -78,7 +79,7 @@
                   <el-form-item>
                     <el-select
                       v-model="formInline.seat_type"
-                      placeholder="经济舱"
+                       :placeholder="holder"
                     >
                       <el-option
                         v-if="formInline.ticket_type == 1"
@@ -269,6 +270,7 @@ export default {
           logo_url: require('')
 
         } */
+      holder:"经济舱",
     };
   },
   methods: {
@@ -304,6 +306,15 @@ export default {
     },
     handleSelect(item) {
       console.log(item);
+    },
+    typechange(val) {
+      if (val == "2") {
+        this.holder="一等座";
+        
+      } else {
+        this.holder="经济舱";
+        
+      }
     },
 
     loadAll() {

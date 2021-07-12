@@ -49,7 +49,7 @@
 
             <el-col :span="5">
               <el-form-item>
-                <el-select v-model="formInline.seat_type" placeholder="经济舱">
+                <el-select v-model="formInline.seat_type"  :placeholder="holder">
                   <el-option
                     v-if="formInline.ticket_type == 1"
                     label="经济舱"
@@ -145,6 +145,7 @@ export default {
       city: [],
       state1: "",
       state2: "",
+      holder:"经济舱",
       baseImg:
         "https://media.cntraveler.com/photos/5fd26c4ddf72876c320b8001/16:9/w_2560%2Cc_limit/952456172",
     };
@@ -153,16 +154,23 @@ export default {
   methods: {
     typechange(val) {
       if (val == "2") {
+        this.holder="一等座";
         this.baseImg =
           "https://images.unsplash.com/photo-1442570468985-f63ed5de9086?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1393&q=80";
       } else {
+        this.holder="经济舱";
         this.baseImg =
           "https://media.cntraveler.com/photos/5fd26c4ddf72876c320b8001/16:9/w_2560%2Cc_limit/952456172";
       }
     },
     onSubmit() {
-      console.log("submit!");
-      this.$router.replace("/tickets/detail");
+      if(this.formInline.ticket_type&&this.formInline.seat_type&&this.state1&&this.state2){
+      this.$router.replace("/tickets/detail");}
+      else {
+        this.$alert('请填写所有选项再查询', '提示', {
+          confirmButtonText: '确定'
+        })
+      }
     },
     querySearch(queryString, cb) {
       var city = this.city;
@@ -202,5 +210,6 @@ export default {
   mounted() {
     this.city = this.loadAll();
   },
+  
 };
 </script>
