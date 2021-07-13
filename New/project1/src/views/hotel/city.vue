@@ -75,6 +75,7 @@
                   :address="item.hlocation"
                   :grade="item.star"
                   type="房客"
+                  :price="250"
                 />
               </li>
             </ul>
@@ -146,6 +147,14 @@ export default {
     onSubmit() {
       console.log("submit!");
     },
+  },
+  created() {
+    this.form1.location = this.$route.query.search;
+    if (this.$route.query.search) {
+      this.title.city = this.$route.query.search;
+    } else {
+      this.title.city = "全部";
+    }
   },
   mounted() {
     this.$axios.get("http://49.234.18.247:8080/api/Hotel").then((response) => {

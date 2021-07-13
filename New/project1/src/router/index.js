@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import hotelCity from '../views/hotel/city.vue'
 
 Vue.use(VueRouter)
 
@@ -25,8 +26,8 @@ const routes = [
   },
   {
     path: '/hotel/city',
-    name: 'city',
-    component: () => import('../views/hotel/city.vue')
+    name: 'hotelCity',
+    component: hotelCity,
   },
   {
     path: '/hotel/HotelOrder',
@@ -64,30 +65,11 @@ const routes = [
     component: () => import('../views/tickets/Order.vue')
   },
   {
-    path: '/moment',
-    name: '',
-    component: () => import('../views/moment/Home.vue')
-  },
-  {
-    path: '/moment/Comment',
-    name: '',
-    component: () => import('../views/moment/Comment.vue')
-  },
-  {
-    path: '/moment/CheckComment',
-    name: '',
-    component: () => import('../views/moment/CheckComment.vue')
-  },
-  {
-    path: '/moment/Publish',
-    name: '',
-    component: () => import('../views/moment/Publish.vue')
-  },
-  {
     path: '/questions',
     name: 'QA',
     component: () => import('../views/Other/questions.vue')
   },
+
 
 ]
 

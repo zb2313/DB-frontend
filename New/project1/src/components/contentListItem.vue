@@ -121,15 +121,15 @@ export default {
     address: String,
     grade: Number,
     type: String,
+    price: Number,
+    coverImgUrl: String,
   },
   data() {
     return {
       clicked: false,
       dianping_number: 471,
-      price: "250",
       baseImg:
         "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
-      coverImgUrl: "",
     };
   },
   methods: {
@@ -148,7 +148,7 @@ export default {
       } else if (this.grade == 2) {
         return "不太好";
       } else {
-        return "一般般";
+        return "非常差";
       }
     },
   },

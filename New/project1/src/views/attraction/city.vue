@@ -60,7 +60,18 @@
             </el-row>
           </div>
           <div class="contents">
-            <contentListItem content.type="游客" />
+            <ul>
+              <li v-for="item in items" :key="item.attractioN_ID">
+                <contentListItem
+                  :title="item.attractioN_NAME"
+                  :address="item.alocation"
+                  :grade="item.star"
+                  :coverImgUrl="item.picture"
+                  type="游客"
+                  :price="item.price"
+                />
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -99,7 +110,22 @@ export default {
       value: [4, 8],
       checkList1: [],
       checkList2: [],
+      items: [],
     };
+  },
+  created() {
+    if (this.$route.query.search) {
+      this.title.city = this.$route.query.search;
+    } else {
+      this.title.city = "全部";
+    }
+  },
+  mounted() {
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Attraction")
+      .then((response) => {
+        this.items = response.data;
+      });
   },
 };
 </script>
