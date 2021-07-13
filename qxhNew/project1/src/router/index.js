@@ -14,6 +14,11 @@ const routes = [
     component: () => import('../views/login.vue')
   },
   {
+    path: '/Register',
+    name: '',
+    component: () => import('../views/Register.vue')
+  },
+  {
     path: '/hotel',
     name: 'hotel',
     component: () => import('../views/hotel/index.vue'),
@@ -64,9 +69,9 @@ const routes = [
     component: () => import('../views/moment/Home.vue')
   },
   {
-    path: '/moment/location',
+    path: '/moment/Comment',
     name: '',
-    component: () => import('../views/moment/location.vue')
+    component: () => import('../views/moment/Comment.vue')
   },
   {
     path: '/moment/CheckComment',
@@ -74,11 +79,15 @@ const routes = [
     component: () => import('../views/moment/CheckComment.vue')
   },
   {
+    path: '/moment/Publish',
+    name: '',
+    component: () => import('../views/moment/Publish.vue')
+  },
+  {
     path: '/questions',
     name: 'QA',
     component: () => import('../views/Other/questions.vue')
   },
-
 
 ]
 

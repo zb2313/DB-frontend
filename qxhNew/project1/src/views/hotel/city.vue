@@ -68,7 +68,16 @@
             </el-radio-group>
           </div>
           <div class="contents">
-            <contentListItem />
+            <ul>
+              <li v-for="item in items" :key="item.hoteL_NAME">
+                <contentListItem
+                  :title="item.hoteL_NAME"
+                  :address="item.hlocation"
+                  :grade="item.star"
+                  type="房客"
+                />
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -137,6 +146,11 @@ export default {
     onSubmit() {
       console.log("submit!");
     },
+  },
+  mounted() {
+    this.$axios.get("http://49.234.18.247:8080/api/Hotel").then((response) => {
+      this.items = response.data;
+    });
   },
 };
 </script>

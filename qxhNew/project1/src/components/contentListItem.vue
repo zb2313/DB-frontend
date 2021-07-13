@@ -15,18 +15,16 @@
       ></div>
     </div>
     <div class="detail">
-      <h1>{{ content.title }}</h1>
-      <p>{{ content.address }}</p>
+      <h1>{{ title }}</h1>
+      <p>{{ address }}</p>
       <div class="dianping">
         <div class="dianping-wenzi">
-          <p class="dianping-wenzi1">{{ dianping.level }}</p>
-          <p class="dianping-wenzi2">
-            共{{ dianping.number }}名{{ content.type }}评分
-          </p>
+          <p class="dianping-wenzi1">{{ level }}</p>
+          <p class="dianping-wenzi2">共{{ dianping_number }}名{{ type }}评分</p>
         </div>
-        <div class="dianping-icon">{{ dianping.grade }}</div>
+        <div class="dianping-icon">{{ grade }}</div>
       </div>
-      <p style="color: red">平均{{ content.price }}元/人</p>
+      <p style="color: red">平均{{ price }}元/人</p>
       <button>点击购买 ></button>
     </div>
   </div>
@@ -118,20 +116,17 @@
 
 <script>
 export default {
+  props: {
+    title: String,
+    address: String,
+    grade: Number,
+    type: String,
+  },
   data() {
     return {
       clicked: false,
-      dianping: {
-        level: "好极了",
-        number: 471,
-        grade: 4.5,
-      },
-      content: {
-        title: "Youth Space",
-        address: "上海市，嘉定区，黄渡理工，学生公寓14号楼",
-        price: "250",
-        type: "房客",
-      },
+      dianping_number: 471,
+      price: "250",
       baseImg:
         "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
       coverImgUrl: "",
@@ -140,6 +135,21 @@ export default {
   methods: {
     loveClick: function () {
       this.clicked = !this.clicked;
+    },
+  },
+  computed: {
+    level: function () {
+      if (this.grade == 5) {
+        return "好极了";
+      } else if (this.grade == 4) {
+        return "非常好";
+      } else if (this.grade == 3) {
+        return "一般般";
+      } else if (this.grade == 2) {
+        return "不太好";
+      } else {
+        return "一般般";
+      }
     },
   },
 };

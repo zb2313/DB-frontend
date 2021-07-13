@@ -42,14 +42,6 @@
 </template>
 
 <style scoped>
-html,
-body,
-#app {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-}
-
 .el-header {
   background-color: #003680;
   color: white;

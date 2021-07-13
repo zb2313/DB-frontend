@@ -5,10 +5,10 @@
     <!--页面主体区域-->
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside width="200px">
+      <el-aside width="220px">
         <!-- 侧边栏菜单区域 -->
         <el-menu
-          background-color="#b8babd"
+          background-color="#3a5a74"
           text-color="#fff"
           active-text-color="#224EFF"
           router
@@ -67,40 +67,38 @@
             </el-menu-item>
           </el-submenu>
 
-          <!-- 发送动态路由 -->
+          <!-- 新建动态路由 -->
           <el-menu-item index="2">
             <!-- 一级菜单模板区 -->
             <template slot="title">
               <!-- 图标 -->
               <i class="el-icon-share"></i>
               <!-- 文本 -->
-              <span>发送动态</span>
+              <span>新建动态</span>
             </template>
           </el-menu-item>
+
           <!--查看动态路由  -->
-          <el-menu-item index="3">
+          <el-menu-item index="4">
             <!-- 一级菜单模板区 -->
             <template slot="title">
               <!-- 图标 -->
               <i class="el-icon-check"></i>
               <!-- 文本 -->
-              <span>查看动态</span>
+              <span>查看评论</span>
             </template>
           </el-menu-item>
         </el-menu>
       </el-aside>
       <!-- 右侧内容主体 -->
-      <el-main>
-        <!-- 路由占位符 -->
-        <router-view></router-view>
-      </el-main>
+      <el-main> </el-main>
     </el-container>
   </el-container>
 </template>
 
 <style scopend>
 .el-aside {
-  background-color: #b8babd;
+  background-color: #3a5a74;
 }
 
 .el-main {
