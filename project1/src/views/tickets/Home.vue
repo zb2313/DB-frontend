@@ -165,7 +165,17 @@ export default {
     },
     onSubmit() {
       if(this.formInline.ticket_type&&this.formInline.seat_type&&this.state1&&this.state2){
-      this.$router.replace("/tickets/detail");}
+      //this.$router.replace("/tickets/detail");}
+      this.$router.push({
+        path:`/tickets/detail`,
+        query:{
+          ticket_type:this.formInline.ticket_type,
+          from:this.state1,
+          to:this.state2,
+          seat_type:this.formInline.seat_type,
+        }
+        })
+        }
       else {
         this.$alert('请填写所有选项再查询', '提示', {
           confirmButtonText: '确定'

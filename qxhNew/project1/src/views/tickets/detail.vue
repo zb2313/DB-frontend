@@ -6,14 +6,12 @@
         <el-menu :default-openeds="['1', '2']">
           <el-submenu index="1">
             <template slot="title"
-              ><i class="el-icon-cold-drink"></i>航空公司</template
+              ><i class="el-icon-cold-drink"></i>交通公司</template
             >
             <el-menu-item-group>
-              <el-checkbox-group class="checkbox_style" v-model="form.type">
-                <el-checkbox label="东方航空" name="type"></el-checkbox>
-                <el-checkbox label="中国国际航空" name="type"></el-checkbox>
-                <el-checkbox label="中国南方航空" name="type"></el-checkbox>
-                <el-checkbox label="吉祥航空" name="type"></el-checkbox>
+              <el-checkbox-group class="checkbox_style" v-model="form.type" v-for="item in show_company" :key="item">
+                <el-checkbox :label="item" name="type"></el-checkbox>
+                
               </el-checkbox-group>
             </el-menu-item-group>
           </el-submenu>
@@ -101,7 +99,7 @@
                   <el-button
                     style="width: 100%"
                     type="primary"
-                    @click="onSubmit"
+                    @click="newQuery"
                     icon="el-icon-search"
                     >查询</el-button
                   >
@@ -113,7 +111,7 @@
           <el-card
             class="cardstyle"
             v-model="tableData"
-            v-for="item in tableData"
+            v-for="(item,index) in tableData"
             :key="item.vehicle_id"
           >
             <div class="header">
@@ -139,9 +137,9 @@
               </div>
               <div class="price">￥{{ item.price }}</div>
               <div class="detail">
-                <el-button type="primary" @click="onSubmit"
-                  >查看详情 ></el-button
-                >
+                <div class="jump_to_detail"><el-button type="primary"  @click="onSubmit(index)"
+                  >查看详情 ></el-button ></div>
+                
               </div>
             </div>
           </el-card>
@@ -214,9 +212,11 @@
 .price {
   font-size: 30px;
   color: #042758;
-  margin-left: 80px;
-  margin-right: 80px;
-  margin-top: 10px;
+  width: 50px;
+  height: 100%;
+  margin-left: 60px;
+  margin-right: 60px;
+  margin-top: 20px;
   float: left;
 }
 .header {
@@ -228,7 +228,8 @@
 }
 .body {
   float: left;
-  width: 800px;
+  width: 750px;
+  height: 100px;
 }
 .el-header {
   background-color: #b3c0d1;
@@ -238,6 +239,11 @@
 
 .el-aside {
   color: #333;
+}
+.jump_to_detail{
+  float: left;
+  margin-left: 10px;
+  margin-top: 10px;
 }
 </style>
 
@@ -274,6 +280,22 @@ export default {
     };
   },
   methods: {
+    onSubmit(index){
+      console.log(index);
+    },
+    newQuery(){
+      if(this.formInline.ticket_type&&this.formInline.seat_type&&this.formInline.state1&&this.formInline.state2){
+      this.$router.push({
+        path:`/tickets/detail`,
+        query:{
+          ticket_type:this.formInline.ticket_type,
+          from:this.formInline.state1,
+          to:this.formInline.state2,
+          seat_type:this.formInline.seat_type,
+        }
+        })
+
+    }},
     querySearch(queryString, cb) {
       var restaurants = this.restaurants;
       var results = queryString
@@ -346,12 +368,47 @@ export default {
           to: "北京",
           price: "748",
         },
+        {
+          company_name: "东方航空",
+          vehicle_id: "MU3029",
+          start_time: "17:00",
+          end_time: "20:20",
+          from: "上海",
+          to: "北京",
+          price: "1044",
+        }
       ];
     },
   },
   created() {
+    this.formInline.state1=this.$route.query.from;
+    this.formInline.ticket_type=this.$route.query.ticket_type;
+    this.formInline.state2=this.$route.query.to;
+    this.formInline.seat_type=this.$route.query.seat_type;
+
     this.tableData = this.loadAll();
     this.restaurants = this.loadAll2();
+    this.$axios.put(
+          "http://49.234.18.247:8080/api/OfferTrafficService/VEHILCE123",
+          {
+              "vehiclE_ID": "VEHICLE123",
+             "companY_ID": "3214567890",
+              "traffiC_TYPE": "火车"
+          })
+          .then(response => (
+
+console.log(response)
+
+))
   },
+  computed:{
+    show_company(){
+      var s=new Set();
+      for(let i=0;i<this.tableData.length;i++){
+        s.add(this.tableData[i].company_name);
+      }
+      return Array.from(s);
+    }
+  }
 };
 </script>
