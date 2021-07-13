@@ -136,14 +136,13 @@ h1 {
 }
 .bgc {
   background: no-repeat center/100%
-    url(https://ids.tongji.edu.cn:8443/nidp/img/background.jpg);
+    url(https://dimg04.c-ctrip.com/images/tg/891/081/421/a93d36fd50a443e2a84b65c03049427a_R_1024_10000_Q90.jpg);
 }
 .dashboard-container {
   width: 37%;
   height: 600px;
   margin: 20px auto;
   background-color: rgba(99, 126, 147, 0.58);
-  border-radius: 20px;
 }
 .title {
   text-align: center;
