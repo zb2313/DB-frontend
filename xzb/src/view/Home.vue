@@ -36,25 +36,7 @@ export default {
         tageList:[],
         collapse:false
       }
-
-
     },
-  created() {
-     this.tagsList =this.$store.state.tagsList.map((item)=>item.name);
-     this.collapse=this.$store.state.collapse;
-  }
-  // ,
-  // setup() {
-  //   //    const store = useStore();
-  //   //     // const tagsList = computed(() =>
-  //   //     //     store.state.tagsList.map((item) => item.name)
-  //   //     // );
-  //   //     const collapse = computed(() => store.state.collapse);
-  //   //     return {
-  //   //         tagsList,
-  //   //         collapse,
-  //   //     };
-  //   // },
-  //   }
+
 };
 </script>

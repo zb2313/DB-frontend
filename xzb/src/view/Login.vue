@@ -25,7 +25,7 @@
           <el-button type="primary" @click="goRegister()">注册</el-button><br>
           <el-button  @click="onTest()">忘记密码</el-button>
         </div>
-        <p class="login-tips">Tips : 用户名和密码随便填。</p>
+        <p class="login-tips">Tips :请填入用户ID和密码</p>
       </el-form>
     </div>
   </div>
@@ -36,11 +36,12 @@
 // import { useStore } from "vuex";
 // import { useRouter } from "vue-router";
 //import { ElMessage } from "element-plus";
-
+import axios from "axios"
 export default {
   data()
   {
     return{
+      userList:{},
       param:
       {
         password: "123123",
@@ -64,9 +65,44 @@ export default {
       {
         submitForm()
         {
-               localStorage.setItem("ms_username", this.param.username);
-               this.$router.push("/");
-               this.$message.success("登录成功");
+          // eslint-disable-next-line no-unused-vars
+          let check=false;
+          for(let i=0;i<this.userList.length;i++)
+          {
+            let u1=this.param.username;
+            let u2=this.userList[i].useR_ID;
+            let u3=this.param.password;
+            let u4=this.userList[i].upassword
+            if(u1.length<=10)
+            {
+              let n=10-u1.length;
+              for(let i=0;i<n;i++)
+              {
+                u1=u1+" ";
+              }
+            }
+            else
+            {
+              alert("用户ID不能超过10位");
+              this.param.username="";
+            }
+            console.log(u1,u2,u3,u4,u1==u2,u3==u4);
+            if((u1==u2)&&
+                (u3==u4))
+            {
+              check=true;
+              break;
+            }
+          }
+
+          if(check==true)
+          {
+            localStorage.setItem("ms_username", this.param.username);
+            this.$router.push("/");
+            this.$message.success("登录成功");
+            return;
+          }
+          this.$message.error("用户名或密码不存在");
         },
         goRegister()
         {
@@ -76,7 +112,15 @@ export default {
         {
           this.$router.push("/table");
         }
+
       },
+  created() {
+
+    axios.get("http://49.234.18.247:8080/api/Users")
+        .then((response)=>{this.userList=response.data});
+
+
+  }
 
 };
 </script>
@@ -121,6 +165,6 @@ export default {
 .login-tips {
   font-size: 12px;
   line-height: 30px;
-  color: #fff;
+  color: #1f2d3d;
 }
 </style>

@@ -1,11 +1,15 @@
 <template>
 <div>
   <div class="crumbs">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item>
-        <i class="el-icon-lx-cascades"></i> 订单列表
-      </el-breadcrumb-item>
-    </el-breadcrumb>
+      <el-select  v-model="orderType" placeholder="选择订单类型">
+        <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+        </el-option>
+      </el-select>
+
   </div>
   <div class="container">
     <el-table :data="testList" border class="table" ref="multipleTable" header-cell-class-name="table-header">
@@ -57,6 +61,21 @@ export default {
   data()
   {
     return{
+      orderType:"",
+      options:[
+        {
+          value:1,
+          label:"景点门票"
+        },
+        {
+          value: 2,
+          label: "交通票"
+        },
+        {
+          value: 3,
+          label: "酒店订单"
+        }
+      ],
       editVisible:false,
       testList:{},
       dataList:[
@@ -159,7 +178,7 @@ export default {
               }
             }
         )
-        this.getListData();
+        //this.getListData();
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -173,8 +192,6 @@ export default {
       });
 
     },
-
-
     handleEdit()
     {
       alert("aaa")
@@ -191,7 +208,13 @@ export default {
 
   },
   created() {
-    axios.get("http://49.234.18.247:8080/api/Attraction").then((response)=>{
+    let baseUrl="http://49.234.18.247:8080/api/";
+    // eslint-disable-next-line no-unused-vars
+    let choose="PurchaseAttractionTicket";
+    if(this.orderType==1)choose="PurchaseAttractionTicket";//景点
+    else if(this.orderType==2)choose="PurchaseTrafficTicket";//交通
+    else choose="BookRoom";//酒店
+    axios.get(baseUrl+choose).then((response)=>{
       this.testList=response.data;
     })
   },

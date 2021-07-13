@@ -4,10 +4,12 @@
       <div class="title"><h1>注册</h1></div>
       <br />
       <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="用户名">
+        <el-form-item label="用户昵称">
           <el-input style="width: 380px" v-model="form.user_NAME" />
         </el-form-item>
-
+        <el-form-item label="用户ID">
+          <el-input style="width: 380px" v-model="form.user_ID" />
+        </el-form-item>
         <el-form-item label="密码">
           <el-input style="width: 380px" v-model="form.Password" />
         </el-form-item>
@@ -20,7 +22,6 @@
         <el-form-item label="E-mail">
           <el-input style="width: 380px" v-model="form.mailbox_ID" />
         </el-form-item>
-        <p>api测试：{{testInfo}}</p>
         <el-form-item label="性别">
           <el-radio-group v-model="form.Gender">
             <el-radio label="Male" />
@@ -30,12 +31,11 @@
         <el-form-item label="地点">
           <v-distpicker
               @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea">
-
           </v-distpicker>
         </el-form-item>
         <div style="text-align: center; margin-top: 40px">
           <el-button type="primary" @click="onSubmit">注册</el-button>
-          <el-button @click="onCancel">取消</el-button>
+          <el-button @click="checkInput">取消</el-button>
         </div>
       </el-form>
     </div>
@@ -47,6 +47,7 @@ import VDistpicker from "v-distpicker";
 import axios from "axios";
 export default {
   name: "Register",
+  userList:{},
   computed: {},
   components: { VDistpicker },
   data() {
@@ -69,31 +70,61 @@ export default {
       province: "aaaaa",
       city: "",
       area: "",
+      location:" ",
       show: false,
     };
   },
   methods: {
+    checkInput()
+    {
+      if(this.form.user_ID.length>10)
+      {
+        alert("userid长度不可超过10，请重新输入");
+        this.form.user_ID="";
+      }
+      else
+      {
+        for(let i=0;i<10-this.form.user_ID.length;i++)
+        {
+          this.form.user_ID+=" ";
+        }
+      }
+      for(let i=0;i<this.userList.length;i++)
+      {
+        if(this.form.user_ID==this.userList[i].useR_ID)
+        {
+          alert("该用户ID已经存在 请重新输入");
+          return;
+        }
+      }
+      this.onSubmit();
+    },
     onSubmit() {
 
-      axios.post("http://49.234.18.247:8080/api/Administrator",
-          {
-            "administratoR_ID": "xzb",
-          "password": "string"
+      axios.post("http://49.234.18.247:8080/api/Users",
 
+          {
+            "useR_ID": this.form.user_ID,
+            "useR_NAME": this.form.user_NAME,
+            "iD_NUMBER": this.form.id_number,
+            "telE_NUMBER":this.form.tele_NUMBER,
+            "mailboX_ID": null,
+            "uprofile": null,
+            "upassword": this.form.Password,
+            "gender": this.form.Gender,
+            "ulocation": this.location,
+            "motto": null
           }
       )
+      this.$message.success("注册成功,请返回登录界面登录");
+      this.$router.push('/Login');
     },
-      // axios.get("http://49.234.18.247:8080/api/Users/1234567890")
-      // .then((response)=>{this.testInfo=res
       onCancel(){
       this.$message({
         message: "cancel!",
         type: "warning",
       }),
           this.$router.push("/Login");
-    },
-    onEdit() {
-      this.form.dState = false;
     },
     //打开选择地区
     onChangeProvince(data) {
@@ -104,30 +135,15 @@ export default {
     },
     onChangeArea(data) {
       this.area= data.value
+      this.location=this.province+this.city+this.area;
     }
   },
+  created() {
+    axios.get("http://49.234.18.247:8080/api/Users")
+        .then((response)=>{this.userList=response.data});
+  },
   mounted: function () {
-    // axios
-    //     .get("http://49.234.18.247:8080/api/Users/1234567890")
-    //     .then((response) => (this.testInfo = response.data[0]));
 
-    axios.put(
-        "http://49.234.18.247:8080/api/Users/1234567890",
-        {
-          "useR_ID": "1234567890",
-          "useR_NAME": "haha444",
-          "iD_NUMBER": "33100220011005201X",
-          "telE_NUMBER": "15157638797",
-          "mailboX_ID": "1234567890",
-          "uprofile": "1",
-          "upassword": "1",
-          "gender": "1",
-          "ulocation": "2"
-        }
-    );
-    //   axios.delete(
-    //       "http://49.234.18.247:8080/api/Users/1234567890"
-    //   )
   },
 };
 </script>
@@ -148,7 +164,7 @@ h1 {
 }
 .dashboard-container {
   width: 37%;
-  height: 600px;
+  height: 650px;
   margin:70px auto;
   background-color: rgba(99, 126, 147, 0.58);
 }
