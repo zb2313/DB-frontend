@@ -9,7 +9,6 @@
         backgroundRepeat: 'no-repeat',
       }"
     >
-    <div class="welcome">开启旅途</div>
       <div class="search">
         <el-form :model="formInline">
           <el-row>
@@ -49,7 +48,7 @@
 
             <el-col :span="5">
               <el-form-item>
-                <el-select v-model="formInline.seat_type"  :placeholder="holder">
+                <el-select v-model="formInline.seat_type" placeholder="经济舱">
                   <el-option
                     v-if="formInline.ticket_type == 1"
                     label="经济舱"
@@ -89,15 +88,6 @@
 </template>
 
 <style scoped>
-.welcome{
-  font-size: 20px;
-  font-weight: bold;
-  margin-left: 135px;
-  margin-top: 150px;
-  width:100%;
-  height: 15px;
-  float: left;
-}
 .pic {
   width: 100%;
   height: 500px;
@@ -124,7 +114,6 @@
   border-radius: 0px;
   background-color: rgba(246, 247, 248, 0.87);
 }
-
 </style>
 
 <script>
@@ -145,7 +134,6 @@ export default {
       city: [],
       state1: "",
       state2: "",
-      holder:"经济舱",
       baseImg:
         "https://tse1-mm.cn.bing.net/th/id/R-C.00c0fcb56d11f58ee2f172191eefa476?rik=U79UiqqhgYmd8Q&riu=http%3a%2f%2ffile06.16sucai.com%2f2016%2f0603%2f91c401949dae819c4f08213f78b63916.jpg&ehk=5bAmiltNduhHMDU%2fKDLJIGdIUjZNwpmZgrqRWRtzgjU%3d&risl=&pid=ImgRaw",
     };
@@ -154,23 +142,16 @@ export default {
   methods: {
     typechange(val) {
       if (val == "2") {
-        this.holder="一等座";
         this.baseImg =
           "https://tse1-mm.cn.bing.net/th/id/R-C.8e1e176979168b67722ff769656f1b10?rik=oipr3IDM2TztAQ&riu=http%3a%2f%2fimg.ivsky.com%2fimg%2ftupian%2fpre%2f201711%2f28%2fxingshizhongdezhengqihuochetupian-004.jpg&ehk=VgMty5004CTtVyOfLYqURK%2b2hEsUjFvs8qwtTGJsXoY%3d&risl=&pid=ImgRaw";
       } else {
-        this.holder="经济舱";
         this.baseImg =
           "https://tse1-mm.cn.bing.net/th/id/R-C.00c0fcb56d11f58ee2f172191eefa476?rik=U79UiqqhgYmd8Q&riu=http%3a%2f%2ffile06.16sucai.com%2f2016%2f0603%2f91c401949dae819c4f08213f78b63916.jpg&ehk=5bAmiltNduhHMDU%2fKDLJIGdIUjZNwpmZgrqRWRtzgjU%3d&risl=&pid=ImgRaw";
       }
     },
     onSubmit() {
-      if(this.formInline.ticket_type&&this.formInline.seat_type&&this.state1&&this.state2){
-      this.$router.replace("/tickets/detail");}
-      else {
-        this.$alert('请填写所有选项再查询', '提示', {
-          confirmButtonText: '确定'
-        })
-      }
+      console.log("submit!");
+      this.$router.replace("/tickets/detail");
     },
     querySearch(queryString, cb) {
       var city = this.city;
@@ -210,6 +191,5 @@ export default {
   mounted() {
     this.city = this.loadAll();
   },
-  
 };
 </script>

@@ -1,12 +1,27 @@
 <template>
   <el-container class="home-container">
     <!--头部区域-->
-  <el-header>
-    <div>
-      <img src="../assets/dongtai.png" alt="">
-      <span>用户动态</span>
+  <el-header height="120px">
+    <div class="upheader">
+      <div class="logo margin1">LVDAO</div>
+      <div class="HomeTitle">动态页面</div>
     </div>
-    <el-button type="info" icon="el-icon-back" >返回 </el-button>
+    <el-menu
+      :default-active="activeIndex"
+      class="el-menu margin1"
+      mode="horizontal"
+      @select="handleSelect"
+      background-color="#003680"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+    >
+    <el-menu-item index="1"
+        ><router-link to="/2">发送动态</router-link></el-menu-item
+      >
+      <el-menu-item index="2"
+        ><router-link to="/3">查看评论</router-link></el-menu-item
+      >
+    </el-menu>
   </el-header>
   <!--页面主体区域-->
   <el-container>
@@ -108,16 +123,34 @@
 .home-container{
   height :100vh;
 }
-.el-header{
-  background-color: #3093a588;
-  display:flex;
-  justify-content: space-between;
+.el-header {
+  background-color: #003680;
+  color: white;
+  text-align: center;
+}
+.HomeTitle{
+  text-align: center;
+  line-height: 60px;
+  font-size: 60px;
+  display: flex;
   align-items: center;
-  color: #FFF;
-  font-size: 20px;
-  
+  justify-content: center;
+  flex-direction: column;
+}
+.upheader {
+  height: 60px;
 }
 
+.logo {
+  width: 200px;
+  height: 60px;
+  font-family: "Microsoft YaHei";
+  font-size: 38px;
+  text-align: left;
+  line-height: 60px;
+  text-indent: 1em;
+  float: left;
+}
 .el-aside{
   background-color: #333333;
 }

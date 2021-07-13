@@ -1,0 +1,142 @@
+<template>
+  <el-header height="121px">
+    <div class="upheader">
+      <router-link to="/hotel"
+        ><div class="logo margin1">LVDAO</div></router-link
+      >
+
+      <div class="nav1">
+        <ul>
+          <li>
+            <router-link to="/questions"
+              ><div class="el-icon-question Mark"></div
+            ></router-link>
+          </li>
+          <li>
+            <el-badge :value="msgValue" :max="maxMsg" class="item">
+              <div class="el-icon-bell Mark" style="margin-left: 8px"></div>
+            </el-badge>
+          </li>
+          <li>
+            <div class="pull">
+              <el-dropdown>
+                <div
+                  class="profile"
+                  :style="{
+                    backgroundImage:
+                      'url(' + (coverImgUrl ? coverImgUrl : baseImg) + ')',
+                    backgroundSize: '100% 100%',
+                    backgroundRepeat: 'no-repeat',
+                  }"
+                ></div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>管理账户</el-dropdown-item>
+                  <el-dropdown-item>订单</el-dropdown-item>
+                  <el-dropdown-item>收藏</el-dropdown-item>
+                  <el-dropdown-item divided>退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <el-menu
+      :default-active="activeIndex"
+      class="el-menu margin1"
+      mode="horizontal"
+      @select="handleSelect"
+      background-color="#003680"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+    >
+      <el-menu-item index="1"
+        ><router-link to="/hotel">酒店</router-link></el-menu-item
+      >
+      <el-menu-item index="2"
+        ><router-link to="/attraction">景点</router-link></el-menu-item
+      >
+      <el-menu-item index="3"
+        ><router-link to="/tickets">机/车票</router-link></el-menu-item
+      >
+    </el-menu>
+  </el-header>
+</template>
+
+<style scoped>
+.el-header {
+  background-color: #003680;
+  color: white;
+  text-align: center;
+}
+
+.upheader {
+  height: 60px;
+}
+
+.logo {
+  width: 200px;
+  height: 60px;
+  font-family: "Microsoft YaHei";
+  font-size: 38px;
+  text-align: left;
+  line-height: 60px;
+  text-indent: 1em;
+  float: left;
+}
+
+.nav1 {
+  float: left;
+  margin-left: 55%;
+}
+
+.nav1 ul li {
+  float: left;
+}
+
+li {
+  list-style: none;
+}
+
+a:link {
+  text-decoration: none;
+  color: white;
+}
+
+a:visited {
+  color: white;
+}
+
+.margin1 {
+  margin-left: 6%;
+}
+
+.Mark {
+  font-size: 30px;
+}
+
+.profile {
+  margin-left: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+}
+</style>
+
+<script>
+export default {
+  name: "Header",
+  props: {
+    activeIndex: "1",
+  },
+  data() {
+    return {
+      maxMsg: "99",
+      msgValue: "20",
+      baseImg:
+        "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80",
+      coverImgUrl: "",
+    };
+  },
+};
+</script>
