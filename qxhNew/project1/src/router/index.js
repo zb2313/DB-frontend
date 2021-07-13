@@ -59,34 +59,24 @@ const routes = [
     component: () => import('../views/tickets/Order.vue')
   },
   {
-    path: '/Personalpage',
-    name: 'Personalpage',
-    component: () => import('../views/Administrator/Personalpage')
+    path: '/moment',
+    name: '',
+    component: () => import('../views/moment/Home.vue')
   },
   {
-    path: '/SendMail',
+    path: '/moment/location',
     name: '',
-    component: () => import('../views/Administrator/SendMail.vue')
+    component: () => import('../views/moment/location.vue')
   },
   {
-    path: '/UpdateQA',
+    path: '/moment/CheckComment',
     name: '',
-    component: () => import('../views/Administrator/UpdateQA.vue')
+    component: () => import('../views/moment/CheckComment.vue')
   },
   {
-    path: '/UploadQA',
-    name: '',
-    component: () => import('../views/Administrator/UploadQA.vue')
-  },
-  {
-    path: '/User',
-    name: '',
-    component: () => import('../views/User/Home.vue')
-  },
-  {
-    path: '/User/Publish',
-    name: '',
-    component: () => import('../views/User/Publish.vue')
+    path: '/questions',
+    name: 'QA',
+    component: () => import('../views/Other/questions.vue')
   },
 
 

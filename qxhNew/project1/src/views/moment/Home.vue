@@ -1,21 +1,14 @@
 <template>
-  <el-container class="home-container">
+  <el-container direction="vertical">
     <!--头部区域-->
-    <el-header>
-      <div>
-        <img src="../../assets/dongtai.png" alt="" />
-        <span>用户动态</span>
-      </div>
-      <el-button type="info" icon="el-icon-back">返回 </el-button>
-    </el-header>
+    <Header1 />
     <!--页面主体区域-->
     <el-container>
       <!-- 侧边栏 -->
       <el-aside width="200px">
-        <div class="toggle-button" @click="toggleCollapse">|||</div>
         <!-- 侧边栏菜单区域 -->
         <el-menu
-          background-color="#333333"
+          background-color="#b8babd"
           text-color="#fff"
           active-text-color="#224EFF"
           router
@@ -106,39 +99,21 @@
 </template>
 
 <style scopend>
-.home-container {
-  height: 100vh;
-}
-.el-header {
-  background-color: #3093a588;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #fff;
-  font-size: 20px;
-}
-
 .el-aside {
-  background-color: #333333;
+  background-color: #b8babd;
 }
 
 .el-main {
   background-color: #eaedf1;
 }
-/* 折叠按钮样式 */
-.toggle-button {
-  background-color: #6f6f6f;
-  font-size: 10px;
-  line-height: 24px;
-  color: #fff;
-  text-align: center;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-}
 </style>
 
 <script>
+import Header1 from "@/components/Header1";
 export default {
+  components: {
+    Header1,
+  },
   data() {
     return {
       isCollapse: false,
@@ -153,10 +128,6 @@ export default {
     },
     //获取所有菜单
     getMenuList() {},
-    //点击按钮，切换菜单折叠状态
-    toggleCollapse() {
-      this.isCollapse = !this.isCollapse;
-    },
   },
 };
 </script>

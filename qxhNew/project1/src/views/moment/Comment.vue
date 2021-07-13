@@ -1,31 +1,14 @@
 <template>
-<div>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-    <div v-for="(item,i) in author" :key="i" class="author-title">
-      <el-avatar class="header-img" :size="60" :src="myHeader"></el-avatar>
-      <div class="author-info">
-                <span class="author-name">{{item.name}}</span>
-                <span class="author-time">{{item.time}}</span>
-            </div>
-            <div class="talk-box">
-                <p>
-                    <span class="reply">{{item.comment}}</span>
-                </p>
-            </div>
-            <div class="icon-btn">
-                <span @click="showReplyInput(i,item.name,item.id)"><i class="iconfont el-icon-s-comment"></i>{{item.commentNum}}</span>
-                <i class="iconfont el-icon-caret-top"></i>{{item.like}}
-            </div>
-    </div>
-      <div style="padding: 14px;">
-          <!-- 评论部分 -->
+    <div>
         <div v-for="(item,i) in comments" :key="i" class="author-title reply-father">
             <el-avatar class="header-img" :size="40" :src="item.headImg"></el-avatar>
             <div class="author-info">
                 <span class="author-name">{{item.name}}</span>
                 <span class="author-time">{{item.time}}</span>
+            </div>
+            <div class="icon-btn">
+                <span @click="showReplyInput(i,item.name,item.id)"><i class="iconfont el-icon-s-comment"></i>{{item.commentNum}}</span>
+                <i class="iconfont el-icon-caret-top"></i>{{item.like}}
             </div>
             <div class="talk-box">
                 <p>
@@ -50,7 +33,6 @@
                         </p>
                     </div>
                     <div class="reply-box">
-
                     </div>
                 </div>
             </div>
@@ -65,144 +47,7 @@
         </div>
         </div>
     </div>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-      <img src="../../assets/dongtai.png" class="image">
-      <div style="padding: 14px;">
-        <span>动态列表</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-      <img src="../../assets/dongtai.png" class="image">
-      <div style="padding: 14px;">
-        <span>动态列表</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-      <img src="../../assets/dongtai.png" class="image">
-      <div style="padding: 14px;">
-        <span>动态列表</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-      <img src="../../assets/dongtai.png" class="image">
-      <div style="padding: 14px;">
-        <span>动态列表</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
-</div>
 </template>
-
-
-<style scoped>
- .time {
-    font-size: 13px;
-    color: #999;
-  }
-  .el-card {
-    height: 100%;
-    min-width: 480px;
-    margin-right: 20px;
-    transition: all .5s;
-    border-radius: 30px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04) 
-  }
-  .author-name{
-      float: left;
-      font-size: 20px;
-  }
-  .author-time{
-      float: right;
-  }
-  .bottom {
-    margin-top: 13px;
-    line-height: 22px;
-  }
-
-  .button {
-    padding: 0;
-    float: right;
-  }
-
-  .header-img {
-    display: block;
-  }
-
-  .clearfix:before,
-  .clearfix:after {
-      display: table;
-      content: "";
-  }
-  
-  .clearfix:after {
-      clear: both
-  }
-  .el-row {
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
-</style>
-
 <script>
 const clickoutside = {
     // 初始化指令
@@ -231,20 +76,9 @@ const clickoutside = {
 };
 export default {
     name:'ArticleComment',
-    data() {
-    return {
-      currentDate: new Date(),
-      author:[
-        {
-            name:'Lana Del Rey',
-            id:19870621,
-            time:'2019年9月16日 18:43',
-            commentNum:2,
-            like:15,
-            comment:'我发布一张新专辑Norman Fucking Rockwell,大家快来听啊',
-        }
-      ],
-      btnShow: false,
+    data(){
+        return{
+            btnShow: false,
             index:'0',
             replyComment:'',
             myName:'Lana Del Rey',
@@ -264,16 +98,17 @@ export default {
                     inputShow:false,
                     reply:[
                         {
-                            from:'Taylor Swift',
-                            fromId:19891221,
-                            fromHeadImg:'https://ae01.alicdn.com/kf/H94c78935ffa64e7e977544d19ecebf06L.jpg',
+                            from:'Ariana Grande',
+                            fromId:1123,
+                            fromHeadImg:'https://ae01.alicdn.com/kf/Hf6c0b4a7428b4edf866a9fbab75568e6U.jpg',
                             to:'Lana Del Rey',
                             toId:19870621,
-                            comment:'我很喜欢你的新专辑！！',
-                            time:22,
-                            commentNum:1,
-                            like:15,
+                            comment:'别忘记宣传我们的合作单曲啊',
+                            time:'2019年9月16日 18:43',
+                            commentNum:0,
+                            like:5,
                             inputShow:false
+ 
                         }
                     ]
                 },
@@ -302,9 +137,7 @@ export default {
             ]
         }
     },
-  directives: {clickoutside},
-    setup() {
-    },
+    directives: {clickoutside},
     methods: {
         inputFocus(){
             var replyInput = document.getElementById('replyInput');
@@ -351,7 +184,7 @@ export default {
                 this.comments.push(a)
                 this.replyComment = ''
                 input.innerHTML = '';
-
+ 
             }
         },
         sendCommentReply(i,j){
@@ -410,92 +243,118 @@ export default {
     },    
 }
 </script>
-<style lang="stylus" scoped>
-.my-reply
-    padding 10px
-    background-color #fafbfc
-    .header-img
-        display inline-block
-        vertical-align top
-    .reply-info    
-        display inline-block
-        margin-left 5px
-        width 90%
-        @media screen and (max-width:1200px) {
-            width 80%
-        }
-        .reply-input
-            min-height 10px
-            line-height 12px
-            padding 10px 10px
-            color #ccc
-            background-color #ffc
-            border-radius 5px
-            &:empty:before
-                content attr(placeholder)
-            &:focus:before
-                content none
-            &:focus
-                padding 8px 8px
-                border 2px solid blue
-                box-shadow none
-                outline none
-    .reply-btn-box
-        height 25px
-        margin 10px 0
-        .reply-btn
-            position relative
-            float right
-            margin-right 15px
-.my-comment-reply
-    margin-left 50px
+<style scoped>
+.reply-input{
+    min-height: 20px;
+    line-height: 22px;
+    padding: 10px 10px;
+    color: #ccc;
+    background-color: #ffc;
+    border-radius: 5px;
+    &:empty:before{
+        content: attr(placeholder);
+    }
+    &:focus:before
+    {
+        content: none;
+    }
+    &:focus{
+        padding: 8px 8px;
+        border: 2px solid blue;
+        box-shadow: none;
+        outline: none;
+    }
+}
+.reply-btn-box
+{
+    height: 25px;
+    margin: 10px 0;
+}
+.reply-btn{
+    position: relative;
+    float: right;
+    margin-right: 15px
+}     
+.my-comment-reply{
+    margin-left: 50px;
+}
     .reply-input
-        width flex
+    {
+        width: flex;
+    }
+       
 .author-title:not(:last-child)
-    border-bottom: 1px solid rgba(178,186,194,.3)
+{
+    border-bottom: 1px solid rgba(178,186,194,.3);
+}
+    
 .author-title
-    padding 10px
-    .header-img
-        display inline-block
-        vertical-align top
-    .author-info
-        display inline-block
-        margin-left 15px
-        width 60%
-        height 40px
-        line-height 20px
-        >span 
-            display block
-            cursor pointer
-            overflow hidden
-            white-space nowrap
-            text-overflow ellipsis
-        .author-name
-            color #000
-            font-size 10px
-            font-weight bold
-        .author-time
-            font-size 10px
-    .icon-btn
-        width 30%
-        padding 0 !important 
-        float right
-        @media screen and (max-width : 1200px){
-            width 20%
-            padding 7px
-        }
-        >span 
-            cursor pointer
-        .iconfont 
-            margin 0 5px
-    .talk-box
-        margin 0 50px
-        >p
-           margin 0
-        .reply
-            font-size 16px
-            color #000
-    .reply-box
-        margin 10px 0 0 50px
-        background-color #efefef
+{
+    padding: 10px;
+}
+.header-img
+{
+    display: inline-block;
+    vertical-align: top;
+}   
+.author-info
+{
+    display: inline-block;
+    margin-left: 15px;
+    width: 60%;
+    height: 40px;
+    line-height: 20px;
+}
+.author-info span{
+        display: block;
+        cursor: pointer;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+}     
+.author-name
+{
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+    float: left;
+}     
+.author-time
+{
+    font-size: 12px;
+    float: right;
+}
+.icon-btn
+{
+    width: 30%;
+    padding: 0 !important ;
+    float: right;
+    @media screen and (max-width : 1200px){
+        width: 20%;
+        padding: 7px;
+    }
+}
+.icon-btn span{
+    cursor: pointer;
+}
+.iconfont{
+    margin: 0 5px;
+}   
+.talk-box{
+    margin: 0 50px;
+}
+.talk-box p{
+    margin: 0;
+}             
+.reply{
+    font-size: 16px;
+    display: block;
+    margin: 0px 0px;
+    color: #000;
+}
+.reply-box{
+    margin: 10px 0 0 50px;
+    background-color: #efef
+}
+        
 </style>

@@ -1,27 +1,34 @@
 <template>
   <el-header height="121px">
     <div class="upheader">
-      <div class="logo margin1">LVDAO</div>
+      <router-link to="/hotel"
+        ><div class="logo margin1">LVDAO</div></router-link
+      >
+
       <div class="nav1">
         <ul>
-          <li><div class="el-icon-question questionMark"></div></li>
           <li>
-            <div
-              class="profile"
-              :style="{
-                backgroundImage:
-                  'url(' + (coverImgUrl ? coverImgUrl : baseImg) + ')',
-                backgroundSize: '100% 100%',
-                backgroundRepeat: 'no-repeat',
-              }"
-            ></div>
+            <router-link to="/questions"
+              ><div class="el-icon-question Mark"></div
+            ></router-link>
+          </li>
+          <li>
+            <el-badge :value="msgValue" :max="maxMsg" class="item">
+              <div class="el-icon-bell Mark" style="margin-left: 8px"></div>
+            </el-badge>
           </li>
           <li>
             <div class="pull">
               <el-dropdown>
-                <span class="el-dropdown-link"
-                  ><i class="el-icon-arrow-down"></i>
-                </span>
+                <div
+                  class="profile"
+                  :style="{
+                    backgroundImage:
+                      'url(' + (coverImgUrl ? coverImgUrl : baseImg) + ')',
+                    backgroundSize: '100% 100%',
+                    backgroundRepeat: 'no-repeat',
+                  }"
+                ></div>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>管理账户</el-dropdown-item>
                   <el-dropdown-item>订单</el-dropdown-item>
@@ -56,13 +63,6 @@
   </el-header>
 </template>
 
-
-<script>
-export default {
-  name: "Header",
-};
-</script>
-
 <style scoped>
 html,
 body,
@@ -95,18 +95,11 @@ body,
 
 .nav1 {
   float: left;
-  margin-left: 60%;
+  margin-left: 55%;
 }
 
 .nav1 ul li {
   float: left;
-}
-
-.nav1 ul li a {
-  display: block;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 10px;
 }
 
 li {
@@ -126,31 +119,28 @@ a:visited {
   margin-left: 6%;
 }
 
-.questionMark {
+.Mark {
   font-size: 30px;
 }
 
 .profile {
-  margin-left: 10px;
+  margin-left: 12px;
   width: 30px;
   height: 30px;
   border-radius: 15px;
-}
-.pull {
-  width: 20px;
-  height: 20px;
-  font-size: 10px;
-  padding-top: 10px;
 }
 </style>
 
 <script>
 export default {
+  name: "Header",
   props: {
     activeIndex: "1",
   },
   data() {
     return {
+      maxMsg: "99",
+      msgValue: "20",
       baseImg:
         "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80",
       coverImgUrl: "",
