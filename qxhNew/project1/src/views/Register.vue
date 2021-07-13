@@ -1,49 +1,51 @@
 <template>
-  <div class="dashboard-container">
-    <div class="title"><h1>注册</h1></div>
-    <br />
-    <el-form ref="form" :model="form" label-width="400px">
-      <el-form-item label="用户名">
-        <el-input style="width: 550px" v-model="form.name" />
-      </el-form-item>
+  <div class="bgc">
+    <div class="dashboard-container">
+      <div class="title"><h1>注册</h1></div>
+      <br />
+      <el-form ref="form" :model="form" label-width="100px">
+        <el-form-item label="用户名">
+          <el-input style="width: 320px" v-model="form.name" />
+        </el-form-item>
 
-      <el-form-item label="密码">
-        <el-input style="width: 550px" v-model="form.password" />
-      </el-form-item>
-      <el-form-item label="身份证号">
-        <el-input style="width: 550px" v-model="form.ID" />
-      </el-form-item>
-      <el-form-item label="手机">
-        <el-input style="width: 550px" v-model="form.phoneNumber" />
-      </el-form-item>
-      <el-form-item label="E-mail">
-        <el-input style="width: 550px" v-model="form.mail" />
-      </el-form-item>
-      <el-form-item>
-        <div style="text-align: center" class="divwrap" v-if="show">
-          <v-distpicker
-            type="mobile"
-            @province="onChangeProvince1"
-            @city="onChangeCity"
-            @area="onChangeArea"
-          ></v-distpicker>
+        <el-form-item label="密码">
+          <el-input style="width: 320px" v-model="form.password" />
+        </el-form-item>
+        <el-form-item label="身份证号">
+          <el-input style="width: 320px" v-model="form.ID" />
+        </el-form-item>
+        <el-form-item label="手机">
+          <el-input style="width: 320px" v-model="form.phoneNumber" />
+        </el-form-item>
+        <el-form-item label="E-mail">
+          <el-input style="width: 320px" v-model="form.mail" />
+        </el-form-item>
+        <el-form-item>
+          <div style="text-align: center" class="divwrap" v-if="show">
+            <v-distpicker
+              type="mobile"
+              @province="onChangeProvince1"
+              @city="onChangeCity"
+              @area="onChangeArea"
+            ></v-distpicker>
+          </div>
+        </el-form-item>
+
+        <el-form-item label="性别">
+          <el-radio-group v-model="form.gender">
+            <el-radio label="Male" />
+            <el-radio label="Female" />
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="地点">
+          <v-distpicker></v-distpicker>
+        </el-form-item>
+        <div style="text-align: center; margin-top: 40px">
+          <el-button type="primary" @click="onSubmit">注册</el-button>
+          <el-button @click="onCancel">取消</el-button>
         </div>
-      </el-form-item>
-
-      <el-form-item label="性别">
-        <el-radio-group v-model="form.gender">
-          <el-radio label="Male" />
-          <el-radio label="Female" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="地点">
-        <v-distpicker></v-distpicker>
-      </el-form-item>
-      <div style="text-align: center; margin-top: 50px">
-        <el-button type="primary" @click="onSubmit">注册</el-button>
-        <el-button @click="onCancel">取消</el-button>
-      </div>
-    </el-form>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -124,13 +126,34 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  margin: 0;
+  padding: 0;
+}
+.bgc:before {
+  content: "";
+  display: table;
+}
+.bgc {
+  background: no-repeat center/100%
+    url(https://dimg04.c-ctrip.com/images/tg/891/081/421/a93d36fd50a443e2a84b65c03049427a_R_1024_10000_Q90.jpg);
+}
 .dashboard-container {
-  margin: 100px;
+  width: 37%;
+  height: 600px;
+  margin: 20px auto;
+  background-color: rgba(99, 126, 147, 0.58);
 }
 .title {
   text-align: center;
+  color: white;
 }
-
+.el-form /deep/ .el-form-item__label {
+  color: white;
+}
+.el-form /deep/ .el-radio__label {
+  color: white;
+}
 /*省市区三级联动*/
 .divwrap {
   height: 50%;
