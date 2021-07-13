@@ -69,11 +69,6 @@ const routes = [
     component: () => import('../views/moment/Home.vue')
   },
   {
-    path: '/moment/location',
-    name: '',
-    component: () => import('../views/moment/location.vue')
-  },
-  {
     path: '/moment/CheckComment',
     name: '',
     component: () => import('../views/moment/CheckComment.vue')
