@@ -1,14 +1,14 @@
 <template>
 <div>
+<div v-for="(item,i) in author" :key="i" class="author-title">
 <el-row>
   <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-    <div v-for="(item,i) in author" :key="i" class="author-title">
-      <el-avatar class="header-img" :size="60" :src="myHeader"></el-avatar>
-      <div class="author-info">
+        <el-card :body-style="{ padding: '0px' }">
+        <el-avatar class="header-img" :size="60" :src="myHeader"></el-avatar>
+        <div class="author-info">
                 <span class="author-name">{{item.name}}</span>
                 <span class="author-time">{{item.time}}</span>
-            </div>
+        </div>
             <div class="talk-box">
                 <p>
                     <span class="reply">{{item.comment}}</span>
@@ -18,7 +18,6 @@
                 <span @click="showReplyInput(i,item.name,item.id)"><i class="iconfont el-icon-s-comment"></i>{{item.commentNum}}</span>
                 <i class="iconfont el-icon-caret-top"></i>{{item.like}}
             </div>
-    </div>
       <div style="padding: 14px;">
           <!-- 评论部分 -->
         <div v-for="(item,i) in comments" :key="i" class="author-title reply-father">
@@ -50,7 +49,6 @@
                         </p>
                     </div>
                     <div class="reply-box">
-
                     </div>
                 </div>
             </div>
@@ -65,69 +63,10 @@
         </div>
         </div>
     </div>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
       </el-card>
   </el-col>
 </el-row>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-      <img src="../../assets/dongtai.png" class="image">
-      <div style="padding: 14px;">
-        <span>动态列表</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-      <img src="../../assets/dongtai.png" class="image">
-      <div style="padding: 14px;">
-        <span>动态列表</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-      <img src="../../assets/dongtai.png" class="image">
-      <div style="padding: 14px;">
-        <span>动态列表</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
-<el-row>
-  <el-col :span="24">
-       <el-card :body-style="{ padding: '0px' }">
-      <img src="../../assets/dongtai.png" class="image">
-      <div style="padding: 14px;">
-        <span>动态列表</span>
-        <div class="bottom clearfix">
-          <time class="time">{{ currentDate }}</time>
-          <el-button type="text" class="button">展开</el-button>
-        </div>
-        </div>
-      </el-card>
-  </el-col>
-</el-row>
+</div>
 </div>
 </template>
 

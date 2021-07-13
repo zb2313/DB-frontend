@@ -93,15 +93,16 @@ export default {
         // 获取文章之后的处理逻辑
         this.$axios
           .post(
-            "",
+            "http://49.234.18.247:8080/api/Moment/",
             // 构造请求参数form-data
-            qs.stringify({
-              value: this.value,
-              ossUrl: this.OssUrl,
-              html: this.html,
-              status: true,
-              md: this.md
-            })
+            // qs.stringify({
+            //   value: this.value,
+            //   ossUrl: this.OssUrl,
+            //   html: this.html,
+            //   status: true,
+            //   md: this.md
+            // })
+
           )
           .then(function(response) {
             console.log("res:", response);

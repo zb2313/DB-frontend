@@ -14,6 +14,10 @@ const routes = [{
         name: 'Home',
         component: Home,
         children: [{
+                path: '/',
+                component: Comment,
+            },
+            {
                 path: '/1-1',
                 component: () =>
                     import ('../components/Comment.vue')
@@ -49,7 +53,12 @@ const routes = [{
         name: 'CheckComment',
         component: () =>
             import ('../components/CheckComment.vue')
-    }
+    },
+    {
+        path: '/3/:momenT_ID',
+        component: () =>
+            import ('../components/SingleComment.vue')
+    },
 ]
 
 const router = new VueRouter({
