@@ -143,10 +143,11 @@
     margin-right: 20px;
     transition: all .5s;
     border-radius: 30px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04) 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 1.12), 0 0 6px rgba(0, 0, 0, .04) 
   }
   .author-name{
       float: left;
+      justify-content: flex-start;
       font-size: 20px;
   }
   .author-time{
@@ -164,6 +165,7 @@
 
   .header-img {
     display: block;
+    justify-content: flex-end;
   }
 
   .clearfix:before,
@@ -410,92 +412,135 @@ export default {
     },    
 }
 </script>
-<style lang="stylus" scoped>
+<style scoped>
 .my-reply
-    padding 10px
-    background-color #fafbfc
-    .header-img
-        display inline-block
-        vertical-align top
-    .reply-info    
-        display inline-block
-        margin-left 5px
-        width 90%
-        @media screen and (max-width:1200px) {
-            width 80%
+{
+    padding: 10px;
+    background-color: #fafbfc;
+}
+.header-img
+{
+    display: inline-block;
+    vertical-align: top;
+}    
+.reply-info
+{
+    display: inline-block;
+    margin-left: 5px;
+    width: 90%;
+    @media screen and (max-width:1200px) {
+            width: 80%;
+    }
+}         
+.reply-input
+{
+    min-height: 10px;
+    line-height: 12px;
+    padding: 10px 10px;
+    color: #ccc;
+    background-color: #ffc;
+    border-radius: 5px;
+        &:empty:before
+        {
+            content: attr(placeholder);
         }
-        .reply-input
-            min-height 10px
-            line-height 12px
-            padding 10px 10px
-            color #ccc
-            background-color #ffc
-            border-radius 5px
-            &:empty:before
-                content attr(placeholder)
-            &:focus:before
-                content none
-            &:focus
-                padding 8px 8px
-                border 2px solid blue
-                box-shadow none
-                outline none
-    .reply-btn-box
-        height 25px
-        margin 10px 0
-        .reply-btn
-            position relative
-            float right
-            margin-right 15px
+        &:focus:before{
+            content: none;
+        } 
+        &:focus
+        {
+            padding: 8px 8px;
+            border: 2px solid blue;
+            box-shadow: none;
+            outline: none;
+        }      
+}
+.reply-btn-box
+{
+    height: 25px;
+    margin: 10px 0;
+}
+.reply-btn
+{
+    position: relative;
+    float: right;
+    margin-right: 15px;
+}
 .my-comment-reply
-    margin-left 50px
-    .reply-input
-        width flex
+{
+    margin-left: 50px;
+}
+.reply-input
+{
+    width: flex;
+}
 .author-title:not(:last-child)
-    border-bottom: 1px solid rgba(178,186,194,.3)
-.author-title
-    padding 10px
-    .header-img
-        display inline-block
-        vertical-align top
-    .author-info
-        display inline-block
-        margin-left 15px
-        width 60%
-        height 40px
-        line-height 20px
-        >span 
-            display block
-            cursor pointer
-            overflow hidden
-            white-space nowrap
-            text-overflow ellipsis
-        .author-name
-            color #000
-            font-size 10px
-            font-weight bold
-        .author-time
-            font-size 10px
-    .icon-btn
-        width 30%
-        padding 0 !important 
-        float right
-        @media screen and (max-width : 1200px){
-            width 20%
-            padding 7px
+{
+    border-bottom: 1px solid rgba(178,186,194,.3);
+}
+.author-title{
+    padding: 10px;
+}
+.header-img
+{
+    display: inline-block;
+    vertical-align: top;
+}     
+.author-info
+{
+    display: inline-block;
+    margin-left: 15px;
+    width: 60%;
+    height: 40px;
+    line-height: 20px;
+}
+.author-info span{
+    display: block;
+    cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}        
+.author-name
+{
+    color: #000;
+    font-size: 10px;
+    font-weight: bold;
+}
+.author-time
+{
+    font-size: 10px;
+}
+.icon-btn
+{
+    width: 30%;
+    padding: 0 !important;
+    float: right;
+    @media screen and (max-width : 1200px){
+            width: 20%;
+            padding: 7px;
         }
-        >span 
-            cursor pointer
-        .iconfont 
-            margin 0 5px
-    .talk-box
-        margin 0 50px
-        >p
-           margin 0
-        .reply
-            font-size 16px
-            color #000
-    .reply-box
-        margin 10px 0 0 50px
-        background-color #efefef
+}
+.icon-btn span{
+    cursor: pointer;
+}   
+.iconfont
+{
+    margin: 0 5px;
+}  
+.talk-box
+{
+    margin: 0 50px;
+}
+.talk-box p{
+    margin: 0;
+}
+.reply{
+    font-size: 16px;
+    color: #000;
+}
+.reply-box{
+    margin: 10px 0 0 50px;
+    background-color: #efefef;
+} 
 </style>

@@ -6,6 +6,7 @@ import SendComment from '../components/SendComment.vue'
 import CheckComment from '../components/CheckComment.vue'
 import Comment from '../components/Comment.vue'
 import Publish from '../components/Publish.vue'
+import SingleComment from '../components/CheckComment.vue'
 Vue.use(VueRouter)
 
 const routes = [{
