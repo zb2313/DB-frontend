@@ -15,7 +15,7 @@ const routes = [
   },
   {
     path: '/Register',
-    name: '',
+    name: 'Register',
     component: () => import('../views/Register.vue')
   },
   {
@@ -69,9 +69,9 @@ const routes = [
     component: () => import('../views/moment/Home.vue')
   },
   {
-    path: '/moment/Comment',
+    path: '/moment/location',
     name: '',
-    component: () => import('../views/moment/Comment.vue')
+    component: () => import('../views/moment/location.vue')
   },
   {
     path: '/moment/CheckComment',
@@ -79,15 +79,11 @@ const routes = [
     component: () => import('../views/moment/CheckComment.vue')
   },
   {
-    path: '/moment/Publish',
-    name: '',
-    component: () => import('../views/moment/Publish.vue')
-  },
-  {
     path: '/questions',
     name: 'QA',
     component: () => import('../views/Other/questions.vue')
   },
+
 
 ]
 

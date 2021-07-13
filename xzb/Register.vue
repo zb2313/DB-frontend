@@ -1,98 +1,97 @@
 <template>
   <div class="dashboard-container">
-    <div class="title"><h1>注册</h1></div>
-    <br />
-    <el-form ref="form" :model="form" label-width="400px">
-      <el-form-item label="用户名">
-        <el-input style="width: 550px" v-model="form.name" />
+    <p>{{testInfo}}</p>
+    <div class="title"><h1>注册</h1></div><br>
+    <el-form ref="form" :model="form" label-width="400px" >
+      <el-form-item label="User Name">
+        <el-input style="width: 550px" v-model="form.name"  />
       </el-form-item>
-
-      <el-form-item label="密码">
+      <el-form-item label="User ID">
+        <el-input style="width: 550px" v-model="form.ID"  />
+      </el-form-item>
+      <el-form-item label="password">
         <el-input style="width: 550px" v-model="form.password" />
       </el-form-item>
-      <el-form-item label="身份证号">
-        <el-input style="width: 550px" v-model="form.ID" />
-      </el-form-item>
-      <el-form-item label="手机">
+      <el-form-item label="phone number">
         <el-input style="width: 550px" v-model="form.phoneNumber" />
       </el-form-item>
-      <el-form-item label="E-mail">
+      <el-form-item label="e-mail">
         <el-input style="width: 550px" v-model="form.mail" />
       </el-form-item>
-      <el-form-item>
-        <div style="text-align: center" class="divwrap" v-if="show">
-          <v-distpicker
-            type="mobile"
-            @province="onChangeProvince1"
-            @city="onChangeCity"
-            @area="onChangeArea"
-          ></v-distpicker>
-        </div>
+      <el-form-item >
+         <div style="text-align: center"  class="divwrap" v-if="show">
+          <v-distpicker type="mobile" @province="onChangeProvince1" @city="onChangeCity"
+                        @area="onChangeArea"></v-distpicker >
+         </div>
       </el-form-item>
 
-      <el-form-item label="性别">
+      <el-form-item label="Gender">
         <el-radio-group v-model="form.gender">
           <el-radio label="Male" />
           <el-radio label="Female" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="地点">
-        <v-distpicker></v-distpicker>
+      <v-distpicker></v-distpicker>
+      <el-form-item label="Motto">
+        <el-input style="width: 550px"  v-model="form.desc" type="textarea" />
       </el-form-item>
-      <div style="text-align: center; margin-top: 50px">
-        <el-button type="primary" @click="onSubmit">注册</el-button>
-        <el-button @click="onCancel">取消</el-button>
-      </div>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">Create</el-button>
+        <el-button @click="onCancel">Cancel</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import VDistpicker from "v-distpicker";
-
+import VDistpicker from 'v-distpicker'
 import axios from "axios";
 export default {
-  name: "Register",
-  computed: {},
-  components: { VDistpicker },
+  name: 'Register',
+  computed: {
+
+  },
+  components: {VDistpicker},
   data() {
     return {
       form: {
-        name: "aaaaaa",
-        password: "aaaaaa",
-        ID: "11111",
-        region: "",
-        date1: "",
-        date2: "",
+        name: 'aaaaaa',
+        password: 'aaaaaa',
+        ID:"11111",
+        region: '',
+        date1: '',
+        date2: '',
         delivery: false,
         type: [],
-        gender: "",
-        desc: "",
-        phoneNumber: " ",
-        mail: "",
+        gender: '',
+        desc: '',
+        phoneNumber:" ",
+        mail:"",
         dState: true,
-      },
-      testInfo: "AAAAAA",
+      }
+      ,
+      testInfo:'AAAAAA',
       //省市区
-      province: "",
-      city: "",
-      area: "",
-      show: false,
-    };
+      province: '',
+      city: '',
+      area: '',
+      show: false
+    }
   },
-  methods: {
+  methods:{
     onSubmit() {
-      this.$message("submit!");
+
+      this.$message('submit!')
     },
     onCancel() {
       this.$message({
-        message: "cancel!",
-        type: "warning",
+        message: 'cancel!',
+        type: 'warning'
       }),
-        this.$router.push("/Login");
+          this.$router.push("/Login")
     },
     onEdit() {
-      this.form.dState = false;
+      this.form.dState = false
     },
 
     //打开选择地区
@@ -102,7 +101,7 @@ export default {
 
     onChangeProvince1: function (a) {
       this.province = a.value;
-      if (a.value == "台湾省") {
+      if (a.value == '台湾省') {
         this.show = false;
       }
     },
@@ -113,23 +112,28 @@ export default {
       this.area = a.value;
       this.show = false;
       this.city = this.province + this.city + this.area;
-    },
+    }
+
   },
   mounted: function () {
     axios
-      .get("http://49.234.18.247:8080/api/Users/1234567890")
-      .then((response) => (this.testInfo = response.data[0].gender));
-  },
-};
+        .get('http://49.234.18.247:8080/api/Users/1234567890')
+        .then(response => (this.testInfo = response.data[0].gender))
+  }
+}
 </script>
 
 <style scoped>
-.dashboard-container {
-  margin: 100px;
+.dashboard-container
+{
+  margin:100px;
+
 }
-.title {
+.title
+{
   text-align: center;
 }
+
 
 /*省市区三级联动*/
 .divwrap {
