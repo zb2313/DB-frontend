@@ -7,18 +7,16 @@
       <div class="HomeTitle">动态页面</div>
     </div>
     <el-menu
-      :default-active="activeIndex"
       class="el-menu margin1"
       mode="horizontal"
-      @select="handleSelect"
       background-color="#003680"
       text-color="#fff"
       active-text-color="#ffd04b"
     >
-    <el-menu-item index="1"
+    <el-menu-item index="2"
         ><router-link to="/2">发送动态</router-link></el-menu-item
       >
-      <el-menu-item index="2"
+      <el-menu-item index="3"
         ><router-link to="/3">查看评论</router-link></el-menu-item
       >
     </el-menu>
@@ -26,7 +24,7 @@
   <!--页面主体区域-->
   <el-container>
     <!-- 侧边栏 -->
-    <el-aside width="200px">
+    <el-aside :width="isCollapse?'64px':'200px'">
       <div class="toggle-button" @click="toggleCollapse">|||</div>
       <!-- 侧边栏菜单区域 -->
       <el-menu
@@ -37,57 +35,15 @@
       :collapse=isCollapse
       :collapse-transition=false>
       <!-- 一级菜单 -->
-      <el-submenu index="1">
+      <el-menu-item index="1">
         <!-- 一级菜单模板区 -->
         <template slot="title">
           <!-- 图标 -->
-          <i class="el-icon-location"></i>
+          <i class="el-icon-menu"></i>
           <!-- 文本 -->
-          <span>筛选地区</span>
+          <span>动态列表</span>
         </template>
-        <!-- 二级菜单 -->
-        <el-menu-item index="1-1">
-           <!-- 二级菜单模板区 -->
-        <template slot="title">
-          <!-- 图标 -->
-          <i class="el-icon-location"></i>
-          <!-- 文本 -->
-          <span>上海</span>
-          </template>
-        </el-menu-item>
-
-        <!-- 二级菜单 -->
-        <el-menu-item index="1-2">
-           <!-- 二级菜单模板区 -->
-        <template slot="title">
-          <!-- 图标 -->
-          <i class="el-icon-location"></i>
-          <!-- 文本 -->
-          <span>北京</span>
-          </template>
-        </el-menu-item>
-
-        <el-menu-item index="1-3">
-           <!-- 二级菜单模板区 -->
-        <template slot="title">
-          <!-- 图标 -->
-          <i class="el-icon-location"></i>
-          <!-- 文本 -->
-          <span>广州</span>
-          </template>
-        </el-menu-item>
-
-        <el-menu-item index="1-4">
-           <!-- 二级菜单模板区 -->
-        <template slot="title">
-          <!-- 图标 -->
-          <i class="el-icon-location"></i>
-          <!-- 文本 -->
-          <span>深圳</span>
-          </template>
-        </el-menu-item>
-      </el-submenu>
-      
+      </el-menu-item>
       <!-- 发送动态路由 -->
       <el-menu-item index="2">
         <!-- 一级菜单模板区 -->
@@ -113,7 +69,9 @@
     <!-- 右侧内容主体 -->
     <el-main>
       <!-- 路由占位符 -->
+      <el-scrollbar style="height=100%">
       <router-view></router-view>
+      </el-scrollbar>
     </el-main> 
   </el-container>
 </el-container>
@@ -179,12 +137,12 @@
       }
     },
     methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
+      // handleOpen(key, keyPath) {
+      //   console.log(key, keyPath);
+      // },
+      // handleClose(key, keyPath) {
+      //   console.log(key, keyPath);
+      // },
       //获取所有菜单
       getMenuList(){},
       //点击按钮，切换菜单折叠状态

@@ -7,6 +7,8 @@ import CheckComment from '../components/CheckComment.vue'
 import Comment from '../components/Comment.vue'
 import Publish from '../components/Publish.vue'
 import SingleComment from '../components/CheckComment.vue'
+import SingleMoment from '../components/SingleMoment.vue'
+import Moments from '../components/Moments.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -15,28 +17,14 @@ const routes = [{
         component: Home,
         children: [{
                 path: '/',
-                component: Comment,
+                component: Moments,
             },
             {
-                path: '/1-1',
+                path: '/1',
                 component: () =>
-                    import ('../components/Comment.vue')
+                    import ('../components/Moments.vue')
             },
-            {
-                path: '/1-2',
-                component: () =>
-                    import ('../components/Location/location.vue')
-            },
-            {
-                path: '/1-3',
-                component: () =>
-                    import ('../components/Location/location.vue')
-            },
-            {
-                path: '/1-4',
-                component: () =>
-                    import ('../components/Location/location.vue')
-            }
+
         ]
     },
     {
@@ -58,6 +46,11 @@ const routes = [{
         path: '/3/:momenT_ID',
         component: () =>
             import ('../components/SingleComment.vue')
+    },
+    {
+        path: '/1/:momenT_ID',
+        component: () =>
+            import ('../components/SingleMoment.vue')
     },
 ]
 

@@ -5,23 +5,17 @@ import store from './store'
 import Axios from 'axios'
 
 Vue.prototype.$axios = Axios
-    // Axios.defaults.baseURL = '/api'
-    // Axios.defaults.headers.post['Content-Type'] = 'application/json';
-    //+引入组件库及相关样式
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import mavonEditor from 'mavon-editor' // 引入markdown 所有组件
 import 'mavon-editor/dist/css/index.css'
+import VDispicker from 'v-distpicker'
+Vue.component('v-distpicker', VDispicker)
+
 //让Vue使用ElementUI
 Vue.use(ElementUI)
 Vue.use(mavonEditor) // markdown  挂在到全局
 Vue.config.productionTip = false
-
-
-Vue.filter('snippet', function(value) {
-    return value.slice(0, 100) + '...'
-})
-
 var vm = new Vue({
         data: {
             // declare message with an empty value

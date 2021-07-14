@@ -3,28 +3,27 @@
 	<div class="showMoment">
 		<h1>我的动态</h1>
     <el-button type="primary" icon="el-icon-back" @click="goBack">返回 </el-button>
-		<!-- <input type="text" v-model="search" placeholder="搜索" />
-		<div class="singleMomment" v-for="(Moment, index) in filterMoment" :key="index">
-			<router-link v-bind:to="'/Moment/' + Moments.momenT_ID">
-				<h2 v-rainbow>{{ Moments.momenT_ID }}</h2>
-			</router-link>
-			<article>{{ Moments.text | snippet}}</article>
-		</div> -->
-	<div class="show" v-for="(item,activeIndex) in Moments" :key="activeIndex">
+	<div class="show" v-for="(item,index) in Moments" :key="index">
 	<div class="singleMoment" >
 		<router-link :to="'/3/'+item.momenT_ID">
-		<span class="zhankai" type="primary" @click="zhankai">展开</span>
+		<span class="zhankai" type="primary">展开</span>
 		</router-link>
 		<span class="moment_id" style="float:left">{{item.momenT_ID}}</span>
 		<br>
+		<!-- 动态发布地点信息和时间信息 -->
 		<span class="moment_location" style="float: left">{{item.momenT_LOCATION}}</span>
 		<span class="moment_time" style="float: right">{{item.momenT_TIME}}</span>
 		<br>
+		<!-- 动态中的文本 -->
 		<p class="moment_text">{{item.text}}</p>
+		<!-- 动态中的图片 -->
 		<img class="moment_img" :src="item.picture">
+		<!-- 动态中的视频 -->
+		<div class="moment_video" v-if="item.vedio!==null">
 		<iframe :src="item.vedio" frameborder='0'
-         allow='autoplay;encrypted-media' allowfullscreen style='width:100%;height:500px;'>
+         allow='autoplay;encrypted-media' allowfullscreen style='width:100%;height:50%;'>
         </iframe>
+		</div>
 	</div>
 	</div>
 	<div class="block">
@@ -35,7 +34,7 @@
 		small
 		background
 		layout="prev, pager, next"
-		:total="50">
+		:total="20">
 	</el-pagination>
 	</div>
 </div>
@@ -44,16 +43,10 @@
 
 <script>
 import axios from 'axios'
-import SingleComment from './SingleComment.vue'
 export default {
-	// name: 'showComment',
-    // components: {
-	// 	SingleComment,
-	// },
 	data() {
 		return {
 			Moments: [],
-			// search: '',
 		}
 	},
   methods: {
@@ -69,45 +62,22 @@ export default {
       goBack() {
         this.$router.push('/')
       },
-	  zhankai(){
-		  this.$router.push('/3-1/')
-	  },
 	  getMoments(){
 		  axios
-			.get('http://49.234.18.247:8080/api/Moment')
+			.get('http://49.234.18.247:8080/api/FunGetAllMomentByUserId/1234567890')
 			.then((res) => {
-				// var MomentArry = []
-				// typeof res  ===  Object
-				// for (let key in res) {
-					// key 为数据库自动生成的字符串，res[key] = 某一对象
-					// 使用每个对象的 key 值，给对象添加 id 属性
-					// res[key] = key
-					// 把添加完id属性的对象push到数组
-					// MomentArry.push(res[key])
-					// this.Moments = MomentArry
-				// this.Moments=res.data;
-
 				console.log(res.data);
 				this.Moments=res.data
-				console.log(this.Moments)
+				console.log("moment:",this.Moments)
+				console.log('res:',this.$route.params.useR_ID)
 			return res.data;
-			
 		})
 	  }
    },
-	
 	// created()：在实例创建完成后被立即调用
 	created() {
 		this.getMoments();
 		},
-	// 计算属性，相对于 methods 存在性能优势
-	computed: {
-		filterMoment() {
-			return this.Moments.filter((Moment) => {
-				// return Moment.Moment_ID.match(this.search)
-			})
-		},
-	},
 }
 </script>
 
@@ -115,13 +85,15 @@ export default {
 .Moment{
 	height: 100%;
 	width: 100%;
-	position: absolute;
+	position: absolute; 
 	background-image: url(../assets/login-bg.jpg);
 }
 .zhankai{
-	float: right;
-	margin-top: 10%;
+	display: flex;
 	cursor: pointer;
+	position: absolute;
+	right: 12px;
+	bottom: 12px;
 }
 .showMoment {
 	min-width: 80%;
@@ -131,14 +103,11 @@ export default {
 }
 .singleMoment {
 	padding: 20px;
-	margin: 20px 0;
-	max-height: ;
+	margin: 20px auto;
 	box-sizing: border-box;
 	background: rgb(82, 198, 233);
 	border: 1px dotted rgb(169, 185, 108);
 	border-radius: 10px;
-}
-.showMoment a {
-	text-decoration: none;
+	position: relative;
 }
 </style>

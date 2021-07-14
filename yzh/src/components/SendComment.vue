@@ -24,16 +24,11 @@
   <el-dialog :visible.sync="dialogVisible">
   <img width="100%" :src="dialogImageUrl" alt="">
   </el-dialog>
-  <!-- 选择地址栏 -->
-    <el-select v-model="value" filterable placeholder="请选择所在位置" class="select-city" >
-    <el-option 
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
-    </el-option>
-  </el-select>
-  
+  <el-form-item label="请选择地点">
+          <v-distpicker
+              @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea">
+          </v-distpicker>
+        </el-form-item>
   </el-main>
   <!-- 尾部区域 -->
   <el-footer>
@@ -66,32 +61,32 @@
 }
 </style>
 <script>
+import VDistpicker from 'v-distpicker'
   export default {
-     data() {
+    components: {VDistpicker},
+    data() {
     return {
+      province: "aaaaa",
+      city: "",
+      area: "",
+      location:" ",
       textarea1: '',
       dialogImageUrl: '',
       dialogVisible: false,
-       options: [{
-          value: 1,
-          label: '上海'
-        }, {
-          value: 2,
-          label: '北京'
-        }, {
-          value: 3,
-          label: '广州'
-        }, {
-          value: 4,
-          label: '深圳'
-        }, {
-          value: 5,
-          label: '西安'
-        }],
-        value: ''
     }
   },
     methods: {
+       //打开选择地区
+    onChangeProvince(data) {
+      this.province= data.value
+    },
+    onChangeCity(data) {
+      this.city= data.value
+    },
+    onChangeArea(data) {
+      this.area= data.value
+      this.location=this.province+this.city+this.area;
+    },
       goBack() {
         this.$router.push('/')
       },
@@ -103,7 +98,7 @@
         this.dialogVisible = true;
       },
       confirm() {
-        if(this.value>0){
+        if(this.location!==''){
           this.$confirm('此操作将提交动态, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
