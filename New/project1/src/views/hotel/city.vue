@@ -6,7 +6,7 @@
         <div class="left">
           <div class="form1">
             <h2></h2>
-            <form action="" method="post">
+            <form>
               <label for="lacation">目的地</label>
               <input type="text" v-model="form1.location" placeholder="广州" />
               <label for="people">人数</label>
@@ -14,7 +14,7 @@
               <label for="room">房间数</label>
               <input type="text" v-model="form1.room" placeholder="1" />
               <div>
-                <button type="submit">搜索</button>
+                <button @click="find">搜索</button>
               </div>
             </form>
           </div>
@@ -58,13 +58,15 @@
           </div>
 
           <div class="sort">
-            <el-radio-group v-model="radio" style="margin-bottom: 100px">
-              <el-radio-button label="热门推荐">热门推荐</el-radio-button>
-              <el-radio-button label="价格">优先显示低价住宿</el-radio-button>
-              <el-radio-button label="距离"
-                >优先显示距离较近住宿</el-radio-button
-              >
-              <el-radio-button label="评分">优先显示高评分住宿</el-radio-button>
+            <el-radio-group
+              v-model="radio"
+              @change="sortClick"
+              style="margin-bottom: 100px"
+            >
+              <el-radio-button label="1">热门推荐</el-radio-button>
+              <el-radio-button label="2">优先显示低价住宿</el-radio-button>
+              <el-radio-button label="3">优先显示距离较近住宿</el-radio-button>
+              <el-radio-button label="4">优先显示高评分住宿</el-radio-button>
             </el-radio-group>
           </div>
           <div class="contents">
@@ -74,8 +76,9 @@
                   :title="item.hoteL_NAME"
                   :address="item.hlocation"
                   :grade="item.star"
+                  :coverImgUrl="item.picture"
                   type="房客"
-                  :price="250"
+                  :price="item.lowesT_PRICE"
                 />
               </li>
             </ul>
@@ -137,15 +140,22 @@ export default {
         city: "广州",
         num: 400,
       },
-      radio: "热门推荐",
+      radio: "1",
     };
   },
   methods: {
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
+    find() {
+      if (this.form1.location) {
+        this.title.city = this.form1.location;
+      }
     },
-    onSubmit() {
-      console.log("submit!");
+    sortClick() {
+      console.log(this.radio);
+      if (this.radio === "4") {
+        this.items = this.items.sort(function (a, b) {
+          return a.star - b.star;
+        });
+      }
     },
   },
   created() {
@@ -155,8 +165,7 @@ export default {
     } else {
       this.title.city = "全部";
     }
-  },
-  mounted() {
+
     this.$axios.get("http://49.234.18.247:8080/api/Hotel").then((response) => {
       this.items = response.data;
     });

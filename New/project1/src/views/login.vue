@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ msg }}
+    {{ wwwwww }}
     <div class="click" @click="onClick"></div>
   </div>
 </template>
@@ -24,8 +24,8 @@ export default {
   },
   methods: {
     onClick() {
-      this.$axios.put("http://49.234.18.247:8080/api/Faqs/1", {
-        questioN_ID: "1",
+      this.$axios.put("http://49.234.18.247:8080/api/Faqs/0000000001", {
+        questioN_ID: "0000000001",
         questioN_NAME: "你好吗",
         solution: "我不好",
       });

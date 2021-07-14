@@ -3,6 +3,20 @@
     <Header activeIndex="3" />
     <div class="fill">
       <el-card class="box-card">
+        <div class="passenger_info">选择座位</div>
+        <el-divider></el-divider>
+        <div class="passenger_input">
+        <el-select v-model="seat_id" placeholder="请选择" style="width=100px">
+    
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select>
+  </div>
+
         <div class="passenger_info">乘机人信息</div>
         <el-divider></el-divider>
         <div class="passenger_input">
@@ -55,6 +69,7 @@
           </div>
         </div>
         <div class="divide"></div>
+        <div style="font-size:14px; float:left;margin-top:10px;margin-left:10px">{{seat_type}} &nbsp; {{seat_id}}</div>
         <div class="price">￥{{ price }}</div>
       </el-card>
     </div>
@@ -162,20 +177,76 @@ export default {
       start_time: "7:00",
       end_time: "9:15",
       price: "666",
+      seat_id: '45C',
+      seat_type: '经济舱',
+      options:[{value:"45C"},{value:"46A"},{value:"48B"},{value:"49F"}]
     };
   },
   methods: {
+    async  get_ticket_info(){
+      let _this=this;
+      return new Promise(function (resolve, reject) { 
+_this.$axios.get('http://49.234.18.247:8080/api/TrafficTicket')
+.then(function (response) {
+//_this.seat_id=response.data[0].seaT_ID;
+_this.vehicle_id=response.data[0].vehiclE_ID;
+_this.seat_type=response.data[0].seaT_TYPE;
+_this.price=response.data[0].price;
+ resolve();       
+ });
+})
+.catch(function (error) {
+console.log(error);
+});
+    },
+
+    async  get_checi_info(){
+       let _this=this;
+
+this.$axios.get('http://49.234.18.247:8080/api/VehicleInfo/'+_this.vehicle_id)
+.then(function (response) {
+  console.log(response);
+  _this.from=response.data[0].starT_LOCATION;
+  _this.to=response.data[0].enD_LOCATION;
+  _this.start_time=response.data[0].starT_TIME;
+  _this.end_time=response.data[0].enD_TIME;
+  console.log(typeof _this.start_time)
+return new Promise(resolve=>{
+        console.log(1)
+        resolve()
+    })
+})
+.catch(function (error) {
+console.log(error);
+});
+_this.$axios.get('http://49.234.18.247:8080/api/OfferTrafficService/'+_this.vehicle_id)
+.then(function (response) {
+_this.company_name=response.data[0].seaT_ID;
+
+ resolve();       
+ })
+    
+.catch(function (error) {
+  _this.company_name='null';
+console.log(error);
+});
+    },
+
+
     book() {
-      this.$alert("预定成功{{this.vehicle_id}}", "提示", {
+      this.$alert(this.vehicle_id+"预定成功","提示", {
         confirmButtonText: "确定",
-        callback: (action) => {
-          this.$message({
-            type: "info",
-            message: `action: ${action}`,
-          });
-        },
+        
       });
     },
+   
   },
+  async mounted(){
+    let _this=this;
+    await  _this.get_ticket_info() ;
+    await  new Promise((resolve, reject) => {_this.get_checi_info() ;resolve()} );
+
+
+  }
 };
 </script>

@@ -24,8 +24,8 @@
         </div>
         <div class="dianping-icon">{{ grade }}</div>
       </div>
-      <p style="color: red">平均{{ price }}元/人</p>
-      <button>点击购买 ></button>
+      <p style="color: red">最低{{ price }}元/人</p>
+      <button>点击预定 ></button>
     </div>
   </div>
 </template>

@@ -46,14 +46,17 @@
             <el-row>
               <el-col :span="20"
                 ><el-input
-                  placeholder="博物馆、公园……"
+                  placeholder="地点/景点……"
                   prefix-icon="el-icon-search"
-                  v-model="input2"
+                  v-model="input"
                 >
                 </el-input
               ></el-col>
               <el-col :span="4"
-                ><el-button type="primary" icon="el-icon-search"
+                ><el-button
+                  type="primary"
+                  icon="el-icon-search"
+                  @click="onSelect"
                   >查询</el-button
                 ></el-col
               >
@@ -111,7 +114,15 @@ export default {
       checkList1: [],
       checkList2: [],
       items: [],
+      input: "",
     };
+  },
+  methods: {
+    onSelect() {
+      if (this.input) {
+        this.title.city = this.input;
+      }
+    },
   },
   created() {
     if (this.$route.query.search) {

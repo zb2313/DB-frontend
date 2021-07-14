@@ -12,7 +12,7 @@
               <h2 class="hotelName">{{ HOTEL_NAME }}</h2>
 
               <h3><i class="el-icon-position"></i> 地址</h3>
-              <p>{{ LOCATION }}</p>
+              <p>{{ location }}</p>
               <h3><i class="el-icon-star-off"></i> 星级</h3>
               <div class="star">
                 <ul>
@@ -29,6 +29,7 @@
             </div>
           </div>
           <div class="orderBox payBox">
+            <h4 style="margin-left: 40px">预定今日的票</h4>
             <el-row type="flex" justify="space-around">
               <el-col :span="3"><span>时间</span></el-col>
               <el-col :span="16"
@@ -61,7 +62,6 @@
                     v-model="num"
                     @change="handleAmount"
                     :min="1"
-                    :max="10"
                     label="订房数"
                   ></el-input-number></div
               ></el-col>
@@ -76,7 +76,9 @@
               <el-col :span="3"><span></span></el-col>
               <el-col :span="16"
                 ><span>
-                  <el-button type="primary" round>支付</el-button></span
+                  <el-button type="primary" round @click="onPay"
+                    >支付</el-button
+                  ></span
                 ></el-col
               >
             </el-row>
@@ -84,10 +86,12 @@
         </div>
       </div>
 
-      <div class="block1 horse">
-        <el-carousel height="150px">
-          <el-carousel-item v-for="item in 6" :key="item">
-            <h3>{{ item }}</h3>
+      <div class="horse">
+        <el-carousel height="250px">
+          <el-carousel-item v-for="item in items" :key="item.useR_ID">
+            <h3>评论时间：{{item.commenT_TIME}}</h3>
+            <h3>用户ID：{{item.useR_ID}}</h3>
+            <h3>{{item.ctext}}</h3>
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -123,7 +127,7 @@
 }
 .hotelOrder .infoPay {
   width: 100%;
-  height: 250px;
+  height: 290px;
   margin: 0 auto;
 }
 .hotelOrder .infoBox {
@@ -134,7 +138,7 @@
 }
 .hotelOrder .payBox {
   width: 500px;
-  height: 250px;
+  height: 290px;
   margin: 5px;
   float: right;
 }
@@ -155,7 +159,6 @@ ul li {
   list-style: none;
 }
 
-
 .yellow {
   color: #f7ba2a;
 }
@@ -173,7 +176,11 @@ ul li {
   margin: 30px auto 0 auto;
   text-align: center;
 }
-
+.horse h3 {
+  height: 20px;
+  margin-top: 0%;
+  margin-bottom: 0%;
+}
 .el-carousel__item h3 {
   color: #475669;
   font-size: 14px;
@@ -206,23 +213,58 @@ export default {
   },
   data() {
     return {
-      currentDate: new Date(),
+      currentDate: new Date().toLocaleString(),
       num: 1,
-      priceSum: 100000,
       price: 1000,
-      LOCATION: "北京城外",
+      location: "北京城外",
       HOTEL_NAME: "北京长城",
       STAR: 5,
       radio: 3,
       TYPE_NAME1: "单间",
       TYPE_NAME2: "双人大床房",
       TYPE_NAME3: "总统套房",
+      items: [
+        { useR_ID: "Foo", ctext: "棒极了", commenT_TIME: "2021-07-13" },
+        { useR_ID: "Bar", ctext: "不太好", commenT_TIME: "2021-07-13" },
+      ],
     };
   },
   methods: {
     handleAmount(value) {
       console.log(value);
     },
+    onPay() {
+      this.$axios.put("http://49.234.18.247:8080/api/Attraction/2021071220",{
+    "attractioN_ID": "2021071220",
+    "attractioN_NAME": "九寨沟",
+    "alocation": "中国云南",
+    "picture": "dd",
+    "opeN_TIME": "08：00 ",
+    "closE_TIME": "24：00",
+    "star": 5,
+    "price": 70
+      });
+    },
+  },
+  computed: {
+    priceSum: function () {
+      return this.num * this.price;
+    },
+    now: function () {
+      return Date.now();
+    },
+  },
+  mounted() {
+    this.$axios
+      .get("http://49.234.18.247:8080/api/CommentOnHotels")
+      .then((response) => {
+        this.items = response.data;
+      });
+    this.$axios.get("http://49.234.18.247:8080/api/Hotel").then((response) => {
+      this.location = response.data[1].hlocation;
+      this.HOTEL_NAME = response.data[1].hoteL_NAME;
+      this.STAR = response.data[1].star;
+    });
   },
 };
 </script>
