@@ -1,0 +1,252 @@
+<template>
+  <div class="order">
+    <Header activeIndex="3" />
+    <div class="fill">
+      <el-card class="box-card">
+        <div class="passenger_info">选择座位</div>
+        <el-divider></el-divider>
+        <div class="passenger_input">
+        <el-select v-model="seat_id" placeholder="请选择" style="width=100px">
+    
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select>
+  </div>
+
+        <div class="passenger_info">乘机人信息</div>
+        <el-divider></el-divider>
+        <div class="passenger_input">
+          <div class="passenger_input_item">
+            <div class="item_header">姓名</div>
+            <el-input
+              v-model="user_id"
+              placeholder="请与证件姓名保持一致"
+            ></el-input>
+          </div>
+
+          <div class="passenger_input_item">
+            <div class="item_header">身份证号</div>
+            <el-input
+              v-model="id_number"
+              placeholder="请输入身份证号"
+            ></el-input>
+          </div>
+
+          <div class="passenger_input_item">
+            <div class="item_header">手机号</div>
+            <el-input
+              v-model="tele_number"
+              placeholder="乘机人手机号码，用于接收短信"
+            ></el-input>
+          </div>
+        </div>
+        <el-button type="primary" @click="book">预定</el-button>
+      </el-card>
+    </div>
+
+    <div class="flight_info">
+      <el-card class="box-card">
+        <div class="flight_info_header">
+          {{ company_name }}&nbsp;{{ vehicle_id }}
+        </div>
+        <div class="time_place">
+          <div class="time">
+            {{ start_time }}
+            <br />
+            <div style="font-size: 14px">{{ from }}</div>
+          </div>
+        </div>
+        <div class="time_place"><br />---------</div>
+        <div class="time_place">
+          <div class="time">
+            {{ end_time }}
+            <br />
+            <div style="font-size: 14px">{{ to }}</div>
+          </div>
+        </div>
+        <div class="divide"></div>
+        <div style="font-size:14px; float:left;margin-top:10px;margin-left:10px">{{seat_type}} &nbsp; {{seat_id}}</div>
+        <div class="price">￥{{ price }}</div>
+      </el-card>
+    </div>
+  </div>
+</template>
+
+<style>
+.el-button {
+  margin-left: 290px;
+}
+.passenger_info {
+  font-size: 20px;
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.passenger_input {
+  margin-left: 30px;
+  text-align: left;
+}
+.item_header {
+  font-size: 18px;
+  float: left;
+  width: 80px;
+  margin-bottom: 10px;
+}
+.el-input__inner {
+  width: 500px;
+}
+.passenger_input_item {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.fill {
+  width: 700px;
+  height: 450px;
+  margin-left: 80px;
+  float: left;
+  /* background:#ff0000; */
+}
+.flight_info {
+  width: 400px;
+  position: fixed;
+  left: 800px;
+  top: 150px;
+  height: 300px;
+  /* background: #000000; */
+}
+.flight_info_header {
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.time_place {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+  float: left;
+  height: 100%;
+  width: 50px;
+}
+.time {
+  font-size: 30px;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  margin-left: 0px;
+  float: left;
+  height: 100%;
+}
+.price {
+  font-size: 30px;
+  color: #042758;
+  margin-left: 0px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  float: left;
+  text-align: left;
+  width: 100%;
+}
+.divide {
+  background: rgb(177, 175, 175);
+  height: 1px;
+  width: 360px;
+  float: left;
+}
+</style>
+
+<script>
+import Header from "@/components/Header.vue";
+export default {
+  components: {
+    Header,
+  },
+  data() {
+    return {
+      user_id: "",
+      id_number: "",
+      tele_number: "",
+      from: "北京",
+      to: "上海",
+      company_name: "东方航空",
+      vehicle_id: "MU5099",
+      start_time: "7:00",
+      end_time: "9:15",
+      price: "666",
+      seat_id: '45C',
+      seat_type: '经济舱',
+      options:[{value:"45C"},{value:"46A"},{value:"48B"},{value:"49F"}]
+    };
+  },
+  methods: {
+    async  get_ticket_info(){
+      let _this=this;
+      return new Promise(function (resolve, reject) { 
+_this.$axios.get('http://49.234.18.247:8080/api/TrafficTicket')
+.then(function (response) {
+//_this.seat_id=response.data[0].seaT_ID;
+_this.vehicle_id=response.data[0].vehiclE_ID;
+_this.seat_type=response.data[0].seaT_TYPE;
+_this.price=response.data[0].price;
+ resolve();       
+ });
+})
+.catch(function (error) {
+console.log(error);
+});
+    },
+
+    async  get_checi_info(){
+       let _this=this;
+
+this.$axios.get('http://49.234.18.247:8080/api/VehicleInfo/'+_this.vehicle_id)
+.then(function (response) {
+  console.log(response);
+  _this.from=response.data[0].starT_LOCATION;
+  _this.to=response.data[0].enD_LOCATION;
+  _this.start_time=response.data[0].starT_TIME;
+  _this.end_time=response.data[0].enD_TIME;
+  console.log(typeof _this.start_time)
+return new Promise(resolve=>{
+        console.log(1)
+        resolve()
+    })
+})
+.catch(function (error) {
+console.log(error);
+});
+_this.$axios.get('http://49.234.18.247:8080/api/OfferTrafficService/'+_this.vehicle_id)
+.then(function (response) {
+_this.company_name=response.data[0].seaT_ID;
+
+ resolve();       
+ })
+    
+.catch(function (error) {
+  _this.company_name='null';
+console.log(error);
+});
+    },
+
+
+    book() {
+      this.$alert(this.vehicle_id+"预定成功","提示", {
+        confirmButtonText: "确定",
+        
+      });
+    },
+   
+  },
+  async mounted(){
+    let _this=this;
+    await  _this.get_ticket_info() ;
+    await  new Promise((resolve, reject) => {_this.get_checi_info() ;resolve()} );
+
+
+  }
+};
+</script>
