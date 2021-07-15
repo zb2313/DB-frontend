@@ -20,7 +20,7 @@
           <el-input style="width: 380px" v-model="form.tele_NUMBER" />
         </el-form-item>
         <el-form-item label="E-mail">
-          <el-input style="width: 380px" v-model="form.mailbox_ID" />
+          <el-input style="width: 380px" v-model="form.mail" />
         </el-form-item>
         <el-form-item label="性别">
           <el-radio-group v-model="form.Gender">
@@ -54,6 +54,7 @@ export default {
   data() {
     return {
       form: {
+        mail:"",
         user_NAME: "",//用户名
         Password: "",//密码
         user_ID: "",//用户编号
@@ -93,14 +94,7 @@ export default {
     },
     setMailBoxID()
     {
-      let chars = ['0','1','2','3','4','5','6','7','8','9'];
-      let ID='';
-      for(let i=0;i<10;i++)
-      {
-        let id = Math.ceil(Math.random()*9);
-        ID+=chars[id];
-      }
-      this.form.mailbox_ID=ID;
+      this.form.mailbox_ID=this.form.user_ID;
     },
     checkInput()
     {

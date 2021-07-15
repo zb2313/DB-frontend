@@ -8,11 +8,24 @@
         backgroundRepeat: 'no-repeat',
       }"
     >
-      <div
-        class="love el-icon-star-on"
-        :class="{ color: clicked }"
-        @click="loveClick"
-      ></div>
+      <el-dropdown @command="handleCommand">
+        <span class="el-dropdown-link">
+          <div
+            class="love el-icon-star-on"
+            :class="{ color: clicked }"
+            @click="quit"
+          ></div>
+        </span>
+        <el-dropdown-menu slot="dropdown" v-if="!clicked">
+          <h6>选择收藏夹：</h6>
+          <el-dropdown-item
+            v-for="(fav, index) in favs"
+            :key="index"
+            :command="index"
+            >{{ fav.favoR_NAME }}</el-dropdown-item
+          >
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
     <div class="detail">
       <h1>{{ title }}</h1>
@@ -25,7 +38,7 @@
         <div class="dianping-icon">{{ grade }}</div>
       </div>
       <p style="color: red">最低{{ price }}元/人</p>
-      <button>点击预定 ></button>
+      <button @click="Book">点击预定 ></button>
     </div>
   </div>
 </template>
@@ -33,9 +46,13 @@
 <style scoped>
 .love {
   font-size: 40px;
-  float: right;
   padding: 5px;
   color: rgba(126, 115, 115, 0.9);
+}
+h6 {
+  margin: 0px;
+  padding: 0px;
+  text-indent: 2px;
 }
 .color {
   color: orange !important;
@@ -123,18 +140,71 @@ export default {
     type: String,
     price: Number,
     coverImgUrl: String,
+    dianping_number: Number,
+    ID: String,
   },
   data() {
     return {
+      temp: [],
+      favs: [],
+      command: "",
+      last: 0,
+      user_ID: "", //测试记得删
       clicked: false,
-      dianping_number: 471,
       baseImg:
         "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
     };
   },
   methods: {
-    loveClick: function () {
+    Book() {
+      let iPath =
+        this.type == "游客" ? "/attraction/AttrOrder" : "/hotel/HotelOrder";
+      this.$router.push({
+        path: iPath,
+        query: { id: this.ID },
+      });
+    },
+    handleCommand(command) {
       this.clicked = !this.clicked;
+      this.last = command;
+      console.log(this.last);
+      this.$axios.post("http://49.234.18.247:8080/api/FavouriteContents", {
+        favoR_ID: this.favs[command].favoR_ID,
+        linK_ID: this.ID,
+        merchanT_LINK: "http://localhost:8080" + this.iPath + "/" + this.ID,
+      });
+      this.$axios.put(
+        "http://49.234.18.247:8080/api/Favorites/" +
+          this.favs[command].favoR_ID,
+        {
+          favoR_ID: this.favs[command].favoR_ID,
+          favoR_NAME: this.favs[command].favoR_NAME,
+          favoR_CONTENT_NUM: this.favs[command].favoR_CONTENT_NUM + 1,
+        }
+      );
+      this.$message("收藏成功！");
+    },
+    quit() {
+      if (this.clicked === true) {
+        this.clicked = !this.clicked;
+        this.$message("取消收藏！");
+      }
+
+      this.$axios.delete(
+        "http://49.234.18.247:8080/api/FavouriteContents/" +
+          this.favs[this.last].favoR_ID +
+          "&" +
+          this.ID
+      );
+      this.$axios.put(
+        "http://49.234.18.247:8080/api/Favorites/" +
+          this.favs[this.last].favoR_ID,
+        {
+          favoR_ID: this.favs[this.last].favoR_ID,
+          favoR_NAME: this.favs[this.last].favoR_NAME,
+          favoR_CONTENT_NUM: this.favs[this.last].favoR_CONTENT_NUM,
+        }
+      );
     },
   },
   computed: {
@@ -151,6 +221,42 @@ export default {
         return "非常差";
       }
     },
+  },
+  created() {
+    this.user_ID=localStorage.getItem("ms_username");
+    console.log("username",this.user_ID);
+    this.$axios
+      .get("http://49.234.18.247:8080/api/HasFavorites")
+      .then((response) => {
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].useR_ID == this.user_ID) {
+            this.temp.push(response.data[i].favoR_ID);
+          }
+        }
+      });
+
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Favorites")
+      .then((response) => {
+        for (var i = 0; i < response.data.length; i++) {
+          if (this.temp.includes(response.data[i].favoR_ID)) {
+            this.favs.push(response.data[i]);
+          }
+        }
+      });
+
+    this.$axios
+      .get("http://49.234.18.247:8080/api/FavouriteContents")
+      .then((response) => {
+        for (var i = 0; i < response.data.length; i++) {
+          if (
+            this.temp.includes(response.data[i].favoR_ID) &&
+            response.data[i].linK_ID == this.ID
+          ) {
+            this.clicked = true;
+          }
+        }
+      });
   },
 };
 </script>

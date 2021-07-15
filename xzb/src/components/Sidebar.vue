@@ -1,6 +1,6 @@
 <template>
     <div class="sidebar">
-        <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#324157"
+        <el-menu class="sidebar-el-menu" :default-active="onRoutes"  background-color="#324157"
             text-color="#bfcbd9" active-text-color="#20a0ff" unique-opened router>
             <template v-for="item in items">
                 <template v-if="item.subs">
@@ -44,7 +44,7 @@ export default {
            },
            {
              icon: "el-icon-s-grid",
-             index: "/table",
+             index: "/HistoryOrder",
              title: "历史订单",
              subs:[
                {
@@ -109,12 +109,10 @@ export default {
            }
          ],
          onRoutes:"",
-         collapse:false
        }
     },
     created() {
       this.onRoutes=this.$route.path;
-      this.collapse=this.$store.state.collapse;
     },
 };
 </script>

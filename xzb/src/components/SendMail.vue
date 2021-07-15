@@ -1,33 +1,33 @@
 <template>
-<div>
-  <admiHeader />
-<div class="page">
-   <el-container>
-      <el-form :model="ruleForm" :rules="rules" ref="ruleForm"   label-width="100px" class="demo-ruleForm" style="width:900px">
-  <el-form-item label="收件人邮箱" prop="mailboxID">
-    <el-input maxlength="10" v-model="ruleForm.mailboxID" show-word-limit></el-input>
-  </el-form-item>
-
-  <el-form-item label="通知类型" prop="type">
-    <el-radio-group v-model="ruleForm.type">
-      <el-radio label="投诉反馈"></el-radio>
-      <el-radio label="系统通知"></el-radio>
-    </el-radio-group>
-  </el-form-item>
-  <el-form-item label="通知信息"  prop="message">
-    <el-input type="textarea" rows="10" v-model="ruleForm.message"></el-input>
-  </el-form-item>
-  <el-form-item>
-    <el-button type="primary" icon="el-icon-s-promotion" @click="submitForm('ruleForm');resetForm('ruleForm')">发送</el-button>
-    <el-button @click="resetForm('ruleForm')">清空</el-button>
-  </el-form-item>
-</el-form>
-      </el-container>
-</div></div>
+  <div>
+    <admiHeader />
+    <div class="page">
+      <el-card>
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm"   label-width="100px" class="demo-ruleForm" style="width:900px">
+          <el-form-item label="用户ID" prop="mailboxID">
+            <el-input maxlength="10" v-model="ruleForm.mailboxID" show-word-limit></el-input>
+          </el-form-item>
+          <el-form-item label="通知类型" prop="type">
+            <el-radio-group v-model="ruleForm.type">
+              <el-radio label="投诉反馈"></el-radio>
+              <el-radio label="系统通知"></el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="通知信息"  prop="message">
+            <el-input type="textarea" rows="10" v-model="ruleForm.message"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-s-promotion" @click="submitForm('ruleForm');resetForm('ruleForm')">发送</el-button>
+            <el-button @click="resetForm('ruleForm')">清空</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
+  </div>
 </template>
 <script>
-import axios from 'axios'
 import admiHeader from "./admiHeader.vue";
+import axios from 'axios';
  export default {
    components: { admiHeader },
     data() {
@@ -59,10 +59,9 @@ import admiHeader from "./admiHeader.vue";
         let month = date.getMonth() + 1;
         let day = date.getDate();
         let nowDate = year + "-" + month + "-" + day;
-        console.log(nowDate)
               let mail_id=Math.floor(Math.random()*10000000000);
-              let  administratoR_ID="2021071220";
-              let mailboX_ID=''+this.ruleForm.mailboxID;
+              let  administratoR_ID=localStorage.getItem("ms_username");
+              let mailboX_ID=this.ruleForm.mailboxID;
               let message=this.ruleForm.type+":"+this.ruleForm.message;
             axios.post("http://49.234.18.247:8080/api/SendMessage",
             {
@@ -75,8 +74,10 @@ import admiHeader from "./admiHeader.vue";
             {"maiL_ID":''+ mail_id,
                "message": message
             });
-            alert('发送成功！');
-
+           this.$message({
+            type: 'success',
+            message: '发送成功'
+          });
           } else {
             alert('输入错误!');
             return false;
@@ -89,4 +90,11 @@ import admiHeader from "./admiHeader.vue";
     }
   }
 </script>
+<style scoped>
+.page{
+  position:absolute;
+  top: 200px;
+  left:300px;
+}
+</style>
 

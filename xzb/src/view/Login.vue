@@ -37,12 +37,27 @@
 // import { useRouter } from "vue-router";
 //import { ElMessage } from "element-plus";
 import axios from "axios"
+// axios.interceptors.request.use(function (config) {
+//   // Do something before request is sent
+//   let token = localStorage.getItem("token");
+//   //let token = window.localStorage.getItem("accessToken")
+//   if (token) {
+//     config.headers.authorization = `Bearer ${token}`;    //将token放到请求头发送给服务器
+//     return config;
+//     //这里经常搭配token使用，将token值配置到tokenkey中，将tokenkey放在请求头中
+//     // config.headers['accessToken'] = Token;
+//   }
+// }, function (error) {
+//   // Do something with request error
+//   return Promise.reject(error);
+// });
 export default {
   data()
   {
     return{
       userList:{},
       adminList:{},
+      hotelList:{},
       param:
       {
         password: "123123",
@@ -69,34 +84,40 @@ export default {
           // eslint-disable-next-line no-unused-vars
           let check=false;
           let admin=false;
+          let seller=false;
           let u1=this.param.username;
+          let u10=this.param.password;
           for(let i=0;i<this.userList.length;i++)
           {
             let u2=this.userList[i].useR_ID;
             let u3=this.param.password;
             let u4=this.userList[i].upassword
+            let u5=this.adminList[i].administratoR_ID;
+            let u6=this.adminList[i].password
+            let u7=this.hotelList[i].hoteL_ID;
+            let u8=this.hotelList[i].hpassword;
             if((u1==u2)&& (u3==u4))
             {
-              console.log(u1,u2,u3,u4)
               localStorage.setItem("ms_username", this.param.username);
+              localStorage.setItem("pictrue",this.userList[i].uprofile)
               localStorage.setItem("usertype",0);
-              localStorage.setItem('gs_username',u1);
               localStorage.setItem('mailbox_id',this.userList[i].mailboX_ID);
               check=true;
               break;
             }
-          }
-          for(let i=0;i<this.adminList.length;i++)
-          {
-            let u2=this.adminList[i].administratoR_ID;
-            let u3=this.param.password;
-            let u4=this.adminList[i].password
-            if((u1==u2)&& (u3==u4))
+            if((u1==u5)&&(u3==u6))
             {
               localStorage.setItem("ms_username", this.param.username);
               localStorage.setItem("usertype",1);
-              localStorage.setItem('gs_username',u1);
+              localStorage.setItem("password",this.param.password);
               admin=true;
+              break;
+            }
+            if((u1==u7)&&(u3==u8))
+            {
+              localStorage.setItem("ms_username", this.param.username);
+              localStorage.setItem("usertype",2);
+              seller=true;
               break;
             }
           }
@@ -104,15 +125,31 @@ export default {
           {
             this.$router.push("/hotel");
             this.$message.success("登录成功");
-            return;
           }
           if(admin==true)
           {
             this.$router.push("/personalpage");
             this.$message.success("管理员登录成功");
+          }
+          if(seller==true)
+          {
+            this.$router.push("/SellerHome");
+            this.$message.success("商家登录成功");
+          }
+          if(check==true||admin==true||seller==true)
+          {
+            // eslint-disable-next-line no-unused-vars
+            let t="username="+u1+"&"+"password="+u10;
+            // eslint-disable-next-line no-unused-vars
+            axios.get("https://localhost:44345/api/OAuth/token?username=admin&password=12345678")
+            .then((response)=>
+            {
+              localStorage.setItem("token",response.data);
+              console.log("token",localStorage.getItem("token"));
+            })
             return;
           }
-          this.$message.error("用户名或密码不存在");
+           this.$message.error("用户名或密码不存在");
         },
         goRegister()
         {
@@ -133,7 +170,12 @@ export default {
     {
       this.adminList=respopnse.data;
     })
-
+    axios.get("http://49.234.18.247:8080/api/Hotel")
+    .then((response)=>
+    {
+      this.hotelList=response.data;
+      console.log(this.hotelList)
+    })
   }
 
 };

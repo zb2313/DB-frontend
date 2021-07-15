@@ -2,6 +2,7 @@
   <el-container direction="vertical">
     <Header activeIndex="1" />
     <el-main>
+
       <div class="Form">
         <el-form :inline="true" :model="form_Select" class="form-inline">
           <el-form-item>
@@ -27,9 +28,11 @@
           </el-form-item>
         </el-form>
       </div>
+
       <div class="tuijian">
         <h2>热门推荐</h2>
       </div>
+
       <div class="all clearfix">
         <div
           class="city"
@@ -162,7 +165,7 @@
 }
 .city {
   width: 350px;
-  height: 250px;
+  height: 200px;
   background-color: rgb(85, 124, 150);
   float: left;
   margin: 5px 5px;

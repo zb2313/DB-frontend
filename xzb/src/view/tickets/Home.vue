@@ -9,7 +9,7 @@
         backgroundRepeat: 'no-repeat',
       }"
     >
-    <div class="welcome">开启旅途</div>
+      <div class="welcome">开启旅途</div>
       <div class="search">
         <el-form :model="formInline">
           <el-row>
@@ -20,8 +20,8 @@
                   @change="typechange"
                   placeholder="机票"
                 >
-                  <el-option label="机票" value="1"></el-option>
-                  <el-option label="火车票" value="2"></el-option>
+                  <el-option label="机票" value="0000000001"></el-option>
+                  <el-option label="火车票" value="0000000002"></el-option>
                 </el-select> </el-form-item
             ></el-col>
 
@@ -29,7 +29,7 @@
               <el-form-item>
                 <el-autocomplete
                   v-model="state1"
-                  :fetch-suggestions="querySearch"
+                  :fetch-suggestions="querySearch1"
                   placeholder="出发地"
                   @select="handleSelect"
                 ></el-autocomplete>
@@ -40,7 +40,7 @@
               <el-form-item>
                 <el-autocomplete
                   v-model="state2"
-                  :fetch-suggestions="querySearch"
+                  :fetch-suggestions="querySearch2"
                   placeholder="目的地"
                   @select="handleSelect"
                 ></el-autocomplete>
@@ -49,19 +49,19 @@
 
             <el-col :span="5">
               <el-form-item>
-                <el-select v-model="formInline.seat_type"  :placeholder="holder">
+                <el-select v-model="formInline.seat_type" :placeholder="holder">
                   <el-option
                     v-if="formInline.ticket_type == 1"
                     label="经济舱"
-                    value="1"
+                    value="经济舱"
                   ></el-option>
-                  <el-option v-else label="一等座" value="1"></el-option>
+                  <el-option v-else label="一等座" value="一等座"></el-option>
                   <el-option
-                    v-if="formInline.ticket_type == 1"
+                    v-if="formInline.ticket_type == '0000000001'"
                     label="商务舱"
-                    value="2"
+                    value="商务舱"
                   ></el-option>
-                  <el-option v-else label="二等座" value="2"></el-option>
+                  <el-option v-else label="二等座" value="二等座"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -89,18 +89,18 @@
 </template>
 
 <style scoped>
-.welcome{
-  font-size: 20px;
+.welcome {
+  font-size: 25px;
   font-weight: bold;
   margin-left: 135px;
   margin-top: 150px;
-  width:100%;
+  width: 100%;
   height: 15px;
   float: left;
 }
 .pic {
   width: 100%;
-  height: 500px;
+  height: 700px;
 }
 .pic:before {
   content: "";
@@ -124,7 +124,6 @@
   border-radius: 0px;
   background-color: rgba(246, 247, 248, 0.87);
 }
-
 </style>
 
 <script>
@@ -142,84 +141,106 @@ export default {
         ticket_type: "",
         seat_type: "",
       },
-      city: [],
+      city1: [],
+      city2: [],
       state1: "",
       state2: "",
-      holder:"经济舱",
+      holder: "经济舱",
       baseImg:
-        "https://media.cntraveler.com/photos/5fd26c4ddf72876c320b8001/16:9/w_2560%2Cc_limit/952456172",
+        "https://tse1-mm.cn.bing.net/th/id/R-C.00c0fcb56d11f58ee2f172191eefa476?rik=U79UiqqhgYmd8Q&riu=http%3a%2f%2ffile06.16sucai.com%2f2016%2f0603%2f91c401949dae819c4f08213f78b63916.jpg&ehk=5bAmiltNduhHMDU%2fKDLJIGdIUjZNwpmZgrqRWRtzgjU%3d&risl=&pid=ImgRaw",
     };
   },
 
   methods: {
     typechange(val) {
-      if (val == "2") {
-        this.holder="一等座";
+      if (val == "0000000002") {
+        this.holder = "一等座";
         this.baseImg =
           "https://images.unsplash.com/photo-1442570468985-f63ed5de9086?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1393&q=80";
       } else {
-        this.holder="经济舱";
+        this.holder = "经济舱";
         this.baseImg =
-          "https://media.cntraveler.com/photos/5fd26c4ddf72876c320b8001/16:9/w_2560%2Cc_limit/952456172";
+          "https://tse1-mm.cn.bing.net/th/id/R-C.00c0fcb56d11f58ee2f172191eefa476?rik=U79UiqqhgYmd8Q&riu=http%3a%2f%2ffile06.16sucai.com%2f2016%2f0603%2f91c401949dae819c4f08213f78b63916.jpg&ehk=5bAmiltNduhHMDU%2fKDLJIGdIUjZNwpmZgrqRWRtzgjU%3d&risl=&pid=ImgRaw";
       }
     },
     onSubmit() {
-      if(this.formInline.ticket_type&&this.formInline.seat_type&&this.state1&&this.state2){
-      //this.$router.replace("/tickets/detail");}
-      this.$router.push({
-        path:`/tickets/detail`,
-        query:{
-          ticket_type:this.formInline.ticket_type,
-          from:this.state1,
-          to:this.state2,
-          seat_type:this.formInline.seat_type,
-        }
-        })
-        }
-      else {
-        this.$alert('请填写所有选项再查询', '提示', {
-          confirmButtonText: '确定'
-        })
+      if (
+        this.formInline.ticket_type &&
+        this.formInline.seat_type &&
+        this.state1 &&
+        this.state2
+      ) {
+        //this.$router.replace("/tickets/detail");}
+        this.$router.push({
+          path: `/tickets/detail`,
+          query: {
+            ticket_type: this.formInline.ticket_type,
+            from: this.state1,
+            to: this.state2,
+            seat_type: this.formInline.seat_type,
+          },
+        });
+      } else {
+        this.$alert("请填写所有选项再查询", "提示", {
+          confirmButtonText: "确定",
+        });
       }
     },
-    querySearch(queryString, cb) {
-      var city = this.city;
+    querySearch1(queryString, cb) {
+      var city1 = this.city1;
       var results = queryString
-        ? city.filter(this.createFilter(queryString))
-        : city;
+        ? city1.filter(this.createFilter(queryString))
+        : city1;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    querySearch2(queryString, cb) {
+      var city2 = this.city2;
+      var results = queryString
+        ? city2.filter(this.createFilter(queryString))
+        : city2;
       // 调用 callback 返回建议列表的数据
       cb(results);
     },
     createFilter(queryString) {
-      return (restaurant) => {
+      return (city) => {
         return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
+          city.value.toLowerCase().indexOf(queryString.toLowerCase()) != -1
         );
       };
     },
-    loadAll() {
-      return [
-        { value: "北京", address: "长宁区新渔路144号" },
-        { value: "上海", address: "上海市长宁区淞虹路661号" },
-        { value: "兰州", address: "上海市普陀区真北路988号创邑金沙谷6号楼113" },
-        { value: "重庆", address: "天山西路438号" },
-        {
-          value: "成都",
-          address: "上海市长宁区金钟路968号1幢18号楼一层商铺18-101",
-        },
-        { value: "广东", address: "上海市长宁区金钟路633号" },
-        { value: "玉林", address: "上海市嘉定区曹安公路曹安路1685号" },
-      ];
-    },
+
     handleSelect(item) {
       console.log(item);
     },
   },
 
   mounted() {
-    this.city = this.loadAll();
+    let _this = this;
+    this.$axios
+      .get("http://49.234.18.247:8080/api/ReturnPlace/%E8%B5%B7%E7%82%B9")
+      .then(function (response) {
+        _this.city1 = [];
+        for (let i = 0; i < response.data.length; i++) {
+          _this.city1.push({ value: response.data[i] });
+        }
+      })
+
+      .catch(function (error) {
+        console.log(error);
+      });
+    this.$axios
+      .get("http://49.234.18.247:8080/api/ReturnPlace/%E7%BB%88%E7%82%B9")
+      .then(function (response) {
+        _this.city2 = [];
+        for (let i = 0; i < response.data.length; i++) {
+          _this.city2.push({ value: response.data[i] });
+        }
+      })
+
+      .catch(function (error) {
+        console.log(error);
+      });
   },
-  
 };
 </script>

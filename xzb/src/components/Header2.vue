@@ -18,7 +18,7 @@
                 </div>
                 <!-- 用户头像 -->
                 <div class="user-avator">
-                    <img src="../assets/img/img.jpg" />
+                    <img :src="pictrue" />
                 </div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -31,7 +31,7 @@
                             <a href="https://github.com/zb2313/DB-frontend" target="_blank">
                                 <el-dropdown-item>项目仓库</el-dropdown-item>
                             </a>
-                            <el-dropdown-item command="user">个人中心</el-dropdown-item>
+                           <router-link to="/personalpage"><el-dropdown-item command="user">个人中心</el-dropdown-item></router-link>
                            <router-link to="/hotel"><el-dropdown-item command="user">返回浏览</el-dropdown-item></router-link>
                           <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
@@ -48,22 +48,24 @@ export default {
       return{
         username:"cccc",
         message:2,
-        collapse:true
+        pictrue:""
       }
     },
     created() {
       this.username=localStorage.getItem("ms_username");
-      this.collapse=this.$store.state.collapse;
+      this.pictrue=localStorage.getItem("pictrue");
     },
     methods: {
-      collapseChange() {
-        this.$store.commit("handleCollapse", !this.collapse.value);
-      },
       handleCommand(command)
       {
         if (command === "logout")
         {
           localStorage.removeItem("ms_username");
+          localStorage.removeItem("usertype");
+          if(localStorage.getItem("usertype")==0)
+          {
+            localStorage.removeItem("pictrue");
+          }
           this.$router.push("/Login");
         }
         else if (command === "user")
@@ -72,48 +74,9 @@ export default {
         }
       }
     },
+
   mounted() {
-    if (document.body.clientWidth < 1500) {
-                    this.collapseChange();
-                }
   }
-  //   ,
-  // setup() {
-  //       const username = localStorage.getItem("ms_username");
-  //       const message = 2;
-  //
-  //       const store = useStore();
-  //       const collapse = computed(() => store.state.collapse);
-  //       // 侧边栏折叠
-  //       const collapseChange = () => {
-  //           store.commit("handleCollapse", !collapse.value);
-  //       };
-  //
-  //       onMounted(() => {
-  //           if (document.body.clientWidth < 1500) {
-  //               collapseChange();
-  //           }
-  //       });
-  //
-  //       // 用户名下拉菜单选择事件
-  //       const router = useRouter();
-  //       const handleCommand = (command) => {
-  //           if (command == "loginout") {
-  //               localStorage.removeItem("ms_username");
-  //               router.push("/login");
-  //           } else if (command == "user") {
-  //               router.push("/user");
-  //           }
-  //       };
-  //
-  //       return {
-  //           username,
-  //           message,
-  //           collapse,
-  //           collapseChage: collapseChange,
-  //           handleCommand,
-  //       };
-  //   },
 };
 </script>
 <style scoped>

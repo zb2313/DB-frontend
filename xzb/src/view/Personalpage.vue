@@ -5,8 +5,18 @@
  <el-tabs type="border-card" id="page">
   <el-tab-pane>
     <span slot="label"><i class="el-icon-user"></i> 基础信息</span>
-   <div id="admi">管理员ID：<br>{{AdministratorID}}<br><br>
-   管理员密码：<br>{{password}}</div>
+   <el-form>
+<el-form-item>
+  <div id="input">管理员ID：
+<el-input v-model="AdministratorID" :disabled="true"></el-input>
+  </div>
+  </el-form-item>
+ <el-form-item>
+  <div id="input">管理员密码：
+<el-input v-model="password" :disabled="true"></el-input>
+  </div>
+  </el-form-item>
+ </el-form>
        </el-tab-pane>
   <el-tab-pane>
     <span slot="label"><i class="el-icon-edit"></i>修改信息</span>
@@ -31,12 +41,10 @@
 </div>
 </template>
 <style>
-.el-container{
-  position:relative;
-  top:15px;
-  left:15px;
-}
 #page{
+  position: relative;
+  left: 20%;
+  width: 60%;
   margin-top: 10px;
   height: 320px;
 }
@@ -46,14 +54,10 @@
 #input{
   width:60%;
 }
-#admi{
-  font-family: "Arial","宋体",serif;
-  font-size: 20px;
-}
 </style>
 <script>
 import admiHeader from "../components/admiHeader.vue";
-import axios from 'axios'
+import axios from 'axios';
 export default {
    components: { admiHeader },
     data() {
@@ -64,13 +68,17 @@ export default {
       };
     },
     created()
-    {var that=this;
+    {
+      let that=this;
           axios.get("http://49.234.18.247:8080/api/Administrator")
         .then(res=>{
             that.AdministratorID=res.data[0].administratoR_ID;
             that.password=res.data[0].password;
           that.editpassword=that.password;
                 })
+      this.AdministratorID=localStorage.getItem("ms_username");
+      this.password=localStorage.getItem("password");
+      this.editpassword=this.password;
     },
     methods: {
      submit()
@@ -78,14 +86,14 @@ export default {
      if(this.editpassword.length!=0)
      {axios.put("http://49.234.18.247:8080/api/Administrator/"+this.AdministratorID,
           {
-           "administratoR_ID":this.editAdministratorID,
+           "administratoR_ID":this.AdministratorID,
             "password":''+this.editpassword,
-          })
-        this.$message({
+          });
+           this.$message({
             type: 'success',
             message: '修改成功!'
-          });
-         this.password=this.editpassword;
+            });
+           this.password=this.editpassword;
      }
      else{
        this.$message({

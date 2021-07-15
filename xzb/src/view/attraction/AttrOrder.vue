@@ -2,7 +2,14 @@
   <div class="attrOrder">
     <Header activeIndex="2" />
     <div class="main">
-      <div class="attrOrderBg">
+      <div
+        class="attrOrderBg"
+        :style="{
+          backgroundImage: 'url(' + baseImg + ')',
+          backgroundSize: '100% 100%',
+          backgroundRepeat: 'no-repeat',
+        }"
+      >
         <h1>{{ attractionName }}</h1>
       </div>
       <div class="infoPay clearfix">
@@ -32,7 +39,7 @@
           <el-row type="flex" justify="space-around">
             <el-col :span="3"><span>时间</span></el-col>
             <el-col :span="16"
-              ><span>{{ currentDate }}</span></el-col
+              ><span>{{ currentDate | dateFormat }}</span></el-col
             >
           </el-row>
           <el-row type="flex" justify="space-around">
@@ -74,11 +81,11 @@
 
       <div class="horse">
         <el-carousel height="250px">
-          <el-carousel-item v-for="item in items" :key="item.useR_ID">
+          <el-carousel-item v-for="item in items" :key="item.useR_NAME">
             <div>
               <h3>评论时间：{{ item.commenT_TIME }}</h3>
-              <h3>用户ID：{{ item.useR_ID }}</h3>
-              <h3>{{ item.ctext }}</h3>
+              <h3>用户名：{{ item.useR_NAME }}</h3>
+              <p>{{ item.ctext }}</p>
             </div>
           </el-carousel-item>
         </el-carousel>
@@ -101,8 +108,6 @@
   *zoom: 1;
 }
 .attrOrderBg {
-  background: no-repeat center/100%
-    url(https://tse1-mm.cn.bing.net/th/id/R-C.f79fd9e6223bc5658d329a5d5093114b?rik=EqFkznLcD%2bW1pw&riu=http%3a%2f%2fimg.mp.itc.cn%2fupload%2f20170103%2f6c44acfb4cdc49da98da2556b141bf48_th.jpg&ehk=9kvZqZf1mrI16XNH84PrHtJ1xu9n%2bJR572cGDsYvX7o%3d&risl=&pid=ImgRaw);
   margin-top: 20px;
   margin-bottom: 20px;
   height: 395px;
@@ -190,18 +195,19 @@ export default {
   },
   data() {
     return {
-      currentDate: new Date().toLocaleString(),
+      user_ID: "",
+      currentDate: new Date(),
       num: 1,
       price: 1000,
       location: "北京城外",
       attractionName: "北京长城",
       closeTime: "17:00",
       openTime: "08:00",
+      attractionId: "",
       items: [
         {
           useR_ID: "Foo",
-          ctext:
-            "一路走来，九寨沟，黄龙都很美，夏日来旅游是避暑胜地。蔡导游服务周到，司机也特别辛苦，在这里感谢你们了，让我们度过了一个不一样的假期，总体上非常棒，很美好的一次旅行，累也快乐～",
+          ctext: "一路走来，九寨沟，黄龙都很美。",
           commenT_TIME: "2021-07-13",
         },
         { useR_ID: "Bar", ctext: "不太好", commenT_TIME: "2021-07-13" },
@@ -215,38 +221,69 @@ export default {
       console.log(value);
     },
     onPay() {
-      this.$axios.post("http://49.234.18.247:8080/api/Users", {
-        useR_ID: "asjklskj",
-        useR_NAME: "ajklsjak",
-        iD_NUMBER: "ahjksh",
-        telE_NUMBER: "ahjksh",
-        mailboX_ID: "ajkslj",
-        uprofile: "aaaa",
-        upassword: "ajhskh",
-        gender: "ajsklh",
-        ulocation: "jahksjh",
-      });
+      let _this = this;
+      _this.$axios
+        .post("http://49.234.18.247:8080/api/PurchaseAttractionTicket", {
+          useR_ID: _this.user_ID,
+          attractioN_ID: _this.attractionId,
+          ordeR_TIME: _this.storeTime,
+          price: _this.priceSum,
+        })
+        .then(function () {
+          console.log("suc");
+          _this.$alert(_this.attractionName + "预定成功", "提示", {
+            confirmButtonText: "确定",
+          });
+        })
+        .catch(function () {
+          console.log("err");
+          console.log(_this.user_ID);
+          console.log(_this.attractionId);
+          console.log(_this.storeTime);
+          console.log(_this.priceSum);
+          _this.$alert(_this.attractionName + "预定失败", "提示", {
+            confirmButtonText: "确定",
+          });
+        });
     },
   },
   computed: {
     priceSum: function () {
       return this.num * this.price;
     },
+    storeTime: function () {
+      let now = new Date().toLocaleString();
+      return (
+        now.substring(5, 9) +
+        "/" +
+        now.substring(0, 4) +
+        " " +
+        now.substring(9, 16)
+      );
+    },
+  },
+  created() {
+    this.attractionId = this.$route.query.id;
+    this.user_ID=localStorage.getItem("ms_username");
   },
   mounted() {
     this.$axios
-      .get("http://49.234.18.247:8080/api/CommentOnAttractions")
+      .get(
+        "http://49.234.18.247:8080/api/FunGetCommentByAttractionId/" +
+          this.attractionId
+      )
       .then((response) => {
         this.items = response.data;
       });
     this.$axios
-      .get("http://49.234.18.247:8080/api/Attraction")
+      .get("http://49.234.18.247:8080/api/Attraction/" + this.attractionId)
       .then((response) => {
         this.location = response.data[0].alocation;
         this.attractionName = response.data[0].attractioN_NAME;
         this.openTime = response.data[0].opeN_TIME;
         this.closeTime = response.data[0].closE_TIME;
         this.price = response.data[0].price;
+        this.baseImg = response.data[0].picture;
       });
   },
 };

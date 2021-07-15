@@ -35,13 +35,15 @@ const routes = [
                     title: '系统首页'
                 },
                 component: () => import ( /* webpackChunkName: "dashboard" */ "../view/Dashboard")
-            }, {
-                path: "/table",
-                name: "basetable",
-                meta: {
-                    title: '表格'
-                },
-                component: () => import ( /* webpackChunkName: "table" */ "../view/BaseTable.vue"),
+            },
+            {
+              path: "/HistoryOrder"  ,
+                name:"HistoryOrder",
+                meta:
+                    {
+                      title: "历史订单"
+                    },
+               component:()=>import("../view/HistoryOrder")
             },
             {
                 path:"/AttractionOrder",
@@ -248,6 +250,18 @@ const routes = [
         path: '/updateQA',
         name: 'UpdateQA',
         component: () => import('../components/UpdateQA.vue')
+    },
+    {
+        path: '/SellerHome',
+        name: 'SellerHome',
+        component: () => import('../view/SellerHome'),
+        children: [
+            {
+                path: '/SellerPost',
+                name:'SellerPost',
+                component:()=>import('../view/SellerPost')
+            }
+        ]
     }
 ];
 const router = new VueRouter({

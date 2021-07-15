@@ -28,10 +28,11 @@
                 }"
               ></div>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>管理账户</el-dropdown-item>
-                <el-dropdown-item>订单</el-dropdown-item>
-                <el-dropdown-item>收藏</el-dropdown-item>
-                <el-dropdown-item divided>退出登录</el-dropdown-item>
+                <router-link to="/dashboard"> <el-dropdown-item>管理账户</el-dropdown-item></router-link>
+                <router-link to="/AttractionOrder"><el-dropdown-item>订单</el-dropdown-item></router-link>
+                <router-link to="/Favorites"><el-dropdown-item>收藏</el-dropdown-item></router-link>
+                <router-link to="/Moment"><el-dropdown-item>动态</el-dropdown-item></router-link>
+                <router-link to="/Login"><el-dropdown-item divided>退出登录</el-dropdown-item></router-link>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -107,6 +108,9 @@ export default {
         "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80",
       coverImgUrl: "",
     };
+  },
+  created() {
+    this.coverImgUrl = localStorage.getItem("pictrue");
   },
 };
 </script>

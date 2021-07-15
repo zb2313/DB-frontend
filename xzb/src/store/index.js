@@ -1,10 +1,10 @@
 import {createStore} from 'vuex'
 
 export default createStore({
-    state: {
-        tagsList: [],
-        collapse: false
-    },
+    // state: {
+    //     tagsList: [],
+    //     collapse: false
+    // },
     mutations: {
         delTagsItem(state, data) {
             state

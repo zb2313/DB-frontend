@@ -23,7 +23,7 @@
           <template #default="scope">
             <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑
             </el-button>
-            <el-button type="text" icon="el-icon-delete" class="red"
+            <el-button type="text" icon="el-icon-delete" class="red" @click="editVisible=true"
                        >退款</el-button>
           </template>
         </el-table-column>
@@ -35,23 +35,9 @@
       <p>{{attractionList}}</p>
     </div>
 
+    <el-dialog title="编辑" v-model="editVisible" style="width: 1000px;float: top;left: 300px;">
 
-      <el-dialog title="编辑" v-model="editVisible" width="30%">
-<!--        <el-form label-width="70px">-->
-<!--          <el-form-item label="用户名">-->
-<!--            <el-input v-model="dataList[0].name"></el-input>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="地址">-->
-<!--            <el-input v-model="dataList[0].id"></el-input>-->
-<!--          </el-form-item>-->
-<!--        </el-form>-->
-<!--        <template #footer>-->
-<!--                    <span class="dialog-footer">-->
-<!--                        <el-button @click="editVisible = false">取 消</el-button>-->
-<!--                        <el-button type="primary" @click="saveEdit">确 定</el-button>-->
-<!--                    </span>-->
-<!--        </template>-->
-      </el-dialog>
+    </el-dialog>
   </div>
 </template>
 

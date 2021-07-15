@@ -30,9 +30,10 @@
                   }"
                 ></div>
                 <el-dropdown-menu slot="dropdown">
-                  <router-link to="/dashboard"><el-dropdown-item>管理账户</el-dropdown-item></router-link>
-                  <router-link to="/1"><el-dropdown-item>动态</el-dropdown-item></router-link>
-                  <el-dropdown-item>收藏</el-dropdown-item>
+                  <router-link to="/dashboard"> <el-dropdown-item>管理账户</el-dropdown-item></router-link>
+                  <router-link to="/AttractionOrder"><el-dropdown-item>订单</el-dropdown-item></router-link>
+                  <router-link to="/Favorites"><el-dropdown-item>收藏</el-dropdown-item></router-link>
+                  <router-link to="/Moment"><el-dropdown-item>动态</el-dropdown-item></router-link>
                   <router-link to="/Login"><el-dropdown-item divided>退出登录</el-dropdown-item></router-link>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -45,7 +46,6 @@
       :default-active="activeIndex"
       class="el-menu margin1"
       mode="horizontal"
-      @select="handleSelect"
       background-color="#003680"
       text-color="#fff"
       active-text-color="#ffd04b"
@@ -127,11 +127,11 @@ a:visited {
 export default {
   name: "Header",
   props: {
-    //activeIndex: "1",
+
     activeIndex: {
-      type: String,
-      default: "1"
-    }
+      type:String,
+      default:"1"
+    },
   },
   data() {
     return {
@@ -141,6 +141,9 @@ export default {
         "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80",
       coverImgUrl: "",
     };
+  },
+  mounted() {
+    this.coverImgUrl = localStorage.getItem("pictrue");
   },
 };
 </script>

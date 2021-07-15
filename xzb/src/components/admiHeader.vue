@@ -33,3 +33,41 @@ export default {
   name: "admiHeader",
 };
 </script>
+<style scoped>
+
+.el-header {
+  background-color: #003680;
+  color: white;
+}
+
+.upheader {
+  height: 60px;
+}
+a:link {
+  text-decoration: none;
+  color: white;
+}
+
+a:visited {
+  color: white;
+}
+
+.margin1 {
+  margin-left: 5%;
+}
+.logo {
+  width: 300px;
+  height: 60px;
+  font-family: "Microsoft YaHei";
+  font-size: 38px;
+  text-align: left;
+  line-height: 60px;
+  text-indent: 1em;
+  float: left;
+}
+#personinfo{
+  position: absolute;
+  top: 30px;
+  right: 33px;
+}
+</style>

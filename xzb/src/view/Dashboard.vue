@@ -4,7 +4,7 @@
             <el-col :span="8">
                 <el-card shadow="hover" class="mgb20" style="height:252px;">
                     <div class="user-info">
-                        <img src="../assets/img/img.jpg" class="user-avator" alt />
+                        <img :src="pictrue" class="user-avator" alt />
                         <div class="user-info-cont">
                             <div class="user-info-name">{{ name }}</div>
                             <div>{{ role }}</div>
@@ -69,7 +69,7 @@
             </el-col>
             <el-col :span="12">
                 <el-card shadow="hover">
-                    <schart ref="line" class="schart" canvasId="line" :options="options2"></schart>
+<!--                    <schart ref="line" class="schart" canvasId="line" :options="options2"></schart>-->
                 </el-card>
             </el-col>
         </el-row>
@@ -78,6 +78,8 @@
 
 <script>
 import Schart from "vue-schart";
+import "@/assets/css/main.css";
+import "@/assets/css/color-dark.css";
 export default {
     name: "dashboard",
     components: { Schart },
@@ -86,6 +88,7 @@ export default {
       return{
         name:"",
         role:"",
+        pictrue:"",
         options:{
           type: "bar",
           title: {
@@ -134,7 +137,16 @@ export default {
     },
     created(){
       this.name=localStorage.getItem("ms_username");
+      this.pictrue=localStorage.getItem("pictrue");
       this.role= this.name === "admin" ? "超级管理员" : "普通用户";
+    },
+    methods:
+        {
+          createMap() {
+          }
+        },
+    mounted() {
+      this.createMap();
     }
 };
 </script>
