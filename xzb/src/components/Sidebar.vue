@@ -46,11 +46,26 @@ export default {
              icon: "el-icon-s-grid",
              index: "/table",
              title: "历史订单",
+             subs:[
+               {
+                  index:"/AttractionOrder",
+                  title: "景点门票"
+               },
+               {
+                  index:"/TrafficOrder",
+                  title:"交通票"
+               },
+               {
+                  index:"/HotelOrder",
+                  title:"酒店订单"
+               }
+             ]
            },
            {
              icon: "el-icon-s-comment",
              index: "/tabs",
              title: "通知",
+
            },
            {
              icon: "el-icon-s-promotion",
@@ -63,17 +78,7 @@ export default {
                },
                {
                  index: "/upload",
-                 title: "文件上传",
-               },
-               {
-                 index: "4",
-                 title: "三级菜单",
-                 subs: [
-                   {
-                     index: "/editor",
-                     title: "富文本编辑器",
-                   },
-                 ],
+                 title: "头像上传",
                },
              ],
            },
@@ -81,11 +86,6 @@ export default {
              icon: "el-icon-s-management",
              index: "/Favorites",
              title: "收藏",
-           },
-           {
-             icon: "el-icon-lx-global",
-             index: "/i18n",
-             title: "国际化功能",
            },
            {
              icon: "el-icon-s-check",
@@ -106,11 +106,6 @@ export default {
              icon: "el-icon-s-opportunity",
              index: "/donate",
              title: "使用帮助",
-           },
-           {
-             icon:"el-icon-s-home",
-             index:"/user",
-             title:"个人中心"
            }
          ],
          onRoutes:"",
@@ -120,100 +115,6 @@ export default {
     created() {
       this.onRoutes=this.$route.path;
       this.collapse=this.$store.state.collapse;
-    },
-    setup()
-    {
-        // const items = [
-        //     {
-        //         icon: "el-icon-lx-home",
-        //         index: "/dashboard",
-        //         title: "个人信息",
-        //     },
-        //     {
-        //         icon: "el-icon-lx-cascades",
-        //         index: "/table",
-        //         title: "历史订单",
-        //     },
-        //     {
-        //         icon: "el-icon-lx-copy",
-        //         index: "/tabs",
-        //         title: "通知",
-        //     },
-        //     {
-        //         icon: "el-icon-lx-calendar",
-        //         index: "3",
-        //         title: "表单相关",
-        //         subs: [
-        //             {
-        //                 index: "/form",
-        //                 title: "修改个人信息",
-        //             },
-        //             {
-        //                 index: "/upload",
-        //                 title: "文件上传",
-        //             },
-        //             {
-        //                 index: "4",
-        //                 title: "三级菜单",
-        //                 subs: [
-        //                     {
-        //                         index: "/editor",
-        //                         title: "富文本编辑器",
-        //                     },
-        //                 ],
-        //             },
-        //         ],
-        //     },
-        //     {
-        //         icon: "el-icon-lx-emoji",
-        //         index: "/icon",
-        //         title: "自定义图标",
-        //     },
-        //     {
-        //         icon: "el-icon-pie-chart",
-        //         index: "/charts",
-        //         title: "schart图表",
-        //     },
-        //     {
-        //         icon: "el-icon-lx-global",
-        //         index: "/i18n",
-        //         title: "国际化功能",
-        //     },
-        //     {
-        //         icon: "el-icon-lx-warn",
-        //         index: "7",
-        //         title: "错误处理",
-        //         subs: [
-        //             {
-        //                 index: "/permission",
-        //                 title: "权限测试",
-        //             },
-        //             {
-        //                 index: "/404",
-        //                 title: "404页面",
-        //             },
-        //         ],
-        //     },
-        //     {
-        //         icon: "el-icon-lx-redpacket_fill",
-        //         index: "/donate",
-        //         title: "使用帮助",
-        //     },
-        // ];
-
-        // const route = useRoute();
-        //
-        // const onRoutes = computed(() => {
-        //     return route.path;
-        // });
-        //
-        // const store = useStore();
-        // const collapse = computed(() => store.state.collapse);
-        //
-        // return {
-        //     onRoutes,
-        //     collapse,
-        // };
     },
 };
 </script>

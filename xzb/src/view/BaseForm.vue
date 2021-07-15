@@ -9,19 +9,33 @@
             </el-breadcrumb>
         </div>
         <div class="container">
+          <el-card shadow="hover">
+            <template #header>
+              <div class="clearfix">
+                <span>账户编辑</span>
+              </div>
+            </template>
+            <el-form label-width="90px">
+              <el-form-item label="用户名："> {{ userData[0].useR_NAME}} </el-form-item>
+              <el-form-item label="密码：">{{userData[0].upassword}}</el-form-item>
+              <el-form-item label="手机号">{{userData[0].telE_NUMBER}}</el-form-item>
+              <el-form-item label="个性签名：">
+                {{userData[0].motto}}
+              </el-form-item>
+            </el-form>
+          </el-card><br>
             <div class="form-box">
                 <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
-                    <el-form-item label="用户名" prop="name" >
+                    <el-form-item label="用户昵称">
                         <el-input :disabled=editState v-model="form.name"></el-input>
                     </el-form-item>
-                    <el-form-item label="选择器" prop="region">
-                        <el-select :disabled="editState" v-model="form.region" placeholder="请选择">
-                            <el-option key="bbk" label="步步高" value="bbk"></el-option>
-                            <el-option key="xtc" label="小天才" value="xtc"></el-option>
-                            <el-option key="imoo" label="imoo" value="imoo"></el-option>
-                        </el-select>
+                    <el-form-item label="密码">
+                        <el-input :disabled=editState v-model="form.password"></el-input>
                     </el-form-item>
-                    <el-form-item label="日期时间">
+                  <el-form-item label="手机号">
+                    <el-input :disabled=editState v-model="form.telephone"></el-input>
+                  </el-form-item>
+                    <el-form-item label="修改时间">
                         <el-col :span="11">
                             <el-form-item prop="date1">
                                 <el-date-picker type="date" placeholder="选择日期" v-model="form.date1"
@@ -36,35 +50,23 @@
                             </el-form-item>
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="城市级联" prop="options">
-                        <el-cascader :options="options" v-model="form.options"></el-cascader>
-                    </el-form-item>
-                    <el-form-item label="选择开关" prop="delivery">
-                        <el-switch v-model="form.delivery"></el-switch>
-                    </el-form-item>
-                    <el-form-item label="多选框" prop="type">
-                        <el-checkbox-group v-model="form.type">
-                            <el-checkbox label="步步高" name="type"></el-checkbox>
-                            <el-checkbox label="小天才" name="type"></el-checkbox>
-                            <el-checkbox label="imoo" name="type"></el-checkbox>
-                        </el-checkbox-group>
-                    </el-form-item>
-                    <el-form-item label="单选框" prop="resource">
-                        <el-radio-group v-model="form.resource">
-                            <el-radio label="步步高"></el-radio>
-                            <el-radio label="小天才"></el-radio>
-                            <el-radio label="imoo"></el-radio>
-                        </el-radio-group>
-                    </el-form-item>
+                  <el-form-item label="地点">
+                    <v-distpicker
+                        @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea">
+                    </v-distpicker>
+                  </el-form-item>
+
                     <el-form-item label="个性签名" prop="desc">
-                        <el-input type="textarea" rows="5" v-model="form.desc"></el-input>
+                        <el-input :disabled="editState" type="textarea" rows="5" v-model="form.desc"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="onSubmit">修改</el-button>
-                        <el-button @click="onReset">保存</el-button>
+                        <el-button type="primary" @click="onReset">修改</el-button>
+                        <el-button @click="onSubmit">保存</el-button>
                     </el-form-item>
                 </el-form>
+
             </div>
+
         </div>
     </div>
 </template>
@@ -73,64 +75,13 @@
 //import { reactive, ref } from "vue";
 //import { ElMessage } from "element-plus";
 //import axios from "axios";
+import axios from "axios";
+
 export default {
     name: "baseform",
     data(){
       return {
         editState:true,
-        options: [
-          {
-            value: "guangdong",
-            label: "广东省",
-            children: [
-              {
-                value: "guangzhou",
-                label: "广州市",
-                children: [
-                  {
-                    value: "tianhe",
-                    label: "天河区",
-                  },
-                  {
-                    value: "haizhu",
-                    label: "海珠区",
-                  },
-                ],
-              },
-              {
-                value: "dongguan",
-                label: "东莞市",
-                children: [
-                  {
-                    value: "changan",
-                    label: "长安镇",
-                  },
-                  {
-                    value: "humen",
-                    label: "虎门镇",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            value: "hunan",
-            label: "湖南省",
-            children: [
-              {
-                value: "changsha",
-                label: "长沙市",
-                children: [
-                  {
-                    value: "yuelu",
-                    label: "岳麓区",
-                  },
-                ],
-              },
-            ],
-          },
-
-        ],
         rules: [
             // name:
             //      { required: true,
@@ -140,15 +91,18 @@ export default {
         ],
         form: {
           name: "",
+          password:"",
           region: "",
+          telephone: "",
           date1: "",
           date2: "",
           delivery: true,
-          type: ["步步高"],
-          resource: "小天才",
+          type: [" "],
+          resource: "",
           desc: "",
           options:[]
-        }
+        },
+        userData:[]
       }
     },
     methods:
@@ -159,108 +113,46 @@ export default {
           },
           onSubmit()
           {
-             this.$message.success("提交成功");
+            let n=localStorage("ms_username");
+            // eslint-disable-next-line no-unused-vars
+            let userInfo;
+            axios.get(
+                "http://49.234.18.247:8080/api/Users/"+n
+            )
+            .then((response)=>{
+              userInfo=response.data;
+            })
+            axios.put(
+                "http://49.234.18.247:8080/api/Users/"+n,
+                {
+                  "useR_ID": n,
+                  "useR_NAME": this.form.name,
+                  "iD_NUMBER": userInfo.iD_NUMBER,
+                  "telE_NUMBER": userInfo.telE_NUMBER,
+                  "mailboX_ID": userInfo.mailboX_ID,
+                  "uprofile": userInfo.uprofile,
+                  "upassword": this.form.password,
+                  "gender": userInfo.gender,
+                  "ulocation": userInfo.ulocation,
+                  "motto": this.form.desc
+                }
+            )
+            this.$message.success("提交成功");
+          },
+          onChangeProvince(data) {
+            this.province= data.value
+          },
+          onChangeCity(data) {
+            this.city= data.value
+          },
+          onChangeArea(data) {
+            this.area= data.value
+            this.location=this.province+this.city+this.area;
           }
         },
    created() {
-
+      axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_username"))
+     .then((response)=>{this.userData=response.data});
    },
-  setup() {
-        // const options =
-        //     [
-        //     {
-        //         value: "guangdong",
-        //         label: "广东省",
-        //         children: [
-        //             {
-        //                 value: "guangzhou",
-        //                 label: "广州市",
-        //                 children: [
-        //                     {
-        //                         value: "tianhe",
-        //                         label: "天河区",
-        //                     },
-        //                     {
-        //                         value: "haizhu",
-        //                         label: "海珠区",
-        //                     },
-        //                 ],
-        //             },
-        //             {
-        //                 value: "dongguan",
-        //                 label: "东莞市",
-        //                 children: [
-        //                     {
-        //                         value: "changan",
-        //                         label: "长安镇",
-        //                     },
-        //                     {
-        //                         value: "humen",
-        //                         label: "虎门镇",
-        //                     },
-        //                 ],
-        //             },
-        //         ],
-        //     },
-        //     {
-        //         value: "hunan",
-        //         label: "湖南省",
-        //         children: [
-        //             {
-        //                 value: "changsha",
-        //                 label: "长沙市",
-        //                 children: [
-        //                     {
-        //                         value: "yuelu",
-        //                         label: "岳麓区",
-        //                     },
-        //                 ],
-        //             },
-        //         ],
-        //     },
-        // ];
-        // const rules = {
-        //     name: [
-        //         { required: true, message: "请输入表单名称", trigger: "blur" },
-        //     ],
-        // };
-        // const formRef = ref(null);
-        // const form = reactive({
-        //     name: "",
-        //     region: "",
-        //     date1: "",
-        //     date2: "",
-        //     delivery: true,
-        //     type: ["步步高"],
-        //     resource: "小天才",
-        //     desc: "",
-        //     options: [],
-        // });
-        // // 提交
-        // const onSubmit = () => {
-        //     // 表单校验
-        //     formRef.value.validate((valid) => {
-        //         if (valid) {
-        //             console.log(form);
-        //             ElMessage.success("提交成功！");
-        //         } else {
-        //             return false;
-        //         }
-        //     });
-        // };
-        // // 重置
-        // const onReset = () => {
-        //     formRef.value.resetFields();
-        // };
-        //
-        // return {
-        //     options,
-        //     rules,
-        //     formRef,
-        //     form,
-        //     onSubmit,
-        //     onReset,
-        // };
-    },
 };
 </script>

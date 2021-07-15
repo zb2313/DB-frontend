@@ -18,15 +18,6 @@ const routes = [
             title:'注册'
         },
         component: ()=>import( /* webpackChunkName: "Register"*/ '@/view/Register')
-    }
-    ,
-    {
-        path:"/Home",
-        name:"Home",
-        meta:{
-            title:'主页'
-        },
-        component:()=>import('@/view/Home')
     },
     {
         path: '/',
@@ -50,22 +41,57 @@ const routes = [
                 meta: {
                     title: '表格'
                 },
-                component: () => import ( /* webpackChunkName: "table" */ "../view/BaseTable.vue")
-            }, {
+                component: () => import ( /* webpackChunkName: "table" */ "../view/BaseTable.vue"),
+            },
+            {
+                path:"/AttractionOrder",
+                name:"AttractionOrder",
+                meta:{
+                    title:'景点门票表'
+                },
+                component:()=>import("../view/AttractionOrder")
+            },
+            {
+                path:"/TrafficOrder",
+                name:"TrafficOrder",
+                meta:{
+                    title:'交通票表'
+                },
+                component:()=>import("../view/TrafficOrder")
+            },
+            {
+                path:"/HotelOrder",
+                name:"HotelOrder",
+                meta:{
+                    title:'订酒店表'
+                },
+                component:()=>import("../view/HotelOrder")
+            },
+            {
                 path: "/Favorites",
                 name: "Favorites",
                 meta: {
-                    title: '图表'
+                    title: '收藏夹'
                 },
                 component: () => import ( /* webpackChunkName: "charts" */ "../view/Favorites.vue")
-            }, {
+            },
+            {
+                path: "/FavoritesContent",
+                name: "FavoritesContent",
+                meta: {
+                    title: '收藏夹内容'
+                },
+                component: () => import ( /* webpackChunkName: "charts" */ "../view/FavoritesContent.vue")
+            },
+             {
                 path: "/form",
                 name: "baseform",
                 meta: {
                     title: '表单'
                 },
                 component: () => import ( /* webpackChunkName: "form" */ "../view/BaseForm.vue")
-            }, {
+            },
+          {
                 path: "/tabs",
                 name: "tabs",
                 meta: {
@@ -88,13 +114,6 @@ const routes = [
                 },
                 component: () => import ( /* webpackChunkName: "permission" */ "../view/Permission.vue")
             }, {
-                path: "/i18n",
-                name: "i18n",
-                meta: {
-                    title: '国际化语言'
-                },
-                component: () => import ( /* webpackChunkName: "i18n" */ "../view/I18n.vue")
-            }, {
                 path: "/upload",
                 name: "upload",
                 meta: {
@@ -115,22 +134,120 @@ const routes = [
                     title: '没有权限'
                 },
                 component: () => import (/* webpackChunkName: "403" */ '../view/403')
-            }, {
-                path: '/user',
-                name: 'user',
-                meta: {
-                    title: '个人中心'
-                },
-                component: () => import (/* webpackChunkName: "user" */ '../view/User.vue')
-            }, {
-                path: '/editor',
-                name: 'editor',
-                meta: {
-                    title: '富文本编辑器'
-                },
-                component:() =>import ('../view/Editor.vue')
-            }
+            },
+
         ]
+    },
+    {
+        path: '/hotel',
+        name: 'hotel',
+        component: () => import('../view/hotel/index.vue'),
+    },
+    {
+        path: '/hotel/city',
+        name: 'hotelCity',
+        component: ()=>import('../view/hotel/city.vue'),
+    },
+    {
+        path: '/hotel/HotelOrder',
+        name: 'HotelOrder',
+        component: () => import('../view/hotel/HotelOrder.vue')
+    },
+    {
+        path: '/attraction/city',
+        name: 'attractionCity',
+        component: () => import('../view/attraction/city.vue')
+    },
+    {
+        path: '/attraction',
+        name: 'attraction',
+        component: () => import('../view/attraction/Home.vue')
+    },
+    {
+        path: '/attraction/AttrOrder',
+        name: 'AttrOrder',
+        component: () => import('../view/attraction/AttrOrder.vue')
+    },
+    {
+        path: '/tickets',
+        name: 'tickets',
+        component: () => import('../view/tickets/Home.vue')
+    },
+    {
+        path: '/tickets/detail',
+        name: 'tickets',
+        component: () => import('../view/tickets/detail.vue')
+    },
+    {
+        path: '/tickets/Order',
+        name: 'ticketsOrder',
+        component: () => import('../view/tickets/Order.vue')
+    },
+    {
+        path: '/questions',
+        name: 'QA',
+        component: () => import('../view/Other/questions.vue')
+    },
+    {
+        path: '/Moment',
+        name: 'Moment',
+        component:()=>import('../components/Home.vue'),
+        children: [{
+            path: '/',
+            component:()=>import('../components/Moments.vue'),
+        },
+            {
+                path: '/1',
+                component: () =>
+                    import ('../components/Moments.vue')
+            },
+
+        ]
+    },
+    {
+        path: '/2',
+        name: 'SendComment',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import ( /* webpackChunkName: "about" */ '../components/Publish.vue')
+    },
+    {
+        path: '/3',
+        name: 'CheckComment',
+        component: () =>
+            import ('../components/CheckComment.vue')
+    },
+    {
+        path: '/3/:momenT_ID',
+        component: () =>
+            import ('../components/SingleComment.vue')
+    },
+    {
+        path: '/1/:momenT_ID',
+        component: () =>
+            import ('../components/SingleMoment.vue')
+    },
+    {
+        path: '/personalpage',
+        name: 'Personalpage',
+        component: () => import('../view/Personalpage.vue')
+    },
+    {
+        path: '/audit',
+        name: 'Audit',
+        component: () => import('../components/Audit.vue')
+    },
+    {
+        path: '/sendmail',
+        name: 'SendMail',
+        component: () => import('../components/SendMail.vue')
+    },
+    {
+        path: '/updateQA',
+        name: 'UpdateQA',
+        component: () => import('../components/UpdateQA.vue')
     }
 ];
 const router = new VueRouter({

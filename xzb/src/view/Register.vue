@@ -8,7 +8,7 @@
           <el-input style="width: 380px" v-model="form.user_NAME" />
         </el-form-item>
         <el-form-item label="用户ID">
-          <el-input style="width: 380px" v-model="form.user_ID" />
+          <p>{{form.user_ID}}</p>
         </el-form-item>
         <el-form-item label="密码">
           <el-input style="width: 380px" v-model="form.Password" />
@@ -36,6 +36,7 @@
         <div style="text-align: center; margin-top: 40px">
           <el-button type="primary" @click="onSubmit">注册</el-button>
           <el-button @click="checkInput">取消</el-button>
+
         </div>
       </el-form>
     </div>
@@ -75,28 +76,34 @@ export default {
     };
   },
   methods: {
+    returnToLogin()
+    {
+      this.$router.push("/Login");
+    },
+    setUserID()
+    {
+      let chars = ['0','1','2','3','4','5','6','7','8','9'];
+      let ID='';
+      for(let i=0;i<10;i++)
+      {
+        let id = Math.ceil(Math.random()*9);
+        ID+=chars[id];
+      }
+      this.form.user_ID=ID;
+    },
+    setMailBoxID()
+    {
+      let chars = ['0','1','2','3','4','5','6','7','8','9'];
+      let ID='';
+      for(let i=0;i<10;i++)
+      {
+        let id = Math.ceil(Math.random()*9);
+        ID+=chars[id];
+      }
+      this.form.mailbox_ID=ID;
+    },
     checkInput()
     {
-      if(this.form.user_ID.length>10)
-      {
-        alert("userid长度不可超过10，请重新输入");
-        this.form.user_ID="";
-      }
-      else
-      {
-        for(let i=0;i<10-this.form.user_ID.length;i++)
-        {
-          this.form.user_ID+=" ";
-        }
-      }
-      for(let i=0;i<this.userList.length;i++)
-      {
-        if(this.form.user_ID==this.userList[i].useR_ID)
-        {
-          alert("该用户ID已经存在 请重新输入");
-          return;
-        }
-      }
       this.onSubmit();
     },
     onSubmit() {
@@ -115,7 +122,7 @@ export default {
             "ulocation": this.location,
             "motto": null
           }
-      )
+      );
       this.$message.success("注册成功,请返回登录界面登录");
       this.$router.push('/Login');
     },
@@ -136,9 +143,25 @@ export default {
     onChangeArea(data) {
       this.area= data.value
       this.location=this.province+this.city+this.area;
+    },
+    checkRepeatitive()
+    {
+      for(let i=0;i<this.userList[0].length;i++)
+      {
+        if((this.user_ID==this.userList[i].useR_ID)||(this.mailbox_ID==this.userList[i].mailboX_ID))
+        {
+          return false;
+        }
+      }
+
+      return true;
     }
   },
   created() {
+    do {
+      this.setUserID();
+      this.setMailBoxID();
+    }while(this.checkRepeatitive()==true);
     axios.get("http://49.234.18.247:8080/api/Users")
         .then((response)=>{this.userList=response.data});
   },

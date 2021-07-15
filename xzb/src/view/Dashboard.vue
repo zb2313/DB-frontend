@@ -12,70 +12,32 @@
                     </div>
                     <div class="user-info-list">
                         上次登录时间：
-                        <span>2019-11-01</span>
+                        <span>2021-7-15</span>
                     </div>
                     <div class="user-info-list">
                         上次登录地点：
-                        <span>东莞</span>
+                        <span>上海</span>
                     </div>
                 </el-card>
                 <el-card shadow="hover" style="height:252px;">
                     <template #header>
                         <div class="clearfix">
-                            <span>语言详情</span>
+                            <span>近几个月历史订单</span>
                         </div>
                     </template>
-                    Vue
-                    <el-progress :percentage="71.3" color="#42b983"></el-progress>JavaScript
-                    <el-progress :percentage="24.1" color="#f1e05a"></el-progress>CSS
-                    <el-progress :percentage="13.7"></el-progress>HTML
-                    <el-progress :percentage="5.9" color="#f56c6c"></el-progress>
+                    交通票
+                    <el-progress :percentage="37" color="#42b983"></el-progress>景点门票
+                    <el-progress :percentage="37" color="#f1e05a"></el-progress>酒店订单
+                    <el-progress :percentage="26"></el-progress>
                 </el-card>
             </el-col>
             <el-col :span="16">
-                <el-row :gutter="20" class="mgb20">
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{ padding: '0px' }">
-                            <div class="grid-content grid-con-1">
-                                <i class="el-icon-user-solid grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
-                                    <div>用户访问量</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{ padding: '0px' }">
-                            <div class="grid-content grid-con-2">
-                                <i class="el-icon-message-solid grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">321</div>
-                                    <div>系统消息</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-card shadow="hover" :body-style="{ padding: '0px' }">
-                            <div class="grid-content grid-con-3">
-                                <i class="el-icon-s-goods grid-con-icon"></i>
-                                <div class="grid-cont-right">
-                                    <div class="grid-num">5000</div>
-                                    <div>数量</div>
-                                </div>
-                            </div>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <el-card shadow="hover" style="height:403px;">
+                <el-card shadow="hover" style="height:525px;">
                     <template #header>
                         <div class="clearfix">
-                            <span>待办事项</span>
-                            <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
+                            <span>通知大厅</span>
                         </div>
                     </template>
-
                     <el-table :show-header="false" :data="todoList" style="width:100%;">
                         <el-table-column width="40">
                             <template #default="scope">
@@ -116,7 +78,6 @@
 
 <script>
 import Schart from "vue-schart";
-//import { reactive } from "vue";
 export default {
     name: "dashboard",
     components: { Schart },
@@ -128,22 +89,22 @@ export default {
         options:{
           type: "bar",
           title: {
-            text: "最近一周各品类销售图",
+            text: "最近几个月下单数据",
           },
           xRorate: 25,
-          labels: ["周一", "周二", "周三", "周四", "周五"],
+          labels: ["3月", "4月", "5月", "6月", "7月"],
           datasets: [
             {
-              label: "家电",
-              data: [234, 278, 270, 190, 230],
+              label: "景点门票",
+              data: [1, 2, 2, 0, 5],
             },
             {
-              label: "百货",
-              data: [164, 178, 190, 135, 160],
+              label: "交通票",
+              data: [0, 1, 3, 2, 4],
             },
             {
-              label: "食品",
-              data: [144, 198, 150, 235, 120],
+              label: "酒店订单",
+              data: [1, 1, 0, 2, 3],
             },
           ],
         },
@@ -174,7 +135,6 @@ export default {
     created(){
       this.name=localStorage.getItem("ms_username");
       this.role= this.name === "admin" ? "超级管理员" : "普通用户";
-
     }
 };
 </script>

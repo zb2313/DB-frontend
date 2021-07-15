@@ -1,137 +1,140 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-pie-chart"></i> schart图表
-                </el-breadcrumb-item>
-            </el-breadcrumb>
+      <div style="margin:auto;">
+      <el-button icon="el-icon-circle-plus" @click="createElVisible=true">新建收藏夹</el-button>
+      <el-button icon="el-icon-delete" @click="deleteElVisible=true">删除收藏夹</el-button>
+      </div>
+      <li v-for="item in favorites" :key="item" style="list-style: none">
+          <el-card style="margin:30px auto;width: 1100px;height: 90px" >
+            <p>{{item.label}}</p>
+            <el-button style="float: right" @click="getContent(items.value)">进入</el-button>
+          </el-card>
+      </li>
+      <el-dialog
+          :visible="createElVisible"
+          style="width: 1000px;float: top;left: 300px"
+       >
+        <h2 style="margin: auto">新建</h2><br>
+        <p>输入新建收藏夹名称</p>
+        <el-input v-model="newFavoritesName"></el-input>
+        <div style="text-align: center">
+        <el-button type="primary" @click="createFavorites">确认</el-button>
+        <el-button @click="createElVisible=false">关闭</el-button>
         </div>
-        <div class="container">
-            <div class="plugins-tips">
-                vue-schart：vue.js封装sChart.js的图表组件。
-                访问地址：
-                <a href="https://github.com/lin-xin/vue-schart" target="_blank">vue-schart</a>
-            </div>
-            <div class="schart-box">
-                <div class="content-title">柱状图</div>
-                <schart class="schart" canvasId="bar" :options="options1"></schart>
-            </div>
-            <div class="schart-box">
-                <div class="content-title">折线图</div>
-                <schart class="schart" canvasId="line" :options="options2"></schart>
-            </div>
-            <div class="schart-box">
-                <div class="content-title">饼状图</div>
-                <schart class="schart" canvasId="pie" :options="options3"></schart>
-            </div>
-            <div class="schart-box">
-                <div class="content-title">环形图</div>
-                <schart class="schart" canvasId="ring" :options="options4"></schart>
-            </div>
+      </el-dialog>
+
+      <el-dialog
+          :visible="deleteElVisible"
+          style="width: 1000px;float: top;left: 300px;"
+      >
+        <h2 style="margin: auto">删除</h2>
+        <el-select v-model="deleteFavoritesName" placeholder="请选择要删除的收藏夹" style="left: 70px;width: 300px">
+          <el-option
+              v-for="item in favorites"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+        <div style="text-align: center;float: bottom" >
+          <el-button type="primary" @click="deleteFavorites">确认</el-button>
+          <el-button @click="deleteElVisible=false">关闭</el-button>
         </div>
+      </el-dialog>
+
     </div>
 </template>
 
 <script>
-import Schart from "vue-schart";
+import axios from "axios"
+//import Schart from "vue-schart";
 export default {
     name: "Favorites",
     components: {
-        Schart,
+       // Schart,
     },
   data()
   {
     return{
-      options1: {
-        type: "bar",
-        title: {
-          text: "最近一周各品类销售图",
+      favorIDs:[],// favor_id
+      favorites:[],//value label
+      items:[
+        {
+          value:1,
+          label:"收藏夹1"
         },
-        bgColor: "#fbfbfb",
-        labels: ["周一", "周二", "周三", "周四", "周五"],
-        datasets: [
-          {
-            label: "家电",
-            fillColor: "rgba(241, 49, 74, 0.5)",
-            data: [234, 278, 270, 190, 230],
-          },
-          {
-            label: "百货",
-            data: [164, 178, 190, 135, 160],
-          },
-          {
-            label: "食品",
-            data: [144, 198, 150, 235, 120],
-          },
-        ],
-      },
-        options2:{
-          type: "line",
-          title: {
-            text: "最近几个月各品类销售趋势图",
-          },
-          bgColor: "#fbfbfb",
-          labels: ["6月", "7月", "8月", "9月", "10月"],
-          datasets: [
-            {
-              label: "家电",
-              data: [234, 278, 270, 190, 230],
-            },
-            {
-              label: "百货",
-              data: [164, 178, 150, 135, 160],
-            },
-            {
-              label: "食品",
-              data: [114, 138, 200, 235, 190],
-            },
-          ],
+        {
+          value:2,
+          label:"收藏夹2"
         },
-        options3:{
-          type: "pie",
-          title: {
-            text: "服装品类销售饼状图",
-          },
-          legend: {
-            position: "left",
-          },
-          bgColor: "#fbfbfb",
-          labels: [
-            "T恤",
-            "牛仔裤",
-            "连衣裙",
-            "毛衣",
-            "七分裤",
-            "短裙",
-            "羽绒服",
-          ],
-          datasets: [
-            {
-              data: [334, 278, 190, 235, 260, 200, 141],
-            },
-          ],
-        },
-        options4:{
-          type: "ring",
-          title: {
-            text: "环形三等分",
-          },
-          showValue: false,
-          legend: {
-            position: "bottom",
-            bottom: 40,
-          },
-          bgColor: "#fbfbfb",
-          labels: ["vue", "react", "angular"],
-          datasets: [
-            {
-              data: [500, 500, 500],
-            },
-          ],
+        {
+          value:3,
+          label: "收藏夹3"
+        }
+      ],
+      createElVisible:false,
+      deleteElVisible:false,
+      newFavoritesName:"",
+      deleteFavoritesName:""
+      }
+  },
+  methods:
+  {
+    getContent(val)
+    {
+      localStorage.setItem("favorites_num",val);
+      this.$router.push("/FavoritesContent");
+    },
+    deleteFavorites()
+    {
+       this.items.splice(this.deleteFavoritesName-1,1);
+       for(let i=0;i<this.items.length;i++)
+       {
+         this.items[i].value=i+1;
+       }
+
+       this.deleteElVisible=false;
+       this.deleteFavoritesName="";
+    },
+    createFavorites()
+    {
+       this.items.push({value:this.items.length,label:this.newFavoritesName});
+       this.createElVisible=false;
+       this.newFavoritesName="";
+    },
+  },
+  created() {
+      axios.get("http://49.234.18.247:8080/api/HasFavorites")
+    .then((response)=>{
+      let t=response.data;
+      let n=localStorage.getItem("ms_username")
+      for(let i=0;i<t.length;i++)
+      {
+        if(n==t[i].useR_ID)
+        {
+          this.favorIDs.push(t[i].favoR_ID)
         }
       }
-    }
+    })
+      axios.get("http://49.234.18.247:8080/api/Favorites")
+    .then((response)=>
+    {
+      let t=response.data;
+      let k=0;
+      for(let i=0;i<this.favorIDs.length;i++)
+      {
+        for(let j=0;j<t.length;j++) {
+          if(t[j].favoR_ID==this.favorIDs[i])
+          {
+            this.favorites.push({value:k+1,label:t[j].favoR_NAME});
+            k=k+1;
+          }
+        }
+      }
+      console.log(this.favorites[0])
+    })
+
+  }
 };
 </script>
 

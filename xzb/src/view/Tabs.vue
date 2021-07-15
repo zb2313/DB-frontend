@@ -72,12 +72,16 @@
 
 <script>
 //import { ref, reactive } from "vue";
+import axios from "axios"
 export default
 {
   name: "tabs",
   data()
   {
     return{
+      mailIDs:[],
+      mails:[],
+      mailDate:[],
       message:"first",
       state:{
         unread: [
@@ -119,7 +123,46 @@ export default
     handleRestore(index){
       const item = this.state.recycle.splice(index, 1);
       this.state.read = item.concat(this.state.read);
+
     }
+  },
+  created()
+  {
+    axios.get("http://49.234.18.247:8080/api/SendMessage")
+    .then((response)=>
+    {
+      let t=response.data;
+      let t1=localStorage.getItem("mailbox_id");
+      for(let i=0;i<t.length;i++)
+      {
+        if(t[i].mailboX_ID==t1)
+        {
+          this.mailIDs.push(t[i].maiL_ID);
+          this.mailDate.push(t[i].senD_TIME);
+        }
+      }
+    })//获取所有的maiL_ID
+
+     axios.get("http://49.234.18.247:8080/api/Mail")
+         .then((response) =>
+             {
+               let t=response.data;
+                 for (let i = 0; i < this.mailIDs.length; i++) {
+                   for(let j=0;j<t.length;j++) {
+                     if (this.mailIDs[i]==t[j].maiL_ID) {
+                       this.mails.push(t[j].message);
+                     }
+                   }
+                 }
+               for(let i=0;i<this.mails.length;i++)
+               {
+                 this.state.unread.push({date:this.mailDate[i],title:this.mails[i]});
+                 console.log(this.mailDate[i])
+               }
+             }
+         );
+
+
   }
 };
 </script>

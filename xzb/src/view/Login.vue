@@ -42,6 +42,7 @@ export default {
   {
     return{
       userList:{},
+      adminList:{},
       param:
       {
         password: "123123",
@@ -67,39 +68,48 @@ export default {
         {
           // eslint-disable-next-line no-unused-vars
           let check=false;
+          let admin=false;
+          let u1=this.param.username;
           for(let i=0;i<this.userList.length;i++)
           {
-            let u1=this.param.username;
             let u2=this.userList[i].useR_ID;
             let u3=this.param.password;
             let u4=this.userList[i].upassword
-            if(u1.length<=10)
+            if((u1==u2)&& (u3==u4))
             {
-              let n=10-u1.length;
-              for(let i=0;i<n;i++)
-              {
-                u1=u1+" ";
-              }
-            }
-            else
-            {
-              alert("用户ID不能超过10位");
-              this.param.username="";
-            }
-            console.log(u1,u2,u3,u4,u1==u2,u3==u4);
-            if((u1==u2)&&
-                (u3==u4))
-            {
+              console.log(u1,u2,u3,u4)
+              localStorage.setItem("ms_username", this.param.username);
+              localStorage.setItem("usertype",0);
+              localStorage.setItem('gs_username',u1);
+              localStorage.setItem('mailbox_id',this.userList[i].mailboX_ID);
               check=true;
               break;
             }
           }
-
+          for(let i=0;i<this.adminList.length;i++)
+          {
+            let u2=this.adminList[i].administratoR_ID;
+            let u3=this.param.password;
+            let u4=this.adminList[i].password
+            if((u1==u2)&& (u3==u4))
+            {
+              localStorage.setItem("ms_username", this.param.username);
+              localStorage.setItem("usertype",1);
+              localStorage.setItem('gs_username',u1);
+              admin=true;
+              break;
+            }
+          }
           if(check==true)
           {
-            localStorage.setItem("ms_username", this.param.username);
-            this.$router.push("/");
+            this.$router.push("/hotel");
             this.$message.success("登录成功");
+            return;
+          }
+          if(admin==true)
+          {
+            this.$router.push("/personalpage");
+            this.$message.success("管理员登录成功");
             return;
           }
           this.$message.error("用户名或密码不存在");
@@ -118,7 +128,11 @@ export default {
 
     axios.get("http://49.234.18.247:8080/api/Users")
         .then((response)=>{this.userList=response.data});
-
+    axios.get("http://49.234.18.247:8080/api/Administrator")
+    .then((respopnse)=>
+    {
+      this.adminList=respopnse.data;
+    })
 
   }
 

@@ -1,197 +1,146 @@
 <template>
-    <div class="header">
-        <!-- 折叠按钮 -->
-        <div class="collapse-btn" @click="collapseChange">
-            <i v-if="!collapse" class="el-icon-s-fold"></i>
-            <i v-else class="el-icon-s-unfold"></i>
-        </div>
-        <div class="logo">LVDAO个人信息系统</div>
-        <div class="header-right">
-            <div class="header-user-con">
-                <!-- 消息中心 -->
-                <div class="btn-bell">
-                    <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                        <router-link to="/tabs">
-                            <i class="el-icon-bell"></i>
-                        </router-link>
-                    </el-tooltip>
-                    <span class="btn-bell-badge" v-if="message"></span>
-                </div>
-                <!-- 用户头像 -->
-                <div class="user-avator">
-                    <img src="../assets/img/img.jpg" />
-                </div>
-                <!-- 用户名下拉菜单 -->
-                <el-dropdown class="user-name" trigger="click" @command="handleCommand">
-                    <span class="el-dropdown-link">
-                        {{username}}
-                        <i class="el-icon-caret-bottom"></i>
-                    </span>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-                                <el-dropdown-item>项目仓库</el-dropdown-item>
-                            </a>
-                            <el-dropdown-item command="user">个人中心</el-dropdown-item>
-                            <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
+  <el-header height="121px">
+    <div class="upheader">
+      <router-link to="/hotel"
+        ><div class="logo margin1">LVDAO</div></router-link
+      >
+
+      <div class="nav1">
+        <ul>
+          <li>
+            <router-link to="/questions"
+              ><div class="el-icon-question Mark"></div
+            ></router-link>
+          </li>
+          <li>
+            <el-badge :value="msgValue" :max="maxMsg" class="item">
+              <div class="el-icon-bell Mark" style="margin-left: 8px"></div>
+            </el-badge>
+          </li>
+          <li>
+            <div class="pull">
+              <el-dropdown>
+                <div
+                  class="profile"
+                  :style="{
+                    backgroundImage:
+                      'url(' + (coverImgUrl ? coverImgUrl : baseImg) + ')',
+                    backgroundSize: '100% 100%',
+                    backgroundRepeat: 'no-repeat',
+                  }"
+                ></div>
+                <el-dropdown-menu slot="dropdown">
+                  <router-link to="/dashboard"><el-dropdown-item>管理账户</el-dropdown-item></router-link>
+                  <router-link to="/1"><el-dropdown-item>动态</el-dropdown-item></router-link>
+                  <el-dropdown-item>收藏</el-dropdown-item>
+                  <router-link to="/Login"><el-dropdown-item divided>退出登录</el-dropdown-item></router-link>
+                </el-dropdown-menu>
+              </el-dropdown>
             </div>
-        </div>
+          </li>
+        </ul>
+      </div>
     </div>
+    <el-menu
+      :default-active="activeIndex"
+      class="el-menu margin1"
+      mode="horizontal"
+      @select="handleSelect"
+      background-color="#003680"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+    >
+      <el-menu-item index="1"
+        ><router-link to="/hotel">酒店</router-link></el-menu-item
+      >
+      <el-menu-item index="2"
+        ><router-link to="/attraction">景点</router-link></el-menu-item
+      >
+      <el-menu-item index="3"
+        ><router-link to="/tickets">机/车票</router-link></el-menu-item
+      >
+    </el-menu>
+  </el-header>
 </template>
-<script>
-//import { computed, onMounted } from "vue";
-//import { useStore } from "vuex";
-//import { useRouter } from "vue-router";
-export default {
-    data()
-    {
-      return{
-        username:"cccc",
-        message:2,
-        collapse:true
-      }
-    },
-    created() {
-      this.username=localStorage.getItem("ms_username");
-      this.collapse=this.$store.state.collapse;
-    },
-    methods: {
-      collapseChange() {
-        this.$store.commit("handleCollapse", !this.collapse.value);
-      },
-      handleCommand(command)
-      {
-        if (command === "logout")
-        {
-          localStorage.removeItem("ms_username");
-          this.$router.push("/Login");
-        }
-        else if (command === "user")
-        {
-          this.$router.push("/Register");
-        }
-      }
-    },
-  mounted() {
-    if (document.body.clientWidth < 1500) {
-                    this.collapseChange();
-                }
-  }
-  //   ,
-  // setup() {
-  //       const username = localStorage.getItem("ms_username");
-  //       const message = 2;
-  //
-  //       const store = useStore();
-  //       const collapse = computed(() => store.state.collapse);
-  //       // 侧边栏折叠
-  //       const collapseChange = () => {
-  //           store.commit("handleCollapse", !collapse.value);
-  //       };
-  //
-  //       onMounted(() => {
-  //           if (document.body.clientWidth < 1500) {
-  //               collapseChange();
-  //           }
-  //       });
-  //
-  //       // 用户名下拉菜单选择事件
-  //       const router = useRouter();
-  //       const handleCommand = (command) => {
-  //           if (command == "loginout") {
-  //               localStorage.removeItem("ms_username");
-  //               router.push("/login");
-  //           } else if (command == "user") {
-  //               router.push("/user");
-  //           }
-  //       };
-  //
-  //       return {
-  //           username,
-  //           message,
-  //           collapse,
-  //           collapseChage: collapseChange,
-  //           handleCommand,
-  //       };
-  //   },
-};
-</script>
+
 <style scoped>
-.header {
-    position: relative;
-    box-sizing: border-box;
-    width: 100%;
-    height: 70px;
-    font-size: 22px;
-    color: #fff;
+.el-header {
+  background-color: #003680;
+  color: white;
+  text-align: center;
 }
-.collapse-btn {
-    float: left;
-    padding: 0 21px;
-    cursor: pointer;
-    line-height: 70px;
+
+.upheader {
+  height: 60px;
 }
-.header .logo {
-    float: left;
-    width: 250px;
-    line-height: 70px;
+
+.logo {
+  width: 200px;
+  height: 60px;
+  font-family: "Microsoft YaHei";
+  font-size: 38px;
+  text-align: left;
+  line-height: 60px;
+  text-indent: 1em;
+  float: left;
 }
-.header-right {
-    float: right;
-    padding-right: 50px;
+
+.nav1 {
+  float: left;
+  margin-left: 55%;
 }
-.header-user-con {
-    display: flex;
-    height: 70px;
-    align-items: center;
+
+.nav1 ul li {
+  float: left;
 }
-.btn-fullscreen {
-    transform: rotate(45deg);
-    margin-right: 5px;
-    font-size: 24px;
+
+li {
+  list-style: none;
 }
-.btn-bell,
-.btn-fullscreen {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    text-align: center;
-    border-radius: 15px;
-    cursor: pointer;
+
+a:link {
+  text-decoration: none;
+  color: white;
 }
-.btn-bell-badge {
-    position: absolute;
-    right: 0;
-    top: -2px;
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background: #f56c6c;
-    color: #fff;
+
+a:visited {
+  color: white;
 }
-.btn-bell .el-icon-bell {
-    color: #fff;
+
+.margin1 {
+  margin-left: 6%;
 }
-.user-name {
-    margin-left: 10px;
+
+.Mark {
+  font-size: 30px;
 }
-.user-avator {
-    margin-left: 20px;
-}
-.user-avator img {
-    display: block;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-.el-dropdown-link {
-    color: #fff;
-    cursor: pointer;
-}
-.el-dropdown-menu__item {
-    text-align: center;
+
+.profile {
+  margin-left: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
 }
 </style>
+
+<script>
+export default {
+  name: "Header",
+  props: {
+    //activeIndex: "1",
+    activeIndex: {
+      type: String,
+      default: "1"
+    }
+  },
+  data() {
+    return {
+      maxMsg: "99",
+      msgValue: "20",
+      baseImg:
+        "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80",
+      coverImgUrl: "",
+    };
+  },
+};
+</script>
