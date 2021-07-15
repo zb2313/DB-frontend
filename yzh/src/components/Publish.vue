@@ -55,12 +55,12 @@ export default {
       md: "", // 文章内容
       momenT_ID:"",//动态ID
       momenTID_LIST:[],
-      timestamp :"",//时间
       // 地址分类
       province: "",
       city: "",
       area: "",
       location:" ",
+      time:"",
       value:0, //是否选择了地点
     };
   },
@@ -108,38 +108,57 @@ export default {
       }
       this.momenT_ID=Moment_ID;
     },
+    gettime(){
+      let date = new Date();
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+      let nowDate = year + "-" + month + "-" + day;
+      this.time=nowDate
+    },
     PublishButton() {
       if (this.md) {
         if(this.value){
         // 获取文章之后的处理逻辑
         //自动生成一个momenT_ID
+        this.momenT_ID="",
         this.creatMoment_ID()
+        this.gettime()
         this.$axios
           .post(
             "http://49.234.18.247:8080/api/Moment",
            {
             "momenT_ID": this.momenT_ID,
-            "momenT_TIME": null,
+            "momenT_TIME": this.time,
             "momenT_LOCATION": this.location,
             "text": this.md,
             "picture": null,
             "vedio": null
            }
           )
-          .then(function(response) {
-            console.log("res:", response);
-            if (response.data.status === 201) {
-              alert("文章发布成功！");
+          .then((res)=> {
+            console.log("res:",res.data);
+            if (res.status === 201) {
+              console.log('id:',this.momenT_ID)
+            this.$message({
+            type: 'success',
+            message: '发布成功!'
+          	});
             }
+            this.$router.push('/1')
           })
-          .catch(function(error) {
-            console.log(error);
+          .catch((error)=> {
+            console.log("error");
           });
           this.$axios
           .post("http://49.234.18.247:8080/api/ReleaseMoment",
           {
             "momenT_ID": this.momenT_ID,
             "useR_ID": "1234567890"
+          })
+          .then((res)=>{
+             this.momenT_ID="";
+             console.log("aId:",this.momenT_ID)
           })
       }
       else {
@@ -152,27 +171,6 @@ export default {
     },
   },
   comments: mavonEditor,
-  // 钩子 组件加载后运行 查询所有分类
-  created: function() {
-    // 组件创建之后
-    // 在created这个方法中可以操作后端的数据  数据驱动试图
-    // 应用：发起Ajax请求
-
-    // this.$axios
-    //   .get("")
-    //   .then(res => {
-    //     // 校验后端返回的code
-    //     if (res.data.code === 1000) {
-    //       this.options = res.data.categoryList;
-    //       console.log(res.data.categoryList);
-    //     } else {
-    //       alert("数据获取失败");
-    //     }
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-  }
 }
 </script>
 <style scoped>
