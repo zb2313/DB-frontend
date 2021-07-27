@@ -16,6 +16,7 @@
     "mavon-editor": "^2.9.1",
     "v-distpicker": "^1.2.12",
     "vue": "^2.6.11",
+    "vue-amap": "^0.5.10",
     "vue-china-map": "^1.0.3",
     "vue-cropperjs": "^5.0.0",
     "vue-router": "^3.5.2",
@@ -44,7 +45,9 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "no-unused-vars": "off"
+    }
   },
   "browserslist": [
     "> 1%",

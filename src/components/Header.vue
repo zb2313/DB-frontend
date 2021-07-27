@@ -14,13 +14,13 @@
           </li>
           <li>
             <router-link to="/tabs">
-            <el-badge is-dot class="item">
-              <div class="el-icon-bell Mark" style="margin-left: 8px"></div>
-            </el-badge>
+              <el-badge is-dot class="item">
+                <div class="el-icon-bell Mark" style="margin-left: 8px"></div>
+              </el-badge>
             </router-link>
           </li>
           <li>
-            <div class="pull" >
+            <div class="pull">
               <el-dropdown>
                 <div
                   class="profile"
@@ -31,12 +31,24 @@
                     backgroundRepeat: 'no-repeat',
                   }"
                 ></div>
-                <el-dropdown-menu slot="dropdown" >
-                  <router-link to="/dashboard"> <el-dropdown-item>管理账户</el-dropdown-item></router-link>
-                  <router-link to="/AttractionOrder"><el-dropdown-item>订单</el-dropdown-item></router-link>
-                  <router-link to="/Favorites"><el-dropdown-item>收藏</el-dropdown-item></router-link>
-                  <router-link to="/Moment"><el-dropdown-item>动态</el-dropdown-item></router-link>
-                  <router-link to="/Login"><el-dropdown-item divided>退出登录</el-dropdown-item></router-link>
+                <el-dropdown-menu slot="dropdown">
+                  <router-link to="/dashboard">
+                    <el-dropdown-item>管理账户</el-dropdown-item></router-link
+                  >
+                  <router-link to="/AttractionOrder"
+                    ><el-dropdown-item>订单</el-dropdown-item></router-link
+                  >
+                  <router-link to="/Favorites"
+                    ><el-dropdown-item>收藏</el-dropdown-item></router-link
+                  >
+                  <router-link to="/Moment"
+                    ><el-dropdown-item>动态</el-dropdown-item></router-link
+                  >
+                  <router-link to="/Login"
+                    ><el-dropdown-item divided
+                      >退出登录</el-dropdown-item
+                    ></router-link
+                  >
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -60,6 +72,9 @@
       >
       <el-menu-item index="3"
         ><router-link to="/tickets">机/车票</router-link></el-menu-item
+      >
+      <el-menu-item index="4"
+        ><router-link to="/Recommend">攻略</router-link></el-menu-item
       >
     </el-menu>
   </el-header>
@@ -89,7 +104,7 @@
 
 .nav1 {
   float: left;
-  margin-top:10px;
+  margin-top: 10px;
   margin-left: 55%;
 }
 
@@ -130,10 +145,9 @@ a:visited {
 export default {
   name: "Header",
   props: {
-
     activeIndex: {
-      type:String,
-      default:"1"
+      type: String,
+      default: "1",
     },
   },
   data() {
