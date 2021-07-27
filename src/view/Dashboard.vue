@@ -279,7 +279,12 @@ export default {
 }
 
 .schart {
-    width: 100%;
-    height: 300px;
+  width: 100%;
+  height: 400px;
 }
+.mapbox {
+  width: 550px;
+  height: 400px;
+  margin-bottom: 20px;
+  float: left;
 </style>
