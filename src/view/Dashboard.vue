@@ -287,4 +287,5 @@ export default {
   height: 400px;
   margin-bottom: 20px;
   float: left;
+  }
 </style>
