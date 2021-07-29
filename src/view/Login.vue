@@ -12,7 +12,7 @@
       <div class="ms-title">旅游信息系统</div>
       <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
         <el-form-item prop="username">
-          <el-input v-model="param.username" placeholder="username">
+          <el-input v-model="param.userid" placeholder="username">
             <template #prepend>
               <el-button icon="el-icon-user"></el-button>
             </template>
@@ -29,9 +29,9 @@
           <el-card>
           <template>
             <p>请选择登录身份</p>
-            <el-radio v-model="role" label="1">用户</el-radio>
-            <el-radio v-model="role" label="2">商家</el-radio>
-            <el-radio v-model="role" label="3">管理员</el-radio>
+            <el-radio v-model="role" label="user">用户</el-radio>
+            <el-radio v-model="role" label="hotel">商家</el-radio>
+            <el-radio v-model="role" label="administrator">管理员</el-radio>
           </template>
           </el-card>
         </el-form-item>
@@ -40,14 +40,62 @@
           <el-button type="primary" @click="goRegister()" style="width: 140px">注册</el-button>
         </el-form-item>
         <el-button type="text" @click="forgetPassword()" style="width: 140px">忘记密码</el-button>
-        <el-button type="text" @click="mailLogin()" style="width: 140px">邮箱验证码登录</el-button>
+        <el-button type="text" @click="mailVisible=true" style="width: 140px">邮箱验证码登录</el-button>
       </el-form>
     </div>
+
     <el-dialog
         title="验证码登录"
       :visible="mailVisible"
     >
-    <el-button @click="mailVisible=false">关闭</el-button>
+
+      <el-form ref="login" label-width="80px" class="ms-content">
+        <el-form-item label="邮箱">
+          <el-input style="width: 450px" v-model="param.userid">
+          </el-input>
+          <el-button type="primary" style="float: right;" @click="sendVerifyCodeLogin">发送验证码</el-button>
+        </el-form-item>
+
+        <el-form-item label="验证码">
+          <el-input style="width: 450px" v-model="verifycode">
+          </el-input>
+        </el-form-item>
+
+      </el-form>
+      <div style="float: right">
+        <el-button  type="primary" @click="mailLogin">登录</el-button>
+        <el-button @click="mailVisible=false">关闭</el-button>
+      </div>
+
+    </el-dialog>
+
+    <el-dialog
+        title="找回密码"
+        :visible="forgetVisible"
+    >
+
+      <el-form ref="login" label-width="80px" class="ms-content">
+        <el-form-item label="邮箱">
+         <el-input style="width: 450px" v-model="param.userid">
+         </el-input>
+          <el-button type="primary" style="float: right;" @click="sendVerifyCodeFind">发送验证码</el-button>
+        </el-form-item>
+
+        <el-form-item label="验证码">
+          <el-input style="width: 450px" v-model="verifycode">
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="新密码">
+          <el-input style="width: 450px" v-model="param.password">
+          </el-input>
+        </el-form-item>
+
+      </el-form>
+      <div style="float: right">
+      <el-button  type="primary" @click="resetPassword">重置密码</el-button>
+      <el-button @click="forgetVisible=false">关闭</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -59,21 +107,23 @@ export default {
   data()
   {
     return{
+      verifycode:"",
+      forgetVisible:false,
       mailVisible:false,
-      role:1,
-      userList:{},
+      role:"user",
+      userinfo:[],
       adminList:{},
       hotelList:{},
       param:
       {
         password: "000001",
-        username:"0000000001"
+        userid:"0000000001"
       },
       rules:{
         username: [
             {
               required: true,
-              message: "请输入用户名",
+              message: "请输入邮箱",
               trigger: "blur",
             },
           ],
@@ -88,84 +138,46 @@ export default {
         submitForm()
         {
           // eslint-disable-next-line no-unused-vars
+          //get api/OAuth/token?role=user&id=userid&password=password
+          //response: 204 重新检查 200 返回了token
+          //user administrator hotel
+          // eslint-disable-next-line no-unused-vars
           let check=false;
-          let admin=false;
-          let seller=false;
-          let u1=this.param.username;
-          let u10=this.param.password;
-          for(let i=0;i<this.userList.length;i++)
+          let t="role="+this.role+"&id="+this.param.userid+"&password="+this.param.password+"&type=logbypwd";
+          axios.get("http://49.234.18.247:8080/api/OAuth/token?"+t)
+              .then((response)=>
+              {
+                if(response.status=="204")
+                {
+                  check=false;
+                  alert("用户id或密码输入有误");
+                  return;
+                }
+                else
+                {
+                  localStorage.setItem("token",response.data);
+                  localStorage.setItem("ms_username", this.param.userid);
+                  check=true;
+                  this.$message.success("登录成功");
+                  this.Login();
+                }
+              })
+        },
+        Login()
+        {
+          if(this.role=="user")
           {
-            let u2=this.userList[i].useR_ID;
-            let u3=this.param.password;
-            let u4=this.userList[i].upassword
-
-
-            if((u1==u2)&& (u3==u4))
-            {
-              localStorage.setItem("ms_username", this.param.username);
-              localStorage.setItem("pictrue",this.userList[i].uprofile)
-              localStorage.setItem("usertype",0);
-              localStorage.setItem('mailbox_id',this.userList[i].mailboX_ID);
-              check=true;
-              break;
-            }
-          }
-          for(let i=0;i<this.hotelList.length;i++)
-          {
-            let u3=this.param.password;
-            let u5=this.hotelList[i].hoteL_ID;
-            let u6=this.hotelList[i].hpassword;
-            if((u1==u5)&&(u3==u6))
-            {
-              localStorage.setItem("ms_username", this.param.username);
-              localStorage.setItem("usertype",2);
-              localStorage.setItem("password",this.param.password);
-              seller=true;
-              break;
-            }
-          }
-          for(let i=0;i<this.adminList.length;i++)
-          {
-            let u3=this.param.password;
-            let u7=this.adminList[i].administratoR_ID;
-            let u8=this.adminList[i].password;
-            if((u1==u7)&&(u3==u8))
-            {
-              localStorage.setItem("ms_username", this.param.username);
-              localStorage.setItem("usertype",1);
-              admin=true;
-              break;
-            }
-          }
-          if(check==true)
-          {
+            localStorage.setItem("usertype",0);
             this.$router.push("/hotel");
-            this.$message.success("登录成功");
           }
-          if(admin==true)
-          {
-            this.$router.push("/personalpage");
-            this.$message.success("管理员登录成功");
-          }
-          if(seller==true)
-          {
-            this.$router.push("/SellerHome");
-            this.$message.success("商家登录成功");
-          }
-          if(check==true||admin==true||seller==true)
-          {
-            // eslint-disable-next-line no-unused-vars
-            let t="username="+u1+"&"+"password="+u10;
-            // eslint-disable-next-line no-unused-vars
-            axios.get("http://49.234.18.247:8080/api/OAuth/token?username=admin&password=12345678")
-            .then((response)=>
-            {
-              localStorage.setItem("token",response.data);
-              console.log("token",localStorage.getItem("token"));
-            })
-            return;
-          }
-           this.$message.error("用户名或密码不存在");
+        },
+        sendVerifyCodeFind()
+        {
+          axios.get("http://49.234.18.247:8080/api/Email/"+this.param.userid+"&findpwd");
+        },
+        sendVerifyCodeLogin()
+        {
+          axios.get("http://49.234.18.247:8080/api/Email/"+this.param.userid+"&login");
         },
         goRegister()
         {
@@ -173,38 +185,42 @@ export default {
         },
         forgetPassword()
         {
-
+          this.forgetVisible=true;
         },
         mailLogin()
         {
           this.mailVisible=true;
+          let t="role=user"+"&id="+this.param.userid+"&password="+this.verifycode+"&type=logbyvericode";
+          axios.get("http://49.234.18.247:8080/api/OAuth/token?"+t)
+              .then((response)=>
+              {
+                if(response.status=="204")
+                {
+                  alert("用户id或验证码输入有误");
+                  return;
+                }
+                else
+                {
+                  localStorage.setItem("token",response.data);
+                  localStorage.setItem("ms_username", this.param.userid);
+                  this.$message.success("登录成功");
+                  this.Login();
+                }
+              })
         },
         Tmap()
         {
           window.addEventListener('message', function(event) {
-
             let loc = event.data;
             console.log(loc.city)  // 显示你当前位置
           }, false);
-
+        },
+        resetPassword()
+        {
+          axios.patch("http://49.234.18.247:8080/api/Users/"+this.param.userid+"&"+this.verifycode+"&"+this.param.password);
         }
       },
   created() {
-    axios.get("http://49.234.18.247:8080/api/Users")
-        .then((response)=>{
-          this.userList=response.data;
-              axios.get("http://49.234.18.247:8080/api/Administrator")
-                  .then((respopnse)=>
-                  {
-                    this.adminList=respopnse.data;
-                    axios.get("http://49.234.18.247:8080/api/Hotel")
-                        .then((response)=>
-                        {
-                          this.hotelList=response.data;
-                        })
-                  })
-        }
-        );
 
   },
   mounted(){

@@ -7,9 +7,6 @@
         <el-form-item label="用户昵称">
           <el-input style="width: 380px" v-model="form.user_NAME" />
         </el-form-item>
-        <el-form-item label="用户ID">
-          <p>{{form.user_ID}}</p>
-        </el-form-item>
         <el-form-item label="密码">
           <el-input style="width: 380px" v-model="form.Password" />
         </el-form-item>
@@ -20,12 +17,16 @@
           <el-input style="width: 380px" v-model="form.tele_NUMBER" />
         </el-form-item>
         <el-form-item label="E-mail">
-          <el-input style="width: 380px" v-model="form.mail" />
+          <el-input style="width: 268px" v-model="form.mail" />
+          <el-button type="primary" @click="sendVerifyCode">发送验证码</el-button>
+        </el-form-item>
+        <el-form-item label="邮箱验证码" v-if="verifyStatus">
+          <el-input style="width: 250px" v-model="form.verifycode"></el-input>
         </el-form-item>
         <el-form-item label="性别">
           <el-radio-group v-model="form.Gender">
-            <el-radio label="Male" />
-            <el-radio label="Female" />
+            <el-radio label="男" />
+            <el-radio label="女" />
           </el-radio-group>
         </el-form-item>
         <el-form-item label="地点">
@@ -36,7 +37,6 @@
         <div style="text-align: center; margin-top: 40px">
           <el-button type="primary" @click="onSubmit">注册</el-button>
           <el-button @click="goBack">取消</el-button>
-
         </div>
       </el-form>
     </div>
@@ -46,11 +46,14 @@
 <script>
 import VDistpicker from "v-distpicker";
 import axios from "axios";
+//email 后加发送验证码按钮和输入框
+//
 export default {
   name: "Register",
   userList:{},
   computed: {},
   components: { VDistpicker },
+  //用户id在注册完后生成
   data() {
     return {
       form: {
@@ -59,11 +62,12 @@ export default {
         Password: "",//密码
         user_ID: "",//用户编号
         id_number:"",
-        Gender: "男",//性别
+        Gender:"",//性别
         desc: "",
         tele_NUMBER: "",//电话号码
         mailbox_ID: "",//
         dState: true,
+        verifycode:""
       },
       testInfo: "",
       //省市区
@@ -72,6 +76,7 @@ export default {
       area: "",
       location:" ",
       show: false,
+      verifyStatus:false
     };
   },
   methods: {
@@ -100,23 +105,49 @@ export default {
     },
     onSubmit() {
 
-      axios.post("http://49.234.18.247:8080/api/Users",
-
+      axios.post("http://49.234.18.247:8080/api/OAuth/"+this.form.verifycode,
           {
-            "useR_ID": this.form.user_ID,
+            "useR_ID": this.form.mail,
             "useR_NAME": this.form.user_NAME,
             "iD_NUMBER": this.form.id_number,
             "telE_NUMBER":this.form.tele_NUMBER,
-            "mailboX_ID": this.form.user_ID,
+            "mailboX_ID": this.form.mail,
             "uprofile":"http://49.234.47.118:8080/pictures/user_uprofile_0.jpg",
             "upassword": this.form.Password,
             "gender": this.form.Gender,
             "ulocation": this.location,
             "motto": null
           }
+      )
+      .then((response)=>
+          {
+            if(response.status=="204")
+            {
+              this.$message.error("验证码错误");
+            }
+            else if(response.status=="409")
+            {
+               //验证码正确 userid重复
+            }
+            else
+            {
+              //成功注册
+              this.$message.success("注册成功");
+              this.$alert(
+                  '用户id: '+this.form.user_ID+'  密码: '+this.form.Password,
+                  '确认账户',
+                  {
+                confirmButtonText: '确定',
+                callback: action => {
+                  this.$message({
+                    type: 'info',
+                    message: `action: ${ action }`
+                  });
+                }
+              });
+            }
+          }
       );
-      this.$message.success("注册成功,请返回登录界面登录");
-      this.$router.push('/Login');
     },
       onCancel(){
       this.$message({
@@ -136,26 +167,15 @@ export default {
       this.area= data.value
       this.location=this.province+this.city+this.area;
     },
-    checkRepeatitive()
+    sendVerifyCode()
     {
-      for(let i=0;i<this.userList[0].length;i++)
-      {
-        if((this.user_ID==this.userList[i].useR_ID)||(this.mailbox_ID==this.userList[i].mailboX_ID))
-        {
-          return false;
-        }
-      }
-
-      return true;
+      axios.get("http://49.234.18.247:8080/api/Email/"+this.form.mail+"&register");
+      this.verifyStatus=true;
     }
   },
   created() {
-    do {
       this.setUserID();
       this.setMailBoxID();
-    }while(this.checkRepeatitive()==true);
-    axios.get("http://49.234.18.247:8080/api/Users")
-        .then((response)=>{this.userList=response.data});
   },
   mounted: function () {
 
