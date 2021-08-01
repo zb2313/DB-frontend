@@ -15,10 +15,11 @@
       <div class="infoPay clearfix">
         <div class="infoBox">
           <div class="orderLeft">
-            <h2 class="attrName">{{ attractionName }}</h2>
+            <h1 class="attrName">{{ attractionName }}</h1>
 
             <h3><i class="el-icon-position"></i> 地址</h3>
             <p>{{ location }}</p>
+            <mapDrag @drag="dragMap" class="mapbox"></mapDrag>
             <h3><i class="el-icon-date"></i> 时间</h3>
             <el-row type="flex">
               <el-col :span="5"> <span class="bold">开放时间</span></el-col>
@@ -35,7 +36,7 @@
           </div>
         </div>
         <div class="orderBorder payBox">
-          <h4 style="margin-left: 30px;padding-top:20px">预定今日的票</h4>
+          <h4 style="margin-left: 30px; padding-top: 20px">预定今日的票</h4>
           <el-row type="flex" justify="space-around">
             <el-col :span="3"><span>时间</span></el-col>
             <el-col :span="16"
@@ -56,6 +57,7 @@
                   v-model="num"
                   @change="handleAmount"
                   :min="1"
+                  :max="10"
                   label="订票数"
                 ></el-input-number></div
             ></el-col>
@@ -80,12 +82,12 @@
       </div>
 
       <div class="horse">
-        <el-carousel height="250px">
+        <el-carousel height="200px">
           <el-carousel-item v-for="item in items" :key="item.useR_NAME">
             <div>
               <h3>评论时间：{{ item.commenT_TIME }}</h3>
               <h3>用户名：{{ item.useR_NAME }}</h3>
-              <p>{{ item.ctext }}</p>
+              <div>{{ item.ctext }}</div>
             </div>
           </el-carousel-item>
         </el-carousel>
@@ -107,6 +109,7 @@
 .clearfix {
   *zoom: 1;
 }
+
 .attrOrderBg {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -122,11 +125,11 @@
 
 .infoPay {
   width: 100%;
-  height: 250px;
+  height: 500px;
 }
 
 .attrOrder .infoBox {
-  width: 400px;
+  width: 500px;
   height: 250px;
   margin: 5px;
   float: left;
@@ -146,6 +149,12 @@
 }
 .orderLeft {
   text-align: left;
+}
+.mapbox {
+  width: 500px;
+  height: 250px;
+  margin-bottom: 20px;
+  float: left;
 }
 .el-carousel__item div {
   color: #475669;
@@ -186,14 +195,23 @@ li {
 
 <script>
 import Header from "@/components/Header.vue";
-
+import mapDrag from "@/components/mapDrag";
 export default {
   name: "About",
   components: {
     Header,
+    mapDrag,
   },
   data() {
     return {
+      dragData: {
+        lng: null,
+        lat: null,
+        address: null,
+        nearestJunction: null,
+        nearestRoad: null,
+        nearestPOI: null,
+      },
       user_ID: "",
       currentDate: new Date(),
       num: 1,
@@ -218,6 +236,16 @@ export default {
       let _this = this;
       _this.num = value;
       console.log(value);
+    },
+    dragMap(data) {
+      this.dragData = {
+        lng: data.position.lng,
+        lat: data.position.lat,
+        address: data.address,
+        nearestJunction: data.nearestJunction,
+        nearestRoad: data.nearestRoad,
+        nearestPOI: data.nearestPOI,
+      };
     },
     onPay() {
       let _this = this;
@@ -263,7 +291,7 @@ export default {
   },
   created() {
     this.attractionId = this.$route.query.id;
-    this.user_ID=localStorage.getItem("ms_username");
+    this.user_ID = localStorage.getItem("ms_username");
   },
   mounted() {
     this.$axios
