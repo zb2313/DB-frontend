@@ -22,7 +22,7 @@ Vue.prototype.$axios = axios;
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
   key: '3c8d72e09340bbf72057257e264b65a2',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Weather'],
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.HawkEye', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Weather', 'AMap.Geocoder'],
   // 默认高德 sdk 版本为 1.4.4
   v: '1.4.4',
   uiVersion: '1.0.11'
