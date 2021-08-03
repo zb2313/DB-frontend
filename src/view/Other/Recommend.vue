@@ -1,26 +1,34 @@
 <template>
-  <div class="amap-wrap">
-    <el-amap
-      vid="amapDemo"
-      isHotspot="true"
-      :amap-manager="amapManager"
-      :center="center"
-      :zoom="zoom"
-      :lang="lang"
-      :events="events"
-    ></el-amap>
-    <div class="info">
-      <p>position:{{ position }}</p>
-      <p>address:{{ address }}</p>
+  <div class="border">
+    <Header activeIndex="4" />
+    <div class="amap-wrap">
+      <el-amap
+        vid="amapDemo"
+        isHotspot="true"
+        :amap-manager="amapManager"
+        :center="center"
+        :zoom="zoom"
+        :lang="lang"
+        :events="events"
+      ></el-amap>
+      <div class="info">
+        <p>position:{{ position }}</p>
+        <p>address:{{ address }}</p>
+      </div>
     </div>
+    
   </div>
 </template>
 
 <script>
+import Header from "@/components/Header.vue";
 import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
 const amapManager = new AMapManager();
 export default {
   name: "AMAP",
+  components:{
+    Header,
+  },
   data() {
     const _this = this;
     return {
@@ -53,6 +61,7 @@ export default {
           geocoder.getAddress([lng, lat], function (status, result) {
             if (status === "complete" && result.info === "OK") {
               if (result && result.regeocode) {
+                console.log(result.regeocode);
                 _this.address = result.regeocode.formattedAddress;
                 _this.$nextTick();
               }
@@ -79,10 +88,16 @@ export default {
           // direction: false,
         })
       );
-      // MapType
-      this.map.addControl(new AMap.MapType());
-      this.map.addControl(new AMap.OverView());
+      let a = this;
+      AMapUI.loadUI(['control/BasicControl'], function(BasicControl) {
 
+        var layerCtrl = new BasicControl.LayerSwitcher({
+            theme: 'my-red',
+            position: 'tr'
+        });
+
+        a.map.addControl(layerCtrl);
+      });
       let marker = new AMap.Marker({
         position: [121, 31],
         title: "here",
@@ -123,7 +138,7 @@ export default {
         });
       });
       //回调函数
-      let a = this;
+      
       function placeSearch_CallBack(data) {
         //infoWindow.open(map, result.lnglat);
         let poiArr = data.poiList.pois;
@@ -194,17 +209,20 @@ export default {
 
 <style>
 .amap-wrap {
-  height: 100vh;
-  width: 100vw;
+  height: 70vh;
+  width: 70vw;
+  position:relative;
+  top:3vh;
+  left:20vw;
 }
 
 .info {
   width: 300px;
   height: 60px;
-  position: absolute;
-  top: 50px;
-  left: 100px;
-  background-color: rgba(95, 91, 91, 0.3);
+  position:absolute;
+  top:5px;
+  left:100px;
+  background-color: rgba(226, 180, 180, 0.3);
 }
 .info-title{
   font-weight: bolder;
@@ -220,4 +238,20 @@ export default {
   line-height: 23px;
   font: 12px Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial;
 }
+
+  /* 定义 my-red 主题 */
+  
+  .amap-ui-control-theme-my-red .amap-ui-control-layer {
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+      background: #25A5F7;
+  }
+  
+  .amap-ui-control-theme-my-red .amap-ui-control-layer-expanded {
+      color: #fff;
+      background: #25A5F7;
+  }
+  
+  .amap-ui-control-theme-my-red .amap-ui-control-layer-toggle {
+      color: #fff;
+  }
 </style>

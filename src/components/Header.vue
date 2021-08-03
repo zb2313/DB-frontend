@@ -1,10 +1,11 @@
 <template>
-  <el-header height="121px">
-    <div class="upheader">
-      <router-link to="/hotel"
-        ><div class="logo margin1">LVDAO</div></router-link
-      >
+  <el-header height="120px">
+    <!-- header的上半部分 -->
+    <div class="upheader" style="height: 60px">
+      <!-- Logo -->
+      <router-link to="/Homepage"><div class="logo">LVDAO</div></router-link>
 
+      <!-- 顶部导航栏 -->
       <div class="nav1">
         <ul>
           <li>
@@ -56,39 +57,53 @@
         </ul>
       </div>
     </div>
-    <el-menu
-      :default-active="activeIndex"
-      class="el-menu margin1"
-      mode="horizontal"
-      background-color="#003680"
-      text-color="#fff"
-      active-text-color="#ffd04b"
-    >
-      <el-menu-item index="1"
-        ><router-link to="/hotel">酒店</router-link></el-menu-item
+
+    <div class="menubox">
+      <el-menu
+        :default-active="activeIndex"
+        mode="horizontal"
+        background-color="#003680"
+        text-color="#fff"
+        active-text-color="#ffd04b"
       >
-      <el-menu-item index="2"
-        ><router-link to="/attraction">景点</router-link></el-menu-item
-      >
-      <el-menu-item index="3"
-        ><router-link to="/tickets">机/车票</router-link></el-menu-item
-      >
-      <el-menu-item index="4"
-        ><router-link to="/Recommend">攻略</router-link></el-menu-item
-      >
-    </el-menu>
+        <el-menu-item index="0"
+          ><router-link class="url" to="/Homepage"
+            >首页</router-link
+          ></el-menu-item
+        >
+        <el-menu-item index="1"
+          ><router-link class="url" to="/hotel">酒店</router-link></el-menu-item
+        >
+        <el-menu-item index="2"
+          ><router-link class="url" to="/attraction"
+            >景点</router-link
+          ></el-menu-item
+        >
+        <el-menu-item index="3"
+          ><router-link class="url" to="/tickets"
+            >机/车票</router-link
+          ></el-menu-item
+        >
+        <el-menu-item index="4"
+          ><router-link class="url" to="/Recommend"
+            >攻略</router-link
+          ></el-menu-item
+        >
+      </el-menu>
+    </div>
   </el-header>
 </template>
 
 <style scoped>
+.url {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .el-header {
   background-color: #003680;
   color: white;
-  text-align: center;
-}
-
-.upheader {
-  height: 60px;
+  padding: 0 8%;
 }
 
 .logo {
@@ -97,38 +112,28 @@
   font-family: "Microsoft YaHei";
   font-size: 38px;
   text-align: left;
-  line-height: 60px;
-  text-indent: 1em;
+  line-height: 70px;
   float: left;
 }
-
 .nav1 {
-  float: left;
-  margin-top: 10px;
-  margin-left: 55%;
+  float: right;
+  height: 60px;
+  width: 116px;
 }
 
 .nav1 ul li {
   float: left;
+  margin-top: 18px;
+  height: 40px;
 }
 
-li {
-  list-style: none;
+.menubox {
+  height: 60px;
 }
-
-a:link {
-  text-decoration: none;
-  color: white;
+.el-menu {
+  border-right: none;
+  border-bottom: none;
 }
-
-a:visited {
-  color: white;
-}
-
-.margin1 {
-  margin-left: 6%;
-}
-
 .Mark {
   font-size: 30px;
 }
