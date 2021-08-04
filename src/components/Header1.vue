@@ -79,6 +79,7 @@
   line-height: 85px;
   width: 50px;
   float: left;
+  cursor: pointer;
 }
 .nav1 {
   float: right;
