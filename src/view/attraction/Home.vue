@@ -1,6 +1,7 @@
 <template>
   <div class="attrHome">
-    <Header activeIndex="2" />
+    <div class="head" style="width: 100%"><Header activeIndex="2" /></div>
+
     <div class="search">
       <div class="block">
         <h1>搜索预订美好体验</h1>

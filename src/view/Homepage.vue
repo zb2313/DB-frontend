@@ -51,7 +51,79 @@
           </span>
         </h2>
 
-        <div class="attrBox Box1"></div>
+        <div class="attrBox Box1">
+          <div class="rightBox">
+            <dl class="keyword-short">
+              <dt>热门主题游</dt>
+              <dd>
+                <span class="entrance-item" title="海岛">
+                  <a href="" target="_blank"> 海岛 </a>
+                </span>
+                <el-divider direction="vertical"></el-divider>
+                <span class="entrance-item" title="亲子游">
+                  <a href="" target="_blank"> 亲子游 </a>
+                </span>
+                <el-divider direction="vertical"></el-divider>
+                <span class="entrance-item" title="蜜月">
+                  <a href="" target="_blank"> 蜜月 </a>
+                </span>
+              </dd>
+
+              <dd style="margin-top: 10px">
+                <span class="entrance-item" title="美食">
+                  <a href="" target="_blank"> 美食 </a>
+                </span>
+                <el-divider direction="vertical"></el-divider>
+                <span class="entrance-item" title="古镇">
+                  <a href="" target="_blank"> 古镇 </a>
+                </span>
+                <el-divider direction="vertical"></el-divider>
+                <span class="entrance-item" title="星空">
+                  <a href="" target="_blank"> 星空 </a>
+                </span>
+              </dd>
+            </dl>
+
+            <dl class="keyword-short" style="margin-top: 30px">
+              <dt>热门目的地</dt>
+              <dd>
+                <span class="entrance-item" title="北京">
+                  <a href="" target="_blank"> 北京 </a>
+                </span>
+                <el-divider direction="vertical"></el-divider>
+                <span class="entrance-item" title="上海">
+                  <a href="" target="_blank"> 上海 </a>
+                </span>
+                <el-divider direction="vertical"></el-divider>
+                <span class="entrance-item" title="三亚">
+                  <a href="" target="_blank"> 三亚 </a>
+                </span>
+              </dd>
+
+              <dd style="margin-top: 10px">
+                <span class="entrance-item" title="南京">
+                  <a href="" target="_blank"> 南京 </a>
+                </span>
+                <el-divider direction="vertical"></el-divider>
+                <span class="entrance-item" title="古镇">
+                  <a href="" target="_blank"> 乌鲁木齐 </a>
+                </span>
+                <el-divider direction="vertical"></el-divider>
+                <span class="entrance-item" title="成都">
+                  <a href="" target="_blank"> 成都 </a>
+                </span>
+              </dd>
+            </dl>
+          </div>
+          <div class="leftBox">
+            <div class="attriInfo"></div>
+            <div class="attriInfo"></div>
+            <div class="attriInfo"></div>
+            <div class="attriInfo"></div>
+            <div class="attriInfo"></div>
+            <div class="attriInfo"></div>
+          </div>
+        </div>
       </div>
 
       <div class="hotel main">
@@ -64,7 +136,45 @@
           ></span>
         </h2>
 
-        <div class="hotelBox Box1"></div>
+        <div class="hotelBox Box1">
+          <div class="rightBox">
+            <dl class="keyword-short">
+              <dt>热门地标周边酒店</dt>
+              <dd>
+                <span class="entrance-item">
+                  <a href="" target="_blank"> 还没想好周末去哪玩？</a>
+                </span>
+              </dd>
+            </dl>
+
+            <dl class="keyword-short" style="margin-top: 30px">
+              <dt>促销</dt>
+              <dd style="margin-top: 10px">
+                <span class="entrance-item">
+                  <a href="" target="_blank"> 全国火车站周边酒店8折起</a>
+                </span>
+              </dd>
+              <dd style="margin-top: 10px">
+                <span class="entrance-item">
+                  <a href="" target="_blank"> 全国机场周边酒店8折起</a>
+                </span>
+              </dd>
+              <dd style="margin-top: 10px">
+                <span class="entrance-item">
+                  <a href="" target="_blank"> 优选酒店80元起</a>
+                </span>
+              </dd>
+            </dl>
+          </div>
+          <div class="leftBox">
+            <div class="hotelInfo"></div>
+            <div class="hotelInfo"></div>
+            <div class="hotelInfo"></div>
+            <div class="hotelInfo"></div>
+            <div class="hotelInfo"></div>
+            <div class="hotelInfo"></div>
+          </div>
+        </div>
       </div>
 
       <div class="tickets main">
@@ -92,7 +202,15 @@
             </div>
           </span>
         </h2>
-        <div class="ticketBox Box1"></div>
+        <div class="Box1">
+          <div class="ticketBox">
+            <div
+              class="ticketInfo"
+              v-for="item in tickets"
+              :key="item.index"
+            ></div>
+          </div>
+        </div>
       </div>
     </el-main>
 
@@ -146,7 +264,7 @@
         <el-divider direction="vertical"></el-divider>
         <dl class="footer-item advantage">
           <dt>关于旅道</dt>
-          <dd class="ft-link-item">关于携程</dd>
+          <dd class="ft-link-item">关于旅道</dd>
           <dd class="ft-link-item">联系我们</dd>
           <dd class="ft-link-item">诚聘英才</dd>
           <dd class="ft-link-item">用户协议</dd>
@@ -287,6 +405,17 @@ export default {
         [true, false],
         [true, false],
       ],
+      tickets: [
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
+      ],
     };
   },
   methods: {
@@ -318,7 +447,7 @@ export default {
   background-color: #003680;
   border: none;
 }
-.el-divider--vertical {
+.el-footer .el-divider--vertical {
   float: left;
   height: 170px;
   margin: 8px 10px;
@@ -337,6 +466,52 @@ export default {
   border-top: 2px solid #003680;
   margin-bottom: 20px;
   margin-top: 3px;
+}
+.rightBox {
+  float: left;
+  width: 25%;
+  height: 100%;
+  border-right: 1px dashed #807c7c;
+}
+.keyword-short {
+  margin-left: 10%;
+}
+.keyword-short dd a {
+  color: #003680 !important;
+  font-size: 13px;
+}
+.leftBox {
+  float: left;
+  width: 74%;
+  height: 100%;
+}
+
+.attriInfo,
+.hotelInfo {
+  float: left;
+  margin: 21px 0px 0px 15px;
+  width: 255px;
+  height: 164px;
+  background-color: #fff;
+}
+.attriInfo:hover,
+.hotelInfo:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+.ticketBox {
+  width: 970px;
+  height: 100%;
+  margin: auto;
+  padding: auto;
+}
+.ticketInfo {
+  float: left;
+  margin: 19px 10px 0px 10px;
+  width: 220px;
+  height: 105px;
+  background-color: #fff;
+  border-radius: 4px;
 }
 .title span {
   position: relative;
@@ -403,7 +578,7 @@ export default {
 .infomation {
   height: 200px;
 }
-dl {
+.el-footer dl {
   float: left;
   width: 250px;
   font-family: "Microsoft YaHei", SimHei, SimSun, Tahoma, Verdana, Arial,
@@ -413,7 +588,7 @@ dt {
   font-size: 18px;
   margin: 8px 0;
 }
-dd {
+.el-footer dd {
   color: #666;
 }
 .advan-item {
