@@ -3,7 +3,7 @@
     <div class="main infomation">
       <dl class="footer-item advantage">
         <dt>为什么选择旅道</dt>
-        <dd>
+        <dd style="margin-top: 16px">
           <div class="advan-item advan-server">
             <div class="advan-img">
               <i class="ico server-ico"></i>
