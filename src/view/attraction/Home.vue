@@ -1,13 +1,28 @@
 <template>
   <div class="attrHome">
-    <Header activeIndex="2" />
+    <div class="head" style="width: 100%"><Header activeIndex="2" /></div>
+
     <div class="search">
       <div class="block">
-        <div class="">
-          <h1>搜索预订美好体验</h1>
-          <p>发现目的地更多精彩活动，尽享欢乐旅程</p>
-        </div>
-        <Search />
+        <h1>搜索预订美好体验</h1>
+        <p>发现目的地更多精彩活动，尽享欢乐旅程</p>
+        <!-- 搜索框 -->
+        <el-row type="flex">
+          <el-col :span="16"
+            ><div>
+              <el-input
+                v-model="input"
+                placeholder="地名、景点"
+              ></el-input></div
+          ></el-col>
+          <el-col :span="2"
+            ><div>
+              <el-button type="primary" icon="el-icon-search" @click="onSearch"
+                >搜索</el-button
+              >
+            </div></el-col
+          >
+        </el-row>
       </div>
     </div>
     <div class="main">
@@ -55,19 +70,14 @@
 </template>
 
 <style scoped>
-html,
-body,
-#app {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-}
-
 .search {
   background: #f2f2f2;
-  padding: 64px 32px;
+  padding: 60px 32px;
 }
 
+.search p {
+  margin-bottom: 5px;
+}
 .main h3 {
   text-indent: 5px;
 }
@@ -89,21 +99,24 @@ body,
   margin: 0 auto;
   width: 61.8%;
 }
+
+.el-button {
+  background-color: #003680;
+  border: none;
+}
 </style>
 
 <script>
-// @ is an alias to /src
-import Search from "@/components/Search.vue";
 import Header from "@/components/Header.vue";
 
 export default {
   name: "Home",
   components: {
-    Search,
     Header,
   },
   data() {
     return {
+      input: "",
       baseImg1:
         "https://cf.bstatic.com/xdata/images/city/540x270/683677.webp?k=b81f21cfcce3f7fb99c0f80b37b2f5b7dde081c02598e74f6f39cfd90bfc114e&o=",
       baseImg2:
@@ -111,6 +124,14 @@ export default {
       baseImg3:
         "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
     };
+  },
+  methods: {
+    onSearch() {
+      this.$router.push({
+        path: "/attraction/city",
+        query: { search: this.input },
+      });
+    },
   },
 };
 </script>

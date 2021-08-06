@@ -38,6 +38,11 @@
     "env": {
       "node": true
     },
+    "globals": {
+      "AMap": false,
+      "AMapUI": false,
+      "lazyAMapApiLoaderInstance": false
+    },
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"

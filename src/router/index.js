@@ -4,6 +4,18 @@ import Home from "@/view/Home";
 Vue.use(VueRouter)
 const routes = [
     {
+        path: '/',
+        redirect: '/Homepage'
+    },
+    {
+        path: "/Homepage",
+        name: "Homepage",
+        meta: {
+            title: '首页'
+        },
+        component: () => import('@/view/Homepage')
+    },
+    {
         path: "/login",
         name: "Login",
         meta: {
@@ -19,10 +31,6 @@ const routes = [
             title: '注册'
         },
         component: () => import( /* webpackChunkName: "Register"*/ '@/view/Register')
-    },
-    {
-        path: '/',
-        redirect: '/Hotel'
     },
     {
         path: "/",

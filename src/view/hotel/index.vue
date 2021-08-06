@@ -1,34 +1,31 @@
 <template>
   <el-container direction="vertical">
     <Header activeIndex="1" />
-    <el-main>
 
-      <div class="Form">
-        <el-form :inline="true" :model="form_Select" class="form-inline">
-          <el-form-item>
-            <el-input
-              v-model="form_Select.location"
-              placeholder="目的地？"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input
-              v-model="form_Select.number1"
-              placeholder="人数"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input
-              v-model="form_Select.number2"
-              placeholder="房间数 "
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
+    <div class="Form">
+      <el-form :inline="true" :model="form_Select" class="form-inline">
+        <el-form-item>
+          <el-input
+            v-model="form_Select.location"
+            placeholder="目的地？"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="form_Select.number1" placeholder="人数"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-input
+            v-model="form_Select.number2"
+            placeholder="房间数 "
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
+    <div class="main">
       <div class="tuijian">
         <h2>热门推荐</h2>
       </div>
@@ -125,9 +122,9 @@
           >
         </div>
       </div>
-      <el-divider></el-divider>
-      <p>版权所有@idontkonw</p>
-    </el-main>
+    </div>
+
+    <Footer />
   </el-container>
 </template>
 
@@ -152,11 +149,21 @@
 }
 
 .Form {
-  margin-top: 5px;
+  width: 100%;
+  padding-top: 25px;
+  height: 60px;
+  text-align: center;
+}
+.main {
+  text-align: center;
+}
+h2 {
+  text-align: center;
 }
 .all {
   width: 1100px;
   margin: 0 auto;
+  margin-bottom: 35px;
 }
 .url {
   display: block;
@@ -184,9 +191,11 @@ p {
 
 <script>
 import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 export default {
   components: {
     Header,
+    Footer,
   },
   data() {
     return {
