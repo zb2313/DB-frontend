@@ -36,7 +36,7 @@
             </div>
           </div>
           <div class="orderBox payBox">
-            <h4 style="margin-left: 40px;padding-top:20px">预定今日的票</h4>
+            <h4 style="margin-left: 40px;padding-top:20px">预定今日的房间</h4>
             <el-row type="flex" justify="space-around">
               <el-col :span="3"><span>时间</span></el-col>
               <el-col :span="16"
