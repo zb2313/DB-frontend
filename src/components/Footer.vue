@@ -26,7 +26,7 @@
         </dd>
       </dl>
       <el-divider direction="vertical"></el-divider>
-      <dl class="footer-item info">
+      <dl class="footer-item index">
         <dt>旅游资讯</dt>
         <dd class="ft-link-item">宾馆索引</dd>
         <dd class="ft-link-item">景点索引</dd>
@@ -35,7 +35,7 @@
         <dd class="ft-link-item">火车票索引</dd>
       </dl>
       <el-divider direction="vertical"></el-divider>
-      <dl class="footer-item advantage">
+      <dl class="footer-item cooperation">
         <dt>加盟合作</dt>
         <dd class="ft-link-item">分销联盟</dd>
         <dd class="ft-link-item">友情链接</dd>
@@ -47,7 +47,7 @@
         <dd class="ft-link-item">更多合作</dd>
       </dl>
       <el-divider direction="vertical"></el-divider>
-      <dl class="footer-item advantage">
+      <dl class="footer-item about">
         <dt>关于旅道</dt>
         <dd class="ft-link-item">关于旅道</dd>
         <dd class="ft-link-item">联系我们</dd>
