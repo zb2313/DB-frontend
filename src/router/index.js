@@ -188,6 +188,11 @@ const routes = [
         component: () => import('../view/hotel/HotelOrder.vue')
     },
     {
+        path: '/hotel/detail',
+        name: 'HotelDetail',
+        component: () => import('../view/hotel/detail.vue')
+    },
+    {
         path: '/attraction/city',
         name: 'attractionCity',
         component: () => import('../view/attraction/city.vue')
