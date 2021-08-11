@@ -208,9 +208,14 @@ const routes = [
         component: () => import('../view/tickets/Home.vue')
     },
     {
-        path: '/tickets/detail',
+        path: '/tickets/trainquery',
         name: 'tickets',
-        component: () => import('../view/tickets/detail.vue')
+        component: () => import('../view/tickets/trainquery.vue')
+    },
+    {
+        path: '/tickets/planequery',
+        name: 'planequery',
+        component: () => import('../view/tickets/planequery.vue')
     },
     {
         path: '/tickets/Order',
