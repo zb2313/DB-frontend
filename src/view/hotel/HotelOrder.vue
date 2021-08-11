@@ -20,16 +20,12 @@
                 <h2>{{ hotelName }}</h2>
               </div>
               <div class="star">
-                <ul>
-                  <li
-                    class="yellow"
-                    v-for="(o, index) in starNum"
-                    :key="o"
-                    :offset="index > 0 ? 0 : 0"
-                  >
-                    <i class="el-icon-star-on"></i>
-                  </li>
-                </ul>
+               <img
+              src="../../assets/img/diamond.svg"
+              v-for="i in starNum"
+              :key="i"
+              style="margin-top: 2px"
+            />
               </div>
             </div>
 
