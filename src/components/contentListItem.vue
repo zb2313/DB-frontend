@@ -79,7 +79,11 @@ h6 {
   height: 250px;
   padding: 25px 25px 0 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+
   border-radius: 5px;
+}
+.content:hover {
+  border: 2px solid rgba(0, 0, 0, 0.1);
 }
 .detail {
   float: left;
@@ -89,7 +93,7 @@ h6 {
 }
 
 .dianping {
-  width: 150px;
+  width: 155px;
   height: 50px;
   position: relative;
   left: 240px;
@@ -97,6 +101,7 @@ h6 {
 }
 .dianping-wenzi {
   float: left;
+  margin-right: 5px;
   width: 100px;
   height: 100%;
 }
@@ -123,7 +128,7 @@ h6 {
 .content button {
   position: relative;
   top: 15px;
-  left: 300px;
+  left: 306px;
   width: 90px;
   height: 40px;
   background-color: #003580;
@@ -223,8 +228,8 @@ export default {
     },
   },
   created() {
-    this.user_ID=localStorage.getItem("ms_username");
-    console.log("username",this.user_ID);
+    this.user_ID = localStorage.getItem("ms_username");
+    console.log("username", this.user_ID);
     this.$axios
       .get("http://49.234.18.247:8080/api/HasFavorites")
       .then((response) => {
@@ -234,17 +239,15 @@ export default {
           }
         }
         this.$axios
-            .get("http://49.234.18.247:8080/api/Favorites")
-            .then((response) => {
-              for (let i = 0; i < response.data.length; i++) {
-                if (this.temp.includes(response.data[i].favoR_ID)) {
-                  this.favs.push(response.data[i]);
-                }
+          .get("http://49.234.18.247:8080/api/Favorites")
+          .then((response) => {
+            for (let i = 0; i < response.data.length; i++) {
+              if (this.temp.includes(response.data[i].favoR_ID)) {
+                this.favs.push(response.data[i]);
               }
-            });
-
+            }
+          });
       });
-
 
     this.$axios
       .get("http://49.234.18.247:8080/api/FavouriteContents")

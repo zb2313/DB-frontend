@@ -103,5 +103,4 @@ export default {
 .singleMoment ul li {
 	margin-left: 65px;
 }
-
 </style>

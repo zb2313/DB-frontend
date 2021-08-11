@@ -197,7 +197,6 @@ li {
 import Header from "@/components/Header.vue";
 import mapDrag from "@/components/mapDrag";
 export default {
-  name: "About",
   components: {
     Header,
     mapDrag,

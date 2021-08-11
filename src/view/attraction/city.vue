@@ -9,33 +9,31 @@
           </div>
 
           <div class="form2">
+            <div class="labelForForm2">缩小搜索范围</div>
 
-              <div class="labelForForm2">缩小搜索范围</div>
+            <div class="budget">
+              <p>预算：</p>
+              <el-checkbox-group v-model="checkList1">
+                <el-checkbox label="1">50元以下</el-checkbox>
+                <el-checkbox label="2">50-100元</el-checkbox>
+                <el-checkbox label="3">100元以上</el-checkbox>
+              </el-checkbox-group>
+            </div>
 
-              <div class="budget">
-                <p>预算：</p>
-                <el-checkbox-group v-model="checkList1">
-                  <el-checkbox label="1">50元以下</el-checkbox>
-                  <el-checkbox label="2">50-100元</el-checkbox>
-                  <el-checkbox label="3">100元以上</el-checkbox>
-                </el-checkbox-group>
-              </div>
+            <div class="grade">
+              <p>评分：</p>
+              <el-checkbox-group v-model="checkList2">
+                <el-checkbox label="1">好极了：5分</el-checkbox>
+                <el-checkbox label="2">非常好：4分</el-checkbox>
+                <el-checkbox label="3">一般般：3分</el-checkbox>
+                <el-checkbox label="4">不太好：2分</el-checkbox>
+                <el-checkbox label="5">非常差：1分</el-checkbox>
+              </el-checkbox-group>
+            </div>
 
-              <div class="grade">
-                <p>评分：</p>
-                <el-checkbox-group v-model="checkList2">
-                  <el-checkbox label="1">好极了：5分</el-checkbox>
-                  <el-checkbox label="2">非常好：4分</el-checkbox>
-                  <el-checkbox label="3">一般般：3分</el-checkbox>
-                  <el-checkbox label="4">不太好：2分</el-checkbox>
-                  <el-checkbox label="5">非常差：1分</el-checkbox>
-                </el-checkbox-group>
-              </div>
-
-              <div class="select">
-                <button @click="Select">筛选</button>
-              </div>
-
+            <div class="select">
+              <button @click="Select">筛选</button>
+            </div>
           </div>
         </div>
 
@@ -83,8 +81,67 @@
 </template>
 
 <style scoped>
+.el-main {
+  background-color: #e9eef3;
+  color: #333;
+  text-align: center;
+}
+.left {
+  width: 250px;
+  float: left;
+}
+
+.right {
+  float: left;
+  width: 800px;
+  margin-left: 50px;
+  text-align: left;
+}
+
+.form2 {
+  margin-top: 15px;
+  border-radius: 5px;
+  border: 1px solid rgb(189, 178, 178);
+  margin-bottom: 40px;
+}
+.labelForForm2 {
+  height: 40px;
+  border-bottom: 1px solid rgb(189, 178, 178);
+  line-height: 40px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: left;
+  text-indent: 5px;
+}
 .title {
   font-size: 16px;
+  text-align: left;
+}
+.el-checkbox {
+  margin-bottom: 18px;
+}
+
+.el-checkbox-group {
+  padding-left: 60px;
+  width: 90px;
+}
+.form2 p {
+  font-size: 15px;
+  text-align: left;
+  text-indent: 25px;
+}
+.select {
+  height: 50px;
+  line-height: 50px;
+}
+
+.select button {
+  width: 80px;
+}
+
+.budget,
+.grade {
+  border-bottom: 1px solid rgb(189, 178, 178);
 }
 .search1 {
   width: 650px;
