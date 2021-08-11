@@ -1,66 +1,5 @@
 <template>
   <el-footer>
-    <div class="main infomation">
-      <dl class="footer-item advantage">
-        <dt>为什么选择旅道</dt>
-        <dd style="margin-top: 16px">
-          <div class="advan-item advan-server">
-            <div class="advan-img">
-              <i class="ico server-ico"></i>
-            </div>
-            <div class="advan-text">
-              <p class="advan-title">放心的服务</p>
-              <p>领先的服务标准 独创的保障体系</p>
-            </div>
-          </div>
-
-          <div class="advan-item advan-price">
-            <div class="advan-img">
-              <i class="ico price-ico"></i>
-            </div>
-            <div class="advan-text">
-              <p class="advan-title">放心的价格</p>
-              <p>具竞争力的价格 无任何隐形消费</p>
-            </div>
-          </div>
-        </dd>
-      </dl>
-      <el-divider direction="vertical"></el-divider>
-      <dl class="footer-item index">
-        <dt>旅游资讯</dt>
-        <dd class="ft-link-item">宾馆索引</dd>
-        <dd class="ft-link-item">景点索引</dd>
-        <dd class="ft-link-item">攻略索引</dd>
-        <dd class="ft-link-item">机票索引</dd>
-        <dd class="ft-link-item">火车票索引</dd>
-      </dl>
-      <el-divider direction="vertical"></el-divider>
-      <dl class="footer-item cooperation">
-        <dt>加盟合作</dt>
-        <dd class="ft-link-item">分销联盟</dd>
-        <dd class="ft-link-item">友情链接</dd>
-        <dd class="ft-link-item">广告业务</dd>
-        <dd class="ft-link-item">保险代理</dd>
-        <dd class="ft-link-item">酒店加盟</dd>
-        <dd class="ft-link-item">景区合作</dd>
-        <dd class="ft-link-item">智慧旅游</dd>
-        <dd class="ft-link-item">更多合作</dd>
-      </dl>
-      <el-divider direction="vertical"></el-divider>
-      <dl class="footer-item about">
-        <dt>关于旅道</dt>
-        <dd class="ft-link-item">关于旅道</dd>
-        <dd class="ft-link-item">联系我们</dd>
-        <dd class="ft-link-item">诚聘英才</dd>
-        <dd class="ft-link-item">用户协议</dd>
-        <dd class="ft-link-item">隐私政策</dd>
-        <dd class="ft-link-item">营业执照</dd>
-        <dd class="ft-link-item">安全中心</dd>
-        <dd class="ft-link-item">知识产权</dd>
-        <dd class="ft-link-item">内容中心</dd>
-      </dl>
-    </div>
-
     <div class="copyright">
       <p class="copyright">
         <a
@@ -73,9 +12,14 @@
         rights reserved.&nbsp;|&nbsp;
         <a
           target="_blank"
+          style="color: #666"
           href="https://ws.downloadfile.fx.ctripcorp.com/files/6/portal/0AS29120008br5oqa9ADD.pdf"
           >ICP证：沪B2-xxxxxxxx&nbsp;|&nbsp;</a
-        ><a rel="nofollow" target="_blank" href="http://beian.miit.gov.cn/"
+        ><a
+          rel="nofollow"
+          target="_blank"
+          href="http://beian.miit.gov.cn/"
+          style="color: #666"
           >沪ICP备xxxxxxxx号</a
         >
       </p>
@@ -85,12 +29,14 @@
           style="color: #666"
           ><i class="icon-gns"></i>沪公网备3101050200xxxx号</a
         >丨<a
+          style="color: #666"
           href="https://ws.downloadfile.fx.ctripcorp.com/files/6/portal/0AS6j120008cc8iw85F86.pdf"
           >互联网药品信息服务资格证</a
         >
       </p>
       <p class="supervision-call">
         违法和不良信息举报电话021-22500846丨全国旅游投诉热线12301丨<a
+          style="color: #666"
           href="http://pages.c-ctrip.com/commerce/promote/201611/other/zz/pc/index.html"
           target="_blank"
           >上海市旅游网站落实诚信建设主体责任承诺书</a
@@ -176,19 +122,11 @@
 </template>
 
 <style scoped>
-.el-footer .el-divider--vertical {
-  float: left;
-  height: 170px;
-  margin: 8px 10px;
-  width: 1.5px;
-}
 .el-footer {
   width: 100%;
-  height: 350px !important;
+  height: 130px !important;
   background-color: #f2f2f2;
 }
-
-.el-footer a:link,
 .el-footer .copyright {
   color: #666;
   text-align: center;
@@ -196,65 +134,6 @@
 .el-footer .copyright p {
   margin-top: 4px;
 }
-.infomation {
-  height: 200px;
-}
-.el-footer dl {
-  float: left;
-  width: 250px;
-  font-family: "Microsoft YaHei", SimHei, SimSun, Tahoma, Verdana, Arial,
-    sans-serif;
-}
-dt {
-  font-size: 18px;
-  margin: 8px 0;
-}
-.el-footer dd {
-  color: #666;
-}
-.advan-item {
-  width: 300px;
-  height: 50px;
-  margin-bottom: 15px;
-}
-.advan-img {
-  float: left;
-}
-.ico {
-  display: inline-block;
-  width: 36px;
-  height: 36px;
-  background-image: url("http://pic.c-ctrip.com/platform/online/home/pic_partner.png");
-  background-repeat: no-repeat;
-  border-radius: 18px;
-}
-.server-ico {
-  background-position: -41px -250px;
-}
-
-.price-ico {
-  background-position: -41px -200px;
-}
-.advan-text {
-  float: left;
-  margin-left: 15px;
-}
-.advan-text .advan-title {
-  font: bold 16px "Microsoft Yahei";
-  color: black;
-}
-
-.advan-text p {
-  font-size: 13px;
-}
-
-.ft-link-item {
-  float: left;
-  width: 120px;
-  margin-top: 8px;
-  font-size: 14px;
-}
-
 .icon-gns,
 .honour_wrap a,
 .honour_wrap span {

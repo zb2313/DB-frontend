@@ -1,26 +1,13 @@
 <template>
   <el-container direction="vertical">
     <Header activeIndex="1" />
+    <div class="Form"></div>
+    <Search />
     <el-main>
       <div class="main">
-        <div class="left">
-          <div class="form1">
-            <h2></h2>
-
-            <label>目的地</label>
-            <input type="text" v-model="form1.location" placeholder="广州" />
-            <label>人数</label>
-            <input type="text" v-model="form1.people" placeholder="1" />
-            <label>房间数</label>
-            <input type="text" v-model="form1.room" placeholder="1" />
-            <div>
-              <button @click="find">搜索</button>
-            </div>
-          </div>
-
+        <!-- <div class="left">
           <div class="form2">
             <div class="labelForForm2">缩小搜索范围</div>
-
             <div class="budget">
               <p>预算：</p>
               <el-checkbox-group v-model="checkList1">
@@ -45,12 +32,12 @@
               <button @click="Select">筛选</button>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="right">
-          <div class="title">
+        <div class="left">
+          <!-- <div class="title">
             <h1>{{ title.city }}：共{{ title.num }}家住宿</h1>
-          </div>
+          </div> -->
 
           <div class="sort">
             <el-radio-group
@@ -58,8 +45,10 @@
               @change="sortClick"
               style="margin-bottom: 100px"
             >
-              <el-radio-button label="1">优先显示低价住宿</el-radio-button>
-              <el-radio-button label="2">优先显示高评分住宿</el-radio-button>
+              <el-radio-button label="1">低价优先</el-radio-button>
+              <el-radio-button label="2">高评分优先</el-radio-button>
+              <el-radio-button label="3">距离(直线)最近</el-radio-button>
+              <el-radio-button label="4">热门推荐</el-radio-button>
             </el-radio-group>
           </div>
           <div class="contents">
@@ -79,54 +68,52 @@
             </ul>
           </div>
         </div>
+
+        <div class="right">
+          <div class="amap-wrap">
+            <el-amap vid="amapDemo"></el-amap>
+          </div>
+        </div>
       </div>
     </el-main>
+    <Footer1 />
   </el-container>
 </template>
 
 <style scoped>
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
+.Form {
+  width: 100%;
+  height: 130px;
+  margin-bottom: -105px;
   text-align: center;
-}
-.left {
-  width: 250px;
-  float: left;
+  background-color: #f2f2f2;
 }
 
-.right {
-  float: left;
-  width: 800px;
-  margin-left: 50px;
+.main {
+  margin-top: 40px;
+}
+.left {
+  width: 750px;
   text-align: left;
+}
+.right {
+  position: absolute;
+  top: 346px;
+  left: 881px;
+  width: 300px;
+  height: 350px;
+  border-radius: 2px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.amap-wrap {
+  width: 100%;
+  height: 100%;
 }
 
 .title {
   font-size: 20px;
   text-align: left;
-}
-.form1 {
-  background-color: #ffc48a;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 5px;
-}
-
-.form1 label {
-  display: block;
-  text-align-last: left;
-  font-size: 6px;
-  margin-left: 48px;
-}
-
-.form1 input {
-  width: 150px;
-  margin-bottom: 8px;
-}
-.form1 button {
-  margin-top: 20px;
-  width: 80px;
 }
 
 .sort {
@@ -182,22 +169,21 @@
 <script>
 import Header from "@/components/Header.vue";
 import contentListItem from "@/components/contentListItem.vue";
+import Search from "@/components/Search.vue";
+import Footer1 from "@/components/Footer1.vue";
 export default {
   components: {
     Header,
     contentListItem,
+    Search,
+    Footer1,
   },
   data() {
     return {
-      form1: {
-        location: "",
-        room: "",
-        people: "",
-      },
       checkList1: [],
       checkList2: [],
       title: {
-        city: "广州",
+        city: "上海",
         num: 400,
       },
       radio: "1",
@@ -206,22 +192,6 @@ export default {
     };
   },
   methods: {
-    find() {
-      if (this.form1.location) {
-        this.title.city = this.form1.location;
-        this.$axios
-          .get(
-            "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
-              this.title.city
-          )
-          .then((response) => {
-            this.items = response.data.sort(function (a, b) {
-              return a.lowestprice - b.lowestprice;
-            });
-            this.title.num = response.data.length;
-          });
-      }
-    },
     sortClick: function (val) {
       if (val === "2") {
         this.items = this.items.sort(function (a, b) {
@@ -369,15 +339,19 @@ export default {
       this.items = newitems;
       this.title.num = newitems.length;
     },
+    handleTabFix() {
+      let box = document.querySelector(".right");
+      if (window.pageYOffset > box.offsetTop) {
+        box.style.position = "fixed";
+        box.style.top = "115px";
+      }
+      if (window.pageYOffset < box.offsetTop) {
+        box.style.position = "absolute";
+        box.style.top = "346px";
+      }
+    },
   },
   created() {
-    this.form1.location = this.$route.query.search;
-    if (this.$route.query.search) {
-      this.title.city = this.$route.query.search;
-    } else {
-      this.title.city = "全部";
-    }
-
     this.$axios
       .get(
         "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
@@ -390,6 +364,15 @@ export default {
         this.title.num = response.data.length;
         this.orginData = JSON.parse(JSON.stringify(response.data));
       });
+  },
+  // 监听页面滚动
+  mounted() {
+    window.addEventListener("scroll", this.handleTabFix, true);
+  },
+  //离开当前组件前一定要清除滚动监听，否则进入其他路由会报错
+  beforeRouteLeave(to, from, next) {
+    window.removeEventListener("scroll", this.handleTabFix, true);
+    next();
   },
 };
 </script>

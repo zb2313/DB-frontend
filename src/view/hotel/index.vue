@@ -2,103 +2,107 @@
   <el-container direction="vertical">
     <Header activeIndex="1" />
 
-    <div class="Form">
-      <el-form :inline="true" :model="form_Select" class="form-inline">
-        <el-form-item>
-          <el-select v-model="form_Select.location" filterable allow-create placeholder="目的地/酒店名称">
-          
-            <el-option-group
-              v-for="group in locations"
-              :key="group.label"
-              :label="group.label">
-              <el-option
-                v-for="item in group.options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-option-group>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item>
-          <el-date-picker
-            v-model="form_Select.time"
-            type="daterange"
-            format="yyyy/MM/dd"
-            range-separator="——"
-            start-placeholder="入住时间"
-            end-placeholder="退房时间"
-            :picker-options="pickerOptions">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-popover
-            placement="bottom"
-            width="200"
-            trigger="click">
-            <div class="">
-              <div>
-                <span>房间：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <el-input-number v-model="form_Select.room_num" size="mini" :min="1" :max="10"></el-input-number>
-              </div>
-              <div>
-                <span>成人：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <el-input-number v-model="form_Select.adult_num" size="mini" :min="1" :max="10"></el-input-number>
-              </div>
-              <div>
-                <span>儿童<i style="font-size:13px;font-style:normal;color:#606266">(18岁以下)</i>：&nbsp;</span>
-                <el-input-number v-model="form_Select.child_num" size="mini" :min="0" :max="10"></el-input-number>
-              </div>  
-            </div>
-            <div slot="reference" class="dropdown">
-              <span class="el-icon-s-custom icon"></span>
-              <span class="title">{{form_Select.adult_num}}位成人·{{form_Select.child_num}}位儿童·{{form_Select.room_num}}间客房</span>
-            </div>
-          </el-popover>
-        </el-form-item>
-
-        <el-form-item>
-         <div @click="onSubmit" class="search_btn el-icon-search"></div>
-        </el-form-item>
-      </el-form>
-    </div>
-
+    <div class="Form"></div>
+    <Search />
     <div class="ad main">
       <el-carousel :interval="4000" height="250px">
         <el-carousel-item v-for="fit in 4" :key="fit.index">
-          <el-image
-          style="width: 1100px; height: 250px"
-          :src="url"
-          fit="cover">
+          <el-image style="width: 1100px; height: 250px" :src="url" fit="cover">
           </el-image>
         </el-carousel-item>
       </el-carousel>
     </div>
 
     <div class="main recommend">
-      <div class="tuijian">酒店推荐</div>
-      <div class="buttons"> 
-        <div class="button" v-for="(item,index) in cities.slice(0,6)" :key="index">
-          {{item.name}}
+      <div class="text">酒店推荐</div>
+      <div class="buttons">
+        <div
+          class="button"
+          v-for="(item, index) in cities.slice(0, 6)"
+          :key="index"
+        >
+          {{ item.name }}
         </div>
         <div class="more" :class="icon">
           <div class="dropdown-content">
-            <div class="cities" v-for="item in cities.slice(6)" :key="item.index">{{item.name}}</div>
+            <div
+              class="cities"
+              v-for="item in cities.slice(6)"
+              :key="item.index"
+            >
+              {{ item.name }}
+            </div>
           </div>
         </div>
       </div>
       <div class="hotels">
         <div
           class="box"
-          v-for="item in 8"
-          :key="item"
-        >   
+          v-for="(item, index) in hotels.slice(0, 8)"
+          :key="index"
+        >
+          <div
+            class="infoImg"
+            :style="{
+              backgroundImage: 'url(' + item.img + ')',
+              backgroundSize: '100% 100%',
+              backgroundRepeat: 'no-repeat',
+            }"
+          ></div>
+          <div class="infoDetail">
+            <div class="Name" style="font-size: 14px; font-weight: 700">
+              {{ item.name }}
+            </div>
+            <img
+              src="../../assets/img/diamond.svg"
+              v-for="i in item.star"
+              :key="i"
+              style="margin-top: 2px"
+            />
+
+            <div class="Details">
+              <div class="leftstar">
+                <div class="star">
+                  {{ item.star }}.0<i
+                    style="font-style: normal; font-size: 11px; color: #4880cf"
+                    >/5</i
+                  >
+                </div>
+                <span class="dianping">{{ item.commentnum }}点评</span>
+              </div>
+              <div class="rightprice">
+                ￥{{ item.price
+                }}<i style="font-size: 11px; font-style: normal; color: gray"
+                  >&nbsp;起</i
+                >
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <Footer />
+    <div class="main server-upgrade">
+      <div class="text">酒店业务升级</div>
+      <ul>
+        <li>
+          <span class="icon-logo service1"></span>
+          <p class="desc">确认后变更，最多赔付首晚房费的3倍</p>
+        </li>
+        <li>
+          <span class="icon-logo service2"></span>
+          <p class="desc">到店无房，最多赔付首晚房费的3倍</p>
+        </li>
+        <li>
+          <span class="icon-logo service3"></span>
+          <p class="desc">退改服务保障与承诺</p>
+        </li>
+      </ul>
+      <p class="link">
+        <a href="#">更多<i class="el-icon-arrow-right"></i> </a>
+      </p>
+    </div>
+    <Footer1 />
   </el-container>
 </template>
 
@@ -106,105 +110,54 @@
 /* 搜索框css */
 .Form {
   width: 100%;
-  height: 100px;
-  padding-top: 50px;
+  height: 130px;
+  margin-bottom: -105px;
   text-align: center;
   background-color: #f2f2f2;
 }
 
-.el-form--inline .el-form-item{
-  margin-right: 0px;
-}
-.el-select /deep/ .el-input__inner{
-  height: 50px;
-  border:1px solid lightgrey;
-  border-radius: 0px;
-  cursor:text;
-}
-.el-date-editor--daterange.el-input__inner{
-  width: 250px;
-  height: 50px;
-  border:1px solid lightgrey;
-  border-radius: 0px;
-}
-.el-range-editor.is-active,
-.dropdown:focus {
-  border:1px solid #409EFF;
-}
-
-.dropdown {
-  position: relative;
-  height: 48px;
-  width: 250px;
-  background-color: #fff;
-  border:1px solid lightgrey;
-  border-radius: 0px;
-  line-height: 48px;
-}
-
-.dropdown .icon {
-  margin-right:20px;
-  color:#DCDFE6;
-}
-.dropdown .title {
-  margin-right:35px;
-  color:#606266;
-}
-.el-input-number--mini {
-  width: 86px;
-}
-.el-input-number /deep/.el-input-number__decrease,
-.el-input-number /deep/ .el-input-number__increase {
-  width: 23px;
-}
-.search_btn {
-  height: 50px;
-  width: 50px;
-  font-size: 33px;
-  background-color: #003680;
-  color: white;
-  line-height: 50px;
-}
 /* 广告css */
 .ad {
-  margin-top:40px;
+  margin-top: 40px;
 }
 .el-carousel__item:nth-child(2n) {
   background-color: #99a9bf;
 }
 
-.el-carousel__item:nth-child(2n+1) {
+.el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
 
 /* 推荐css */
 .recommend {
-  margin-top:50px;
-  margin-bottom: 35px;
+  margin-top: 50px;
   text-align: center;
 }
-.tuijian {
-  font-size:28px;
-  margin-bottom:17px;
+.text {
+  font-size: 28px;
+  margin-bottom: 17px;
   font-weight: 700;
 }
 .box {
   width: 265px;
   height: 190px;
-  background-color: rgb(85, 124, 150);
   float: left;
   margin: 5px 5px;
+  text-align: left;
+}
+.box:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 
 .buttons {
   width: 500px;
   height: 40px;
-  margin:0 auto;
+  margin: 0 auto;
 }
 
 .button,
 .more {
-  float:left;
+  float: left;
   margin-left: 5px;
   margin-right: 5px;
   width: 63px;
@@ -221,22 +174,22 @@
 }
 .button:hover,
 .more:hover {
-  border-color:#409EFF;
+  border-color: #409eff;
   cursor: pointer;
 }
-.more:hover .dropdown-content{
+.more:hover .dropdown-content {
   display: block;
 }
 .dropdown-content {
-  position:absolute;
-  display:none;
+  position: absolute;
+  display: none;
   top: 35px;
   left: -270px;
   min-width: 300px;
   min-height: 100px;
   border-radius: 2px;
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 .cities {
   float: left;
@@ -246,100 +199,206 @@
 .cities:hover {
   background-color: #ffd04b;
 }
+
+.infoImg {
+  height: 60%;
+  width: 100%;
+}
+.infoDetail {
+  width: 100%;
+  height: 80%;
+  margin-left: 2px;
+  margin-top: 5px;
+}
+.infoDetail .star {
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  color: white;
+  text-align: center;
+  background-color: #003680;
+  border-radius: 5px 5px 0px 5px;
+}
+
+.dianping {
+  height: 20px;
+  line-height: 20px;
+  font-size: 13px;
+  margin-left: 5px;
+  display: inline-block;
+  color: rgb(189, 189, 189);
+}
+
+.leftstar {
+  float: left;
+  width: 50%;
+}
+.rightprice {
+  float: right;
+  width: 40%;
+  margin-right: 5px;
+  text-align: right;
+  font-size: 22px;
+  font-weight: 700;
+  color: red;
+  margin-top: -5px;
+}
+
+/* 服务升级css */
+.server-upgrade {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 35px;
+}
+.server-upgrade ul > li {
+  display: inline-block;
+  width: 300px;
+  text-align: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  color: #455873;
+  font-size: 14px;
+}
+.icon-logo {
+  display: block;
+  height: 48px;
+  width: 48px;
+  margin: 0 auto;
+}
+.service1 {
+  background: url("data:image/png;base64,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")
+    no-repeat 50%;
+  background-size: 48px 48px;
+}
+.service2 {
+  background: url("data:image/png;base64,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")
+    no-repeat 50%;
+  background-size: 48px 48px;
+}
+.service3 {
+  background: url("data:image/png;base64,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")
+    no-repeat 50%;
+  background-size: 48px 48px;
+}
+.link {
+  text-align: right;
+  margin-top: 16px;
+}
+.link a {
+  color: #287dfa;
+  cursor: pointer;
+}
 </style>
 
 <script>
 import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
+import Footer1 from "@/components/Footer1.vue";
+import Search from "@/components/Search.vue";
 export default {
   components: {
     Header,
-    Footer,
+    Footer1,
+    Search,
   },
   data() {
     return {
-      
-      form_Select: {
-        location:"",
-        time:"",  
-        room_num:1,
-        adult_num:1,
-        child_num:0,
-      },
-      locations: [{
-          label: '热门城市',
-          options: [{
-            value: 'Shanghai',
-            label: '上海'
-          }, {
-            value: 'Beijing',
-            label: '北京'
-          }]
-        }, {
-          label: '附近酒店',
-          options: [{
-            value: 'Chengdu',
-            label: '格林豪泰快捷酒店'
-          }, {
-            value: 'Shenzhen',
-            label: '七天酒店'
-          }, {
-            value: 'Guangzhou',
-            label: '四季酒店'
-          }, {
-            value: 'Dalian',
-            label: '秋果酒店'
-          }]
-        }],
-      pickerOptions: {
-          disabledDate(time) {
-            return time.getTime() < Date.now()-86400000;
-          },
-      },
       url: require("@/assets/img/ad.png"),
-      cities:[
-        {name:"北京"},
-        {name:"上海"},
-        {name:"深圳"},
-        {name:"广州"},
-        {name:"杭州"},
-        {name:"南京"},
-        {name:"苏州"},
-        {name:"武汉"},
-        {name:"无锡"},
-        {name:"重庆"},
-        {name:"长沙"},
-        {name:"天津"},
-        {name:"郑州"},
-        {name:"济南"},
-        {name:"宁波"},
-        {name:"西安"},
-        {name:"青岛"},
-        {name:"合肥"},
-        {name:"福州"},
-        {name:"佛山"},
-        {name:"大连"},
-        {name:"沈阳"},
-        {name:"厦门"},
-        {name:"昆明"},
-        {name:"南昌"},
-        {name:"珠海"},
+      cities: [
+        { name: "北京" },
+        { name: "上海" },
+        { name: "深圳" },
+        { name: "广州" },
+        { name: "杭州" },
+        { name: "南京" },
+        { name: "苏州" },
+        { name: "武汉" },
+        { name: "无锡" },
+        { name: "重庆" },
+        { name: "长沙" },
+        { name: "天津" },
+        { name: "郑州" },
+        { name: "济南" },
+        { name: "宁波" },
+        { name: "西安" },
+        { name: "青岛" },
+        { name: "合肥" },
+        { name: "福州" },
+        { name: "佛山" },
+        { name: "大连" },
+        { name: "沈阳" },
+        { name: "厦门" },
+        { name: "昆明" },
+        { name: "南昌" },
+        { name: "珠海" },
       ],
-      icon:"el-icon-arrow-down",
+      icon: "el-icon-arrow-down",
+      hotels: [
+        {
+          name: "格林豪泰酒店",
+          star: 3,
+          price: 400,
+          address: "同济大学正门外",
+          commentnum: 250,
+          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        },
+        {
+          name: "格林豪泰酒店",
+          star: 3,
+          price: 400,
+          address: "同济大学正门外",
+          commentnum: 250,
+          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        },
+        {
+          name: "格林豪泰酒店",
+          star: 4,
+          price: 400,
+          address: "同济大学正门外",
+          commentnum: 250,
+          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        },
+        {
+          name: "格林豪泰酒店",
+          star: 5,
+          price: 400,
+          address: "同济大学正门外",
+          commentnum: 250,
+          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        },
+        {
+          name: "格林豪泰酒店",
+          star: 2,
+          price: 400,
+          address: "同济大学正门外",
+          commentnum: 250,
+          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        },
+        {
+          name: "格林豪泰酒店",
+          star: 3,
+          price: 400,
+          address: "同济大学正门外",
+          commentnum: 250,
+          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        },
+        {
+          name: "格林豪泰酒店",
+          star: 3,
+          price: 400,
+          address: "同济大学正门外",
+          commentnum: 250,
+          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        },
+        {
+          name: "格林豪泰酒店",
+          star: 3,
+          price: 400,
+          address: "同济大学正门外",
+          commentnum: 250,
+          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        },
+      ],
     };
   },
-  methods: {
-    onSubmit() {
-      console.log(this.form_Select.time);
-      // this.$router.push({
-      //   path: "/hotel/city",
-      //   query: { search: this.form_Select.location },
-      // });
-    },
-   
-  },
-  mounted() {
-      this.restaurants = this.loadAll();
-    }
 };
 </script>
