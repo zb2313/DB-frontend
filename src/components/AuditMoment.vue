@@ -1,16 +1,39 @@
 <template>
   <div>
-    <admiHeader />
+    <admiHeader /> <img src="../assets/img/audit1.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0">
     <div class="page">
       <el-card id="nomoment" v-if="momentlist.length===0">暂无动态
       </el-card>
       <el-card class="box-card" v-for="(item,i) in momentlist" :key="i" id="moment">
         <div>
-          <el-image v-bind:src="item.picture" v-if="item.picture!=null"></el-image>
+          <el-avatar
+          size="large"
+          :src="item.uprofile"
+          style="float: left"
+        ></el-avatar>
+        <pre><span class="user_name" style="float: left"> 用户名：{{item.useR_NAME}}</span>
+    <span class="user_name" style="float: left"> 用户ID:{{item.useR_ID}}</span>
+		<span class="moment_time" style="float:left"> {{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
+      </pre>
           <div><br>{{item.text}}
+          <img
+            :src="item.picture"
+            v-if="item.picture !== null"
+            style="width: 30%; height: 80px"
+          />
+          <div v-if="item.vedio !== null">
+            <iframe
+              :src="item.vedio"
+              frameborder="0"
+              allow="autoplay;encrypted-media"
+              allowfullscreen
+              style="width: 100%; height: 50%"
+            >
+            </iframe>
+          </div>
           </div><br>
-          <el-button icon="el-icon-error" @click="del=i;clear()">清除内容</el-button>
-          <el-button icon="el-icon-delete" type="danger" @click="del=i;dele()">删 除</el-button>
+          <el-button icon="el-icon-error" size="small" @click="del=i;clear()">清除内容</el-button>
+          <el-button icon="el-icon-delete" size="small" type="danger" @click="del=i;dele()">删 除</el-button>
         </div >
       </el-card>
     </div>
@@ -27,7 +50,7 @@
 .page{
   position:absolute;
   top: 200px;
-  left:300px;
+  left:300px; 
 }
 </style>
 <script>
@@ -43,11 +66,9 @@ export default {
       };
   },
   created()
-  {
-       var that=this;
-          axios.get("http://49.234.18.247:8080/api/Moment")
+  {axios.get("http://49.234.18.247:8080/api/FunGetAllMomentInfo")
         .then(res=>{
-            that.momentlist=res.data;
+            this.momentlist=res.data;
                 })
         .catch(err=>{
         console.log(err)
@@ -55,6 +76,13 @@ export default {
   },
   methods:
   {
+    recreated()
+    {
+      axios.get("http://49.234.18.247:8080/api/FunGetAllMomentInfo")
+        .then(res=>{
+            this.momentlist=res.data;
+                })
+    },
       clear()
       {
            this.$confirm('此操作将清除该动态内容, 是否继续?', '提示', {
@@ -73,9 +101,7 @@ export default {
           })
           .then(()=>
           {
-            this.momentlist[this.del].text="违规内容，内容已清除！";
-            this.momentlist[this.del].picture=null;
-            this.momentlist[this.del].vedio=null;
+            this.recreated();
             this.$message({
               type: 'success',
               message: '清除成功!'

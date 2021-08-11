@@ -1,5 +1,5 @@
 <template>
-  <el-header height="80px">
+  <el-header height="100px">
     <router-link to="/hotel"><div class="logo">LVDAO</div></router-link>
 
     <div class="nav1">
@@ -64,7 +64,7 @@
 }
 
 .nav1 {
-  float: left;
+  float: right;
   margin-left: 55%;
   margin-top: 10px;
 }

@@ -1,18 +1,15 @@
 <template>
   <div class="ALLMoment">
-    <el-header height="100px">
-        <div class="logo">LVDAO
-        </div>
-      <div class="sss">
-        <el-button type="primary" icon="el-icon-back" @click="goBack"
+ <Header1/>
+<img src="../assets/img/faq.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
+<div class="sss">
+        <el-button type="success" plain icon="el-icon-back" size="medium" @click="goBack"
         >返回
         </el-button>
       </div>
-
-    </el-header>
     <!-- 动态区域 -->
     <div class="showMoment">
-      <span v-if="this.Moments.length===0">暂无数据···</span>
+      <span v-if="this.Moments.length===0">暂无数据···</span><br>
       <li
         class="show"
         v-for="(item, index) in Moments"
@@ -21,15 +18,10 @@
       >
         <el-card class="singleMoment">
           <router-link :to="'/3/' + item.momenT_ID">
-            <span class="zhankai" type="primary">展开</span>
-          </router-link>
-          <pre><span class="user_id" style="float:left">{{item.useR_ID}}</span>
-		<span class="moment_id" style="float:left">{{item.momenT_ID}}</span></pre>
-          <!-- 动态发布地点信息和时间信息 -->
-          <pre><span class="moment_location" style="float: left">{{item.momenT_LOCATION}}</span>
-		<span class="moment_time" style="float: right">{{item.momenT_TIME}}</span></pre>
+            <span class="zhankai" type="primary"><i class="el-icon-arrow-down"> 查看动态详情</i></span>
+          </router-link> 
           <!-- 动态中的文本 -->
-          <el-card class="mymoment_text">
+         
             <p class="moment_text">{{ item.text }}</p>
             <!-- 动态中的图片 -->
             <img
@@ -49,7 +41,9 @@
               >
               </iframe>
             </div>
-          </el-card>
+              <!-- 动态发布地点信息和时间信息 -->
+          <pre><br>
+           <span class="moment_location" style="float: right">{{item.momenT_TIME}}<br>发布于{{item.momenT_LOCATION}}</span></pre><br>
         </el-card>
       </li>
     </div>
@@ -58,7 +52,11 @@
 
 <script>
 import axios from "axios";
+import Header1 from "@/components/Header1.vue";
 export default {
+  components:{
+      Header1
+    },
   data() {
     return {
       Moments: [],
@@ -102,15 +100,14 @@ export default {
 
 <style scoped>
 .sss {
-  float:right;
-  margin-top:50px;
-  margin-right: 50px;
+  float:left;
+  margin-top:45px;
+  margin-left: 190px;
 }
 .ALLMoment {
   max-height: 1000px;
   width: 100%;
   position: absolute;
-  background-color: #fbf8ef;
 }
 .zhankai {
   display: flex;
@@ -131,7 +128,6 @@ export default {
   margin: 12px auto;
   box-sizing: border-box;
   background: #ecf8e0;
-  border: 1px dotted rgb(169, 185, 108);
   border-radius: 10px;
   position: relative;
 }

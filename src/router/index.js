@@ -267,9 +267,14 @@ const routes = [
         component: () => import('../view/Personalpage.vue')
     },
     {
-        path: '/audit',
-        name: 'Audit',
-        component: () => import('../components/Audit.vue')
+        path: '/auditmoment',
+        name: 'AuditMoment',
+        component: () => import('../components/AuditMoment.vue')
+    },
+    {
+        path: '/auditmerchant',
+        name: 'AuditMerchant',
+        component: () => import('../components/AuditMerchant.vue')
     },
     {
         path: '/sendmail',
@@ -277,9 +282,9 @@ const routes = [
         component: () => import('../components/SendMail.vue')
     },
     {
-        path: '/updateQA',
-        name: 'UpdateQA',
-        component: () => import('../components/UpdateQA.vue')
+        path: '/updateFAQ',
+        name: 'UpdateFAQ',
+        component: () => import('../components/UpdateFAQ.vue')
     },
     {
         path: '/SellerHome',

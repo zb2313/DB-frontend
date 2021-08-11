@@ -1,13 +1,8 @@
 <template>
+<div>
+  <Header1/>
   <el-container>
-    <!-- 头部区域 -->
-    <el-header class="PublishHead" style="height: 80px">
-      <div class="headline">动态发布</div>
-
-      <el-button type="primary" icon="el-icon-back" style="margin-top: 30px;margin-right:75px" @click="goBack">返回 </el-button>
-    </el-header>
     <el-main>
-
       <div id="editor">
         <mavon-editor
             style="height: 95% ;width:90%;margin:auto"
@@ -15,7 +10,6 @@
             ref="md"
         ></mavon-editor>
       </div>
-
       <div class="pick_location">
         <div class="notice">请选择地点</div>
         <div class="selects">
@@ -23,26 +17,26 @@
               @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea">
             </v-distpicker>
         </div>
-        <el-button type="primary" style="float: right;margin-right:145px" @click="PublishButton">动态发布</el-button>
-
+        <el-button type="primary" icon="el-icon-s-promotion" style="float: right;margin-right:10px" @click="PublishButton">发布动态</el-button>
+       <el-button type="primary" plain style="float:right;margin-right:10px" @click="goBack">取消发布</el-button>
       </div>
-
     </el-main>
 
   </el-container>
-
+</div>
 </template>
 
 <script>
 // Local Registration
 import axios from "axios";
 
+import Header1 from "@/components/Header1.vue";
 import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 axios.defaults.baseURL = "http://127.0.0.1:8081";
 import VDistpicker from 'v-distpicker'
 export default {
-  components: {VDistpicker},
+  components: {VDistpicker,  Header1},
   name: "pulishNav",
   data() {
     return {
@@ -60,7 +54,7 @@ export default {
   },
   methods:{
     goBack() {
-      this.$router.push('/')
+      this.$router.push('/1')
     },
     //打开选择地区
     onChangeProvince(data) {
@@ -79,13 +73,15 @@ export default {
       this.value=1
     },
     creatMoment_ID(){
+      do{
       let chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-      let Moment_ID='';
+      var Moment_ID='';
       for(let i=0;i<10;i++)
       {
         let id = Math.ceil(Math.random()*35);
         Moment_ID+=chars[id];
       }
+      var rep=false;//id重复标志
       this.$axios
       .get("http://49.234.18.247:8080/api/Moment")
       .then((res)=>{
@@ -95,11 +91,10 @@ export default {
         {
           console.log("data:",this.momenTID_LIST[j].momenT_ID)
           if(Moment_ID===this.momenTID_LIST[j].momenT_ID)
-          {
-            alert("动态id重复，请重新发布")
-          }
+         rep=true;
         }
       })
+    }while(rep===true)//动态id重复时重新生成一个
       this.momenT_ID=Moment_ID;
     },
     gettime(){
@@ -173,20 +168,13 @@ export default {
 #editor {
   margin: auto;
   width: 100%;
-  height: 580px;
-}
-.PublishHead button{
-  display: block;
-  float: right;
-  justify-content: center;
-  align-content: center;
-  margin-top: 10px;
+  height: 676px;
 }
 .el-row {
   margin-bottom: 20px;
 }
 .pick_location{
-  width: 100%;
+  width: 90%;
   height: 40px;
   margin-left: 70px;
 }
@@ -207,13 +195,5 @@ export default {
 .submit_button{
 
   margin-right: 20px;
-}
-.headline{
-  margin-top: 20px;
-  margin-left: 75px;
-  font-size: 30px;
-  font-weight: bold;
-  color: #ffffff;
-  float: left;
 }
 </style>

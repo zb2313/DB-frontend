@@ -1,6 +1,7 @@
 <template>
   <div>
     <admiHeader/>
+    <img src="../assets/img/faq.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0"> 
     <div class="page">
       <el-card>
         <el-table :max-height="600"
@@ -33,12 +34,12 @@
             <template slot-scope="scope">
               <el-button icon="el-icon-edit"
                size="mini"   v-if="tableData.length!=0"
-               @click="handleEdit(scope.$index,scope.row);editFormVisible=true">
+               @click="handleEdit(scope.row);editFormVisible=true">
                更改</el-button>
               <el-button icon="el-icon-delete"
               size="mini"  v-if="tableData.length!=0"
               type="danger"
-              @click="handleDelete(scope.$index,scope.row)">
+              @click="handleDelete(scope.row)">
               删除</el-button>
             </template>
           </el-table-column>
@@ -54,8 +55,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="addFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="add()">确 定</el-button>
+          <el-button size="medium" @click="addFormVisible = false">取 消</el-button>
+          <el-button  size="medium" type="primary" @click="add()">确 定</el-button>
         </div>
       </el-dialog>
       <el-dialog title="请输入问题及解答！" :visible.sync="editFormVisible">
@@ -68,8 +69,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="editFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="save()">确 定</el-button>
+          <el-button size="medium" @click="editFormVisible = false">取 消</el-button>
+          <el-button size="medium" type="primary" @click="save()">确 定</el-button>
        </div>
       </el-dialog>
     </div></div>
@@ -82,7 +83,6 @@ import axios from 'axios';
     data() {
       return {
         search:'',
-        editindex:0,
         tableData: [],
         rules: {
           questioN_NAME: [
@@ -107,36 +107,68 @@ import axios from 'axios';
       }
     },
     created()
-    {   let that=this;
+    {  
           axios.get("http://49.234.18.247:8080/api/Faqs")
         .then(res=>{
-            that.tableData=res.data;
+            this.tableData=res.data;
                 })
         .catch(err=>{
         console.log(err)
                 });
     },
     methods: {
-      handleEdit(index,row) {
+      recreated()
+      {
+            axios.get("http://49.234.18.247:8080/api/Faqs")
+        .then(res=>{
+            this.tableData=res.data;
+                })
+      },
+      createID()
+      {do{
+      let chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+      var ID='';
+      for(let i=0;i<10;i++)
+      {
+        let id = Math.ceil(Math.random()*35);
+        ID+=chars[id];
+      }
+      var rep=false;
+      for(let j=0;j<this.tableData.length;j++)
+      if(ID===this.tableData[j].questioN_ID)
+      rep=true;//将生成的id与已有的问题id比较，如有相同的就重新生成一个
+      }while(rep===true)
+      return ID;
+      },
+      handleEdit(row) {
          this.editform.questioN_NAME=row.questioN_NAME;
         this.editform.solution=row.solution;
         this.editform.questioN_ID=row.questioN_ID;
-        this.editindex=index;
       },
-      handleDelete(index,row) {
+      handleDelete(row) {
            this.$confirm('此操作将永久删除该问题, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          axios.delete("http://49.234.18.247:8080/api/Faqs/"+row.questioN_ID)
+          axios.delete("http://49.234.18.247:8080/api/UpdateFaqs/"+row.questioN_ID+'&'+localStorage.getItem("ms_username"))
+          .then(()=>
+          {axios.delete("http://49.234.18.247:8080/api/Faqs/"+row.questioN_ID)
           .then(()=>
           {
-            this.tableData.splice(index,1);
+             this.recreated();
             this.$message({
               type: 'success',
               message: '删除成功!'
             });
+          })
+         .catch(()=>
+            {
+               this.$message({
+              type: 'error',
+              message: '服务器内部错误!'
+            });
+            })
           })
           .catch(()=>
           {
@@ -145,8 +177,6 @@ import axios from 'axios';
               message: '网络错误!'
             });
           });
-
-
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -159,23 +189,28 @@ import axios from 'axios';
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         }).then(() => {if(this.ruleform.questioN_NAME!=''&&this.ruleform.solution!='')
-          {  let chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-      let question_id='';
-      for(let i=0;i<10;i++)
-      {
-        let id = Math.ceil(Math.random()*35);
-        question_id+=chars[id];
-      }
-          this.ruleform.questioN_ID=question_id;
+          { 
+          this.ruleform.questioN_ID=this.createID();
         axios.post("http://49.234.18.247:8080/api/Faqs",
           {
-              "questioN_ID":question_id,
+              "questioN_ID":this.ruleform.questioN_ID,
               "questioN_NAME":this.ruleform.questioN_NAME,
               "solution":this.ruleform.solution
           })
         .then(()=>
-        {
-          this.tableData.push(this.ruleform);
+        {axios.post("http://49.234.18.247:8080/api/UpdateFaqs",
+          {
+            "administratoR_ID":localStorage.getItem("ms_username"),
+              "questioN_ID":this.ruleform.questioN_ID,
+          })
+          .catch(()=>
+          {
+            this.$message({
+              type: 'error',
+              message: '服务器内部错误!'
+            });
+          })
+          this.recreated();
           this.ruleform=[];
           this.$message({
             type: 'success',
@@ -187,8 +222,8 @@ import axios from 'axios';
             this.$message({
               type: 'error',
               message: '网络错误!'
-            });});
-
+            });
+            });
           }
           else   alert('输入不能为空!');
         }).catch(() => {
@@ -208,8 +243,7 @@ import axios from 'axios';
           })
       .then(()=>
       {
-        this.tableData[this.editindex].questioN_NAME=this.editform.questioN_NAME;
-        this.tableData[this.editindex].solution=this.editform.solution;
+        this.recreated();
         this.$message({
           type: 'success',
           message: '修改成功'
