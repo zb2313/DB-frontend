@@ -103,7 +103,7 @@ export default {
 	text-align: center;
 	vertical-align: middle;
 	display: inline-block;
-	margin: 20px 0;
+	margin: 20px 20px;
 	background: #007acc;
 	color: #fff;
 	border: 0;
