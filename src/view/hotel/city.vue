@@ -1,24 +1,118 @@
 <template>
   <el-container direction="vertical">
     <Header activeIndex="1" />
-    <div class="Form"></div>
-    <Search />
+
     <el-main>
       <div class="main">
-        <!-- <div class="left">
+        <!-- 左边展示区域 -->
+        <div class="left">
+          <!-- 重新搜索 -->
+          <div class="searchBox">
+            <div class="searchForm">
+              <p>目的地/酒店名称</p>
+              <el-input placeholder="上海" v-model="searchForm.location">
+                <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              </el-input>
+
+              <p class="margin">入住日期</p>
+              <el-date-picker
+                v-model="searchForm.date1"
+                type="date"
+                placeholder="开始日期"
+                :picker-options="searchForm.pickerOptions0"
+              >
+              </el-date-picker>
+
+              <p class="margin">退房日期</p>
+              <el-date-picker
+                v-model="searchForm.date2"
+                type="date"
+                placeholder="结束日期"
+                :picker-options="searchForm.pickerOptions1"
+              >
+              </el-date-picker>
+              <p>入住{{ searchForm.dates }}晚</p>
+
+              <div class="input-number margin" style="margin-bottom: 7px">
+                <div class="input-number-text">
+                  {{ searchForm.adult }}位成人
+                </div>
+                <div class="input-number-icon">
+                  <div class="input-number-up-icon">
+                    <i class="el-icon-arrow-up"></i>
+                  </div>
+                  <div class="input-number-down-icon">
+                    <i class="el-icon-arrow-down"></i>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="input-number"
+                style="display: inline-block; width: 82px; margin-right: 4px"
+              >
+                <div class="input-number-text">
+                  {{ searchForm.child }}名儿童
+                </div>
+                <div class="input-number-icon">
+                  <div class="input-number-up-icon">
+                    <i class="el-icon-arrow-up"></i>
+                  </div>
+                  <div class="input-number-down-icon">
+                    <i class="el-icon-arrow-down"></i>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="input-number"
+                style="display: inline-block; width: 82px"
+              >
+                <div class="input-number-text">{{ searchForm.room }}间房</div>
+                <div class="input-number-icon">
+                  <div class="input-number-up-icon">
+                    <i class="el-icon-arrow-up"></i>
+                  </div>
+                  <div class="input-number-down-icon">
+                    <i class="el-icon-arrow-down"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="searchBtn">点击搜索</div>
+            </div>
+          </div>
+
+          <!-- 地图 -->
+          <div class="map">
+            <div class="el-icon-location locationMark"></div>
+            <div class="mapshow-btn" @click="dialogVisible = true">
+              在地图上查看
+            </div>
+          </div>
+          <el-dialog
+            :visible.sync="dialogVisible"
+            width="90%"
+            center="true"
+            top="20px"
+          >
+            <div class="amap-wrap">
+              <el-amap vid="amapDemo"></el-amap>
+            </div>
+          </el-dialog>
+          <!-- 筛选框 -->
           <div class="form2">
             <div class="labelForForm2">缩小搜索范围</div>
+            <!-- 按价格筛选 -->
             <div class="budget">
-              <p>预算：</p>
+              <p>你的预算(每晚)</p>
               <el-checkbox-group v-model="checkList1">
                 <el-checkbox label="1">200元以下</el-checkbox>
                 <el-checkbox label="2">200-500元</el-checkbox>
                 <el-checkbox label="3">500元以上</el-checkbox>
               </el-checkbox-group>
             </div>
-
+            <!-- 按星级筛选 -->
             <div class="grade">
-              <p>评分：</p>
+              <p>评分</p>
               <el-checkbox-group v-model="checkList2">
                 <el-checkbox label="1">好极了：5分</el-checkbox>
                 <el-checkbox label="2">非常好：4分</el-checkbox>
@@ -28,23 +122,17 @@
               </el-checkbox-group>
             </div>
 
-            <div class="select">
-              <button @click="Select">筛选</button>
-            </div>
+            <div class="select" @click="Select">筛选</div>
           </div>
-        </div> -->
+        </div>
 
-        <div class="left">
-          <!-- <div class="title">
+        <div class="right">
+          <div class="title">
             <h1>{{ title.city }}：共{{ title.num }}家住宿</h1>
-          </div> -->
+          </div>
 
           <div class="sort">
-            <el-radio-group
-              v-model="radio"
-              @change="sortClick"
-              style="margin-bottom: 100px"
-            >
+            <el-radio-group v-model="radio" @change="sortClick">
               <el-radio-button label="1">低价优先</el-radio-button>
               <el-radio-button label="2">高评分优先</el-radio-button>
               <el-radio-button label="3">距离(直线)最近</el-radio-button>
@@ -68,12 +156,6 @@
             </ul>
           </div>
         </div>
-
-        <div class="right">
-          <div class="amap-wrap">
-            <el-amap vid="amapDemo"></el-amap>
-          </div>
-        </div>
       </div>
     </el-main>
     <Footer1 />
@@ -81,49 +163,122 @@
 </template>
 
 <style scoped>
-.Form {
-  width: 100%;
-  height: 130px;
-  margin-bottom: -105px;
-  text-align: center;
-  background-color: #f2f2f2;
-}
-
 .main {
-  margin-top: 40px;
+  margin-top: 25px;
 }
+/* 左侧css */
 .left {
-  width: 750px;
-  text-align: left;
-}
-.right {
-  position: absolute;
-  top: 346px;
-  left: 881px;
   width: 300px;
-  height: 350px;
-  border-radius: 2px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  float: left;
+  text-align: center;
+}
+/* 重新搜索 */
+.searchBox {
+  width: 270px;
+  height: 400px;
+  border-radius: 3px;
+  border: 1px solid rgb(189, 178, 178);
+  background-color: #ffc489;
+}
+.searchForm {
+  width: 80%;
+  height: 90%;
+  margin: 0 auto;
+  margin-top: 20px;
+  background-color: #fff;
+  font-size: 13px;
+  text-align: left;
+  background-color: #ffc489;
+}
+.el-date-editor.el-input,
+.el-date-editor.el-input__inner,
+.el-input {
+  width: 211px;
+}
+.input-number {
+  width: 190px;
+  height: 30px;
+  line-height: 30px;
+  border: 1px solid lightgray;
+  padding: 0 10px;
+  border-radius: 4px;
+  background-color: white;
+}
+.input-number-text {
+  float: left;
+  text-align: left;
+  height: 100%;
+}
+.input-number-icon {
+  float: right;
+  text-align: right;
+  height: 100%;
+}
+.input-number-up-icon {
+  font-size: 8px;
+  height: 50%;
+  line-height: 23px;
+}
+.input-number-down-icon {
+  font-size: 8px;
+  height: 50%;
+  line-height: 8px;
+}
+.searchBtn {
+  width: 120px;
+  height: 50px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  background-color: #0071c2;
+  margin: 0 auto;
+  margin-top: 15px;
+  cursor: pointer;
+}
+.margin {
+  margin-top: 12px;
+}
+/* 地图btn css */
+.left .map {
+  margin-top: 20px;
+  width: 272px;
+  height: 180px;
+  border-radius: 3px;
+  background: url("http://ac-q-cf.static.booking.cn/static/img/map/map-entry-point/7813a559b03ef30ba107ca5224172615a210e416.png")
+    no-repeat;
+  background-size: cover;
+}
+.left .locationMark {
+  font-size: 60px;
+  margin-top: 45px;
+  color: #0071c2;
+}
+.left .mapshow-btn {
+  width: 105px;
+  height: 32px;
+  line-height: 32px;
+  margin: 8px auto;
+  font-size: 15px;
+  color: white;
+  border-radius: 3px;
+  background-color: #0071c2;
+  cursor: pointer;
 }
 
 .amap-wrap {
   width: 100%;
-  height: 100%;
+  height: 500px;
 }
 
-.title {
-  font-size: 20px;
-  text-align: left;
-}
-
-.sort {
-  height: 60px;
-  text-align: left;
-}
-
+/* 左侧筛选框 */
 .form2 {
-  margin-top: 15px;
-  border-radius: 5px;
+  width: 270px;
+  margin-top: 20px;
+  border-radius: 3px;
   border: 1px solid rgb(189, 178, 178);
   margin-bottom: 40px;
 }
@@ -138,48 +293,95 @@
   text-indent: 5px;
 }
 .el-checkbox {
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 }
 
 .el-checkbox-group {
-  padding-left: 60px;
+  padding-left: 20px;
   width: 90px;
 }
 .form2 p {
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 600;
   text-align: left;
-  text-indent: 25px;
+  text-indent: 18px;
+  margin: 10px 0;
 }
 
 .select {
   height: 50px;
   line-height: 50px;
+  cursor: pointer;
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+  background-color: #0071c2;
 }
-
-.select button {
-  width: 80px;
-}
-
 .budget,
 .grade {
   border-bottom: 1px solid rgb(189, 178, 178);
+}
+
+.select:hover,
+.mapshow-btn:hover,
+.searchBtn:hover {
+  background-color: #003680;
+}
+
+/* 右边展示区css */
+.right {
+  float: left;
+  margin-left: 27px;
+  width: 750px;
+  text-align: left;
+}
+.right .title {
+  font-size: 20px;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+/* 搜索框 */
+.right .sort {
+  height: 60px;
 }
 </style>
 
 <script>
 import Header from "@/components/Header.vue";
 import contentListItem from "@/components/contentListItem.vue";
-import Search from "@/components/Search.vue";
 import Footer1 from "@/components/Footer1.vue";
 export default {
   components: {
     Header,
     contentListItem,
-    Search,
     Footer1,
   },
   data() {
     return {
+      searchForm: {
+        location: "",
+        date1: "",
+        date2: "",
+        dates: "",
+        pickerOptions0: {
+          disabledDate: (time) => {
+            return time.getTime() < Date.now() - 8.64e7;
+          },
+        },
+        pickerOptions1: {
+          disabledDate: (time) => {
+            return (
+              time.getTime() < this.searchForm.date1 ||
+              time.getTime() < Date.now() - 86400000
+            );
+          },
+        },
+        adult: 1,
+        child: 0,
+        room: 1,
+      },
+      dialogVisible: false,
       checkList1: [],
       checkList2: [],
       title: {
@@ -339,17 +541,6 @@ export default {
       this.items = newitems;
       this.title.num = newitems.length;
     },
-    handleTabFix() {
-      let box = document.querySelector(".right");
-      if (window.pageYOffset > box.offsetTop) {
-        box.style.position = "fixed";
-        box.style.top = "115px";
-      }
-      if (window.pageYOffset < box.offsetTop) {
-        box.style.position = "absolute";
-        box.style.top = "346px";
-      }
-    },
   },
   created() {
     this.$axios
@@ -365,14 +556,31 @@ export default {
         this.orginData = JSON.parse(JSON.stringify(response.data));
       });
   },
-  // 监听页面滚动
-  mounted() {
-    window.addEventListener("scroll", this.handleTabFix, true);
+  watch: {
+    "searchForm.date1"(inew, iold) {
+      if (this.searchForm.date2) {
+        if (inew > this.searchForm.date2) {
+          var temp = this.searchForm.date1;
+          this.searchForm.date1 = this.searchForm.date2;
+          this.searchForm.date2 = temp;
+        }
+        this.searchForm.dates = Math.ceil(
+          (this.searchForm.date2 - this.searchForm.date1) / 8.64e7
+        );
+      }
+    },
+    "searchForm.date2"(inew, iold) {
+      if (this.searchForm.date1) {
+        this.searchForm.dates = Math.ceil(
+          (inew - this.searchForm.date1) / 8.64e7
+        );
+      }
+    },
+    deep: true,
   },
-  //离开当前组件前一定要清除滚动监听，否则进入其他路由会报错
-  beforeRouteLeave(to, from, next) {
-    window.removeEventListener("scroll", this.handleTabFix, true);
-    next();
+  mounted() {
+    this.searchForm.date1 = Date.now();
+    this.searchForm.date2 = Date.now() + 8.64e7;
   },
 };
 </script>
