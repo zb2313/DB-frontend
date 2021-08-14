@@ -190,7 +190,7 @@ const routes = [
     {
         path: '/hotel/detail',
         name: 'HotelDetail',
-        component: () => import('../view/hotel/detail.vue')
+        component: () => import('../components/comment.vue')
     },
     {
         path: '/attraction/city',
