@@ -1,6 +1,7 @@
 <template>
   <div class="fixed">
     <el-form :inline="true" :model="form_Select" class="form-inline">
+      <!-- 罗检form-inline这个类好像没用 -->
       <el-form-item>
         <el-select
           v-model="form_Select.location"
