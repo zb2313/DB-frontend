@@ -1,60 +1,46 @@
 <template>
   <el-card class="content" shadow="never">
-    <div class="leftPart">
-      <div
-        class="leftimg"
-        :style="{
-          backgroundImage: 'url(' + (coverImgUrl ? coverImgUrl : baseImg) + ')',
-          backgroundSize: '100% 100%',
-          backgroundRepeat: 'no-repeat',
-        }"
-      ></div>
-      <h4>{{ roomName }}</h4>
-      <span @click="viewRoomInfo" class="hint">查看客房信息</span>
-    </div>
+    <div class="clearfix">
+      <div class="leftPart">
+        <div style="width: 200px" class="clearfix">
+          <div
+            class="leftimg"
+            :style="{
+              backgroundImage:
+                'url(' + (userAvatar ? userAvatar : baseImg) + ')',
+              backgroundSize: '100% 100%',
+              backgroundRepeat: 'no-repeat',
+            }"
+          ></div>
+          <div style="float: left">
+            <p>{{ userName }}</p>
+            <p class="hint">{{ commentTime }}</p>
+          </div>
+        </div>
+        <div class="hint">
+          <p>
+            <i class="el-icon-receiving"></i>
+            <span>{{ commentRoom }}</span>
+          </p>
+          <p>
+            <i class="el-icon-date"></i>
+            <span>于{{ bookTime }}入住</span>
+          </p>
+          <p>
+            <i class="el-icon-edit-outline"></i>
+            <span>{{ userCommentNum }}条点评</span>
+          </p>
+        </div>
+      </div>
 
-    <!-- 分割线 -->
-    <div style="float: left; height: 700px">
-      <el-divider direction="vertical"></el-divider>
-    </div>
-    <!-- 住房数 -->
-    <div class="detail">
-      <i class="el-icon-user"></i>
-      <span class="customer"> x {{ customerNum }}</span>
-    </div>
-    <!-- 床以及餐食 -->
-    <div class="detail">
-      <p>{{ bed }}</p>
-      <br />
-      <p>{{ dish }}餐食</p>
-    </div>
-    <!-- 烟及窗 -->
-    <div class="detail">
-      <p>{{ smoke }}吸烟</p>
-      <br />
-      <p>{{ window }}窗</p>
-    </div>
-    <!-- 不可取消及立即确认 -->
-    <div class="detail" style="color: #06aebd">
-      <p>{{ cancel }}</p>
-      <br />
-      <p>立即确认</p>
-    </div>
-    <!-- 预定 -->
-    <div class="detail">
-      <div class="relative">
-        <div class="clearfix">
-          <div style="float: left">
-            <span style="color: #003580; font-weight: 700; font-size: 24px">
-              ￥{{ price }}
-            </span>
-          </div>
-          <div style="float: left">
-            <span style="color: grey; font-size: 14px; text-decoration: line-through;">
-              ￥{{ originalPrice }}
-            </span>
-          </div>
-          <button @click="Book">预定</button>
+      <!-- 评论内容 -->
+      <div class="comment">
+        <div>
+          <span class="rate">{{ commentRate }}</span>
+          <span class="hint">/5</span><span class="rate">{{ level }}</span>
+        </div>
+        <div>
+          {{ commentContent }}
         </div>
       </div>
     </div>
@@ -62,50 +48,47 @@
 </template>
 
 <style scoped>
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+.clearfix {
+  *zoom: 1;
+}
 .hint {
-  color: cornflowerblue;
-  font-size: 14px;
+  color: grey;
+  font-size: 12px;
+  text-align-last: left;
 }
 .leftPart {
   float: left;
 }
 
 .leftimg {
-  width: 200px;
-  height: 130px;
+  width: 60px;
+  height: 60px;
+  float: left;
 }
-
-.content h4 {
-  margin-top: 5px;
+.rate {
+  margin-left: 5px;
+  font-size: 24px;
+  color: #003580;
+  font-weight: 700;
 }
 .content {
   margin-left: 10%;
   margin-right: 10%;
   height: 210px;
-  text-align: center;
 }
-.detail {
+.comment {
   float: left;
-  margin-top: 40px;
-  margin-left: 20px;
-  margin-right: 40px;
   font-size: 14px;
-}
-.customer {
-  background-color: navy;
-  color: white;
-  font-size: 14px;
-}
-.relative {
-  position: relative;
-  top: 15px;
-  left: 100px;
-}
-button {
-  width: 90px;
-  height: 40px;
-  background-color: #f7ba2a;
-  color: white;
+  margin-right: 10%;
+  height: 210px;
 }
 </style>
 
@@ -114,7 +97,7 @@ export default {
   //   props: {
   //     title: String,
   //     address: String,
-  //     grade: Number,
+  //     commentRate: Number,
   //     type: String,
   //     price: Number,
   //     coverImgUrl: String,
@@ -123,34 +106,39 @@ export default {
   //   },
   data() {
     return {
-      roomName: "山系·城景大床房",
-      customerNum: 2,
-      bed: "1张大床和1张双人床",
-      dish: "有",
-      smoke: "可",
-      window: "有",
-      cancel: "不可取消",
-      price: 999,
-      originalPrice:1314,
-      coverImgUrl:
-        "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+      userName: "蔡蔡小游侠",
+      userAvatar:
+        "https://ak-d.tripcdn.com/images/0Z83i120008sxl11y398B_R_100_100_R5_Q70_D.jpg",
+      commentRoom: "山系·城景大床房",
+      bookTime: "08/14/2021",
+      commentPicture:
+        "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
+      userCommentNum: 1,
+      commentRate: 4,
+      commentContent:
+        "楼下有个人的早餐店铺 豌杂面还不错，不能加床。 🛏️床确实是1.5米的，这个必须肯定。楼下有免费停车🅿️场 。 房间没有介绍的45平米，感觉被骗了。最多30平米左右，窗子对着居民楼，跟图片上完全不一样。整个旅途住宿费最贵的 真的是最差的一家。江边一直有施工，很乱。",
+      commentTime: "08/14/2021 20:53",
       baseImg:
         "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
     };
   },
-  methods: {
-    viewRoomInfo() {
-      const h = this.$createElement;
-      this.$msgbox({
-        title: "消息",
-        message: h("p", null, [
-          h("span", null, "内容可以是 "),
-          h("i", { style: "color: teal" }, "VNode"),
-        ]),
-        showCancelButton: false,
-        confirmButtonText: "确定",
-      });
+  computed: {
+    level: function () {
+      if (this.commentRate == 5) {
+        return "好极了";
+      } else if (this.commentRate == 4) {
+        return "非常好";
+      } else if (this.commentRate == 3) {
+        return "一般般";
+      } else if (this.commentRate == 2) {
+        return "不太好";
+      } else {
+        return "非常差";
+      }
     },
+  },
+  methods: {
+    
   },
   created() {},
 };
