@@ -1,0 +1,128 @@
+<template>
+  <el-card class="content main" shadow="never">
+    <div class="leftPart">
+      <div style="width: 200px" class="clearfix">
+        <div
+          class="leftimg"
+          :style="{
+            backgroundImage: 'url(' + (userAvatar ? userAvatar : baseImg) + ')',
+            backgroundSize: '100% 100%',
+            backgroundRepeat: 'no-repeat',
+          }"
+        ></div>
+        <div style="float: left; margin-left: 10px">
+          <p>{{ userName }}</p>
+          <p class="hint">{{ commentTime }}</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px">
+        <p class="hint">
+          <i class="el-icon-receiving">&nbsp;</i>
+          <span>{{ commentRoom }}</span>
+        </p>
+        <p class="hint">
+          <i class="el-icon-date">&nbsp;</i>
+          <span>于{{ bookTime }}入住</span>
+        </p>
+        <p class="hint">
+          <i class="el-icon-edit-outline">&nbsp;</i>
+          <span>{{ userCommentNum }}条点评</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 评论内容 -->
+    <div class="comment">
+      <div>
+        <span class="rate">{{ commentRate }}</span>
+        <span class="hint">/5</span><span class="rate">{{ level }}</span>
+      </div>
+      <div style="margin-top: 40px">
+        {{ commentContent }}
+      </div>
+    </div>
+  </el-card>
+</template>
+
+<style scoped>
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+.clearfix {
+  *zoom: 1;
+}
+.content {
+  height: 180px;
+}
+.leftPart {
+  float: left;
+}
+.hint {
+  margin-top: 5px;
+  color: grey;
+  font-size: 13px;
+  text-align: left;
+}
+.leftimg {
+  width: 50px;
+  height: 50px;
+  border-radius: 2px;
+  float: left;
+}
+.rate {
+  margin-left: 5px;
+  font-size: 24px;
+  color: #003580;
+  font-weight: 700;
+}
+
+.comment {
+  float: right;
+  width: 850px;
+  font-size: 14px;
+}
+</style>
+
+<script>
+export default {
+  props: {
+    userName: String,
+    userAvatar: String,
+    commentRoom: String,
+    bookTime: String,
+    userCommentNum: Number,
+    commentRate: Number,
+    commentContent: String,
+    commentTime: String,
+  },
+  data() {
+    return {
+      baseImg:
+        "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
+    };
+  },
+  computed: {
+    level: function () {
+      if (this.commentRate == 5) {
+        return "好极了";
+      } else if (this.commentRate == 4) {
+        return "非常好";
+      } else if (this.commentRate == 3) {
+        return "一般般";
+      } else if (this.commentRate == 2) {
+        return "不太好";
+      } else {
+        return "非常差";
+      }
+    },
+  },
+  methods: {},
+  created() {},
+};
+</script>
