@@ -1,7 +1,8 @@
 <template>
-  <div class="ALLMoment">
- <Header1/>
+<div>
+   <Header1/>
 <img src="../assets/img/faq.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
+  <div class="ALLMoment">
 <div class="sss">
         <el-button type="success" plain icon="el-icon-back" size="medium" @click="goBack"
         >返回
@@ -48,6 +49,7 @@
       </li>
     </div>
   </div>
+</div>
 </template>
 
 <script>

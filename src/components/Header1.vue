@@ -76,7 +76,7 @@
   float: right;
   margin-left: 55%;
   margin-top: 10px;
-
+}
 .nav1 ul li {
   float: left;
 }
