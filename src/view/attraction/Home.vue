@@ -3,6 +3,7 @@
     <Header activeIndex="2" />
 
     <div class="Form"></div>
+    <div class="searchBox"></div>
 
     <!-- 热门目的地 -->
     <div class="main hot">
@@ -116,8 +117,10 @@
         }"
       >
         <div class="mask">
-          <h4>{{ item.cityname }}</h4>
-          <p>{{ item.num }}项</p>
+          <div class="text">
+            <h4>{{ item.cityname }}</h4>
+            <p>{{ item.num }}项</p>
+          </div>
         </div>
       </div>
     </div>
@@ -197,10 +200,17 @@ h3 {
   height: 150px;
   color: white;
   text-indent: 5px;
+  border-radius: 2px;
   background: rgba(161, 159, 159, 0.3);
 }
 .mask p {
-  font-size: 13px;
+  font-size: 12px;
+}
+.mask .text {
+  position: relative;
+  top: 110px;
+  width: 100%;
+  height: 50px;
 }
 .mainDest div {
   float: left;
@@ -246,37 +256,42 @@ export default {
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
         {
-          cityname: "上海",
+          cityname: "杭州",
           num: 20,
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
         {
-          cityname: "上海",
+          cityname: "嘉兴",
           num: 20,
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
         {
-          cityname: "上海",
+          cityname: "苏州",
           num: 20,
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
         {
-          cityname: "上海",
+          cityname: "无锡",
           num: 20,
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
         {
-          cityname: "上海",
+          cityname: "南京",
           num: 20,
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
         {
-          cityname: "上海",
+          cityname: "舟山",
           num: 20,
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
         {
-          cityname: "上海",
+          cityname: "宁波",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+        {
+          cityname: "黄山",
           num: 20,
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
