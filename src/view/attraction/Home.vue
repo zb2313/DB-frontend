@@ -1,31 +1,11 @@
 <template>
-  <div class="attrHome">
-    <div class="head" style="width: 100%"><Header activeIndex="2" /></div>
+  <el-container direction="vertical">
+    <Header activeIndex="2" />
 
-    <div class="search">
-      <div class="block">
-        <h1>搜索预订美好体验</h1>
-        <p>发现目的地更多精彩活动，尽享欢乐旅程</p>
-        <!-- 搜索框 -->
-        <el-row type="flex">
-          <el-col :span="16"
-            ><div>
-              <el-input
-                v-model="input"
-                placeholder="地名、景点"
-              ></el-input></div
-          ></el-col>
-          <el-col :span="2"
-            ><div>
-              <el-button type="primary" icon="el-icon-search" @click="onSearch"
-                >搜索</el-button
-              >
-            </div></el-col
-          >
-        </el-row>
-      </div>
-    </div>
-    <div class="main">
+    <div class="Form"></div>
+
+    <!-- 热门目的地 -->
+    <div class="main hot">
       <h3>热门目的地</h3>
       <div class="mainDest">
         <router-link to="/attraction/city?search=北京"
@@ -66,22 +46,162 @@
         >
       </div>
     </div>
-  </div>
+
+    <div class="main"><el-divider></el-divider></div>
+
+    <!-- 产品优势 -->
+    <div class="main advantage">
+      <h3>找我们就对了</h3>
+      <ul style="margin-top: 20px">
+        <li>
+          <img src="../../assets/img/attraction.svg" />
+          <div>
+            <h4>探索热门景点</h4>
+            <p>尽情体验目的地，著名景点、观光导览和丰富活动等你来</p>
+          </div>
+        </li>
+        <li>
+          <img src="../../assets/img/book.svg" style="margin-left: 34px" />
+          <div>
+            <h4>快速又灵活</h4>
+            <p>在线订票仅需几分钟，许多景点支持免费取消</p>
+            <br />
+          </div>
+        </li>
+        <li>
+          <img
+            src="../../assets/img/service-staff.svg"
+            style="margin-left: 34px"
+          />
+          <div>
+            <h4>随时提供支持</h4>
+            <p>旅道客服团队7x24小时提供专业帮助</p>
+            <br />
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="main"><el-divider></el-divider></div>
+
+    <div class="main more">
+      <h3>探索更多目的地</h3>
+      <div class="menubox">
+        <el-menu
+          default-active="1"
+          mode="horizontal"
+          active-text-color="#003680"
+        >
+          <el-menu-item index="1"> 华东</el-menu-item>
+          <el-menu-item index="2"> 华南</el-menu-item>
+          <el-menu-item index="3"> 华北</el-menu-item>
+          <el-menu-item index="4"> 华中</el-menu-item>
+          <el-menu-item index="5"> 东北</el-menu-item>
+          <el-menu-item index="6"> 西南</el-menu-item>
+          <el-menu-item index="7"> 西北</el-menu-item>
+          <el-menu-item index="8"> 东南</el-menu-item>
+          <el-menu-item index="9"> 青藏</el-menu-item>
+        </el-menu>
+      </div>
+    </div>
+    <div class="main moreCity">
+      <div
+        class="box"
+        v-for="item in moreCity"
+        :key="item.index"
+        :style="{
+          backgroundImage: 'url(' + item.img + ')',
+          backgroundSize: '100% 100%',
+          backgroundRepeat: 'no-repeat',
+        }"
+      >
+        <div class="mask">
+          <h4>{{ item.cityname }}</h4>
+          <p>{{ item.num }}项</p>
+        </div>
+      </div>
+    </div>
+    <Footer1 />
+  </el-container>
 </template>
 
 <style scoped>
-.search {
-  background: #f2f2f2;
-  padding: 60px 32px;
+/* 搜索框 */
+.Form {
+  width: 100%;
+  height: 130px;
+  /* margin-bottom: -105px; */
+  text-align: center;
+  background-color: #f2f2f2;
 }
 
-.search p {
-  margin-bottom: 5px;
+/* 展示区域公用 */
+h3 {
+  font-size: 20px;
 }
-.main h3 {
+.el-divider--horizontal {
+  width: 1100px;
+}
+
+/* 热门推荐 */
+.hot {
+  height: 300px;
+  margin-top: 20px;
+  border: 1px solid black;
+  margin-bottom: 10px;
+}
+/* 产品优势 */
+.advantage {
+  height: 150px;
+  margin-top: 10px;
+}
+.advantage img,
+.advantage li,
+.advantage div {
+  display: inline-block;
+}
+.advantage li {
+  width: 366px;
+  height: 60px;
+}
+.advantage img {
+  margin-bottom: 25px;
+}
+.advantage div {
+  width: 290px;
+  margin-left: 8px;
+}
+.advantage p {
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* 更多目的地 */
+.el-menu--horizontal > .el-menu-item {
+  height: 50px;
+  color: gray;
+}
+.moreCity {
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+.moreCity .box {
+  float: left;
+  margin: 5px;
+  width: 264px;
+  height: 150px;
+  border-radius: 2px;
+}
+.mask {
+  width: 264px;
+  height: 150px;
+  color: white;
   text-indent: 5px;
+  background: rgba(161, 159, 159, 0.3);
 }
-
+.mask p {
+  font-size: 13px;
+}
 .mainDest div {
   float: left;
 }
@@ -108,15 +228,59 @@
 
 <script>
 import Header from "@/components/Header.vue";
+import Footer1 from "@/components/Footer1.vue";
 
 export default {
   name: "Home",
   components: {
     Header,
+    Footer1,
   },
   data() {
     return {
       input: "",
+      moreCity: [
+        {
+          cityname: "上海",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+        {
+          cityname: "上海",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+        {
+          cityname: "上海",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+        {
+          cityname: "上海",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+        {
+          cityname: "上海",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+        {
+          cityname: "上海",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+        {
+          cityname: "上海",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+        {
+          cityname: "上海",
+          num: 20,
+          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
+        },
+      ],
       baseImg1:
         "https://cf.bstatic.com/xdata/images/city/540x270/683677.webp?k=b81f21cfcce3f7fb99c0f80b37b2f5b7dde081c02598e74f6f39cfd90bfc114e&o=",
       baseImg2:
@@ -126,12 +290,12 @@ export default {
     };
   },
   methods: {
-    onSearch() {
-      this.$router.push({
-        path: "/attraction/city",
-        query: { search: this.input },
-      });
-    },
+    // onSearch() {
+    //   this.$router.push({
+    //     path: "/attraction/city",
+    //     query: { search: this.input },
+    //   });
+    // },
   },
 };
 </script>

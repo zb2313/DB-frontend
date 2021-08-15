@@ -101,6 +101,19 @@
           <!-- 筛选框 -->
           <div class="form2">
             <div class="labelForForm2">缩小搜索范围</div>
+
+            <!-- 按类别筛选 -->
+            <div class="type">
+              <p>类别</p>
+              <el-checkbox-group v-model="checkList">
+                <el-checkbox label="1">民宿</el-checkbox>
+                <el-checkbox label="2">酒店公寓</el-checkbox>
+                <el-checkbox label="3">带娃爱住</el-checkbox>
+                <el-checkbox label="4">闪住</el-checkbox>
+                <el-checkbox label="5">浪漫情侣</el-checkbox>
+              </el-checkbox-group>
+            </div>
+
             <!-- 按价格筛选 -->
             <div class="budget">
               <p>你的预算(每晚)</p>
@@ -298,7 +311,7 @@
 
 .el-checkbox-group {
   padding-left: 20px;
-  width: 90px;
+  width: 70px;
 }
 .form2 p {
   font-size: 14px;
@@ -317,6 +330,7 @@
   font-weight: 600;
   background-color: #0071c2;
 }
+.type,
 .budget,
 .grade {
   border-bottom: 1px solid rgb(189, 178, 178);
@@ -382,6 +396,7 @@ export default {
         room: 1,
       },
       dialogVisible: false,
+      checkList: [],
       checkList1: [],
       checkList2: [],
       title: {

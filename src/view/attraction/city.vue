@@ -219,6 +219,7 @@
   line-height: 25px;
   border: 1px solid orange;
   border-radius: 2px;
+  cursor: pointer;
 }
 </style>
 
@@ -395,19 +396,20 @@ export default {
       this.title.num = newitems.length;
     },
     handleCommand(command) {
-      switch (command) {
-        case "a":
-          this.sortBy = "热门推荐";
-          break;
-        case "b":
-          this.sortBy = "低价优先";
-          break;
-        case "c":
-          this.sortBy = "高分优先";
-          break;
-        case "d":
-          this.sortBy = "距离最短";
-          break;
+      if (command == "a") {
+        this.sortBy = "热门推荐";
+      } else if (command == "b") {
+        this.sortBy = "低价优先";
+        this.items = this.items.sort(function (a, b) {
+          return a.price - b.price;
+        });
+      } else if (command == "c") {
+        this.sortBy = "高分优先";
+        this.items = this.items.sort(function (a, b) {
+          return b.star - a.star;
+        });
+      } else if (command == "d") {
+        this.sortBy = "距离最短";
       }
     },
   },
