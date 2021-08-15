@@ -122,17 +122,21 @@ h6 {
   text-align: center;
   font: normal 700 25px/50px "Microsoft YaHei";
   color: white;
-  background-color: #003580;
+  background-color: #0071c2;
 }
 
 .content button {
-  position: relative;
-  top: 15px;
-  left: 306px;
+  float: right;
+  margin-top: 30px;
   width: 90px;
   height: 40px;
-  background-color: #003580;
+  border: none;
+  background-color: #0071c2;
   color: white;
+}
+.content button:hover {
+  background-color: #003680;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 </style>
 
@@ -172,7 +176,6 @@ export default {
     handleCommand(command) {
       this.clicked = !this.clicked;
       this.last = command;
-      console.log(this.last);
       this.$axios.post("http://49.234.18.247:8080/api/FavouriteContents", {
         favoR_ID: this.favs[command].favoR_ID,
         linK_ID: this.ID,
@@ -229,7 +232,6 @@ export default {
   },
   created() {
     this.user_ID = localStorage.getItem("ms_username");
-    console.log("username", this.user_ID);
     this.$axios
       .get("http://49.234.18.247:8080/api/HasFavorites")
       .then((response) => {

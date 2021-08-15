@@ -8,11 +8,27 @@
             <h1>{{ title.city }}：共{{ title.num }}个景点</h1>
           </div>
 
+          <!-- 地图 -->
+          <div class="amap-wrap">
+            <el-amap vid="amapDemo"></el-amap>
+          </div>
+
           <div class="form2">
             <div class="labelForForm2">缩小搜索范围</div>
 
+            <div class="type">
+              <p>类别</p>
+              <el-checkbox-group v-model="checkList">
+                <el-checkbox label="1">地标</el-checkbox>
+                <el-checkbox label="2">博物馆</el-checkbox>
+                <el-checkbox label="3">亲子</el-checkbox>
+                <el-checkbox label="4">自然</el-checkbox>
+                <el-checkbox label="3">蜜月</el-checkbox>
+              </el-checkbox-group>
+            </div>
+
             <div class="budget">
-              <p>预算：</p>
+              <p>预算</p>
               <el-checkbox-group v-model="checkList1">
                 <el-checkbox label="1">50元以下</el-checkbox>
                 <el-checkbox label="2">50-100元</el-checkbox>
@@ -21,7 +37,7 @@
             </div>
 
             <div class="grade">
-              <p>评分：</p>
+              <p>评分</p>
               <el-checkbox-group v-model="checkList2">
                 <el-checkbox label="1">好极了：5分</el-checkbox>
                 <el-checkbox label="2">非常好：4分</el-checkbox>
@@ -31,24 +47,18 @@
               </el-checkbox-group>
             </div>
 
-            <div class="select">
-              <button @click="Select">筛选</button>
-            </div>
+            <div class="select" @click="Select">点击筛选</div>
           </div>
         </div>
 
+        <!-- 右侧搜索框 -->
         <div class="right">
           <div class="search1">
             <el-row>
-              <el-col :span="20"
-                ><el-input
-                  placeholder="地点/景点……"
-                  prefix-icon="el-icon-search"
-                  v-model="input"
-                >
-                </el-input
+              <el-col :span="22"
+                ><el-input placeholder="地点/景点……" v-model="input"> </el-input
               ></el-col>
-              <el-col :span="4"
+              <el-col :span="2"
                 ><el-button
                   type="primary"
                   icon="el-icon-search"
@@ -57,6 +67,22 @@
                 ></el-col
               >
             </el-row>
+          </div>
+
+          <div class="sort">
+            <div class="sortBox">
+              <el-dropdown @command="handleCommand">
+                <span class="el-dropdown-link">
+                  {{ sortBy }}<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item command="a">热门推荐</el-dropdown-item>
+                  <el-dropdown-item command="b">低价优先</el-dropdown-item>
+                  <el-dropdown-item command="c">高分优先</el-dropdown-item>
+                  <el-dropdown-item command="d">距离最短</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
           </div>
           <div class="contents">
             <ul>
@@ -77,30 +103,42 @@
         </div>
       </div>
     </el-main>
+
+    <Footer1 />
   </el-container>
 </template>
 
 <style scoped>
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
+.main {
+  margin-top: 15px;
 }
 .left {
-  width: 250px;
+  width: 300px;
   float: left;
 }
-
 .right {
   float: left;
-  width: 800px;
-  margin-left: 50px;
+  width: 750px;
+  margin-left: 27px;
+  text-align: right;
+}
+.title {
+  font-size: 16px;
   text-align: left;
 }
-
-.form2 {
+/* 地图css */
+.amap-wrap {
+  width: 270px;
+  height: 300px;
   margin-top: 15px;
-  border-radius: 5px;
+  border: 1px solid rgb(189, 178, 178);
+  border-radius: 3px;
+}
+/* 左侧筛选框 */
+.form2 {
+  width: 270px;
+  margin-top: 20px;
+  border-radius: 3px;
   border: 1px solid rgb(189, 178, 178);
   margin-bottom: 40px;
 }
@@ -113,53 +151,88 @@
   text-align: left;
   text-indent: 5px;
 }
-.title {
-  font-size: 16px;
-  text-align: left;
-}
 .el-checkbox {
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 }
-
 .el-checkbox-group {
-  padding-left: 60px;
+  padding-left: 20px;
   width: 90px;
 }
 .form2 p {
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 600;
   text-align: left;
-  text-indent: 25px;
+  text-indent: 18px;
+  margin: 10px 0;
 }
+
 .select {
   height: 50px;
   line-height: 50px;
+  cursor: pointer;
+  color: white;
+  font-size: 17px;
+  font-weight: 600;
+  background-color: #0071c2;
+  text-align: center;
 }
-
-.select button {
-  width: 80px;
-}
-
+.type,
 .budget,
 .grade {
   border-bottom: 1px solid rgb(189, 178, 178);
 }
-.search1 {
-  width: 650px;
-  margin-top: 50px;
-  margin-bottom: 30px;
+
+.select:hover,
+.mapshow-btn:hover,
+.searchBtn:hover {
+  background-color: #003680;
 }
-.detail {
-  float: right;
+
+/* 搜索框 */
+.search1 {
+  width: 100%;
+  margin-top: 45px;
+  margin-bottom: 20px;
+}
+.el-input /deep/ .el-input__inner {
+  height: 55px;
+  border: 3px solid orange;
+  border-radius: 3px 0 0 3px;
+}
+.el-button {
+  height: 55px;
+  border: 3px solid orange;
+  border-left: unset;
+  border-radius: 0 3px 3px 0;
+}
+
+/* 排序 */
+.sort {
+  width: 100%;
+  text-align: right;
+}
+.sortBox {
+  margin-left: 690px;
+  margin-bottom: 10px;
+  width: 85px;
+  height: 25px;
+  line-height: 25px;
+  border: 1px solid orange;
+  border-radius: 2px;
+  cursor: pointer;
 }
 </style>
 
 <script>
 import Header from "@/components/Header.vue";
 import contentListItem from "@/components/contentListItem.vue";
+import Footer1 from "@/components/Footer1.vue";
+
 export default {
   components: {
     Header,
     contentListItem,
+    Footer1,
   },
   data() {
     return {
@@ -167,11 +240,13 @@ export default {
         city: "广州",
         num: "333",
       },
+      checkList: [],
       checkList1: [],
       checkList2: [],
       items: [],
       orginData: [],
       input: "",
+      sortBy: "热门推荐",
     };
   },
   methods: {
@@ -319,6 +394,23 @@ export default {
       }
       this.items = newitems;
       this.title.num = newitems.length;
+    },
+    handleCommand(command) {
+      if (command == "a") {
+        this.sortBy = "热门推荐";
+      } else if (command == "b") {
+        this.sortBy = "低价优先";
+        this.items = this.items.sort(function (a, b) {
+          return a.price - b.price;
+        });
+      } else if (command == "c") {
+        this.sortBy = "高分优先";
+        this.items = this.items.sort(function (a, b) {
+          return b.star - a.star;
+        });
+      } else if (command == "d") {
+        this.sortBy = "距离最短";
+      }
     },
   },
   created() {

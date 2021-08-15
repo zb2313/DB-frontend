@@ -4,8 +4,8 @@
     <!-- 搜索区域 -->
     <div class="search">
       <div class="block">
-        <h1>搜索预订美好体验</h1>
-        <p>发现目的地更多精彩活动，尽享欢乐旅程</p>
+        <h1 style="font-size: 30px">搜索预订美好体验</h1>
+        <p style="margin-top: 4px">发现目的地更多精彩活动，尽享欢乐旅程</p>
         <!-- 搜索框 -->
         <el-row type="flex">
           <el-col :span="16"
@@ -455,19 +455,23 @@ export default {
 <style scoped>
 .search {
   background: #f2f2f2;
-  padding: 60px 32px;
+  padding: 45px 20px;
 }
 .search p {
   margin-bottom: 5px;
 }
 .block {
-  margin-left: 25%;
-  width: 60%;
+  margin-left: 24%;
+  width: 70%;
   color: #003680;
+}
+.el-input /deep/ .el-input__inner {
+  height: 55px;
 }
 .el-button {
   background-color: #003680;
   border: none;
+  height: 54px;
 }
 
 .title {
