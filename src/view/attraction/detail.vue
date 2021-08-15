@@ -1,14 +1,14 @@
 <template>
   <el-container direction="vertical">
-    <Header activeIndex="1" />
+    <Header activeIndex="2" />
     <Search />
     <el-divider></el-divider>
     <el-card class="box-card" shadow="never">
       <div class="clearfix">
         <div class="namePicture">
           <div class="clearfix">
-            <div class="hotelName">
-              <h2>{{ hotelName }}</h2>
+            <div class="attrationName">
+              <h2>{{ attrationName }}</h2>
             </div>
             <div class="star">
               <img
@@ -363,7 +363,7 @@
   margin-top: 100px;
   margin-left: 15px;
 }
-.hotelName {
+.attrationName {
   float: left;
 }
 .namePicture .star {
@@ -540,9 +540,9 @@ export default {
   data() {
     return {
       hotelId: "",
-      hotelName: "速八酒店",
+      attrationName: "上海海昌海洋公园",
       starNum: 5,
-      location: "上海市嘉定区安亭镇曹安公路4800号",
+      location: "上海市浦东新区南汇新城镇银飞路166号",
       dianping_number: 999,
       grade: 5,
       description: "开业：2021 客房数：198 联系方式：+86-19823483690",

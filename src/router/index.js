@@ -190,7 +190,7 @@ const routes = [
     {
         path: '/hotel/detail',
         name: 'HotelDetail',
-        component: () => import('../components/comment.vue')
+        component: () => import('../view/hotel/detail.vue')
     },
     {
         path: '/attraction/city',
@@ -205,7 +205,7 @@ const routes = [
     {
         path: '/attraction/AttrOrder',
         name: 'AttrOrder',
-        component: () => import('../view/attraction/AttrOrder.vue')
+        component: () => import('../view/attraction/detail.vue')
     },
     {
         path: '/tickets',

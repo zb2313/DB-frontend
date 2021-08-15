@@ -1,103 +1,225 @@
 <template>
-  <div class="attrOrder">
+  <el-container direction="vertical">
     <Header activeIndex="2" />
-    <div class="main">
-      <div
-        class="attrOrderBg"
-        :style="{
-          backgroundImage: 'url(' + baseImg + ')',
-          backgroundSize: '100% 100%',
-          backgroundRepeat: 'no-repeat',
-        }"
-      >
-        <h1>{{ attractionName }}</h1>
-      </div>
-      <div class="infoPay clearfix">
-        <div class="infoBox">
-          <div class="orderLeft">
-            <h1 class="attrName">{{ attractionName }}</h1>
 
-            <h3><i class="el-icon-position"></i> 地址</h3>
-            <p>{{ location }}</p>
-            <mapDrag @drag="dragMap" class="mapbox"></mapDrag>
-            <h3><i class="el-icon-date"></i> 时间</h3>
-            <el-row type="flex">
-              <el-col :span="5"> <span class="bold">开放时间</span></el-col>
-              <el-col :span="5"
-                ><span>{{ openTime }}</span></el-col
-              >
-            </el-row>
-            <el-row type="flex">
-              <el-col :span="5"> <span class="bold">关门时间</span></el-col>
-              <el-col :span="5"
-                ><span>{{ closeTime }}</span></el-col
-              >
-            </el-row>
-          </div>
-        </div>
-        <div class="orderBorder payBox">
-          <h4 style="margin-left: 30px; padding-top: 20px">预定今日的票</h4>
-          <el-row type="flex" justify="space-around">
-            <el-col :span="3"><span>时间</span></el-col>
-            <el-col :span="16"
-              ><span>{{ currentDate | dateFormat }}</span></el-col
-            >
-          </el-row>
-          <el-row type="flex" justify="space-around">
-            <el-col :span="3"><span>单价</span></el-col>
-            <el-col :span="16"
-              ><span>{{ price }}</span></el-col
-            >
-          </el-row>
-          <el-row type="flex" justify="space-around">
-            <el-col :span="3"><span>数量</span></el-col>
-            <el-col :span="16"
-              ><div>
-                <el-input-number
-                  v-model="num"
-                  @change="handleAmount"
-                  :min="1"
-                  :max="10"
-                  label="订票数"
-                ></el-input-number></div
-            ></el-col>
-          </el-row>
-          <el-row type="flex" justify="space-around">
-            <el-col :span="3"><span>总计</span></el-col>
-            <el-col :span="16"
-              ><span>{{ priceSum }}</span></el-col
-            >
-          </el-row>
-          <el-row type="flex" justify="space-around">
-            <el-col :span="3"><span></span></el-col>
-            <el-col :span="16"
-              ><span>
-                <el-button type="primary" round @click="onPay"
-                  >支付</el-button
-                ></span
-              ></el-col
-            >
-          </el-row>
-        </div>
-      </div>
-
-      <div class="horse">
-        <el-carousel height="200px">
-          <el-carousel-item v-for="item in items" :key="item.useR_NAME">
-            <div>
-              <h3>评论时间：{{ item.commenT_TIME }}</h3>
-              <h3>用户名：{{ item.useR_NAME }}</h3>
-              <div>{{ item.ctext }}</div>
+    <!-- 步骤条部分 -->
+    <!-- <div>
+      <el-steps :space="200" :active="1" finish-status="success" simple="true">
+        <el-step title="已选酒店"></el-step>
+        <el-step title="个人信息"></el-step>
+        <el-step title="最后一步"></el-step>
+      </el-steps>
+    </div> -->
+    <el-container>
+      <el-aside width="800px">
+        <div class="info">
+          <el-card class="box-card1" shadow="never">
+            <!-- 酒店名+星级 -->
+            <div class="clearfix">
+              <div class="attrationName">
+                <h2>{{ attrationName }}</h2>
+              </div>
+              <div class="star">
+                <img
+                  src="../../assets/img/diamond.svg"
+                  v-for="i in starNum"
+                  :key="i"
+                  style="margin-top: 2px"
+                />
+              </div>
             </div>
-          </el-carousel-item>
-        </el-carousel>
-      </div>
-    </div>
-  </div>
+
+            <i class="el-icon-location"></i>{{ location }}
+            <div class="roomInfo">
+              <h4 style="margin-bottom: 5px; margin-top: 10px">
+                {{ typeName }}
+              </h4>
+              <i class="el-icon-user"></i>{{ cNum }}人入住
+              <i class="el-icon-receiving"></i>{{ bedNum }}张床
+              <i class="el-icon-dish"></i>{{ dish }}早餐
+            </div>
+            <el-divider></el-divider>
+            <div>
+              <h3>订房必读</h3>
+              <i class="el-icon-info" style="margin-top: 7px"></i>
+              该房型允许携带儿童入住。
+            </div>
+            <el-divider></el-divider>
+            <div class="advertise">
+              <ul>
+                <li>好赞！你挑到了本店最划算的房间</li>
+                <li>预订成功后房间将为您整晚保留</li>
+              </ul>
+            </div>
+          </el-card>
+          <br />
+          <el-card class="box-card1" shadow="never">
+            <div form>
+              <el-form :inline="true" :model="form_Select">
+                <el-form-item>
+                  <el-date-picker
+                    v-model="form_Select.time"
+                    type="daterange"
+                    format="yyyy/MM/dd"
+                    range-separator="——"
+                    start-placeholder="入住时间"
+                    end-placeholder="退房时间"
+                    :picker-options="pickerOptions"
+                  >
+                  </el-date-picker>
+                </el-form-item>
+
+                <el-form-item>
+                  <el-select
+                    v-model="form_Select.room_num"
+                    @change="roomNumChange"
+                    placeholder="房间数"
+                  >
+                    <el-option label="1" value="1"></el-option>
+                    <el-option label="2" value="2"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div>
+              <h3>住客资料</h3>
+              <p style="font-size: 12px; color: grey; margin-top: 7px">
+                <i class="el-icon-info"></i
+                >请按实际入住人数填写，姓名与证件保持一致
+              </p>
+            </div>
+            <br />
+            <div class="personInfo">
+              <p style="margin-bottom: 5px; margin-top: 5px">住客姓名</p>
+              <input type="text" placeholder="每间只需填1人" />
+              <p style="margin-bottom: 5px; margin-top: 5px">电话号码</p>
+              <input type="text" placeholder="+86 中国内陆电话号码" />
+            </div>
+          </el-card>
+          <br />
+          <el-card class="box-card1" shadow="never">
+            <h2>到达时间</h2>
+            <div>
+              <p style="font-size: 16px; margin-top: 7px; margin-bottom: 7px">
+                到达时间
+              </p>
+              <el-select
+                v-model="form_Select.arrival"
+                @change="arriveTimeChange"
+                placeholder="14：00"
+              >
+                <el-option label="14：00" value="14：00"></el-option>
+                <el-option label="15：00" value="15：00"></el-option>
+              </el-select>
+              <p style="font-size: 16px; margin-top: 7px; margin-bottom: 7px">
+                房间整晚保留
+              </p>
+            </div>
+          </el-card>
+          <br />
+          <el-card class="box-card1" shadow="never">
+            <h2>特别要求</h2>
+            <p
+              style="
+                font-size: 12px;
+                color: grey;
+                margin-top: 7px;
+                margin-bottom: 7px;
+              "
+            >
+              该酒店不支持填写特殊要求
+            </p>
+          </el-card>
+          <br />
+          <el-card class="box-card1" shadow="never">
+            <h2>发票信息</h2>
+            <p
+              style="
+                font-size: 16px;
+
+                margin-top: 7px;
+                margin-bottom: 7px;
+              "
+            >
+              如需要发票，可向酒店索取（酒店可开普票、不可开专票）
+            </p>
+          </el-card>
+          <br />
+          <el-card class="box-card1" shadow="never">
+            <div class="clearfix">
+              <div style="float: left">
+                <span>在线付</span>
+                <span style="color: #003680; font-weight: 700; font-size: 24px">
+                  ￥{{ storePrice }}
+                </span>
+              </div>
+
+              <div @click="onPay" class="pay_btn" style="float: right">
+                去支付
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </el-aside>
+      <!-- 显示金额订单部分 -->
+      <el-main>
+        <div class="order-form">
+          <el-card class="box-card2" shadow="hover">
+            <el-row type="flex" justify="space-between" class="">
+              <el-col :span="7"
+                ><div>
+                  {{ form_Select.room_num }}间X{{ form_Select.room_num }}晚
+                </div></el-col
+              >
+              <el-col :span="7"
+                ><div>￥{{ price }}</div></el-col
+              >
+            </el-row>
+            <el-row type="flex" justify="space-between">
+              <el-col :span="7"><div>十亿豪补</div></el-col>
+              <el-col :span="7"
+                ><div class="yellow">-￥{{ discount }}</div></el-col
+              >
+            </el-row>
+            <el-row type="flex" justify="space-between">
+              <el-col :span="7"><h1>应付金额</h1></el-col>
+              <el-col :span="7"
+                ><div style="color: #003680; font-weight: 700; font-size: 20px">
+                  ￥{{ storePrice }}
+                </div></el-col
+              >
+            </el-row>
+            <el-divider></el-divider>
+            <h4>不可取消</h4>
+            <p style="font-size: 12px; color: grey; margin-top: 7px">
+              该订单确认后不可被取消修改，若未入住将收取您首日房费RMB
+              98。旅道会根据您的付款方式扣除房费，订单需等酒店或供应商确认后生效，订单确认结果以旅道短信、邮件或app通知为准，如订单不确认将全额退款至您的付款账户。
+            </p>
+            <el-divider></el-divider>
+            <h4>说明</h4>
+            <p style="font-size: 12px; color: grey; margin-top: 7px">
+              预订服务由旅道旗下上海旅道国际旅行社有限公司及其分公司提供、住宿服务由酒店提供，交易款项由商家委托旅道旗下子公司统一收取。
+            </p>
+          </el-card>
+          <el-card class="box-card2" shadow="never">
+            <p
+              style="
+                font-size: 12px;
+                color: cornflowerblue;
+                margin-top: 7px;
+                text-align: center;
+              "
+            >
+              旅道专业服务 全程保障
+            </p>
+          </el-card>
+        </div>
+      </el-main>
+    </el-container>
+  </el-container>
 </template>
 
-
-<style>
+<style scoped>
 .clearfix:before,
 .clearfix:after {
   content: "";
@@ -109,208 +231,120 @@
 .clearfix {
   *zoom: 1;
 }
-
-.attrOrderBg {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  height: 395px;
-  color: #fff;
-  line-height: 395px;
-  text-align: center;
+.roomInfo {
+  margin-top: 5px;
+}
+.info {
+  margin-left: 100px;
 }
 
-.attrName {
-  margin-top: 10px;
+.box-card1 {
+  width: 680px;
 }
-
-.infoPay {
-  width: 100%;
-  height: 500px;
-}
-
-.attrOrder .infoBox {
-  width: 500px;
-  height: 250px;
-  margin: 5px;
-  float: left;
-}
-
-.attrOrder .payBox {
+.box-card2 {
   width: 400px;
-  margin: 5px;
-  float: right;
 }
-.el-col {
-  text-align: center;
+.order-form {
+  position: fixed;
+  margin-right: 100px;
 }
-.el-row {
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-.orderLeft {
-  text-align: left;
-}
-.mapbox {
-  width: 500px;
-  height: 250px;
-  margin-bottom: 20px;
+.attrationName {
   float: left;
 }
-.el-carousel__item div {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 150px;
-  margin: 0;
+.star {
+  height: 30px;
+  line-height: 30px;
+  font-size: 30px;
+  float: left;
 }
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
+.star ul {
+  padding: 0;
 }
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-
-.orderBorder {
-  border-radius: 4px;
-  border: 1px solid black;
-}
-
-li {
+.star ul li {
+  float: left;
   list-style: none;
 }
 
-.horse {
-  margin: 30px auto 0 auto;
+.yellow {
+  color: #f7ba2a;
+}
+.advertise {
+  color: #f7ba2a;
+  font-weight: 700;
+}
+.form {
+  width: 100%;
+  height: 100px;
+  padding-top: 50px;
+  text-align: center;
+  background-color: #f2f2f2;
+}
+.el-row {
+  margin-bottom: 10px;
+}
+.personInfo input {
+  background: #fff;
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 700;
+  border: solid #ced2d9;
+  border-width: 0 0 1px;
+  transition: border-color 0.25s;
+  color: #0f294d;
+}
+.el-select {
+  width: 100%;
+  color: #0f294d;
+}
+.pay_btn {
+  width: 100px;
+  font-size: 20px;
+  background-color: #f7ba2a;
+  color: white;
+  line-height: 50px;
   text-align: center;
 }
-.horse h3 {
-  height: 20px;
-  margin-top: 0%;
-  margin-bottom: 0%;
+.pay_btn:hover {
+  cursor: pointer;
 }
 </style>
-
-
+        
 <script>
-import Header from "@/components/Header.vue";
-import mapDrag from "@/components/mapDrag";
+import Header from "@/components/Header";
 export default {
   components: {
     Header,
-    mapDrag,
   },
   data() {
     return {
-      dragData: {
-        lng: null,
-        lat: null,
-        address: null,
-        nearestJunction: null,
-        nearestRoad: null,
-        nearestPOI: null,
+      attrationName: "速八酒店",
+      starNum: 5,
+      location: "上海市嘉定区安亭镇曹安公路4800号",
+      typeName: "特惠大床房",
+      cNum: 2,
+      bedNum: 1,
+      dish: "无",
+      price: 198.0,
+      discount: 11.0,
+      form_Select: {
+        time: "2021/08/11",
+        room_num: 1,
+        arrival: " ",
       },
-      user_ID: "",
-      currentDate: new Date(),
-      num: 1,
-      price: 1000,
-      location: "北京城外",
-      attractionName: "北京长城",
-      closeTime: "17:00",
-      openTime: "08:00",
-      attractionId: "",
-      items: [
-        {
-          useR_ID: "Foo",
-          ctext: "一路走来，九寨沟，黄龙都很美。",
-          commenT_TIME: "2021-07-13",
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 86400000;
         },
-        { useR_ID: "Bar", ctext: "不太好", commenT_TIME: "2021-07-13" },
-      ],
+      },
     };
   },
-  methods: {
-    handleAmount(value) {
-      let _this = this;
-      _this.num = value;
-      console.log(value);
-    },
-    dragMap(data) {
-      this.dragData = {
-        lng: data.position.lng,
-        lat: data.position.lat,
-        address: data.address,
-        nearestJunction: data.nearestJunction,
-        nearestRoad: data.nearestRoad,
-        nearestPOI: data.nearestPOI,
-      };
-    },
-    onPay() {
-      let _this = this;
-      _this.$axios
-        .post("http://49.234.18.247:8080/api/PurchaseAttractionTicket", {
-          useR_ID: _this.user_ID,
-          attractioN_ID: _this.attractionId,
-          ordeR_TIME: _this.storeTime,
-          price: _this.priceSum,
-        })
-        .then(function () {
-          console.log("suc");
-          _this.$alert(_this.attractionName + "预定成功", "提示", {
-            confirmButtonText: "确定",
-          });
-        })
-        .catch(function () {
-          console.log("err");
-          console.log(_this.user_ID);
-          console.log(_this.attractionId);
-          console.log(_this.storeTime);
-          console.log(_this.priceSum);
-          _this.$alert(_this.attractionName + "预定失败", "提示", {
-            confirmButtonText: "确定",
-          });
-        });
-    },
-  },
+  methods: { roomNumChange() {} },
   computed: {
-    priceSum: function () {
-      return this.num * this.price;
+    storePrice: function () {
+      return this.price - this.discount;
     },
-    storeTime: function () {
-      let now = new Date().toLocaleString();
-      return (
-        now.substring(5, 9) +
-        "/" +
-        now.substring(0, 4) +
-        " " +
-        now.substring(9, 20)
-      );
-    },
-  },
-  created() {
-    this.attractionId = this.$route.query.id;
-    this.user_ID = localStorage.getItem("ms_username");
-  },
-  mounted() {
-    this.$axios
-      .get(
-        "http://49.234.18.247:8080/api/FunGetCommentByAttractionId/" +
-          this.attractionId
-      )
-      .then((response) => {
-        this.items = response.data;
-      });
-    this.$axios
-      .get("http://49.234.18.247:8080/api/Attraction/" + this.attractionId)
-      .then((response) => {
-        this.location = response.data[0].alocation;
-        this.attractionName = response.data[0].attractioN_NAME;
-        this.openTime = response.data[0].opeN_TIME;
-        this.closeTime = response.data[0].closE_TIME;
-        this.price = response.data[0].price;
-        this.baseImg = response.data[0].picture;
-      });
   },
 };
 </script>
