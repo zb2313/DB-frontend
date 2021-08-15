@@ -23,7 +23,7 @@
         >
         <router-link to="/attraction/city?search=上海"
           ><div
-            class="attrBox"
+            class="attrBox margin"
             :style="{
               backgroundImage: 'url(' + baseImg2 + ')',
               backgroundSize: '100% 100%',
@@ -35,7 +35,7 @@
         >
         <router-link to="/attraction/city?search=南京"
           ><div
-            class="attrBox"
+            class="attrBox margin"
             :style="{
               backgroundImage: 'url(' + baseImg3 + ')',
               backgroundSize: '100% 100%',
@@ -148,15 +148,33 @@ h3 {
 
 /* 热门推荐 */
 .hot {
-  height: 300px;
+  height: 245px;
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+.mainDest {
   margin-top: 20px;
-  border: 1px solid black;
-  margin-bottom: 10px;
+  width: 100%;
+  height: 200px;
+}
+
+.attrBox {
+  float: left;
+  width: 352px;
+  height: 100%;
+  color: #fff;
+  text-align: center;
+  line-height: 200px;
+  border-radius: 2px;
+}
+
+.margin {
+  margin-left: 20px;
 }
 /* 产品优势 */
 .advantage {
-  height: 150px;
-  margin-top: 10px;
+  height: 125px;
+  margin-top: 5px;
 }
 .advantage img,
 .advantage li,
@@ -180,6 +198,9 @@ h3 {
 }
 
 /* 更多目的地 */
+.more {
+  margin-top: 5px;
+}
 .el-menu--horizontal > .el-menu-item {
   height: 50px;
   color: gray;
@@ -211,18 +232,6 @@ h3 {
   top: 110px;
   width: 100%;
   height: 50px;
-}
-.mainDest div {
-  float: left;
-}
-
-.attrBox {
-  width: 350px;
-  height: 200px;
-  margin: 5px;
-  color: #fff;
-  text-align: center;
-  line-height: 170px;
 }
 
 .block {
@@ -287,11 +296,6 @@ export default {
         },
         {
           cityname: "宁波",
-          num: 20,
-          img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
-        },
-        {
-          cityname: "黄山",
           num: 20,
           img: "https://ac-q-cf.static.booking.cn/xdata/images/city/540x270/683805.webp?k=f17521ef2323b4e61ed402abfa5988ba05ea0898a63bf36c86318a0a42039cfa&o=",
         },
