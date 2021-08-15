@@ -1,112 +1,110 @@
 <template>
-  <div class="hotelOrder">
+  <el-container direction="vertical">
     <Header activeIndex="1" />
-    <div class="main">
-      <div
-          class="hotelOrderBg"
-          :style="{
-          backgroundImage: 'url(' + baseImg + ')',
-          backgroundSize: '100% 100%',
-          backgroundRepeat: 'no-repeat',
-        }"
-      >
-        <h1>{{ HOTEL_NAME }}</h1>
-      </div>
-      <div>
-        <div class="infoPay clearfix">
-          <div class="infoBox">
-            <div class="orderLeft">
-              <h2 class="hotelName">{{ HOTEL_NAME }}</h2>
-
-              <h3><i class="el-icon-position"></i> 地址</h3>
-              <p>{{ location }}</p>
-              <h3><i class="el-icon-star-off"></i> 星级</h3>
-              <div class="star">
-                <ul>
-                  <li
-                      class="yellow"
-                      v-for="(o, index) in STAR"
-                      :key="o"
-                      :offset="index > 0 ? 0 : 0"
+    <Search />
+    <el-divider></el-divider>
+    <el-card class="box-card" shadow="never">
+      <div class="clearfix">
+        <div class="name_picture">
+          <div class="clearfix">
+            <div class="hotelName">
+              <h2>{{ hotelName }}</h2>
+            </div>
+            <div class="star">
+              <img
+                src="../../assets/img/diamond.svg"
+                v-for="i in starNum"
+                :key="i"
+                style="margin-top: 2px"
+              />
+            </div>
+          </div>
+          <i class="el-icon-location"></i>{{ location }}
+          <span @click="viewMap" class="hint">查看地图</span>
+          <div>
+            <i class="el-icon-s-home"></i>{{ description }}
+            <span @click="viewMore" class="hint">查看更多</span>
+          </div>
+          <div
+            class="picture"
+            :style="{
+              backgroundImage: 'url(' + baseImg + ')',
+              backgroundSize: '100% 100%',
+              backgroundRepeat: 'no-repeat',
+            }"
+          ></div>
+        </div>
+        <div class="other" style="float: left">
+          <div class="clearfix">
+            <div style="float: left">
+              <div class="dianping">
+                <div class="dianping-icon">{{ grade }}</div>
+                <div class="dianping-wenzi">
+                  <p class="dianping-wenzi1">{{ level }}</p>
+                  <p class="dianping-wenzi2">
+                    共{{ dianping_number }}名房客评分
+                  </p>
+                </div>
+              </div>
+              <a href="#comment" style="color: cornflowerblue; font-size: 14px"
+                >显示所有{{ dianping_number }}条点评</a
+              >
+            </div>
+            <div class="chooseRoom" style="float: right">
+              <div class="clearfix">
+                <div style="float: left">
+                  <span
+                    style="color: #003580; font-weight: 700; font-size: 24px"
                   >
-                    <i class="el-icon-star-on"></i>
-                  </li>
-                </ul>
+                    ￥{{ minPrice }}
+                  </span>
+                  <span
+                    style="
+                      color: grey;
+                      height: 50px;
+                      line-height: 50px;
+                      font-weight: 700;
+                    "
+                    >起</span
+                  >
+                </div>
+
+                <a href="#room" class="choose_btn" style="float: left">
+                  选择房间
+                </a>
               </div>
             </div>
           </div>
-          <div class="orderBox payBox">
-            <h4 style="margin-left: 40px;padding-top:20px">预定今日的房间</h4>
-            <el-row type="flex" justify="space-around">
-              <el-col :span="3"><span>时间</span></el-col>
-              <el-col :span="16"
-              ><span>{{ currentDate | dateFormat }}</span></el-col
-              >
-            </el-row>
-            <el-row type="flex" justify="space-around">
-              <el-col :span="3"><span>类型</span></el-col>
-              <el-col :span="16"
-              ><span>
-                  <el-radio-group v-model="radio">
-                    <span v-if="Single" class="Radio"
-                    ><el-radio :label="1">{{ TYPE_NAME1 }}</el-radio></span
-                    >
-                    <span v-if="Double" class="Radio"
-                    ><el-radio :label="2">{{ TYPE_NAME2 }}</el-radio></span
-                    >
-                    <span v-if="President" class="Radio"
-                    ><el-radio :label="3">{{ TYPE_NAME3 }}</el-radio></span
-                    >
-                  </el-radio-group></span
-              ></el-col
-              >
-            </el-row>
-            <el-row type="flex" justify="space-around">
-              <el-col :span="3"><span>单价</span></el-col>
-              <el-col :span="16"
-              ><span>{{ price }}</span></el-col
-              >
-            </el-row>
-            <el-row type="flex" justify="space-around">
-              <el-col :span="3"><span>数量</span></el-col>
-              <el-col :span="16"
-              ><span>很抱歉，目前一次只能定一间房</span></el-col
-              >
-            </el-row>
-            <el-row type="flex" justify="space-around">
-              <el-col :span="3"><span>总计</span></el-col>
-              <el-col :span="16"
-              ><span>{{ priceSum }}</span></el-col
-              >
-            </el-row>
-            <el-row type="flex" justify="space-around">
-              <el-col :span="3"><span></span></el-col>
-              <el-col :span="16"
-              ><span>
-                  <el-button type="primary" round @click="onPay"
-                  >支付</el-button
-                  ></span
-              ></el-col
-              >
-            </el-row>
-          </div>
+          <el-divider></el-divider>
         </div>
       </div>
-
-      <div class="horse">
-        <el-carousel height="250px">
-          <el-carousel-item v-for="item in items" :key="item.useR_NAME">
-            <h3>评论时间：{{ item.commenT_TIME }}</h3>
-            <h3>用户ID：{{ item.useR_NAME }}</h3>
-            <h3>{{ item.ctext }}</h3>
-          </el-carousel-item>
-        </el-carousel>
+    </el-card>
+    <el-card class="box-card" shadow="never">
+      <div class="clearfix">
+        <div style="float: left">
+          <span>超大优惠</span>
+          <span style="color: #f7ba2a; font-weight: 700; font-size: 14px">
+            新客最高减100
+          </span>
+        </div>
+        <div @click="onReceive" class="receive_btn">领取</div>
       </div>
-    </div>
-  </div>
+    </el-card>
+  </el-container>
 </template>
 
-<style>
+<style scoped>
+.Form {
+  width: 100%;
+  height: 130px;
+  margin-bottom: -105px;
+  text-align: center;
+  background-color: #f2f2f2;
+}
+.box-card {
+  margin-left: 10%;
+  margin-right: 10%;
+}
 .clearfix:before,
 .clearfix:after {
   content: "";
@@ -118,11 +116,76 @@
 .clearfix {
   *zoom: 1;
 }
-.Radio {
-  margin-left: 5px;
-  margin-right: 5px;
+.name_picture {
+  float: left;
+  width: 700px;
 }
-.hotelOrderBg {
+.other {
+  float: left;
+  margin-top: 100px;
+  margin-left: 15px;
+}
+.hotelName {
+  float: left;
+}
+.star {
+  height: 30px;
+  line-height: 30px;
+  font-size: 30px;
+  float: left;
+}
+.hint {
+  color: #003580;
+  font-weight: 700;
+  font-size: 14px;
+}
+.hint:hover {
+  text-decoration: underline;
+}
+.dianping {
+  width: 155px;
+  height: 50px;
+  left: 240px;
+  margin-bottom: 10px;
+}
+.dianping-wenzi {
+  float: left;
+  margin-right: 5px;
+  width: 100px;
+  height: 100%;
+}
+
+.dianping-wenzi1 {
+  font-weight: 700;
+  font-size: 18px;
+}
+.dianping-wenzi2 {
+  font-size: 10px;
+  color: grey;
+}
+.dianping-icon {
+  float: left;
+  width: 50px;
+  height: 100%;
+  border-radius: 10px 10px 10px 0px;
+  text-align: center;
+  font: normal 700 25px/50px "Microsoft YaHei";
+  color: white;
+  background-color: #003580;
+}
+.choose_btn {
+  width: 100px;
+  font-size: 20px;
+  background-color: #003580;
+  color: white;
+  line-height: 50px;
+  text-align: center;
+  border-radius: 4px;
+}
+/* .choose_btn:hover {
+  cursor: pointer;
+} */
+.picture {
   margin-top: 20px;
   margin-bottom: 20px;
   height: 395px;
@@ -130,221 +193,106 @@
   line-height: 395px;
   text-align: center;
 }
-
-.hotelName {
-  margin-top: 10px;
-}
-.hotelOrder .infoPay {
-  width: 100%;
-  height: 290px;
-  margin: 0 auto;
-}
-.hotelOrder .infoBox {
-  width: 300px;
-  height: 250px;
-  margin: 5px;
-  float: left;
-}
-.hotelOrder .payBox {
-  width: 500px;
-  /*height: 290px;*/
-  margin: 5px;
-  float: right;
-}
-.orderLeft {
-  text-align: left;
-}
-.star {
-  width: 400px;
-  height: 30px;
+.receive_btn {
+  width: 70px;
+  font-size: 16px;
+  background-color: #f7ba2a;
+  color: white;
   line-height: 30px;
-  font-size: 30px;
-}
-ul {
-  padding: 0;
-}
-ul li {
-  float: left;
-  list-style: none;
-}
-
-.yellow {
-  color: #f7ba2a;
-}
-
-.el-row {
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-
-.el-col {
   text-align: center;
-}
 
-.horse {
-  margin: 30px auto 0 auto;
-  text-align: center;
-}
-.horse h3 {
-  height: 20px;
-  margin-top: 0%;
-  margin-bottom: 0%;
-}
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 150px;
-  margin: 0;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-
-.orderBox {
-  border-radius: 4px;
-  border: 1px solid black;
+  float: right;
 }
 </style>
 
 
 <script>
 import Header from "@/components/Header.vue";
-
+import Search from "@/components/Search.vue";
 export default {
   components: {
     Header,
+    Search,
   },
   data() {
     return {
-      President: false,
-      Single: false,
-      Double: false,
-      user_ID: "0000000003",
-      currentDate: new Date(),
-      location: "北京城外",
-      HOTEL_NAME: "北京长城",
-      STAR: 5,
-      radio: 1,
-      room_ID1: "00001",
-      room_ID2: "00001",
-      room_ID3: "00001",
-      price1: 0,
-      price2: 0,
-      price3: 0,
-      TYPE_NAME1: "单间",
-      TYPE_NAME2: "大床房",
-      TYPE_NAME3: "总统套房",
       hotelId: "",
-      items: [
-        { useR_ID: "Foo", ctext: "棒极了", commenT_TIME: "2021-07-13" },
-        { useR_ID: "Bar", ctext: "不太好", commenT_TIME: "2021-07-13" },
+      hotelName: "速八酒店",
+      starNum: 5,
+      location: "上海市嘉定区安亭镇曹安公路4800号",
+      dianping_number: 999,
+      grade: 5,
+      description: "开业：2021 客房数：198 联系方式：+86-19823483690",
+      minPrice: 99,
+      baseImg:
+        "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+      comments: [
+        {
+          userName: "蔡蔡小游侠",
+          userAvatar:
+            "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          commentRoom: "",
+          userCommentNum: 1,
+          commentRate: 2.5,
+          commentContent:
+            "楼下有个人的早餐店铺 豌杂面还不错，不能加床。 🛏️床确实是1.5米的，这个必须肯定。楼下有免费停车🅿️场 。 房间没有介绍的45平米，感觉被骗了。最多30平米左右，窗子对着居民楼，跟图片上完全不一样。整个旅途住宿费最贵的 真的是最差的一家。江边一直有施工，很乱。",
+          commentTime: "08/14/2021 20:53",
+        },
+        {
+          userName: "兰州潇洒哥",
+          userAvatar: "",
+          commentRoom:
+            "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          userCommentNum: 1,
+          commentRate: 5.0,
+          commentContent:
+            "环境真的挺不错，价格对于学生党真的好实惠！离解放碑挺近，没想到这个价钱能订到这么好的酒店！我和闺蜜都很满意！保洁阿姨的态度也很好，见到还会问好！强烈推荐！下次来还会订！",
+          commentTime: "08/14/2021 20:53",
+        },
       ],
     };
   },
-  methods: {
-    onPay() {
-      let _this = this;
-      _this.$axios
-          .post("http://49.234.18.247:8080/api/PurchaseHotelRoom", {
-            hoteL_ID: _this.hotelId,
-            rooM_ID: _this.room_ID,
-            useR_ID: _this.user_ID,
-            ordeR_AMOUNT: _this.price,
-            ordeR_TIME: _this.storeTime,
-          })
-          .then(function () {
-            console.log("suc");
-            _this.$alert(_this.HOTEL_NAME + "预定成功", "提示", {
-              confirmButtonText: "确定",
-            });
-          })
-          .catch(function () {
-            console.log("err");
-            console.log(_this.hotelId);
-            console.log(_this.room_ID);
-            console.log(_this.user_ID);
-            console.log(_this.price);
-            console.log(_this.storeTime);
-            _this.$alert(_this.HOTEL_NAME + "预定失败", "提示", {
-              confirmButtonText: "确定",
-            });
-          });
-    },
-  },
   computed: {
-    priceSum: function () {
-      if (this.radio === 1) return this.price1;
-      else if (this.radio === 2) return this.price2;
-      else return this.price3;
-    },
-    price: function () {
-      return this.priceSum;
-    },
-    storeTime: function () {
-      let now = new Date().toLocaleString();
-      return (
-          now.substring(5, 9) +
-          "/" +
-          now.substring(0, 4) +
-          " " +
-          now.substring(9, 15)
-      );
-    },
-    room_ID: function () {
-      if (this.radio === 1) return this.room_ID1;
-      else if (this.radio === 2) return this.room_ID2;
-      else return this.room_ID3;
+    level: function () {
+      if (this.grade == 5) {
+        return "好极了";
+      } else if (this.grade == 4) {
+        return "非常好";
+      } else if (this.grade == 3) {
+        return "一般般";
+      } else if (this.grade == 2) {
+        return "不太好";
+      } else {
+        return "非常差";
+      }
     },
   },
-  created() {
-    this.hotelId = this.$route.query.id;
-    this.user_ID = localStorage.getItem("ms_username");
-    this.$axios
-        .get(
-            "http://49.234.18.247:8080/api/FunGetVacantRoomTypeByHotelId/" +
-            this.hotelId
-        )
-        .then((response) => {
-          this.grocery = response.data;
-          for (let i = 0; i < this.grocery.length; i++) {
-            if (this.grocery[i].typE_NAME === "大床房") {
-              this.price2 = this.grocery[i].price;
-              this.room_ID2 = this.grocery[i].rooM_ID;
-              this.Double = true;
-            } else if (this.grocery[i].typE_NAME === this.TYPE_NAME3) {
-              this.price3 = this.grocery[i].price;
-              this.room_ID3 = this.grocery[i].rooM_ID;
-              this.President = true;
-            } else {
-              this.Single = true;
-              this.price1 = this.grocery[i].price;
-              this.room_ID1 = this.grocery[i].rooM_ID;
-            }
-          }
-          return false;
-        });
-
-    this.$axios
-        .get(
-            "http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + this.hotelId
-        )
-        .then((response) => {
-          this.items = response.data;
-        });
-    this.$axios
-        .get("http://49.234.18.247:8080/api/Hotel/" + this.hotelId)
-        .then((response) => {
-          this.location = response.data[0].hlocation;
-          this.HOTEL_NAME = response.data[0].hoteL_NAME;
-          this.STAR = response.data[0].star;
-          this.baseImg = response.data[0].picture;
-        });
+  methods: {
+    viewMap() {
+      const h = this.$createElement;
+      this.$msgbox({
+        title: "消息",
+        message: h("p", null, [
+          h("span", null, "内容可以是 "),
+          h("i", { style: "color: teal" }, "VNode"),
+        ]),
+        showCancelButton: false,
+        confirmButtonText: "确定",
+      });
+    },
+    viewMore() {
+      const h = this.$createElement;
+      this.$msgbox({
+        title: "消息",
+        message: h("p", null, [
+          h("span", null, "内容可以是 "),
+          h("i", { style: "color: teal" }, "VNode"),
+        ]),
+        showCancelButton: false,
+        confirmButtonText: "确定",
+      });
+    },
   },
+  mounted() {},
 };
 </script>
