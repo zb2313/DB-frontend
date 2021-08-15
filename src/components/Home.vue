@@ -16,9 +16,9 @@
         <!-- 一级菜单模板区 -->
         <template slot="title">
           <!-- 图标 -->
-          <i class="el-icon-menu"></i>
+          <i class="el-icon-chat-dot-square"></i>
           <!-- 文本 -->
-          <span>动态列表</span>
+          <span>动态广场</span>
         </template>
       </el-menu-item>
       <!-- 发送动态路由 -->
@@ -26,9 +26,9 @@
         <!-- 一级菜单模板区 -->
         <template slot="title" >
           <!-- 图标 -->
-         <i class="el-icon-share"></i>
+         <i class="el-icon-s-promotion"></i>
           <!-- 文本 -->
-           <span>发送动态</span>
+           <span>发布动态</span>
         </template>
       </el-menu-item>
         <!-- 查看动态路由  -->
@@ -36,9 +36,9 @@
         <!-- 一级菜单模板区 -->
         <template slot="title" >
           <!-- 图标 -->
-          <i class="el-icon-check"></i>
+          <i class="el-icon-view"></i>
           <!-- 文本 -->
-          <span>查看动态</span>
+          <span>个人动态</span>
         </template>
       </el-menu-item>
     </el-menu>
@@ -78,14 +78,11 @@
 }
 .el-aside{
   background-color: white;
-
 }
-
 .el-main{
-  background-color: #EAEDF1;
+  background-color: #f1f3f0;
 }
 </style>
-
 <script>
 import Header1 from "@/components/Header1.vue";
   export default {

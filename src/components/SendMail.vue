@@ -1,6 +1,7 @@
 <template>
   <div>
     <admiHeader />
+    <img src="../assets/img/mail.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0"> 
     <div class="page">
       <el-card>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm"   label-width="100px" class="demo-ruleForm" style="width:900px">
@@ -17,8 +18,8 @@
             <el-input type="textarea" rows="10" v-model="ruleForm.message"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="el-icon-s-promotion" @click="submitForm('ruleForm');resetForm('ruleForm')">发送</el-button>
-            <el-button @click="resetForm('ruleForm')">清空</el-button>
+            <el-button type="primary" size="medium" icon="el-icon-s-promotion" @click="submitForm('ruleForm');resetForm('ruleForm')">发送</el-button>
+            <el-button size="medium" icon="el-icon-refresh" @click="resetForm('ruleForm')">清空</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -32,6 +33,7 @@ import axios from 'axios';
    components: { admiHeader },
     data() {
       return {
+        MailList:[],
         ruleForm: {
           mailboxID: '',
           type: '',
@@ -51,6 +53,26 @@ import axios from 'axios';
       };
     },
     methods: {
+      createID()
+      {do{
+      let chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+      var ID='';
+      for(let i=0;i<10;i++)
+      {
+        let id = Math.ceil(Math.random()*35);
+        ID+=chars[id];
+      }
+      var rep=false;
+      axios.get("http://49.234.18.247:8080/api/Mail")
+        .then(res=>{
+            this.MailList=res.data;
+                });
+      for(let j=0;j<this.MailList.length;j++)
+      if(ID===this.MailList[j].maiL_ID)
+      rep=true;
+      }while(rep===true)
+      return ID;
+      },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -61,18 +83,9 @@ import axios from 'axios';
         let day = date.getDate();
         day=day<10?('0'+day):day;
         let nowDate = year + "-" + month + "-" + day;
-              let chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-      let mail_id='';
-      for(let i=0;i<10;i++)
-      {
-        let id = Math.ceil(Math.random()*35);
-       mail_id+=chars[id];
-      }
-              let  administratoR_ID="2021071220";
+      let mail_id=this.createID();
               let mailboX_ID=''+this.ruleForm.mailboxID;
               let message=this.ruleForm.type+":"+this.ruleForm.message;
-          console.log(mail_id)
-
               axios.post("http://49.234.18.247:8080/api/mail",
             {"maiL_ID":mail_id,
                "message": message
@@ -81,7 +94,7 @@ import axios from 'axios';
               {
                 axios.post("http://49.234.18.247:8080/api/SendMessage",
                     {
-                      "administratoR_ID":administratoR_ID,
+                      "administratoR_ID":localStorage.getItem("ms_username"),
                       "mailboX_ID":mailboX_ID,
                       "senD_TIME":nowDate,
                       "maiL_ID": mail_id
@@ -97,7 +110,7 @@ import axios from 'axios';
                 {
                   this.$message({
                     type: 'error',
-                    message: '网络错误!'
+                    message: '服务器内部错误!'
                   });
                 });
               })

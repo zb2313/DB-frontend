@@ -20,14 +20,17 @@
       text-color="#fff"
       active-text-color="#ffd04b"
     >
-      <el-menu-item index="1"
-        ><router-link to="/audit">审核动态信息</router-link></el-menu-item
-      >
       <el-menu-item index="2"
-        ><router-link to="/updateQA">更新常见问题</router-link></el-menu-item
+        ><router-link to="/updateFAQ">更新常见问题</router-link></el-menu-item
       >
       <el-menu-item index="3"
         ><router-link to="/sendmail">发送邮件通知</router-link></el-menu-item
+      >
+      <el-menu-item index="1"
+        ><router-link to="/auditmoment">审核动态信息</router-link></el-menu-item
+      >
+       <el-menu-item index="4"
+        ><router-link to="/auditmerchant">商家入驻审核</router-link></el-menu-item
       >
     </el-menu>
   </el-header>
