@@ -205,7 +205,7 @@ const routes = [
     {
         path: '/attraction/AttrOrder',
         name: 'AttrOrder',
-        component: () => import('../view/attraction/AttrOrder.vue')
+        component: () => import('../view/attraction/detail.vue')
     },
     {
         path: '/tickets',

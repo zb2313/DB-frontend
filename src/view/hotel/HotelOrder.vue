@@ -54,7 +54,7 @@
           </el-card>
           <br />
           <el-card class="box-card1" shadow="never">
-            <div form>
+            <div class="form">
               <el-form :inline="true" :model="form_Select">
                 <el-form-item>
                   <el-date-picker
@@ -321,7 +321,7 @@ export default {
     return {
       hotelName: "速八酒店",
       starNum: 5,
-      location: "北京城外",
+      location: "上海市嘉定区安亭镇曹安公路4800号",
       typeName: "特惠大床房",
       cNum: 2,
       bedNum: 1,

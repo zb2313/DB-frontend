@@ -1,6 +1,7 @@
 <template>
   <div class="fixed">
     <el-form :inline="true" :model="form_Select" class="form-inline">
+      <!-- 罗检form-inline这个类好像没用 -->
       <el-form-item>
         <el-select
           v-model="form_Select.location"
@@ -30,8 +31,8 @@
           type="daterange"
           format="yyyy/MM/dd"
           range-separator="至"
-          start-placeholder="入住时间"
-          end-placeholder="退房时间"
+          start-placeholder="入住日期"
+          end-placeholder="退房日期"
           :picker-options="pickerOptions"
         >
         </el-date-picker>
@@ -179,7 +180,7 @@ export default {
 .fixed {
   position: -webkit-sticky;
   position: sticky;
-  top: 0;
+  top: -1px;
   z-index: 99;
   width: 100%;
   height: 70px;
