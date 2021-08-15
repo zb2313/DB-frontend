@@ -1,5 +1,5 @@
 <template>
-  <el-card class="content main" shadow="never">
+  <el-card class="content" shadow="never">
     <div class="leftPart">
       <div style="width: 200px" class="clearfix">
         <div
@@ -28,6 +28,7 @@
         <p class="hint">
           <i class="el-icon-edit-outline">&nbsp;</i>
           <span>{{ userCommentNum }}条点评</span>
+          <br> <br>
         </p>
       </div>
     </div>
@@ -38,8 +39,9 @@
         <span class="rate">{{ commentRate }}</span>
         <span class="hint">/5</span><span class="rate">{{ level }}</span>
       </div>
-      <div style="margin-top: 40px">
+      <div style="margin-top: 20px">
         {{ commentContent }}
+        <br> <br>
       </div>
     </div>
   </el-card>
@@ -58,7 +60,8 @@
   *zoom: 1;
 }
 .content {
-  height: 180px;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 .leftPart {
   float: left;
@@ -81,7 +84,6 @@
   color: #003580;
   font-weight: 700;
 }
-
 .comment {
   float: right;
   width: 850px;

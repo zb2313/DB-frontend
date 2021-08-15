@@ -19,12 +19,15 @@
               />
             </div>
           </div>
-          <i class="el-icon-location"></i>{{ location }}
-          <span @click="viewMap" class="hint">查看地图</span>
-          <div>
-            <i class="el-icon-s-home"></i>{{ description }}
-            <span @click="viewMore" class="hint">查看更多</span>
+          <div style="font-size:12px;">
+            <i class="el-icon-location"></i>{{ location }}
+            <span @click="viewMap" class="hint">查看地图</span>
+            <div>
+              <i class="el-icon-s-home"></i>{{ description }}
+              <span @click="viewMore" class="hint">查看更多</span>
+            </div>
           </div>
+
           <div
             class="picture"
             :style="{
@@ -46,7 +49,7 @@
                   </p>
                 </div>
               </div>
-              <a href="#comments" style="color: cornflowerblue; font-size: 14px"
+              <a href="#comments" style="color: cornflowerblue; font-size: 12px"
                 >显示所有{{ dianping_number }}条点评</a
               >
             </div>
@@ -106,7 +109,7 @@
             </div>
           </div>
           <el-divider></el-divider>
-          <div style="font-size: 14px; margin-top: 0px">
+          <div style="font-size: 12px; margin-top: 0px">
             <span>接机服务</span><el-divider direction="vertical"></el-divider>
             <span>24小时大堂经理</span>
           </div>
@@ -375,7 +378,7 @@
 .hint {
   color: #003580;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12px;
 }
 .hint:hover {
   text-decoration: underline;
@@ -419,6 +422,7 @@
   line-height: 50px;
   text-align: center;
   border-radius: 4px;
+  margin-left: 5px;
 }
 .picture {
   margin-top: 20px;
@@ -439,7 +443,7 @@
 }
 .map {
   width: 200px;
-  height: 190px;
+  height: 180px;
   float: left;
 }
 .aboutMap {

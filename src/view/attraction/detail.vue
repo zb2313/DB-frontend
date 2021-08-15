@@ -72,205 +72,208 @@
           </div>
           <br />
           <div>
-            <i class="el-icon-location"></i> {{ location }}
+            <i class="el-icon-location-outline"></i> &nbsp;&nbsp; {{ location }}
             <br />
             <br />
-            <div><i class="el-icon-date"></i> {{ openTime }}</div>
+            <div><i class="el-icon-date"></i> &nbsp;&nbsp; {{ openTime }}</div>
+            <br />
+            <div>
+              <i class="el-icon-phone-outline"></i> &nbsp;&nbsp; {{ call }}
+            </div>
           </div>
         </div>
       </div>
     </el-card>
     <br />
     <div class="clearfix box-card">
-      <el-card class="small-box-card" shadow="never">
-        <h1>
-          点评<span
-            style="
-              color: grey;
-              font-weight: 700;
-              font-size: 18px;
-              margin-left: 10px;
-            "
-            >({{ dianping_number }}名住客真实点评)</span
-          >
-        </h1>
-        <div class="sort">
-          <el-form :inline="true" :model="form_Select">
-            <el-form-item>
-              <el-select
-                v-model="form_Select.roomType"
-                @change="roomTypeChange"
-              >
-                <el-option label="所有房型" value="所有房型"></el-option>
-                <el-option label="大床房" value="大床房"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-select v-model="form_Select.sortWay" @change="sortWayChange">
-                <el-option label="推荐排序" value="推荐排序"></el-option>
-                <el-option label="最近入住" value="最近入住"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
-      </el-card>
-      <div id="comments">
-        <ul>
-          <li v-for="comment in comments" :key="comment.userName">
-            <CommentOnAttr
-              :userName="comment.userName"
-              :userAvatar="comment.userAvatar"
-              :commentRoom="comment.commentRoom"
-              :bookTime="comment.bookTime"
-              :userCommentNum="comment.userCommentNum"
-              :commentRate="comment.commentRate"
-              :commentContent="comment.commentContent"
-              :commentTime="comment.commentTime"
-            />
-          </li>
-        </ul>
-        <!-- 得加个分页 -->
-      </div>
-      <br />
-      <!-- 酒店政策 -->
-      <el-card class="small-box-card policy" shadow="never">
-        <h1>酒店政策</h1>
-        <div class="bold">
-          <el-row type="flex" style="margin-top: 20px">
-            <el-col :span="6">入住及退房</el-col>
-            <el-col :span="18"
-              >入住时间： 14:00后 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              退房时间： 12:00前</el-col
+      <div style="float: left">
+        <el-card class="left-box-card" shadow="never">
+          <h1>
+            点评<span
+              style="
+                color: grey;
+                font-weight: 700;
+                font-size: 18px;
+                margin-left: 10px;
+              "
+              >({{ dianping_number }}名用户真实点评)</span
             >
-          </el-row>
-          <el-divider></el-divider>
-          <el-row type="flex">
-            <el-col :span="6">入住方式</el-col>
-            <el-col :span="18" style="font-weight: 400"
-              >请到前台领取钥匙/门卡</el-col
-            >
-          </el-row>
-          <el-divider></el-divider>
-          <el-row type="flex">
-            <el-col :span="6">儿童及加床</el-col>
-            <el-col :span="18" style="font-weight: 400"
-              >酒店允许携带12岁及以上儿童入住
-              <div style="margin-top: 20px">
-                <div style="font-weight: 700">· 使用现有床铺</div>
-                <p>每房间可有1名12-17岁的儿童使用现有床铺。</p>
-                <div style="font-weight: 700">· 加床：</div>
-                <p>不可加床</p>
-                <div style="font-weight: 700">· 备注</div>
-                <p>
-                  加床政策、儿童政策会根据客房类型而有所不同，房价仅适用于特定数量的客人。携带儿童与额外客人可能会产生额外费用，详情请咨询酒店。
-                </p>
-              </div>
-            </el-col>
-          </el-row>
-          <el-divider></el-divider>
-          <el-row type="flex">
-            <el-col :span="6">早餐</el-col>
-            <el-col :span="18" style="font-weight: 400">
-              <p>早餐类型中式</p>
-              <el-divider></el-divider>
-              <p>菜单类型自助餐</p>
-              <el-divider></el-divider>
-              <p>营业时间07:00-09:00 [星期一 - 星期日]</p>
-            </el-col>
-          </el-row>
-          <el-divider></el-divider>
-          <el-row type="flex">
-            <el-col :span="6">停车场</el-col>
-            <el-col :span="18" style="font-weight: 400">
-              不可预约：酒店内提供公共停车场（免费）。</el-col
-            >
-          </el-row>
-          <el-divider></el-divider>
-          <el-row type="flex">
-            <el-col :span="6">宠物</el-col>
-            <el-col :span="18" style="font-weight: 400"> 不可携带宠物。</el-col>
-          </el-row>
-          <el-divider></el-divider>
-          <el-row type="flex">
-            <el-col :span="6">年龄限制</el-col>
-            <el-col :span="18" style="font-weight: 400"
-              >入住办理人需年满18岁</el-col
-            >
-          </el-row>
-          <el-divider></el-divider>
-          <el-row type="flex">
-            <el-col :span="6">到店付款方式</el-col>
-            <el-col :span="18" style="font-weight: 400"
-              >酒店接受以下付款方式
-              <div>
-                <img
-                  src="https://tse1-mm.cn.bing.net/th/id/R-C.692de9abd94bc6a408ce5591e04403b1?rik=Pdt3a4ecCmrvQQ&riu=http%3a%2f%2fpic.ntimg.cn%2ffile%2f20191130%2f29554138_095901936699_2.jpg&ehk=deyCCJtpHBww4tY9QO9z8ZGsTCZWN%2fdTHjfZ3SYvktU%3d&risl=&pid=ImgRaw&r=0"
-                  alt=""
-                />
-                <img
-                  src="https://pic38.photophoto.cn/20160325/1155115744558206_b.jpg"
-                  alt=""
-                />
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </el-card>
-      <br />
-
-      <!--附近的酒店  -->
-      <el-card class="small-box-card near" shadow="never">
-        <h1>附近的酒店</h1>
-        <div class="hotels">
-          <div
-            class="box"
-            v-for="(item, index) in hotels.slice(0, 8)"
-            :key="index"
-          >
-            <div
-              class="infoImg"
-              :style="{
-                backgroundImage: 'url(' + item.img + ')',
-                backgroundSize: '100% 100%',
-                backgroundRepeat: 'no-repeat',
-              }"
-            ></div>
-            <div class="infoDetail">
-              <div class="Name" style="font-size: 14px; font-weight: 700">
-                {{ item.name }}
-              </div>
-              <img
-                src="../../assets/img/diamond.svg"
-                v-for="i in item.star"
-                :key="i"
-                style="margin-top: 2px"
+          </h1>
+          <div class="sort">
+            <el-form :inline="true" :model="form_Select">
+              <el-form-item>
+                <el-select
+                  v-model="form_Select.commentLevel"
+                  @change="commentLevelChange"
+                >
+                  <el-option label="所有点评" value="所有点评"></el-option>
+                  <el-option label="好评（打分>3）" value="好评（打分>3）"></el-option>
+                  <el-option label="非好评（打分<4）" value="非好评（打分<4）"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-select
+                  v-model="form_Select.sortWay"
+                  @change="sortWayChange"
+                >
+                  <el-option label="智能排序" value="智能排序"></el-option>
+                  <el-option label="最近购买" value="最近购买"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-card>
+        <div id="comments">
+          <ul>
+            <li v-for="comment in comments" :key="comment.userName">
+              <CommentOnAttr
+                :userName="comment.userName"
+                :userAvatar="comment.userAvatar"
+                :commentTicket="comment.commentTicket"
+                :bookTime="comment.bookTime"
+                :userCommentNum="comment.userCommentNum"
+                :commentRate="comment.commentRate"
+                :commentContent="comment.commentContent"
+                :commentTime="comment.commentTime"
               />
-
-              <div class="Details">
-                <div class="leftstar">
-                  <div class="star">
-                    {{ item.star }}.0<i
-                      style="
-                        font-style: normal;
-                        font-size: 11px;
-                        color: #4880cf;
-                      "
-                      >/5</i
+            </li>
+          </ul>
+          <!-- 得加个分页 -->
+        </div>
+        <br />
+        <!-- 酒店政策 -->
+        <el-card class="left-box-card policy" shadow="never">
+          <h1>酒店政策</h1>
+          <div class="bold">
+            <el-row type="flex" style="margin-top: 20px">
+              <el-col :span="6">入住及退房</el-col>
+              <el-col :span="18"
+                >入住时间： 14:00后 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                退房时间： 12:00前</el-col
+              >
+            </el-row>
+            <el-divider></el-divider>
+            <el-row type="flex">
+              <el-col :span="6">入住方式</el-col>
+              <el-col :span="18" style="font-weight: 400"
+                >请到前台领取钥匙/门卡</el-col
+              >
+            </el-row>
+            <el-divider></el-divider>
+            <el-row type="flex">
+              <el-col :span="6">儿童及加床</el-col>
+              <el-col :span="18" style="font-weight: 400"
+                >酒店允许携带12岁及以上儿童入住
+                <div style="margin-top: 20px">
+                  <div style="font-weight: 700">· 使用现有床铺</div>
+                  <p>每房间可有1名12-17岁的儿童使用现有床铺。</p>
+                  <div style="font-weight: 700">· 加床：</div>
+                  <p>不可加床</p>
+                  <div style="font-weight: 700">· 备注</div>
+                  <p>
+                    加床政策、儿童政策会根据客房类型而有所不同，房价仅适用于特定数量的客人。携带儿童与额外客人可能会产生额外费用，详情请咨询酒店。
+                  </p>
+                </div>
+              </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <el-row type="flex">
+              <el-col :span="6">早餐</el-col>
+              <el-col :span="18" style="font-weight: 400">
+                <p>早餐类型中式</p>
+                <el-divider></el-divider>
+                <p>菜单类型自助餐</p>
+                <el-divider></el-divider>
+                <p>营业时间07:00-09:00 [星期一 - 星期日]</p>
+              </el-col>
+            </el-row>
+            <el-divider></el-divider>
+            <el-row type="flex">
+              <el-col :span="6">停车场</el-col>
+              <el-col :span="18" style="font-weight: 400">
+                不可预约：酒店内提供公共停车场（免费）。</el-col
+              >
+            </el-row>
+            <el-divider></el-divider>
+            <el-row type="flex">
+              <el-col :span="6">宠物</el-col>
+              <el-col :span="18" style="font-weight: 400">
+                不可携带宠物。</el-col
+              >
+            </el-row>
+            <el-divider></el-divider>
+            <el-row type="flex">
+              <el-col :span="6">年龄限制</el-col>
+              <el-col :span="18" style="font-weight: 400"
+                >入住办理人需年满18岁</el-col
+              >
+            </el-row>
+            <el-divider></el-divider>
+            <el-row type="flex">
+              <el-col :span="6">到店付款方式</el-col>
+              <el-col :span="18" style="font-weight: 400"
+                >酒店接受以下付款方式
+                <div>
+                  <img
+                    src="https://tse1-mm.cn.bing.net/th/id/R-C.692de9abd94bc6a408ce5591e04403b1?rik=Pdt3a4ecCmrvQQ&riu=http%3a%2f%2fpic.ntimg.cn%2ffile%2f20191130%2f29554138_095901936699_2.jpg&ehk=deyCCJtpHBww4tY9QO9z8ZGsTCZWN%2fdTHjfZ3SYvktU%3d&risl=&pid=ImgRaw&r=0"
+                    alt=""
+                  />
+                  <img
+                    src="https://pic38.photophoto.cn/20160325/1155115744558206_b.jpg"
+                    alt=""
+                  />
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+        <br />
+      </div>
+      <div style="float: right">
+        <el-card class="right-box-card" shadow="never">
+          <h4>附近景点</h4>
+           <div
+              class="box"
+              v-for="(item, index) in attrations.slice(0, 8)"
+              :key="index"
+            >
+              <div
+                class="infoImg"
+                :style="{
+                  backgroundImage: 'url(' + item.img + ')',
+                  backgroundSize: '100% 100%',
+                  backgroundRepeat: 'no-repeat',
+                }"
+              ></div>
+              <div class="infoDetail">
+                <div class="Name" style="font-size: 14px; font-weight: 700">
+                  {{ item.name }}
+                </div>
+                <div class="Details">
+                  <div class="leftstar">
+                    <div class="star">
+                      {{ item.star }}<i
+                        style="
+                          font-style: normal;
+                          font-size: 11px;
+                          color: #4880cf;
+                        "
+                        >/5</i
+                      >
+                    </div>
+                    <i style="font-size: 11px; font-style: normal; color: gray">{{ item.commentnum }}点评</i>
+                  </div>
+                  <div class="rightprice">
+                    <i
+                      style="font-size: 11px; font-style: normal; color: gray"
+                      >&nbsp;直线距离{{ item.distance}}米</i
                     >
                   </div>
-                  <span class="dianping">{{ item.commentnum }}点评</span>
-                </div>
-                <div class="rightprice">
-                  ￥{{ item.price
-                  }}<i style="font-size: 11px; font-style: normal; color: gray"
-                    >&nbsp;起</i
-                  >
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </el-card>
+        </el-card>
+      </div>
     </div>
 
     <br />
@@ -286,12 +289,16 @@
   text-align: center;
   background-color: #f2f2f2;
 }
+
 .box-card {
   margin-left: 10%;
   margin-right: 10%;
 }
-.small-box-card {
-  width: 800px;
+.left-box-card {
+  width: 858px;
+}
+.right-box-card {
+  width: 330px;
 }
 .clearfix:before,
 .clearfix:after {
@@ -369,6 +376,7 @@
   line-height: 50px;
   text-align: center;
   border-radius: 4px;
+  margin-left: 5px;
 }
 .picture {
   margin-top: 20px;
@@ -418,7 +426,7 @@ img {
 }
 .box {
   width: 250px;
-  height: 190px;
+  height: 180px;
   float: left;
   margin: 5px 5px;
   text-align: left;
@@ -446,16 +454,6 @@ img {
   background-color: #003680;
   border-radius: 5px 5px 0px 5px;
 }
-
-.near .dianping {
-  height: 20px;
-  line-height: 20px;
-  font-size: 13px;
-  margin-left: 5px;
-  display: inline-block;
-  color: rgb(189, 189, 189);
-}
-
 .leftstar {
   float: left;
   width: 50%;
@@ -496,117 +494,122 @@ export default {
       baseImg:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
-        roomType: "所有房型",
-        sortWay: "最近入住",
+        commentLevel: "所有点评",
+        sortWay: "最近购买",
       },
       airport: 22.78,
       train: 12.45,
       subway: 10.44,
       attrationNum: 7,
+      call: "400-601-6699,021-50606666",
       comments: [
         {
           userName: "蔡蔡小游侠",
           userAvatar:
             "https://ak-d.tripcdn.com/images/Z80p180000013uw9yF21F_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
+          commentTicket: "成人票",
           bookTime: "08/14/2021",
           commentPicture:
             "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 1,
+          userCommentNum: 12,
           commentRate: 4,
           commentContent:
-            "楼下有个人的早餐店铺 豌杂面还不错，不能加床。 🛏️床确实是1.5米的，这个必须肯定。楼下有免费停车🅿️场 。 房间没有介绍的45平米，感觉被骗了。最多30平米左右，窗子对着居民楼，跟图片上完全不一样。整个旅途住宿费最贵的 真的是最差的一家。江边一直有施工，很乱。",
+            "真的真的超赞的！做攻略想玩的都玩到啦～ 交通： 我们开车去的，实在是太偏了！花了一个多小时去的，宝宝一直在问到了没？回来有些堵车，时间更长。一次50元。九点过一点点到的，停车已经停到3楼了！ 游玩路线： 路上先在公众号查了下剧场时间，发现和做的攻略有点出入，稍微调整了一点，先看了海狮、企鹅、天幕影院，穿过鸽子，时间将将好看虎鲸表演！没人敢坐前三排，我们仨勇猛的很，太爽了！下午去喂了斑海豹、花了60买了4条鱼，太亏了，人家海豹都不要吃，哼哼。又时间刚刚好，坐在前排看了白鲸表演，很震撼。看完坐缆车，要等40分钟，我们差不多35分钟排到，宝宝正好睡了一觉。起来在缆车上看风景～之后看了海洋世界馆、珊瑚水母馆、美人鱼表演，垮馆的时候又碰上花车巡游，和美人鱼隔空互动了！哈哈哈。 tips： 带宝宝的话推车和零食水果很重要，看表演后场的时候可以消磨时间～现在的天气，南极北极馆和室外温差大，给宝宝准备件外套吧，看虎鲸表演坐前15排的话的请带好雨具！",
           commentTime: "08/14/2021 20:53",
         },
         {
-          userName: "兰州潇洒哥",
+          userName: "柏拉M兔",
           userAvatar:
             "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
+          commentTicket: "成人票",
           bookTime: "08/14/2021",
           commentPicture:
             "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 1,
+          userCommentNum: 13,
           commentRate: 5.0,
           commentContent:
-            "环境真的挺不错，价格对于学生党真的好实惠！离解放碑挺近，没想到这个价钱能订到这么好的酒店！我和闺蜜都很满意！保洁阿姨的态度也很好，见到还会问好！强烈推荐！下次来还会订！",
+            "宝宝两岁还小，没有带他去比较贵的迪士尼，而是性价比相对高的海昌。 这次是他第二次来，第一次是他17个月的时候。 两次都在携程boss带货直播中抢购了房+两个成人票的套餐，1300左右的价格，玩两天住一晚太核算啦。 而且海昌海洋公园的酒店边门就是乐园的入口，玩累了，拉臭臭了，肚子饿了，衣服出汗湿了，回房间休整一下，不要太方便。 娃小，不懂什么IP，也不能玩刺激的项目，海昌乐园的项目就特别合适，人不多的时候，海洋木马项目的工作人员会让可以连续乘个两次。 乐园的动物也有很多，有北京熊、虎鲸、白鲸、海豚、企鹅、海豹等等大动物，也有各种好看的热带鱼、珊瑚等等。 总之，娃很开心，老母亲觉得性价比很高。",
           commentTime: "08/14/2021 20:53",
         },
         {
-          userName: "蔡蔡小游侠",
+          userName: "加油干饭呀",
           userAvatar:
             "https://ak-d.tripcdn.com/images/Z80p180000013uw9yF21F_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
+          commentTicket: "成人票",
           bookTime: "08/14/2021",
           commentPicture:
             "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 1,
+          userCommentNum: 115,
           commentRate: 4,
           commentContent:
-            "楼下有个人的早餐店铺 豌杂面还不错，不能加床。 🛏️床确实是1.5米的，这个必须肯定。楼下有免费停车🅿️场 。 房间没有介绍的45平米，感觉被骗了。最多30平米左右，窗子对着居民楼，跟图片上完全不一样。整个旅途住宿费最贵的 真的是最差的一家。江边一直有施工，很乱。",
+            "不管年龄多大 总有人把你宠成孩子 不能出沪的春节假期，人山人海的除了迪士尼，还有海昌海洋公园，抓住小长假的尾巴错峰出行，分享一下省钱又省时的玩乐攻略💌 首先要告诉你们的是，海洋公园真的没有你们想象中那么大，但是由于标识不够清晰容易晕头转向，可以关注gzh获取电子地图和当日演出表 🎫行程紧凑的话游玩半天就够了，推荐购买7折夜场票，3点入园8点闭园，绝对值回票价 🚗不建议开车前往，有限的车位无法满足膨胀的人流，16号线打车5分钟即可抵达 🗺参观顺序完全被演出时间牵着走，虎鲸和海豚表演值得一看，还有人鱼公主从海底捞“福”，非常具有春节特色哟 🎆晚上7:30有光影水幕和无人机表演，江边最佳观景位先到先得，结束以后还会有烟花秀哦",
           commentTime: "08/14/2021 20:53",
         },
         {
-          userName: "兰州潇洒哥",
+          userName: "erin1227",
           userAvatar:
             "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
+          commentTicket: "成人票",
           bookTime: "08/14/2021",
           commentPicture:
             "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 1,
+          userCommentNum: 12,
           commentRate: 5.0,
           commentContent:
-            "环境真的挺不错，价格对于学生党真的好实惠！离解放碑挺近，没想到这个价钱能订到这么好的酒店！我和闺蜜都很满意！保洁阿姨的态度也很好，见到还会问好！强烈推荐！下次来还会订！",
+            "我们是上午11点半到的，根据场馆表演时间，先后去看了11:45海象表演，12:204D电影，13点的虎鲸表演，13:40晶彩奇航，13:45鲨鱼馆的人鱼表演，14:15海豚恋曲（海豚馆），15:00白鲸之恋，15:20水上飞人。看完表演，去了几个场馆看海洋动物，因为基本都是在室内的，所以整个下午都不算太热。4点半左右排队45分钟去了漂流，在漂流门口花10块钱买一次性雨披和鞋套。最后去儿童乐园玩了几个项目，6点半结束，没有看晚上的灯光秀，有点遗憾。",
           commentTime: "08/14/2021 20:53",
         },
         {
-          userName: "兰州潇洒哥",
+          userName: "成人票",
           userAvatar:
             "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
+          commentTicket: "成人票",
           bookTime: "08/14/2021",
           commentPicture:
             "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 1,
-          commentRate: 5.0,
+          userCommentNum: 25,
+          commentRate: 3,
           commentContent:
-            "环境真的挺不错，价格对于学生党真的好实惠！离解放碑挺近，没想到这个价钱能订到这么好的酒店！我和闺蜜都很满意！保洁阿姨的态度也很好，见到还会问好！强烈推荐！下次来还会订！",
+            "只能说一般般呀",
           commentTime: "08/14/2021 20:53",
         },
       ],
-      hotels: [
+      attrations: [
         {
-          name: "格林豪泰酒店",
-          star: 2,
+          name: "南极企鹅馆",
+          star: 4.8,
           price: 400,
           address: "同济大学正门外",
           commentnum: 250,
           img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          distance:100,
         },
         {
-          name: "格林豪泰酒店",
-          star: 3,
+          name: "海豚过山车",
+          star: 3.2,
           price: 400,
           address: "同济大学正门外",
           commentnum: 250,
           img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          distance:100,
         },
         {
-          name: "格林豪泰酒店",
-          star: 3,
+          name: "虎鲸剧场《虎鲸科普秀》",
+          star: 3.6,
           price: 400,
           address: "同济大学正门外",
           commentnum: 250,
           img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          distance:100,
         },
         {
-          name: "格林豪泰酒店",
-          star: 3,
+          name: "深海奇航",
+          star: 4.6,
           price: 400,
           address: "同济大学正门外",
           commentnum: 250,
           img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          distance:100,
         },
       ],
     };
@@ -651,7 +654,7 @@ export default {
         confirmButtonText: "确定",
       });
     },
-    roomTypeChange() {},
+    commentLevelChange() {},
     sortWayChange() {},
   },
   mounted() {},

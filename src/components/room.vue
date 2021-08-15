@@ -9,7 +9,7 @@
           backgroundRepeat: 'no-repeat',
         }"
       ></div>
-      <h4>{{ roomName }}</h4>
+      <h5>{{ roomName }}</h5>
       <span @click="viewRoomInfo" class="hint">查看客房信息</span>
     </div>
 
@@ -43,9 +43,8 @@
     <!-- 预定 -->
     <div class="relative">
       <div class="clearfix">
-          <button @click="Book">预定</button>
+        <button @click="Book">预定</button>
         <div style="float: right">
-            
           <span style="color: #003580; font-weight: 700; font-size: 24px">
             ￥{{ price }}
           </span>
@@ -57,7 +56,6 @@
             ￥{{ originalPrice }}
           </span>
         </div>
-        
       </div>
     </div>
   </el-card>
@@ -110,7 +108,9 @@ button {
   background-color: #f7ba2a;
   color: white;
   float: right;
-   line-height: 30px;
+  line-height: 30px;
+  border: none;
+  margin-left: 5px;
 }
 </style>
 
