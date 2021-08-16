@@ -1,7 +1,6 @@
 <template>
   <div class="fixed">
-    <el-form :inline="true" :model="form_Select" class="form-inline">
-      <!-- 罗检form-inline这个类好像没用 -->
+    <el-form :inline="true" :model="form_Select">
       <el-form-item>
         <el-select
           v-model="form_Select.location"
@@ -166,17 +165,7 @@ export default {
 
 <style scoped>
 /* 搜索框css */
-.out {
-  width: 100%;
-  height: 130px;
-}
-.Form {
-  width: 100%;
-  height: 130px;
-  margin-bottom: -115px;
-  text-align: center;
-  background-color: #f2f2f2;
-}
+
 .fixed {
   position: -webkit-sticky;
   position: sticky;
@@ -215,7 +204,7 @@ export default {
 .dropdown {
   position: relative;
   height: 58px;
-  width: 346px;
+  width: 300px;
   background-color: #fff;
   border: 1px solid lightgrey;
   border-radius: 0px;
@@ -246,7 +235,7 @@ export default {
 }
 .search_btn {
   height: 60px;
-  width: 60px;
+  width: 106px;
   font-size: 33px;
   background-color: #003680;
   color: white;

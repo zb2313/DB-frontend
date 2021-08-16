@@ -3,7 +3,7 @@
     <Header activeIndex="2" />
 
     <div class="Form"></div>
-    <div class="searchBox"></div>
+    <SearchAttr />
 
     <!-- 热门目的地 -->
     <div class="main hot">
@@ -133,7 +133,7 @@
 .Form {
   width: 100%;
   height: 130px;
-  /* margin-bottom: -105px; */
+  margin-bottom: -105px;
   text-align: center;
   background-color: #f2f2f2;
 }
@@ -149,7 +149,7 @@ h3 {
 /* 热门推荐 */
 .hot {
   height: 245px;
-  margin-top: 25px;
+  margin-top: 55px;
   margin-bottom: 15px;
 }
 .mainDest {
@@ -248,16 +248,17 @@ h3 {
 <script>
 import Header from "@/components/Header.vue";
 import Footer1 from "@/components/Footer1.vue";
+import SearchAttr from "@/components/SearchAttr.vue";
 
 export default {
   name: "Home",
   components: {
     Header,
     Footer1,
+    SearchAttr,
   },
   data() {
     return {
-      input: "",
       moreCity: [
         {
           cityname: "上海",
