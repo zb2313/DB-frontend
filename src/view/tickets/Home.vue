@@ -143,7 +143,7 @@ export default {
       pickerOptions: {
              disabledDate(time) {
     
-             return time.getTime() < Date.now();
+            return (time.getTime() < Date.now()-86400000)||(time.getTime() > Date.now()+14*86400000);
              },},
       departure_trainstation_list: [],
       arrival_trainstation_list: [],
