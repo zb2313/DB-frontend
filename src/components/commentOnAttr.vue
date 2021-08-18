@@ -28,7 +28,7 @@
         <p class="hint">
           <i class="el-icon-edit-outline">&nbsp;</i>
           <span>{{ userCommentNum }}条点评</span>
-           <br><br>
+          <br /><br />
         </p>
       </div>
     </div>
@@ -41,7 +41,7 @@
       </div>
       <div style="margin-top: 15px">
         {{ commentContent }}
-        <br><br>
+        <br /><br />
       </div>
     </div>
   </el-card>
@@ -83,12 +83,12 @@
 
 .comment {
   float: right;
-  width: 618px;
+  width: 500px;
   font-size: 14px;
 }
 .main-box {
-  width: 858px;
-  margin: auto 0px ;
+  width: 800px;
+  margin: auto 0px;
 }
 </style>
 

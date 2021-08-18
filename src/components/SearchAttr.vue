@@ -8,14 +8,6 @@
           width="490"
           trigger="click"
         >
-          <el-menu default-active="1" mode="horizontal" @select="handleSelect">
-            <el-menu-item index="1"><a href="#hot">热门</a></el-menu-item>
-            <el-menu-item index="2"><a href="#A">ABCDE</a></el-menu-item>
-            <el-menu-item index="3"><a href="#F">FGHJK</a></el-menu-item>
-            <el-menu-item index="4"><a href="#L">LMNPQ</a></el-menu-item>
-            <el-menu-item index="5"><a href="#R">RSTWX</a></el-menu-item>
-            <el-menu-item index="6"><a href="#Y">YZ</a></el-menu-item>
-          </el-menu>
           <div class="allcity">
             <div id="hot" class="cityBox">
               <div class="label" style="font-size: 13px">热门</div>

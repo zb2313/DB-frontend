@@ -292,6 +292,9 @@ export default {
   },
   data() {
     return {
+      currentCity: "",
+      currentIng: "",
+      currentlat: "",
       attrStart: "上海",
       ticketStart: "上海",
       attrDropdown: [
@@ -448,6 +451,31 @@ export default {
       }
       this.$set(this.show[a], b, true);
     },
+    getLocation() {
+      let a = this;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        a.currentIng = position.coords.longitude.toFixed(6);
+        a.currentlat = position.coords.latitude.toFixed(6);
+
+        fetch(
+          "https://restapi.amap.com/v3/geocode/regeo?key=b46e001d88ea385075cc97e1c892ce37&location=" +
+            a.currentIng +
+            "," +
+            a.currentlat
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (myJson) {
+            a.currentCity = myJson.regeocode.addressComponent.province;
+            console.log(a.currentCity);
+          });
+      });
+    },
+  },
+  mounted() {
+    // 获取浏览器地理位置
+    this.getLocation();
   },
 };
 </script>
@@ -619,7 +647,7 @@ export default {
   position: absolute;
   left: 50%;
   margin-left: -6px;
-  bottom: -6px;
+  bottom: -7px;
   width: 0;
   height: 0;
   overflow: hidden;
