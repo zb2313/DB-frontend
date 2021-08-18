@@ -274,10 +274,9 @@
 }
 .form {
   width: 100%;
-  height: 100px;
-  padding-top: 50px;
+  height: 80px;
+  padding-top: 20px;
   text-align: center;
-  background-color: #f2f2f2;
 }
 .el-row {
   margin-bottom: 10px;
@@ -330,7 +329,7 @@ export default {
       discount: 11.0,
       form_Select: {
         time: "2021/08/11",
-        room_num: 1,
+        room_num: undefined,
         arrival: " ",
       },
       pickerOptions: {
