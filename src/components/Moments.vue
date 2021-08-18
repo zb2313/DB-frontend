@@ -9,21 +9,21 @@
     >
       <el-card class="singleMoment">
         <router-link :to="'/1/' + item.momenT_ID">
-          <span class="zhankai" type="primary">展开</span>
+          <span class="zhankai" type="primary"><i class="el-icon-view"> 查看</i></span>
         </router-link>
         <el-avatar
-          size="medium"
+          size="large"
           :src="item.uprofile"
           style="float: left"
         ></el-avatar>
-        <pre><span class="user_id" style="float:left">{{item.useR_ID}}</span>
-		<span class="user_name" style="float: left">{{item.useR_NAME}}</span>
+        <pre>
+		<span class="user_name" style="float: left"> {{item.useR_NAME}}</span>
+		<span class="moment_time" style="float:left"> {{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
 		<!-- 动态发布地点信息和时间信息 -->
-		<span class="moment_location" style="float: left">{{item.momenT_LOCATION}}</span>
-		<span class="moment_time" style="float: right">{{item.momenT_TIME}}</span></pre>
-        <el-card style="background: #fbfbef">
+      </pre>
+      <div>
           <!-- 动态中的文本 -->
-          <p class="moment_text">{{ item.text }}</p>
+          <span style="float:left">{{ item.text }}</span>
           <!-- 动态中的图片 -->
           <img
             class="moment_img"
@@ -42,7 +42,7 @@
             >
             </iframe>
           </div>
-        </el-card>
+      </div><br>
       </el-card>
     </li>
   </div>
@@ -135,6 +135,7 @@ export default {
 <style scoped>
 .moment {
   max-height: 400px;
+  
 }
 .zhankai {
   display: flex;
@@ -148,8 +149,7 @@ export default {
   padding: 20px;
   margin: 20px auto;
   box-sizing: border-box;
-  background: #ecf8e0;
-  border: 1px dotted rgb(169, 185, 108);
+   background: #ecf8e0;
   border-radius: 10px;
   position: relative;
 }

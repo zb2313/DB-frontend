@@ -130,6 +130,7 @@
 .el-footer .copyright {
   color: #666;
   text-align: center;
+  font-size: 12px;
 }
 .el-footer .copyright p {
   margin-top: 4px;

@@ -1,5 +1,7 @@
 <template>
   <div class="singleShow">
+    <Header1/>
+<img src="../assets/img/login-bg.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
     <!-- 动态区 -->
     <div class="singleMoment" v-for="(item, index) in Moments" :key="index">
       <el-card class="momentCard">
@@ -12,7 +14,7 @@
 		<span style="float:left">{{item.useR_NAME}}</span>
 		<span style="float: right">{{item.momenT_LOCATION}}</span>
 		<span style="float: right">{{item.momenT_TIME}}</span></pre>
-        <el-card style="background: #fbfbef">
+        <div>
           <p>{{ item.text }}</p>
           <img
             class="moment_img"
@@ -30,7 +32,7 @@
             >
             </iframe>
           </div>
-        </el-card>
+        </div>
       </el-card>
     </div>
     <!-- 评论区 -->
@@ -60,7 +62,7 @@
         class="comment_input"
         type="textarea"
         :autosize="{ minRows: 2 }"
-        placeholder="说点什么吧..."
+        placeholder="评论"
         v-model="comment_text"
         maxlength="100"
         show-word-limit
@@ -68,16 +70,20 @@
 
     </div>
     <div class="submit">
-      <br />
-      <button class="button-back el-icon-s-promotion" @click="submit">发送</button>
-      <button class="button-back" @click="goback">返回</button>
+      <br /><br>
+      <el-button size="medium" type="primary" class="el-icon-s-promotion" @click="submit">发表</el-button>
+      <el-button size="medium" type="primary" plain @click="goback">返 回</el-button>
     </div>
 
   </div>
 </template>
 <script>
 import axios from "axios";
+import Header1 from "@/components/Header1.vue";
 export default {
+   components:{
+      Header1
+    },
   name: "singleMomment",
   data() {
     return {
@@ -195,26 +201,10 @@ export default {
 .singleMoment {
   width: 80%;
   margin: 12px auto;
+ 
 }
 .CommentMoment {
   width: 80%;
   margin: 12px auto;
-}
-.button-back {
-  text-decoration: none;
-  text-align: center;
-  vertical-align: middle;
-  display: inline-block;
-  margin: 20px 20px 0px 0px;
-  background: #007acc;
-  color: #fff;
-  border: 0;
-  padding: 9px;
-  border-radius: 4px;
-  font-size: 18px;
-  cursor: pointer;
-  width: 80px;
-  height: 40px;
-  outline: none;
 }
 </style>

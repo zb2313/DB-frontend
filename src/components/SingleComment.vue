@@ -1,18 +1,18 @@
 <template>
+<div>
+<Header1/>
+<img src="../assets/img/faq.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
 <div class="singleShow">
 	<div class="singleMoment" v-for="(item,index) in Moments" :key="index">
     <el-avatar
-        size="medium"
+        size="large"
         :src="item.uprofile"
         style="float: left"
     ></el-avatar>
-		<br>
-		<pre>
-		<span style="float: right">{{item.momenT_LOCATION}}</span>
-		<span style="float: right">{{item.momenT_TIME}}</span></pre>
-		<el-card style="background:#FBFBEF">
+		<pre><span style="float: left">{{item.useR_NAME}}</span>
+		<span style="float: left">{{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
+		</pre>
 		<p>{{ item.text }}</p>
-		</el-card>
 		<br>
 		<img class="moment_img" :src="item.picture" v-if="item.picture!==null" style="width:40px;height:40px">
 		<br>
@@ -23,23 +23,28 @@
 		</div>
 		<!-- 评论区 -->
 		<li class="CommentMoment" v-for="(item1,index) in Comments" :key="index" style="list-style: none">
-		<el-card class="moment_block">
+		<div><pre>评论列表：</pre><br>
 			<el-avatar size=medium :src=item1.uprofile style="float:left"></el-avatar>
 			<pre><span class="user_id" style="float:left">{{item1.useR_ID}}</span>
 			<span class="user_name" style="float: left">{{item1.useR_NAME}}</span>
 			<span class="comment_time" style="float:right">{{item1.commenT_TIME}}</span></pre>
 			<p class="comment_text">{{item1.commenT_TEXT}}</p>
-		</el-card>
+		</div><br>
 		</li>
-		<button class="button1" @click="deleteBlog">删除</button>
-		<button class="button2" @click="goback">返回</button>
+		<el-button type="danger" size="small" @click="deleteBlog">删除</el-button>
+		<el-button size="small" @click="goback">返回</el-button>
 	</div>
+</div>
 </div>
 </template>
 
 <script>
 import axios from 'axios'
-export default {
+import Header1 from "@/components/Header1.vue";
+export default { 
+	components:{
+      Header1
+    },
 	name: 'singleComment',
 	data() {
 		return {
@@ -97,42 +102,5 @@ export default {
 }
 .singleMoment ul li {
 	margin-left: 65px;
-}
-.button1 {
-	text-decoration: none;
-	text-align: center;
-	vertical-align: middle;
-	display: inline-block;
-	margin: 20px 20px;
-	background: #007acc;
-	color: #fff;
-	border: 0;
-	padding: 9px;
-	border-radius: 4px;
-	font-size: 18px;
-	cursor: pointer;
-	width: 80px;
-	height: 40px;
-	outline: none;
-}
-.button2{
-	text-decoration: none;
-	text-align: center;
-	vertical-align: middle;
-	display: inline-block;
-	margin: 20px 0;
-	background: #007acc;
-	color: #fff;
-	border: 0;
-	padding: 9px;
-	border-radius: 4px;
-	font-size: 18px;
-	cursor: pointer;
-	width: 80px;
-	height: 40px;
-	outline: none;
-}
-.button.left {
-	margin-left: 15px;
 }
 </style>

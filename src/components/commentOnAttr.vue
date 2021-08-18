@@ -1,5 +1,5 @@
 <template>
-  <el-card class="content" shadow="never">
+  <el-card class="content main-box" shadow="never">
     <div class="leftPart">
       <div style="width: 200px" class="clearfix">
         <div
@@ -18,17 +18,17 @@
 
       <div style="margin-top: 20px">
         <p class="hint">
-          <i class="el-icon-receiving">&nbsp;</i>
-          <span>{{ commentRoom }}</span>
+          <i class="el-icon-s-finance">&nbsp;</i>
+          <span>{{ commentTicket }}</span>
         </p>
         <p class="hint">
           <i class="el-icon-date">&nbsp;</i>
-          <span>于{{ bookTime }}入住</span>
+          <span>于{{ bookTime }}购买门票</span>
         </p>
         <p class="hint">
           <i class="el-icon-edit-outline">&nbsp;</i>
           <span>{{ userCommentNum }}条点评</span>
-          <br> <br>
+           <br><br>
         </p>
       </div>
     </div>
@@ -39,9 +39,9 @@
         <span class="rate">{{ commentRate }}</span>
         <span class="hint">/5</span><span class="rate">{{ level }}</span>
       </div>
-      <div style="margin-top: 20px">
+      <div style="margin-top: 15px">
         {{ commentContent }}
-        <br> <br>
+        <br><br>
       </div>
     </div>
   </el-card>
@@ -58,10 +58,6 @@
 }
 .clearfix {
   *zoom: 1;
-}
-.content {
-  margin-left: 10%;
-  margin-right: 10%;
 }
 .leftPart {
   float: left;
@@ -84,10 +80,15 @@
   color: #003580;
   font-weight: 700;
 }
+
 .comment {
   float: right;
-  width: 850px;
+  width: 618px;
   font-size: 14px;
+}
+.main-box {
+  width: 858px;
+  margin: auto 0px ;
 }
 </style>
 
@@ -96,7 +97,7 @@ export default {
   props: {
     userName: String,
     userAvatar: String,
-    commentRoom: String,
+    commentTicket: String,
     bookTime: String,
     userCommentNum: Number,
     commentRate: Number,

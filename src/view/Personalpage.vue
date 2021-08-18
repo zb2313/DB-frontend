@@ -1,13 +1,14 @@
 <template>
 <div>
 <admiHeader/>
+<img src="../assets/img/admi.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
 <div class="page" id="form">
  <el-tabs type="border-card" id="page">
   <el-tab-pane>
     <span slot="label"><i class="el-icon-user"></i> 基础信息</span>
    <el-form>
 <el-form-item>
-  <div id="input">管理员ID：
+  <div id="input">管理员工号：
 <el-input v-model="AdministratorID" :disabled="true"></el-input>
   </div>
   </el-form-item>
@@ -22,7 +23,7 @@
     <span slot="label"><i class="el-icon-edit"></i>修改信息</span>
  <el-form>
 <el-form-item>
-  <div id="input">管理员ID：
+  <div id="input">管理员工号：
 <el-input v-model="AdministratorID" :disabled="true"></el-input>
   </div>
   </el-form-item>
@@ -32,7 +33,7 @@
   </div>
   </el-form-item>
 <el-form-item>
-  <el-button type="primary" @click="submit()">提交</el-button>
+  <el-button type="primary" size="medium" @click="submit()">提交</el-button>
 </el-form-item>
  </el-form>
 </el-tab-pane>
@@ -69,10 +70,9 @@ export default {
     },
     created()
     {
-      let that=this;
           this.AdministratorID=localStorage.getItem("ms_username")
-          that.password=localStorage.getItem("password");
-          that.editpassword=that.password;
+          this.password=localStorage.getItem("password");
+          this.editpassword=this.password;
     },
     methods: {
      submit()

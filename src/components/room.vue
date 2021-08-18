@@ -9,7 +9,7 @@
           backgroundRepeat: 'no-repeat',
         }"
       ></div>
-      <h4>{{ roomName }}</h4>
+      <h5>{{ roomName }}</h5>
       <span @click="viewRoomInfo" class="hint">查看客房信息</span>
     </div>
 
@@ -41,20 +41,20 @@
       <p>立即确认</p>
     </div>
     <!-- 预定 -->
-    <div class="detail">
-      <div class="relative">
-        <div class="clearfix">
-          <div style="float: left">
-            <span style="color: #003580; font-weight: 700; font-size: 24px">
-              ￥{{ price }}
-            </span>
-          </div>
-          <div style="float: left">
-            <span style="color: grey; font-size: 14px; text-decoration: line-through;">
-              ￥{{ originalPrice }}
-            </span>
-          </div>
-          <button @click="Book">预定</button>
+    <div class="relative">
+      <div class="clearfix">
+        <button @click="Book">预定</button>
+        <div style="float: right">
+          <span style="color: #003580; font-weight: 700; font-size: 24px">
+            ￥{{ price }}
+          </span>
+        </div>
+        <div style="float: right">
+          <span
+            style="color: grey; font-size: 14px; text-decoration: line-through"
+          >
+            ￥{{ originalPrice }}
+          </span>
         </div>
       </div>
     </div>
@@ -64,15 +64,15 @@
 <style scoped>
 .hint {
   color: cornflowerblue;
-  font-size: 14px;
+  font-size: 12px;
 }
 .leftPart {
   float: left;
 }
 
 .leftimg {
-  width: 200px;
-  height: 130px;
+  width: 120px;
+  height: 80px;
 }
 
 .content h4 {
@@ -81,7 +81,7 @@
 .content {
   margin-left: 10%;
   margin-right: 10%;
-  height: 210px;
+  height: 150px;
   text-align: center;
 }
 .detail {
@@ -89,7 +89,7 @@
   margin-top: 40px;
   margin-left: 20px;
   margin-right: 40px;
-  font-size: 14px;
+  font-size: 12px;
 }
 .customer {
   background-color: navy;
@@ -97,43 +97,39 @@
   font-size: 14px;
 }
 .relative {
-  position: relative;
-  top: 15px;
-  left: 100px;
+  text-align: right;
+  margin-right: 100px;
+  margin-left: 20px;
+  margin-top: 50px;
 }
 button {
   width: 90px;
   height: 40px;
   background-color: #f7ba2a;
   color: white;
+  float: right;
+  line-height: 30px;
+  border: none;
+  margin-left: 5px;
 }
 </style>
 
 <script>
 export default {
-  //   props: {
-  //     title: String,
-  //     address: String,
-  //     grade: Number,
-  //     type: String,
-  //     price: Number,
-  //     coverImgUrl: String,
-  //     dianping_number: Number,
-  //     ID: String,
-  //   },
+  props: {
+    roomName: String,
+    customerNum: Number,
+    bed: String,
+    dish: String,
+    smoke: String,
+    window: String,
+    cancel: String,
+    price: Number,
+    originalPrice: Number,
+    coverImgUrl: String,
+  },
   data() {
     return {
-      roomName: "山系·城景大床房",
-      customerNum: 2,
-      bed: "1张大床和1张双人床",
-      dish: "有",
-      smoke: "可",
-      window: "有",
-      cancel: "不可取消",
-      price: 999,
-      originalPrice:1314,
-      coverImgUrl:
-        "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       baseImg:
         "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
     };

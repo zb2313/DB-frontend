@@ -1,8 +1,6 @@
 <template>
-  <el-header height="80px">
-    <router-link to="/Homepage"><div class="logo">LVDAO</div></router-link>
-
-    <div class="goback" @click="goback">返回</div>
+  <el-header height="100px">
+    <router-link to="/hotel"><div class="logo">LVDAO</div></router-link>
 
     <div class="nav1">
       <ul>
@@ -74,18 +72,11 @@
   line-height: 80px;
   float: left;
 }
-.goback {
-  height: 80px;
-  line-height: 85px;
-  width: 50px;
-  float: left;
-  cursor: pointer;
-}
 .nav1 {
   float: right;
-  margin-top: 22px;
+  margin-left: 55%;
+  margin-top: 10px;
 }
-
 .nav1 ul li {
   float: left;
 }

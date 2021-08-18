@@ -54,7 +54,7 @@
           </el-card>
           <br />
           <el-card class="box-card1" shadow="never">
-            <div form>
+            <div class="form">
               <el-form :inline="true" :model="form_Select">
                 <el-form-item>
                   <el-date-picker
