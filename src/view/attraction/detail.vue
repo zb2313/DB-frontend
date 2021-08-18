@@ -75,7 +75,11 @@
             <i class="el-icon-location-outline"></i> &nbsp;&nbsp; {{ location }}
             <br />
             <br />
-            <div><i class="el-icon-date"></i> &nbsp;&nbsp; {{ openTime }}</div>
+            <div>
+              <i class="el-icon-date"></i> &nbsp;&nbsp;{{ openTime }}-{{
+                closeTime
+              }}开放（ {{ stopTime }}停止入园）
+            </div>
             <br />
             <div>
               <i class="el-icon-phone-outline"></i> &nbsp;&nbsp; {{ call }}
@@ -85,6 +89,7 @@
       </div>
     </el-card>
     <br />
+
     <div class="clearfix box-card">
       <div style="float: left">
         <el-card class="left-box-card" shadow="never">
@@ -107,8 +112,14 @@
                   @change="commentLevelChange"
                 >
                   <el-option label="所有点评" value="所有点评"></el-option>
-                  <el-option label="好评（打分>3）" value="好评（打分>3）"></el-option>
-                  <el-option label="非好评（打分<4）" value="非好评（打分<4）"></el-option>
+                  <el-option
+                    label="好评（打分>3）"
+                    value="好评（打分>3）"
+                  ></el-option>
+                  <el-option
+                    label="非好评（打分<4）"
+                    value="非好评（打分<4）"
+                  ></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -141,89 +152,42 @@
           <!-- 得加个分页 -->
         </div>
         <br />
-        <!-- 酒店政策 -->
-        <el-card class="left-box-card policy" shadow="never">
-          <h1>酒店政策</h1>
-          <div class="bold">
+        <!-- 景点详情 -->
+        <el-card class="left-box-card details" shadow="never">
+          <h1>景点介绍</h1>
+          <div>
             <el-row type="flex" style="margin-top: 20px">
-              <el-col :span="6">入住及退房</el-col>
-              <el-col :span="18"
-                >入住时间： 14:00后 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                退房时间： 12:00前</el-col
+              <el-col :span="24"
+                >{{description}}</el-col
               >
             </el-row>
             <el-divider></el-divider>
-            <el-row type="flex">
-              <el-col :span="6">入住方式</el-col>
-              <el-col :span="18" style="font-weight: 400"
-                >请到前台领取钥匙/门卡</el-col
+            <h1>开放时间</h1>
+            <el-row type="flex" style="margin-top: 20px">
+              <el-col :span="24"
+                >7月1日-8月31日 周一至周五 09:00-20:00(最晚入园19:00) 周六至周日 09:00-20:30(最晚入园19:30)；年卡中心开卡时间：开园前半小时至闭园前一个半小时。 景区现场停止售票时间：闭园前一个半小时。 闭园前1小时停止检票</el-col
               >
             </el-row>
             <el-divider></el-divider>
-            <el-row type="flex">
-              <el-col :span="6">儿童及加床</el-col>
-              <el-col :span="18" style="font-weight: 400"
-                >酒店允许携带12岁及以上儿童入住
-                <div style="margin-top: 20px">
-                  <div style="font-weight: 700">· 使用现有床铺</div>
-                  <p>每房间可有1名12-17岁的儿童使用现有床铺。</p>
-                  <div style="font-weight: 700">· 加床：</div>
-                  <p>不可加床</p>
-                  <div style="font-weight: 700">· 备注</div>
-                  <p>
-                    加床政策、儿童政策会根据客房类型而有所不同，房价仅适用于特定数量的客人。携带儿童与额外客人可能会产生额外费用，详情请咨询酒店。
-                  </p>
-                </div>
-              </el-col>
-            </el-row>
-            <el-divider></el-divider>
-            <el-row type="flex">
-              <el-col :span="6">早餐</el-col>
-              <el-col :span="18" style="font-weight: 400">
-                <p>早餐类型中式</p>
-                <el-divider></el-divider>
-                <p>菜单类型自助餐</p>
-                <el-divider></el-divider>
-                <p>营业时间07:00-09:00 [星期一 - 星期日]</p>
-              </el-col>
-            </el-row>
-            <el-divider></el-divider>
-            <el-row type="flex">
-              <el-col :span="6">停车场</el-col>
-              <el-col :span="18" style="font-weight: 400">
-                不可预约：酒店内提供公共停车场（免费）。</el-col
+            <h1>优待政策</h1>
+            <el-row type="flex" style="margin-top: 20px">
+              <el-col :span="24" 
+                >儿童：身高1.0米（含）以下或者3周岁以下（需持本人身份证等有效证件原件，购票成人陪同），免费；身高1.0米（不含）-1.4米（含）之间，优惠 <br> 老人：65周岁（含）以上（持本人有效身份证件），优惠 <br> 军人：现役军人、残疾军人、烈士遗属、因公牺牲军人遗属、病故军人遗属、现役军人家属、在职/退休消防救援人员和消防救援院校学员（持本人有效证件至现场购买），优惠 <br> 残疾人：凭有效证件，优惠  <br> 补充说明：以上信息仅供参考，具体信息请以景区当天披露为准。</el-col
               >
             </el-row>
             <el-divider></el-divider>
-            <el-row type="flex">
-              <el-col :span="6">宠物</el-col>
-              <el-col :span="18" style="font-weight: 400">
-                不可携带宠物。</el-col
+            <h1>服务设施</h1>
+            <el-row type="flex" style="margin-top: 20px">
+              <el-col :span="24"
+                >停车场： 地址：{{location}};库位：约1000个；除了景区内停车场，周边还设有三个市政配套停车场，所有停车位总共约3000多个。 <br>行李寄存：行李寄存处位于园区正门右侧，大件60元/件，小件50元/件。 <br> 婴儿车租赁：婴儿车60元/车/天，押金300元；单人童车70元/车/天，押金200元；双人童车90元/车/天，押金200元。车辆乘坐体重限制标准：婴儿车限10kg，单人童车限25kg，双人童车限45kg。 <br> 轮椅租赁：免费租赁，押金300元。  <br> 卫生间：园区内设有多个卫生间，有明显标识。</el-col
               >
             </el-row>
             <el-divider></el-divider>
-            <el-row type="flex">
-              <el-col :span="6">年龄限制</el-col>
-              <el-col :span="18" style="font-weight: 400"
-                >入住办理人需年满18岁</el-col
+            <h1>交通攻略</h1>
+            <el-row type="flex" style="margin-top: 20px">
+              <el-col :span="24"
+                >距{{nearSubwayStation}}{{nearSubwayDistance}}m,步行12mins</el-col
               >
-            </el-row>
-            <el-divider></el-divider>
-            <el-row type="flex">
-              <el-col :span="6">到店付款方式</el-col>
-              <el-col :span="18" style="font-weight: 400"
-                >酒店接受以下付款方式
-                <div>
-                  <img
-                    src="https://tse1-mm.cn.bing.net/th/id/R-C.692de9abd94bc6a408ce5591e04403b1?rik=Pdt3a4ecCmrvQQ&riu=http%3a%2f%2fpic.ntimg.cn%2ffile%2f20191130%2f29554138_095901936699_2.jpg&ehk=deyCCJtpHBww4tY9QO9z8ZGsTCZWN%2fdTHjfZ3SYvktU%3d&risl=&pid=ImgRaw&r=0"
-                    alt=""
-                  />
-                  <img
-                    src="https://pic38.photophoto.cn/20160325/1155115744558206_b.jpg"
-                    alt=""
-                  />
-                </div>
-              </el-col>
             </el-row>
           </div>
         </el-card>
@@ -232,46 +196,48 @@
       <div style="float: right">
         <el-card class="right-box-card" shadow="never">
           <h4>附近景点</h4>
-           <div
-              class="box"
-              v-for="(item, index) in attrations.slice(0, 8)"
-              :key="index"
-            >
-              <div
-                class="infoImg"
-                :style="{
-                  backgroundImage: 'url(' + item.img + ')',
-                  backgroundSize: '100% 100%',
-                  backgroundRepeat: 'no-repeat',
-                }"
-              ></div>
-              <div class="infoDetail">
-                <div class="Name" style="font-size: 14px; font-weight: 700">
-                  {{ item.name }}
-                </div>
-                <div class="Details">
-                  <div class="leftstar">
-                    <div class="star">
-                      {{ item.star }}<i
-                        style="
-                          font-style: normal;
-                          font-size: 11px;
-                          color: #4880cf;
-                        "
-                        >/5</i
-                      >
-                    </div>
-                    <i style="font-size: 11px; font-style: normal; color: gray">{{ item.commentnum }}点评</i>
-                  </div>
-                  <div class="rightprice">
-                    <i
-                      style="font-size: 11px; font-style: normal; color: gray"
-                      >&nbsp;直线距离{{ item.distance}}米</i
+          <div
+            class="box"
+            v-for="(item, index) in attrations.slice(0, 8)"
+            :key="index"
+          >
+            <div
+              class="infoImg"
+              :style="{
+                backgroundImage: 'url(' + item.img + ')',
+                backgroundSize: '100% 100%',
+                backgroundRepeat: 'no-repeat',
+              }"
+            ></div>
+            <div class="infoDetail">
+              <div class="Name" style="font-size: 14px; font-weight: 700">
+                {{ item.name }}
+              </div>
+              <div class="Details">
+                <div class="leftstar">
+                  <div class="star">
+                    {{ item.star
+                    }}<i
+                      style="
+                        font-style: normal;
+                        font-size: 11px;
+                        color: #4880cf;
+                      "
+                      >/5</i
                     >
                   </div>
+                  <i style="font-size: 11px; font-style: normal; color: gray"
+                    >{{ item.commentnum }}点评</i
+                  >
+                </div>
+                <div class="rightprice">
+                  <i style="font-size: 11px; font-style: normal; color: gray"
+                    >&nbsp;直线距离{{ item.distance }}米</i
+                  >
                 </div>
               </div>
             </div>
+          </div>
         </el-card>
       </div>
     </div>
@@ -418,11 +384,8 @@ img {
   line-height: 30px;
   font-size: 30px;
 }
-.bold {
-  font-weight: 700;
-}
-.policy {
-  font-size: 12px;
+.details {
+  font-size: 14px;
 }
 .box {
   width: 250px;
@@ -489,10 +452,16 @@ export default {
       location: "上海市浦东新区南汇新城镇银飞路166号",
       dianping_number: 999,
       grade: 5,
-      openTime: "09:00-20:30开放（19:30停止入园）",
-      minPrice: 99,
+      openTime: "09:00",
+      closeTime: "20:30",
+      stopTime: "19:30",
+      minPrice: 59,
+      nearSubwayStation:"临港中运量1号线杞青路站",
+      nearSubwayDistance:793,
+      description:
+        "上海海昌海洋公园被评定为国家4A级旅游景区，以海洋文化为主题，缔造五大区域和一个度假酒店，拥有《虎鲸科普秀》《海象嘻游记》《海豚恋曲》等十六大明星剧目；设有南极企鹅馆、海兽探秘馆等六大动物展示场馆，提供火山漂流、海豚过山车等十余项游乐设施，汇聚三万余只海洋生物，展现海洋梦幻花车巡游及百场演艺！",
       baseImg:
-        "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+        "https://dimg06.c-ctrip.com/images/100q11000000qcqie2920_C_1600_1200.jpg",
       form_Select: {
         commentLevel: "所有点评",
         sortWay: "最近购买",
@@ -560,7 +529,7 @@ export default {
           commentTime: "08/14/2021 20:53",
         },
         {
-          userName: "成人票",
+          userName: "大胃张😍",
           userAvatar:
             "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
           commentTicket: "成人票",
@@ -569,8 +538,7 @@ export default {
             "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
           userCommentNum: 25,
           commentRate: 3,
-          commentContent:
-            "只能说一般般呀",
+          commentContent: "只能说一般般呀",
           commentTime: "08/14/2021 20:53",
         },
       ],
@@ -581,8 +549,8 @@ export default {
           price: 400,
           address: "同济大学正门外",
           commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-          distance:100,
+          img: "https://dimg07.c-ctrip.com/images/10091f000001gsmc674CC_C_1600_1200.jpg",
+          distance: 300,
         },
         {
           name: "海豚过山车",
@@ -590,8 +558,8 @@ export default {
           price: 400,
           address: "同济大学正门外",
           commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-          distance:100,
+          img: "https://dimg04.c-ctrip.com/images/100j0y000000m8x8jB7D9_C_1600_1200.jpg",
+          distance: 150,
         },
         {
           name: "虎鲸剧场《虎鲸科普秀》",
@@ -599,8 +567,8 @@ export default {
           price: 400,
           address: "同济大学正门外",
           commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-          distance:100,
+          img: "https://dimg03.c-ctrip.com/images/350e19000001661l2B737_C_1600_1200.jpg",
+          distance: 400,
         },
         {
           name: "深海奇航",
@@ -608,8 +576,8 @@ export default {
           price: 400,
           address: "同济大学正门外",
           commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-          distance:100,
+          img: "https://dimg06.c-ctrip.com/images/100v1f000001h1b2y1909_C_1600_1200.jpg",
+          distance: 130,
         },
       ],
     };
