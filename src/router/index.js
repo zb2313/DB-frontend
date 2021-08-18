@@ -238,6 +238,11 @@ const routes = [
         component: () => import('../view/Other/Recommend.vue')
     },
     {
+        path: '/travelplan',
+        name: 'travelplan',
+        component: () => import('../view/Other/travelplan.vue')
+    },
+    {
         path: '/Moment',
         name: 'Moment',
         component: () => import('../components/Home.vue'),
