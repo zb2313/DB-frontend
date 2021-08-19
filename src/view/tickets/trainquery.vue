@@ -739,7 +739,7 @@ async sleeping(time){
         return  a.starT_TIME.localeCompare(b.starT_TIME) } );
                   })
                    _this.sort();
-                  if(i>1)await _this.sleeping(1000);
+                  if(i>1)await _this.sleeping(1300);
                   console.log(i);
                   if(i>=num-1||i>10)document.getElementById("loading").style.visibility="hidden";
               }
