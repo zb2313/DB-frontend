@@ -28,7 +28,8 @@
         <p class="hint">
           <i class="el-icon-edit-outline">&nbsp;</i>
           <span>{{ userCommentNum }}条点评</span>
-          <br> <br>
+          <br />
+          <br />
         </p>
       </div>
     </div>
@@ -41,7 +42,8 @@
       </div>
       <div style="margin-top: 20px">
         {{ commentContent }}
-        <br> <br>
+        <br />
+        <br />
       </div>
     </div>
   </el-card>
@@ -59,10 +61,7 @@
 .clearfix {
   *zoom: 1;
 }
-.content {
-  margin-left: 10%;
-  margin-right: 10%;
-}
+
 .leftPart {
   float: left;
 }
