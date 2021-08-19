@@ -20,10 +20,10 @@
               <p>类别</p>
               <el-checkbox-group v-model="checkList">
                 <el-checkbox label="1">地标</el-checkbox>
-                <el-checkbox label="2">博物馆</el-checkbox>
-                <el-checkbox label="3">亲子</el-checkbox>
-                <el-checkbox label="4">自然</el-checkbox>
-                <el-checkbox label="3">蜜月</el-checkbox>
+                <el-checkbox label="2">亲子</el-checkbox>
+                <el-checkbox label="3">建筑</el-checkbox>
+                <el-checkbox label="4">休闲</el-checkbox>
+                <el-checkbox label="3">历史</el-checkbox>
               </el-checkbox-group>
             </div>
 
@@ -47,7 +47,7 @@
               </el-checkbox-group>
             </div>
 
-            <div class="select" @click="Select">点击筛选</div>
+            <!-- <div class="select" @click="Select">点击筛选</div> -->
           </div>
         </div>
 
@@ -71,7 +71,7 @@
 
           <div class="sort">
             <div class="sortBox">
-              <el-dropdown @command="handleCommand">
+              <el-dropdown @command="Sort">
                 <span class="el-dropdown-link">
                   {{ sortBy }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
@@ -96,6 +96,7 @@
                   :price="item.price"
                   :ID="item.attractionid"
                   :dianping_number="item.commentnum"
+                  :label="item.label"
                 />
               </li>
             </ul>
@@ -120,7 +121,6 @@
   float: left;
   width: 750px;
   margin-left: 27px;
-  text-align: right;
 }
 .title {
   font-size: 16px;
@@ -166,7 +166,7 @@
   margin: 10px 0;
 }
 
-.select {
+/* .select {
   height: 50px;
   line-height: 50px;
   cursor: pointer;
@@ -175,14 +175,14 @@
   font-weight: 600;
   background-color: #0071c2;
   text-align: center;
-}
+} */
+/* .grade, */
 .type,
-.budget,
-.grade {
+.budget {
   border-bottom: 1px solid rgb(189, 178, 178);
 }
 
-.select:hover,
+/* .select:hover, */
 .mapshow-btn:hover,
 .searchBtn:hover {
   background-color: #003680;
@@ -256,7 +256,8 @@ export default {
         this.$axios
           .get(
             "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
-              this.title.city
+              this.title.city +
+              "市"
           )
           .then((response) => {
             this.items = response.data.sort(function (a, b) {
@@ -266,136 +267,136 @@ export default {
           });
       }
     },
-    Select() {
-      var newitems = [];
-      this.items = this.orginData;
-      for (var i = 0; i < this.items.length; i++) {
-        if (!this.checkList1.length) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        } else if (this.checkList1.includes("1") && this.items[i].price <= 50) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        } else if (
-          this.checkList1.includes("2") &&
-          this.items[i].price > 50 &&
-          this.items[i].price <= 100
-        ) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        } else if (this.checkList1.includes("3") && this.items[i].price > 100) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        }
-      }
-      this.items = newitems;
-      this.title.num = newitems.length;
-    },
-    handleCommand(command) {
+    // Select() {
+    //   var newitems = [];
+    //   this.items = this.orginData;
+    //   for (var i = 0; i < this.items.length; i++) {
+    //     if (!this.checkList1.length) {
+    //       if (!this.checkList2.length) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 5 &&
+    //         this.checkList2.includes("1")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 4 &&
+    //         this.checkList2.includes("2")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 3 &&
+    //         this.checkList2.includes("3")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 2 &&
+    //         this.checkList2.includes("4")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 1 &&
+    //         this.checkList2.includes("5")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       }
+    //     } else if (this.checkList1.includes("1") && this.items[i].price <= 50) {
+    //       if (!this.checkList2.length) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 5 &&
+    //         this.checkList2.includes("1")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 4 &&
+    //         this.checkList2.includes("2")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 3 &&
+    //         this.checkList2.includes("3")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 2 &&
+    //         this.checkList2.includes("4")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 1 &&
+    //         this.checkList2.includes("5")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       }
+    //     } else if (
+    //       this.checkList1.includes("2") &&
+    //       this.items[i].price > 50 &&
+    //       this.items[i].price <= 100
+    //     ) {
+    //       if (!this.checkList2.length) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 5 &&
+    //         this.checkList2.includes("1")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 4 &&
+    //         this.checkList2.includes("2")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 3 &&
+    //         this.checkList2.includes("3")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 2 &&
+    //         this.checkList2.includes("4")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 1 &&
+    //         this.checkList2.includes("5")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       }
+    //     } else if (this.checkList1.includes("3") && this.items[i].price > 100) {
+    //       if (!this.checkList2.length) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 5 &&
+    //         this.checkList2.includes("1")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 4 &&
+    //         this.checkList2.includes("2")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 3 &&
+    //         this.checkList2.includes("3")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 2 &&
+    //         this.checkList2.includes("4")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       } else if (
+    //         this.items[i].star === 1 &&
+    //         this.checkList2.includes("5")
+    //       ) {
+    //         newitems.push(this.items[i]);
+    //       }
+    //     }
+    //   }
+    //   this.items = newitems;
+    //   this.title.num = newitems.length;
+    // },
+    Sort(command) {
       if (command == "a") {
         this.sortBy = "热门推荐";
       } else if (command == "b") {
@@ -424,7 +425,8 @@ export default {
     this.$axios
       .get(
         "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
-          this.title.city
+          this.title.city +
+          "市"
       )
       .then((response) => {
         this.items = response.data.sort(function (a, b) {
@@ -433,6 +435,12 @@ export default {
         this.title.num = response.data.length;
         this.orginData = JSON.parse(JSON.stringify(response.data));
       });
+  },
+  watch: {
+    checkList1(newValue, oldValue) {
+      var newitems = [];
+      this.items = this.orginData;
+    },
   },
 };
 </script>

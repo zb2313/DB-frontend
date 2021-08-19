@@ -550,6 +550,7 @@ export default {
   },
   data() {
     return {
+      // 其他页面传过来的酒店ID给你用的，ｂｙ秦
       hotelId: "",
       hotelName: "速八酒店",
       starNum: 5,
@@ -774,5 +775,10 @@ export default {
     sortWayChange() {},
   },
   mounted() {},
+  created() {
+    if (this.$route.query.id) {
+      this.hotelId = this.$route.query.id;
+    }
+  },
 };
 </script>

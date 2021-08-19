@@ -164,6 +164,7 @@
                   :price="item.lowestprice"
                   :ID="item.hoteid"
                   :dianping_number="item.commentnum"
+                  :label="item.label"
                 />
               </li>
             </ul>
@@ -421,6 +422,16 @@ export default {
         });
       }
     },
+    // 酒店地址处理
+    fun_hotel_district(detail) {
+      var tmp;
+      if (detail[5] == "市") {
+        tmp = detail.slice(3, 6) + detail.slice(7);
+      } else {
+        tmp = detail;
+      }
+      return tmp;
+    },
     Select: function () {
       var newitems = [];
       this.items = this.orginData;
@@ -556,6 +567,15 @@ export default {
       this.items = newitems;
       this.title.num = newitems.length;
     },
+    cutLabel(str) {
+      var labels = str.split("_");
+      var res = [];
+      for (var i = 0; i < labels.length; i++) {
+        res.push(labels[i]);
+      }
+      console.log(res);
+      return res;
+    },
   },
   created() {
     this.$axios
@@ -564,6 +584,12 @@ export default {
           this.title.city
       )
       .then((response) => {
+        for (var i = 0; i < response.data.length; i++) {
+          response.data[i].hotelname = response.data[i].hotelname.split("(")[0];
+          response.data[i].location = this.fun_hotel_district(
+            response.data[i].location
+          );
+        }
         this.items = response.data.sort(function (a, b) {
           return a.lowestprice - b.lowestprice;
         });

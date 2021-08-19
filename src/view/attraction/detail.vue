@@ -464,7 +464,8 @@ export default {
   },
   data() {
     return {
-      hotelId: "",
+      // 景点id已经传过来,可直接使用
+      AttrId: "",
       attrationName: "上海海昌海洋公园",
       starNum: 5,
       location: "上海市浦东新区南汇新城镇银飞路166号",
@@ -644,5 +645,10 @@ export default {
     sortWayChange() {},
   },
   mounted() {},
+  created() {
+    if (this.$route.query.id) {
+      this.AttrId = this.$route.query.id;
+    }
+  },
 };
 </script>

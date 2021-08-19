@@ -18,22 +18,27 @@
       <div class="buttons">
         <div
           class="button"
-          v-for="(item, index) in cities.slice(0, 6)"
+          v-for="(item, index) in cities"
           :key="index"
+          @click="chooseCity1(item)"
         >
-          {{ item.name }}
+          {{ item }}
         </div>
-        <div class="more" :class="icon">
-          <div class="dropdown-content">
-            <div
-              class="cities"
-              v-for="item in cities.slice(6)"
-              :key="item.index"
-            >
-              {{ item.name }}
-            </div>
+        <div class="button" @click="chooseCity1(sixth_city)">
+          {{ sixth_city }}
+        </div>
+
+        <el-popover placement="bottom-end" width="300" trigger="click"
+          ><div
+            class="cities"
+            v-for="(item, index) in morecity"
+            :key="index"
+            @click="chooseCity(item, index)"
+          >
+            {{ item }}
           </div>
-        </div>
+          <div class="more el-icon-arrow-down" slot="reference"></div>
+        </el-popover>
       </div>
       <div class="hotels">
         <div
@@ -44,14 +49,14 @@
           <div
             class="infoImg"
             :style="{
-              backgroundImage: 'url(' + item.img + ')',
+              backgroundImage: 'url(' + item.picture + ')',
               backgroundSize: '100% 100%',
               backgroundRepeat: 'no-repeat',
             }"
           ></div>
           <div class="infoDetail">
             <div class="Name" style="font-size: 14px; font-weight: 700">
-              {{ item.name }}
+              {{ item.hotelname.split("(")[0] }}
             </div>
             <img
               src="../../assets/img/diamond.svg"
@@ -71,7 +76,7 @@
                 <span class="dianping">{{ item.commentnum }}点评</span>
               </div>
               <div class="rightprice">
-                ￥{{ item.price
+                ￥{{ item.lowestprice
                 }}<i style="font-size: 11px; font-style: normal; color: gray"
                   >&nbsp;起</i
                 >
@@ -195,8 +200,11 @@
   float: left;
   width: 50px;
   height: 30px;
+  text-align: center;
+  line-height: 30px;
 }
 .cities:hover {
+  cursor: pointer;
   background-color: #ffd04b;
 }
 
@@ -302,103 +310,80 @@ export default {
   },
   data() {
     return {
+      currentCity: "",
       url: require("@/assets/img/ad.png"),
-      cities: [
-        { name: "北京" },
-        { name: "上海" },
-        { name: "深圳" },
-        { name: "广州" },
-        { name: "杭州" },
-        { name: "南京" },
-        { name: "苏州" },
-        { name: "武汉" },
-        { name: "无锡" },
-        { name: "重庆" },
-        { name: "长沙" },
-        { name: "天津" },
-        { name: "郑州" },
-        { name: "济南" },
-        { name: "宁波" },
-        { name: "西安" },
-        { name: "青岛" },
-        { name: "合肥" },
-        { name: "福州" },
-        { name: "佛山" },
-        { name: "大连" },
-        { name: "沈阳" },
-        { name: "厦门" },
-        { name: "昆明" },
-        { name: "南昌" },
-        { name: "珠海" },
+      cities: ["北京", "上海", "南京", "广州", "杭州"],
+      sixth_city: "苏州",
+      morecity: [
+        "武汉",
+        "无锡",
+        "重庆",
+        "长沙",
+        "天津",
+        "郑州",
+        "济南",
+        "宁波",
+        "西安",
+        "青岛",
+        "合肥",
+        "福州",
+        "佛山",
+        "大连",
+        "沈阳",
+        "厦门",
+        "昆明",
+        "南昌",
+        "珠海",
       ],
-      icon: "el-icon-arrow-down",
-      hotels: [
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 4,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 5,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 2,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-      ],
+      hotels: [],
     };
   },
+  methods: {
+    // 浏览器获得当前城市名
+    getLocation() {
+      let a = this;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var Ing, Lat;
+        Ing = position.coords.longitude.toFixed(6);
+        Lat = position.coords.latitude.toFixed(6);
+
+        fetch(
+          "https://restapi.amap.com/v3/geocode/regeo?key=b46e001d88ea385075cc97e1c892ce37&location=" +
+            Ing +
+            "," +
+            Lat
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (myJson) {
+            a.currentCity = myJson.regeocode.addressComponent.province;
+          });
+      });
+    },
+    // 根据城市名获取酒店信息
+    getHotelbyCity(city) {
+      this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
+            city
+        )
+        .then((response) => {
+          this.hotels = response.data;
+        });
+    },
+    chooseCity1(cityName) {
+      this.getHotelbyCity(cityName);
+    },
+    chooseCity(cityName, index) {
+      this.$set(this.morecity, index, this.sixth_city);
+      this.sixth_city = cityName;
+    },
+  },
+  created() {
+    this.getHotelbyCity("上海市");
+    this.getLocation();
+  },
+  mounted() {},
 };
 </script>

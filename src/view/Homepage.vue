@@ -30,23 +30,27 @@
     <el-main>
       <div class="attraction main">
         <h2 class="title">
-          <span @click="onClick(0, 0)">热门<i v-show="show[0][0]"></i></span>
+          <span @click="onClick(0, 0)">门票<i v-show="show[0][0]"></i></span>
           <span @click="onClick(0, 1)">周边游<i v-show="show[0][1]"></i></span>
-          <span @click="onClick(0, 2)">门票<i v-show="show[0][2]"></i></span>
 
-          <span class="dropdown" style="margin-left: 76%">
-            <span style="color: #0071c2; font-size: 14px" class="drop-btn"
-              >我在{{ attrStart }}
-              <div class="el-icon-caret-bottom"></div
-            ></span>
-            <div class="drop-content">
+          <span class="dropdown" style="margin-left: 80%">
+            <el-popover placement="bottom-end" width="50" trigger="click"
+              ><div class="drop-content">
+                <span
+                  v-for="item in attrDropdown"
+                  :key="item.index"
+                  @click="changeCity1(item)"
+                  >{{ item }}</span
+                >
+              </div>
               <span
-                v-for="item in attrDropdown"
-                :key="item.index"
-                @click="changeCity1(item)"
-                >{{ item }}</span
-              >
-            </div>
+                slot="reference"
+                style="color: #0071c2; font-size: 14px"
+                class="drop-btn"
+                >玩在{{ attrStart }}
+                <div class="el-icon-caret-bottom"></div
+              ></span>
+            </el-popover>
           </span>
         </h2>
 
@@ -55,30 +59,30 @@
             <dl class="keyword-short">
               <dt>热门主题游</dt>
               <dd>
-                <span class="entrance-item" title="海岛">
-                  <a href="" target="_blank"> 海岛 </a>
+                <span title="地标">
+                  <a href="" target="_blank"> 地标 </a>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="亲子游">
-                  <a href="" target="_blank"> 亲子游 </a>
+                <span title="亲子">
+                  <a href="" target="_blank"> 亲子 </a>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="蜜月">
-                  <a href="" target="_blank"> 蜜月 </a>
+                <span title="建筑">
+                  <a href="" target="_blank"> 建筑 </a>
                 </span>
               </dd>
 
               <dd style="margin-top: 10px">
-                <span class="entrance-item" title="美食">
-                  <a href="" target="_blank"> 美食 </a>
+                <span title="休闲">
+                  <a href="" target="_blank"> 休闲 </a>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="古镇">
-                  <a href="" target="_blank"> 古镇 </a>
+                <span title="历史">
+                  <a href="" target="_blank"> 历史 </a>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="星空">
-                  <a href="" target="_blank"> 星空 </a>
+                <span title="自然奇观">
+                  <a href="" target="_blank"> 自然奇观 </a>
                 </span>
               </dd>
             </dl>
@@ -86,30 +90,42 @@
             <dl class="keyword-short" style="margin-top: 30px">
               <dt>热门目的地</dt>
               <dd>
-                <span class="entrance-item" title="北京">
-                  <a href="" target="_blank"> 北京 </a>
+                <span title="北京">
+                  <router-link to="/attraction/city?search=北京">
+                    北京
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="上海">
-                  <a href="" target="_blank"> 上海 </a>
+                <span title="上海">
+                  <router-link to="/attraction/city?search=上海">
+                    上海
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="三亚">
-                  <a href="" target="_blank"> 三亚 </a>
+                <span title="南京">
+                  <router-link to="/attraction/city?search=南京">
+                    南京
+                  </router-link>
                 </span>
               </dd>
 
               <dd style="margin-top: 10px">
-                <span class="entrance-item" title="南京">
-                  <a href="" target="_blank"> 南京 </a>
+                <span title="成都">
+                  <router-link to="/attraction/city?search=成都">
+                    成都
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="古镇">
-                  <a href="" target="_blank"> 乌鲁木齐 </a>
+                <span title="乌鲁木齐">
+                  <router-link to="/attraction/city?search=成都">
+                    乌鲁木齐
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="成都">
-                  <a href="" target="_blank"> 成都 </a>
+                <span title="拉萨">
+                  <router-link to="/attraction/city?search=成都">
+                    拉萨
+                  </router-link>
                 </span>
               </dd>
             </dl>
@@ -169,6 +185,26 @@
           <span @click="onClick(1, 1)"
             >国外酒店<i v-show="show[1][1]"></i
           ></span>
+
+          <span class="dropdown" style="margin-left: 76%">
+            <el-popover placement="bottom-end" width="50" trigger="click"
+              ><div class="drop-content">
+                <span
+                  v-for="item in attrDropdown"
+                  :key="item.index"
+                  @click="changeCity2(item)"
+                  >{{ item }}</span
+                >
+              </div>
+              <span
+                slot="reference"
+                style="color: #0071c2; font-size: 14px"
+                class="drop-btn"
+                >住在{{ hotelStart }}
+                <div class="el-icon-caret-bottom"></div
+              ></span>
+            </el-popover>
+          </span>
         </h2>
 
         <div class="hotelBox Box1">
@@ -176,7 +212,7 @@
             <dl class="keyword-short">
               <dt>热门地标周边酒店</dt>
               <dd>
-                <span class="entrance-item">
+                <span>
                   <a href="" target="_blank"> 还没想好周末去哪玩？</a>
                 </span>
               </dd>
@@ -185,17 +221,17 @@
             <dl class="keyword-short" style="margin-top: 30px">
               <dt>促销</dt>
               <dd style="margin-top: 10px">
-                <span class="entrance-item">
+                <span>
                   <a href="" target="_blank"> 全国火车站周边酒店8折起</a>
                 </span>
               </dd>
               <dd style="margin-top: 10px">
-                <span class="entrance-item">
+                <span>
                   <a href="" target="_blank"> 全国机场周边酒店8折起</a>
                 </span>
               </dd>
               <dd style="margin-top: 10px">
-                <span class="entrance-item">
+                <span>
                   <a href="" target="_blank"> 优选酒店80元起</a>
                 </span>
               </dd>
@@ -206,6 +242,7 @@
               class="hotelInfo"
               v-for="(item, index) in hotels.slice(0, 6)"
               :key="index"
+              @click="toHotelDetail(item.hoteid)"
             >
               <div
                 class="infoImg"
@@ -217,7 +254,7 @@
               ></div>
               <div class="infoDetail">
                 <div class="Name" style="font-size: 14px">
-                  {{ item.hotelname }}
+                  {{ item.hotelname.split("(")[0] }}
                 </div>
                 <img
                   src="../assets/img/diamond.svg"
@@ -226,7 +263,9 @@
                   style="margin-top: 2px"
                 />
                 <div class="Details">
-                  <span class="address">{{ fun_district(item.location) }}</span>
+                  <span class="address">{{
+                    fun_hotel_district(item.location)
+                  }}</span>
                   <span class="Price"
                     ><span class="price"> ￥{{ item.lowestprice }}</span
                     ><i>起</i></span
@@ -248,18 +287,23 @@
           ></span>
 
           <span class="dropdown" style="margin-left: 70%">
-            <span style="color: #0071c2; font-size: 14px" class="drop-btn"
-              >{{ ticketStart }}出发
-              <div class="el-icon-caret-bottom"></div
-            ></span>
-            <div class="drop-content">
+            <el-popover placement="bottom-end" width="50" trigger="click"
+              ><div class="drop-content">
+                <span
+                  v-for="item in ticketDropdown"
+                  :key="item.index"
+                  @click="changeCity3(item)"
+                  >{{ item }}</span
+                >
+              </div>
               <span
-                v-for="item in ticketDropdown"
-                :key="item.index"
-                @click="changeCity2(item)"
-                >{{ item }}</span
-              >
-            </div>
+                slot="reference"
+                style="color: #0071c2; font-size: 14px"
+                class="drop-btn"
+                >{{ ticketStart }}出发
+                <div class="el-icon-caret-bottom"></div
+              ></span>
+            </el-popover>
           </span>
         </h2>
         <div class="Box1">
@@ -304,10 +348,9 @@ export default {
   data() {
     return {
       currentCity: "",
-      currentIng: "",
-      currentlat: "",
-      attrStart: "上海",
-      ticketStart: "上海",
+      attrStart: "北京",
+      hotelStart: "北京",
+      ticketStart: "北京",
       attrDropdown: [
         "上海",
         "北京",
@@ -329,7 +372,7 @@ export default {
         "苏州",
       ],
       show: [
-        [true, false, false],
+        [true, false],
         [true, false],
         [true, false],
       ],
@@ -361,19 +404,30 @@ export default {
       }
       this.$set(this.show[a], b, true);
     },
-    // 改变景点出发城市
+    // 改变景点推荐城市
     changeCity1(newCity) {
       this.attrStart = newCity;
       this.getAttrbyCity(newCity);
     },
-    toArrDetail(hotelID) {
+    toArrDetail(AttrID) {
       this.$router.push({
-        path: "/attraction/city",
-        query: { search: hotelID },
+        path: "/attraction/detail",
+        query: { id: AttrID },
+      });
+    },
+    // 改变酒店推荐城市
+    changeCity2(newCity) {
+      this.hotelStart = newCity;
+      this.getHotelbyCity(newCity);
+    },
+    toHotelDetail(HotelID) {
+      this.$router.push({
+        path: "/hotel/detail",
+        query: { id: HotelID },
       });
     },
     // 改变航班出发城市
-    changeCity2(newCity) {
+    changeCity3(newCity) {
       this.ticketStart = newCity;
       // 还需获取机票信息
     },
@@ -382,30 +436,49 @@ export default {
       var i = 0;
       var len = detail.length;
       var res = "";
-      while (detail[i] != "路" && i < len) {
+      while (detail[i] != "路" && isNaN(detail[i]) && i < len) {
         res += detail[i];
         i++;
       }
-      return res + "路";
+      if (detail[i] == "路") {
+        return res + "路";
+      } else {
+        return res;
+      }
     },
+    // 酒店地址处理
+    fun_hotel_district(detail) {
+      var tmp;
+      if (detail[5] == "市") {
+        tmp = detail.slice(3, 6) + detail.slice(7);
+      } else {
+        tmp = detail;
+      }
+      return this.fun_district(tmp);
+    },
+
     // 浏览器获得当前城市名
     getLocation() {
       let a = this;
       navigator.geolocation.getCurrentPosition(function (position) {
-        a.currentIng = position.coords.longitude.toFixed(6);
-        a.currentlat = position.coords.latitude.toFixed(6);
+        var Ing, Lat;
+        Ing = position.coords.longitude.toFixed(6);
+        Lat = position.coords.latitude.toFixed(6);
 
         fetch(
           "https://restapi.amap.com/v3/geocode/regeo?key=b46e001d88ea385075cc97e1c892ce37&location=" +
-            a.currentIng +
+            Ing +
             "," +
-            a.currentlat
+            Lat
         )
           .then(function (response) {
             return response.json();
           })
           .then(function (myJson) {
             a.currentCity = myJson.regeocode.addressComponent.province;
+            a.attrStart = a.currentCity.substr(0, a.currentCity.length - 1);
+            a.ticketStart = a.attrStart;
+            a.hotelStart = a.attrStart;
           });
       });
     },
@@ -428,16 +501,20 @@ export default {
         )
         .then((response) => {
           this.hotels = response.data;
+          console.log(response.data);
         });
     },
   },
   created() {
-    this.getAttrbyCity(this.attrStart);
-    this.getHotelbyCity(this.attrStart);
-  },
-  mounted() {
     // 获取浏览器地理位置
     this.getLocation();
+  },
+  mounted() {},
+  watch: {
+    currentCity(newValue, oldValue) {
+      this.getAttrbyCity(newValue);
+      this.getHotelbyCity(newValue);
+    },
   },
 };
 </script>
@@ -622,28 +699,12 @@ export default {
   border-right: 6px solid transparent;
 }
 
-.dropdown {
-  position: relative;
-}
-.drop-content {
-  display: none;
-  position: absolute;
-  left: 10px;
-  background-color: #f9f9f9;
-  width: 90px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-}
-.dropdown:hover .drop-content {
-  display: block;
-}
 .drop-content span {
   display: block;
   color: black;
   font-size: 13px;
   height: 20px;
   line-height: 20px;
-  margin-left: 10px;
-  margin-right: 10px;
 }
 .drop-content span:hover {
   background-color: #ffd04b;
