@@ -30,8 +30,12 @@
     <el-main>
       <div class="attraction main">
         <h2 class="title">
-          <span @click="onClick(0, 0)">门票<i v-show="show[0][0]"></i></span>
-          <span @click="onClick(0, 1)">周边游<i v-show="show[0][1]"></i></span>
+          <span @click="onClick(0, 0)" :class="{ titleClick: show[0] == 0 }"
+            >门票<i v-show="!show[0]"></i
+          ></span>
+          <span @click="onClick(0, 1)" :class="{ titleClick: show[0] == 1 }"
+            >周边游<i v-show="show[0]"></i
+          ></span>
 
           <span class="dropdown" style="margin-left: 80%">
             <el-popover placement="bottom-end" width="50" trigger="click"
@@ -60,29 +64,35 @@
               <dt>热门主题游</dt>
               <dd>
                 <span title="地标">
-                  <a href="" target="_blank"> 地标 </a>
+                  <router-link to="/attraction/city?search=全部&label=地标">
+                    地标
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
                 <span title="亲子">
-                  <a href="" target="_blank"> 亲子 </a>
+                  <router-link to="/attraction/city?search=全部&label=亲子">
+                    亲子
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
                 <span title="建筑">
-                  <a href="" target="_blank"> 建筑 </a>
+                  <router-link to="/attraction/city?search=全部&label=建筑">
+                    建筑
+                  </router-link>
                 </span>
               </dd>
 
               <dd style="margin-top: 10px">
                 <span title="休闲">
-                  <a href="" target="_blank"> 休闲 </a>
+                  <router-link to="/attraction/city?search=全部&label=休闲">
+                    休闲
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
                 <span title="历史">
-                  <a href="" target="_blank"> 历史 </a>
-                </span>
-                <el-divider direction="vertical"></el-divider>
-                <span title="自然奇观">
-                  <a href="" target="_blank"> 自然奇观 </a>
+                  <router-link to="/attraction/city?search=全部&label=历史">
+                    历史
+                  </router-link>
                 </span>
               </dd>
             </dl>
@@ -179,11 +189,11 @@
 
       <div class="hotel main">
         <h2 class="title">
-          <span @click="onClick(1, 0)"
-            >国内酒店<i v-show="show[1][0]"></i
+          <span @click="onClick(1, 0)" :class="{ titleClick: show[1] == 0 }"
+            >国内酒店<i v-show="!show[1]"></i
           ></span>
-          <span @click="onClick(1, 1)"
-            >国外酒店<i v-show="show[1][1]"></i
+          <span @click="onClick(1, 1)" :class="{ titleClick: show[1] == 1 }"
+            >国外酒店<i v-show="show[1]"></i
           ></span>
 
           <span class="dropdown" style="margin-left: 76%">
@@ -279,11 +289,11 @@
 
       <div class="tickets main">
         <h2 class="title">
-          <span @click="onClick(2, 0)"
-            >国内特价机票<i v-show="show[2][0]"></i
+          <span @click="onClick(2, 0)" :class="{ titleClick: show[2] == 0 }"
+            >国内特价机票<i v-show="!show[2]"></i
           ></span>
-          <span @click="onClick(2, 1)"
-            >国际特价机票<i v-show="show[2][1]"></i
+          <span @click="onClick(2, 1)" :class="{ titleClick: show[2] == 1 }"
+            >国际特价机票<i v-show="show[2]"></i
           ></span>
 
           <span class="dropdown" style="margin-left: 70%">
@@ -314,12 +324,12 @@
               :key="item.index"
             >
               <div class="item-name">
-                {{ item.begin }}
+                {{ item.starT_LOCATION }}
                 <div class="dancheng"></div>
-                {{ item.end }}
+                {{ item.enD_LOCATION }}
               </div>
               <div class="item-date">
-                {{ item.date }}
+                {{ item.starT_TIME }}
               </div>
               <div class="item-info">
                 <strong>￥{{ item.price }}</strong
@@ -371,38 +381,15 @@ export default {
         "桂林",
         "苏州",
       ],
-      show: [
-        [true, false],
-        [true, false],
-        [true, false],
-      ],
+      show: [0, 0, 0],
       attractions: [],
       hotels: [],
-      tickets: [
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-        { begin: "上海", end: "武汉", price: 300, date: "8月5日" },
-      ],
+      tickets: [],
     };
   },
   methods: {
     onClick(a, b) {
-      console.log(this.show);
-      for (var i = 0; i < this.show[a].length; i++) {
-        this.$set(this.show[a], i, false);
-      }
-      this.$set(this.show[a], b, true);
+      this.$set(this.show, a, b);
     },
     // 改变景点推荐城市
     changeCity1(newCity) {
@@ -429,7 +416,7 @@ export default {
     // 改变航班出发城市
     changeCity3(newCity) {
       this.ticketStart = newCity;
-      // 还需获取机票信息
+      this.getTicketbyCity(newCity);
     },
     // 截取部分地址
     fun_district(detail) {
@@ -456,7 +443,6 @@ export default {
       }
       return this.fun_district(tmp);
     },
-
     // 浏览器获得当前城市名
     getLocation() {
       let a = this;
@@ -501,19 +487,37 @@ export default {
         )
         .then((response) => {
           this.hotels = response.data;
-          console.log(response.data);
+        });
+    },
+    // 根据城市名获取机票信息
+    getTicketbyCity(city) {
+      this.$axios
+        .get("http://49.234.18.247:8080/api/FunGetLowestPrice/" + city)
+        .then((response) => {
+          var date = new Date();
+          var day = date.getDate();
+          var month = date.getMonth() + 1;
+          for (var i = 0; i < response.data.length; i++) {
+            response.data[i].starT_TIME =
+              month + "月" + day + "日" + " " + response.data[i].starT_TIME;
+          }
+          this.tickets = response.data;
         });
     },
   },
   created() {
     // 获取浏览器地理位置
     this.getLocation();
+    this.getAttrbyCity(this.attrStart);
+    this.getHotelbyCity(this.hotelStart);
+    // this.getTicketbyCity(this.ticketStart);
   },
   mounted() {},
   watch: {
     currentCity(newValue, oldValue) {
       this.getAttrbyCity(newValue);
       this.getHotelbyCity(newValue);
+      this.getTicketbyCity(newValue.slice(0, 2));
     },
   },
 };
@@ -659,8 +663,8 @@ export default {
   font-size: 12px;
 }
 .item-btn {
-  margin-left: 40px;
-  display: inline-block;
+  margin-right: 14px;
+  float: right;
   height: 26px;
   width: 55px;
   background-color: orange;
@@ -673,13 +677,18 @@ export default {
 .item-btn:hover {
   background-color: #ffb71b;
 }
+
+.titleClick {
+  color: #003680;
+}
+
 .title span {
   position: relative;
   margin-left: 15px;
 }
 
 .title > span:hover {
-  color: #ffd04b;
+  color: #003680;
   cursor: pointer;
 }
 .title span i {
@@ -705,9 +714,12 @@ export default {
   font-size: 13px;
   height: 20px;
   line-height: 20px;
+  text-align: center;
 }
 .drop-content span:hover {
-  background-color: #ffd04b;
+  background-color: #2577e3;
+  color: white;
+  cursor: pointer;
 }
 
 dt {

@@ -38,12 +38,14 @@
         </div>
         <div class="dianping-icon">{{ grade }}</div>
       </div>
-      <p style="color: red; margin-left: 300px">最低{{ price }}元/人</p>
+      <p style="color: red; margin-left: 300px">{{ words }}{{ price }}元/人</p>
       <div class="bottom">
         <div class="label">
-          <span v-for="(item, index) in label.split('_')" :key="index">{{
-            item
-          }}</span>
+          <span
+            v-for="(item, index) in (label || '').length ? label.split('_') : 0"
+            :key="index"
+            >{{ item }}</span
+          >
         </div>
         <button @click="Book">点击预定 ></button>
       </div>
@@ -179,6 +181,7 @@ export default {
     dianping_number: Number,
     ID: String,
     label: String,
+    words: String,
   },
   data() {
     return {

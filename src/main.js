@@ -22,7 +22,7 @@ Vue.prototype.$axios = axios;
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
   key: '3c8d72e09340bbf72057257e264b65a2',
-  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch','AMap.AdvancedInfoWindow', 'AMap.Scale', 'AMap.HawkEye', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Weather', 'AMap.Geocoder'],
+  plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.AdvancedInfoWindow', 'AMap.Scale', 'AMap.HawkEye', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Weather', 'AMap.Geocoder'],
   // 默认高德 sdk 版本为 1.4.4
   v: '1.4.4',
   uiVersion: '1.0.11'
@@ -56,6 +56,21 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 
+// 解决页面跳转后不从置顶显示
+router.afterEach((to, from, next) => {
+  window.scrollTo(0, 0);
+})
+//或者
+router.beforeEach((to, from, next) => {
+  // chrome
+  document.body.scrollTop = 0
+  // firefox
+  document.documentElement.scrollTop = 0
+  // safari
+  window.pageYOffset = 0
+  next()
+})
+
 
 //请求失败后重试
 axios.defaults.retry = 20;
@@ -64,49 +79,49 @@ axios.defaults.retryDelay = 1500;
 
 axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
 
- var config = err.config;
+  var config = err.config;
 
- // If config does not exist or the retry option is not set, reject
+  // If config does not exist or the retry option is not set, reject
 
- if(!config || !config.retry) return Promise.reject(err);
+  if (!config || !config.retry) return Promise.reject(err);
 
- // Set the variable for keeping track of the retry count
+  // Set the variable for keeping track of the retry count
 
- config.__retryCount = config.__retryCount || 0;
+  config.__retryCount = config.__retryCount || 0;
 
- // Check if we've maxed out the total number of retries
+  // Check if we've maxed out the total number of retries
 
- if(config.__retryCount >= config.retry) {
+  if (config.__retryCount >= config.retry) {
 
-  // Reject with the error
+    // Reject with the error
 
-  return Promise.reject(err);
+    return Promise.reject(err);
 
- }
+  }
 
- // Increase the retry count
+  // Increase the retry count
 
- config.__retryCount += 1;
+  config.__retryCount += 1;
 
- // Create new promise to handle exponential backoff
+  // Create new promise to handle exponential backoff
 
- var backoff = new Promise(function(resolve) {
+  var backoff = new Promise(function (resolve) {
 
-  setTimeout(function() {
+    setTimeout(function () {
 
-   resolve();
+      resolve();
 
-  }, config.retryDelay || 1);
+    }, config.retryDelay || 1);
 
- });
+  });
 
- // Return the promise in which recalls axios to retry the request
+  // Return the promise in which recalls axios to retry the request
 
- return backoff.then(function() {
+  return backoff.then(function () {
 
-  return axios(config);
+    return axios(config);
 
- });
+  });
 
 });
 

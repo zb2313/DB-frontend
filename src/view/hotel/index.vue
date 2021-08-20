@@ -18,13 +18,18 @@
       <div class="buttons">
         <div
           class="button"
+          :class="{ buttonBgc: background == index }"
           v-for="(item, index) in cities"
           :key="index"
-          @click="chooseCity1(item)"
+          @click="chooseCity1(item, index)"
         >
           {{ item }}
         </div>
-        <div class="button" @click="chooseCity1(sixth_city)">
+        <div
+          class="button"
+          :class="{ buttonBgc: background == 6 }"
+          @click="chooseCity1(sixth_city, 6)"
+        >
           {{ sixth_city }}
         </div>
 
@@ -45,6 +50,7 @@
           class="box"
           v-for="(item, index) in hotels.slice(0, 8)"
           :key="index"
+          @click="toHotelDetail(item.hoteid)"
         >
           <div
             class="infoImg"
@@ -159,7 +165,11 @@
   height: 40px;
   margin: 0 auto;
 }
-
+.buttonBgc {
+  background-color: rgba(68, 138, 255, 0.1);
+  border-color: rgba(68, 138, 255, 0.1) !important;
+  color: #287dfa;
+}
 .button,
 .more {
   float: left;
@@ -315,6 +325,7 @@ export default {
       cities: ["北京", "上海", "南京", "广州", "杭州"],
       sixth_city: "苏州",
       morecity: [
+        "上海", //测试记得删
         "武汉",
         "无锡",
         "重庆",
@@ -336,6 +347,7 @@ export default {
         "珠海",
       ],
       hotels: [],
+      background: 0,
     };
   },
   methods: {
@@ -372,18 +384,57 @@ export default {
           this.hotels = response.data;
         });
     },
-    chooseCity1(cityName) {
+    chooseCity1(cityName, index) {
       this.getHotelbyCity(cityName);
+      this.background = index;
     },
     chooseCity(cityName, index) {
       this.$set(this.morecity, index, this.sixth_city);
       this.sixth_city = cityName;
+      this.chooseCity1(cityName, 6);
+    },
+    // 跳转到酒店详情页面
+    toHotelDetail(HotelID) {
+      this.$router.push({
+        path: "/hotel/detail",
+        query: { id: HotelID },
+      });
     },
   },
   created() {
-    this.getHotelbyCity("上海市");
+    this.getHotelbyCity("北京");
     this.getLocation();
   },
   mounted() {},
+  watch: {
+    // 根据获得的当前地址推荐酒店，若被地址获取拒绝则推荐北京的
+    currentCity(newValue, oldValue) {
+      this.getHotelbyCity(newValue);
+      newValue = newValue.slice(0, 2);
+      for (var i = 0; i < 5; i++) {
+        if (this.cities[i] == newValue) {
+          this.background = i;
+          break;
+        }
+      }
+      if (this.background == 0 && this.sixth_city == newValue) {
+        this.background = 6;
+      }
+      if (this.background == 0) {
+        for (var j = 0; j < this.morecity.length; j++) {
+          if (this.morecity[j] == newValue) {
+            this.$set(this.morecity, j, this.sixth_city);
+            this.sixth_city = newValue;
+            break;
+          }
+        }
+      }
+      if (this.background == 0 && newValue != "北京") {
+        this.$set(this.morecity, this.morecity.length, this.sixth_city);
+        this.sixth_city = newValue;
+        this.background = 6;
+      }
+    },
+  },
 };
 </script>

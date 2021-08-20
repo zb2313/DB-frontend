@@ -35,4 +35,10 @@ a:visited {
   width: 1100px;
   margin: 0px auto;
 }
+
+/* 这个东西比较特别只能在这设置 */
+.el-popover {
+  min-width: 50px !important;
+  padding: 8px !important;
+}
 </style>

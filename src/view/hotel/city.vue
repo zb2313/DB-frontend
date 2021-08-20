@@ -161,6 +161,7 @@
                   :grade="item.star"
                   :coverImgUrl="item.picture"
                   type="房客"
+                  words="最低"
                   :price="item.lowestprice"
                   :ID="item.hoteid"
                   :dianping_number="item.commentnum"
@@ -566,15 +567,6 @@ export default {
       }
       this.items = newitems;
       this.title.num = newitems.length;
-    },
-    cutLabel(str) {
-      var labels = str.split("_");
-      var res = [];
-      for (var i = 0; i < labels.length; i++) {
-        res.push(labels[i]);
-      }
-      console.log(res);
-      return res;
     },
   },
   created() {
