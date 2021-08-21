@@ -14,14 +14,12 @@
       <div class="info">
         <p>position:{{ position }}</p>
         <p>address:{{ address }}</p>
-        <p>city:{{ city }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import getUserIP from '@/utils'
 import Header from "@/components/Header.vue";
 import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
 const amapManager = new AMapManager();
@@ -33,10 +31,8 @@ export default {
   data() {
     const _this = this;
     return {
-      city: "",
       position: [0, 0],
       address: "",
-      distance: 0,
       map: null,
       lang: "zh_en",
       zoom: 18,
@@ -91,16 +87,6 @@ export default {
         })
       );
       let a = this;
-      // AMap.plugin("AMap.CitySearch", function () {
-      //   var citySearch = new AMap.CitySearch();
-      //   citySearch.getLocalCity(function (status, result) {
-      //     if (status === "complete" && result.info === "OK") {
-      //       console.log(result);
-      //     }
-      //   });
-
-      //   a.map.addControl(citySearch);
-      // });
       AMapUI.loadUI(["control/BasicControl"], function (BasicControl) {
         var layerCtrl = new BasicControl.LayerSwitcher({
           theme: "my-red",
@@ -231,9 +217,7 @@ export default {
       });
     },
   },
-  created() {
-    
-  }
+  created() {},
 };
 </script>
 
@@ -267,21 +251,5 @@ export default {
   color: #666666;
   line-height: 23px;
   font: 12px Helvetica, "Hiragino Sans GB", "Microsoft Yahei", "微软雅黑", Arial;
-}
-
-/* 定义 my-red 主题 */
-
-.amap-ui-control-theme-my-red .amap-ui-control-layer {
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
-  background: #25a5f7;
-}
-
-.amap-ui-control-theme-my-red .amap-ui-control-layer-expanded {
-  color: #fff;
-  background: #25a5f7;
-}
-
-.amap-ui-control-theme-my-red .amap-ui-control-layer-toggle {
-  color: #fff;
 }
 </style>

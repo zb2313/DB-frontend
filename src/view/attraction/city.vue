@@ -260,6 +260,21 @@ export default {
           }
         });
     },
+    // 回到顶部
+    goTop() {
+      // document.documentElement.scrollTop = document.body.scrollTop = 0;
+      let top = document.documentElement.scrollTop || document.body.scrollTop;
+      // 实现过度滚动效果
+      const timeTop = setInterval(() => {
+        document.body.scrollTop =
+          document.documentElement.scrollTop =
+          top -=
+            50;
+        if (top <= 0) {
+          clearInterval(timeTop);
+        }
+      }, 30);
+    },
     // 检查是否有某标签
     checkLabel(label, data) {
       if (label) {
@@ -310,29 +325,38 @@ export default {
       }
     },
     intersect() {
-      if (this.withList.length === 0) {
+      if (this.withList.length === 0 && this.checkList.length === 0) {
         for (var i = 0; i < this.originData.length; i++) {
           this.withList.push(i);
         }
       }
-      if (this.withList1.length === 0) {
+      if (this.withList1.length === 0 && this.checkList1.length === 0) {
         for (var j = 0; j < this.originData.length; j++) {
           this.withList1.push(j);
         }
       }
-      // if (!this.withList2) {
-      //   for (var i = 0; i < this.originData.length; i++) {
-      //     this.withList2.push(i);
-      //   }
-      // }
-      if (this.withList.length != 0 && this.withList1.length != 0) {
-        var res = this.withList.filter(function (v) {
-          return this.withList1.indexOf(v) > -1;
-        });
-        console.log(res);
+      if (this.withList2.length === 0 && this.checkList2.length === 0) {
+        for (var k = 0; k < this.originData.length; k++) {
+          this.withList2.push(k);
+        }
       }
 
-      //
+      var withList1 = this.withList1;
+      var withList2 = this.withList2;
+      var res = this.withList.filter(function (v) {
+        return withList1.includes(v);
+      });
+      res = res.filter(function (v) {
+        return withList2.includes(v);
+      });
+
+      this.items = [];
+      for (var n = 0; n < this.originData.length; n++) {
+        if (res.includes(n)) {
+          this.items.push(this.originData[n]);
+        }
+      }
+      this.title.num = this.items.length;
     },
     onSelect() {
       if (this.input) {
@@ -380,12 +404,17 @@ export default {
     checkList(newValue, oldValue) {
       this.narrow(newValue);
       this.intersect();
+      this.goTop();
     },
     checkList1(newValue, oldValue) {
       this.narrow1(newValue);
+      this.intersect();
+      this.goTop();
     },
     checkList2(newValue, oldValue) {
       this.narrow2(newValue);
+      this.intersect();
+      this.goTop();
     },
   },
 };

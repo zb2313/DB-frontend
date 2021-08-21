@@ -41,4 +41,20 @@ a:visited {
   min-width: 50px !important;
   padding: 8px !important;
 }
+
+/* 定义 my-red 主题 */
+
+.amap-ui-control-theme-my-red .amap-ui-control-layer {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+  background: #25a5f7;
+}
+
+.amap-ui-control-theme-my-red .amap-ui-control-layer-expanded {
+  color: #fff;
+  background: #25a5f7;
+}
+
+.amap-ui-control-theme-my-red .amap-ui-control-layer-toggle {
+  color: #fff;
+}
 </style>
