@@ -23,7 +23,7 @@
            
         </div>
         <div class="create">
-               <el-button type="primary" @click="submit">创建行程</el-button>
+               <el-button type="primary" @click="submit()">创建行程</el-button>
                </div> 
         <div class="cities_list">
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -211,6 +211,14 @@ export default {
       },
       delete_item(index){
           this.select_cities.splice(index,1);
+      },
+      submit(){
+          this.$router.push({
+          path: `/makeplan`,
+          query: {
+            cities: this.select_cities,
+          },
+        });
       }
   }
 }

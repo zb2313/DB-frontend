@@ -243,6 +243,11 @@ const routes = [
         component: () => import('../view/Other/travelplan.vue')
     },
     {
+        path: '/makeplan',
+        name: 'makeplan',
+        component: () => import('../view/Other/makeplan.vue')
+    },
+    {
         path: '/Moment',
         name: 'Moment',
         component: () => import('../components/Home.vue'),
