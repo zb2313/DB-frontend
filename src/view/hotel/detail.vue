@@ -2,333 +2,344 @@
   <el-container direction="vertical">
     <Header activeIndex="1" />
     <Search />
-    <el-divider></el-divider>
-    <el-card class="box-card" shadow="never">
-      <div class="clearfix">
-        <div class="namePicture">
-          <div class="clearfix">
-            <div class="hotelName">
-              <h2>{{ hotelName }}</h2>
+    <div class="main">
+      <el-card class="box-card" shadow="never">
+        <div class="clearfix">
+          <div class="namePicture">
+            <div class="clearfix">
+              <div class="hotelName">
+                <h2>{{ hotelName }}</h2>
+              </div>
+              <div class="star">
+                <img
+                  src="../../assets/img/diamond.svg"
+                  v-for="i in starNum"
+                  :key="i"
+                  style="margin-top: 2px"
+                />
+              </div>
             </div>
-            <div class="star">
+            <div style="font-size: 12px">
+              <i class="el-icon-location"></i>{{ location }}
+              <span @click="viewMap" class="hint">查看地图</span>
+              <div>
+                <i class="el-icon-s-home"></i>{{ description }}
+                <span @click="viewMore" class="hint">查看更多</span>
+              </div>
+            </div>
+
+            <div
+              class="picture"
+              :style="{
+                backgroundImage: 'url(' + baseImg + ')',
+                backgroundSize: '100% 100%',
+                backgroundRepeat: 'no-repeat',
+              }"
+            ></div>
+          </div>
+          <div class="other" style="float: left">
+            <div class="clearfix">
+              <div style="float: left">
+                <div class="dianping">
+                  <div class="dianping-icon">{{ grade }}</div>
+                  <div class="dianping-wenzi">
+                    <p class="dianping-wenzi1">{{ level }}</p>
+                    <p class="dianping-wenzi2">
+                      共{{ dianping_number }}名房客评分
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="#comments"
+                  style="color: cornflowerblue; font-size: 12px"
+                  >显示所有{{ dianping_number }}条点评</a
+                >
+              </div>
+              <div class="chooseRoom" style="float: right">
+                <div class="clearfix">
+                  <div style="float: left">
+                    <span
+                      style="color: #003580; font-weight: 700; font-size: 24px"
+                    >
+                      ￥{{ minPrice }}
+                    </span>
+                    <span
+                      style="
+                        color: grey;
+                        height: 50px;
+                        line-height: 50px;
+                        font-weight: 700;
+                      "
+                      >起</span
+                    >
+                  </div>
+
+                  <a href="#rooms" class="choose_btn" style="float: left">
+                    选择房间
+                  </a>
+                </div>
+              </div>
+            </div>
+            <el-divider></el-divider>
+            <div class="clearfix">
+              <div class="map"><el-amap vid="amapDemo"></el-amap></div>
+              <div class="aboutMap">
+                <div>
+                  <img
+                    src="../../assets/img/airport.svg"
+                    style="margin-top: 2px"
+                  />{{ airport }}公里
+                </div>
+                <div>
+                  <img
+                    src="../../assets/img/train.svg"
+                    style="margin-top: 2px"
+                  />{{ train }}公里
+                </div>
+                <div>
+                  <img
+                    src="../../assets/img/subway.svg"
+                    style="margin-top: 2px"
+                  />{{ subway }}公里
+                </div>
+                <p style="font-size: 8px; color: gray; margin-top: 5px">
+                  附近1公里内有{{ attrationNum }}个景点
+                </p>
+                <div @click="viewMap" class="hint" style="margin-top: 75px">
+                  查看完整地图
+                </div>
+              </div>
+            </div>
+            <el-divider></el-divider>
+            <div style="font-size: 12px; margin-top: 0px">
+              <span>接机服务</span
+              ><el-divider direction="vertical"></el-divider>
+              <span>24小时大堂经理</span>
+            </div>
+          </div>
+        </div>
+      </el-card>
+      <el-card class="box-card" shadow="never">
+        <div class="clearfix">
+          <div style="float: left">
+            <span>超大优惠</span>
+            <span style="color: #f7ba2a; font-weight: 700; font-size: 14px">
+              新客最高减100
+            </span>
+          </div>
+          <div @click="onReceive" class="receive_btn">领取</div>
+        </div>
+      </el-card>
+      <br />
+      <div id="rooms">
+        <ul>
+          <li v-for="room in rooms" :key="room.roomName">
+            <Room
+              :roomName="room.roomName"
+              :customerNum="room.customerNum"
+              :bed="room.bed"
+              :dish="room.dish"
+              :smoke="room.smoke"
+              :window="room.window"
+              :cancel="room.cancel"
+              :price="room.price"
+              :originalPrice="room.originalPrice"
+              :coverImgUrl="room.coverImgUrl"
+            />
+          </li>
+        </ul>
+      </div>
+      <br />
+      <el-card class="box-card" shadow="never">
+        <h1>
+          点评<span
+            style="
+              color: grey;
+              font-weight: 700;
+              font-size: 18px;
+              margin-left: 10px;
+            "
+            >({{ dianping_number }}名住客真实点评)</span
+          >
+        </h1>
+        <div class="sort">
+          <el-form :inline="true" :model="form_Select">
+            <el-form-item>
+              <el-select
+                v-model="form_Select.roomType"
+                @change="roomTypeChange"
+              >
+                <el-option label="所有房型" value="所有房型"></el-option>
+                <el-option label="大床房" value="大床房"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-select v-model="form_Select.sortWay" @change="sortWayChange">
+                <el-option label="推荐排序" value="推荐排序"></el-option>
+                <el-option label="最近入住" value="最近入住"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-card>
+      <div id="comments">
+        <ul>
+          <li v-for="comment in comments" :key="comment.userName">
+            <Comment
+              :userName="comment.userName"
+              :userAvatar="comment.userAvatar"
+              :commentRoom="comment.commentRoom"
+              :bookTime="comment.bookTime"
+              :userCommentNum="comment.userCommentNum"
+              :commentRate="comment.commentRate"
+              :commentContent="comment.commentContent"
+              :commentTime="comment.commentTime"
+            />
+          </li>
+        </ul>
+        <!-- 得加个分页 -->
+      </div>
+      <br />
+      <!-- 酒店政策 -->
+      <el-card class="box-card policy" shadow="never">
+        <h1>酒店政策</h1>
+        <div class="bold">
+          <el-row type="flex" style="margin-top: 20px">
+            <el-col :span="6">入住及退房</el-col>
+            <el-col :span="18"
+              >入住时间： 14:00后 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              退房时间： 12:00前</el-col
+            >
+          </el-row>
+          <el-divider></el-divider>
+          <el-row type="flex">
+            <el-col :span="6">入住方式</el-col>
+            <el-col :span="18" style="font-weight: 400"
+              >请到前台领取钥匙/门卡</el-col
+            >
+          </el-row>
+          <el-divider></el-divider>
+          <el-row type="flex">
+            <el-col :span="6">儿童及加床</el-col>
+            <el-col :span="18" style="font-weight: 400"
+              >酒店允许携带12岁及以上儿童入住
+              <div style="margin-top: 20px">
+                <div style="font-weight: 700">· 使用现有床铺</div>
+                <p>每房间可有1名12-17岁的儿童使用现有床铺。</p>
+                <div style="font-weight: 700">· 加床：</div>
+                <p>不可加床</p>
+                <div style="font-weight: 700">· 备注</div>
+                <p>
+                  加床政策、儿童政策会根据客房类型而有所不同，房价仅适用于特定数量的客人。携带儿童与额外客人可能会产生额外费用，详情请咨询酒店。
+                </p>
+              </div>
+            </el-col>
+          </el-row>
+          <el-divider></el-divider>
+          <el-row type="flex">
+            <el-col :span="6">早餐</el-col>
+            <el-col :span="18" style="font-weight: 400">
+              <p>早餐类型中式</p>
+              <el-divider></el-divider>
+              <p>菜单类型自助餐</p>
+              <el-divider></el-divider>
+              <p>营业时间07:00-09:00 [星期一 - 星期日]</p>
+            </el-col>
+          </el-row>
+          <el-divider></el-divider>
+          <el-row type="flex">
+            <el-col :span="6">停车场</el-col>
+            <el-col :span="18" style="font-weight: 400">
+              不可预约：酒店内提供公共停车场（免费）。</el-col
+            >
+          </el-row>
+          <el-divider></el-divider>
+          <el-row type="flex">
+            <el-col :span="6">宠物</el-col>
+            <el-col :span="18" style="font-weight: 400"> 不可携带宠物。</el-col>
+          </el-row>
+          <el-divider></el-divider>
+          <el-row type="flex">
+            <el-col :span="6">年龄限制</el-col>
+            <el-col :span="18" style="font-weight: 400"
+              >入住办理人需年满18岁</el-col
+            >
+          </el-row>
+          <el-divider></el-divider>
+          <el-row type="flex">
+            <el-col :span="6">到店付款方式</el-col>
+            <el-col :span="18" style="font-weight: 400"
+              >酒店接受以下付款方式
+              <div>
+                <img
+                  src="https://tse1-mm.cn.bing.net/th/id/R-C.692de9abd94bc6a408ce5591e04403b1?rik=Pdt3a4ecCmrvQQ&riu=http%3a%2f%2fpic.ntimg.cn%2ffile%2f20191130%2f29554138_095901936699_2.jpg&ehk=deyCCJtpHBww4tY9QO9z8ZGsTCZWN%2fdTHjfZ3SYvktU%3d&risl=&pid=ImgRaw&r=0"
+                  alt=""
+                />
+                <img
+                  src="https://pic38.photophoto.cn/20160325/1155115744558206_b.jpg"
+                  alt=""
+                />
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+      </el-card>
+      <br />
+
+      <!--附近的酒店  -->
+      <el-card class="box-card near" shadow="never">
+        <h1>附近的酒店</h1>
+        <div class="hotels">
+          <div
+            class="box"
+            v-for="(item, index) in hotels.slice(0, 8)"
+            :key="index"
+          >
+            <div
+              class="infoImg"
+              :style="{
+                backgroundImage: 'url(' + item.img + ')',
+                backgroundSize: '100% 100%',
+                backgroundRepeat: 'no-repeat',
+              }"
+            ></div>
+            <div class="infoDetail">
+              <div class="Name" style="font-size: 14px; font-weight: 700">
+                {{ item.name }}
+              </div>
               <img
                 src="../../assets/img/diamond.svg"
-                v-for="i in starNum"
+                v-for="i in item.star"
                 :key="i"
                 style="margin-top: 2px"
               />
-            </div>
-          </div>
-          <div style="font-size:12px;">
-            <i class="el-icon-location"></i>{{ location }}
-            <span @click="viewMap" class="hint">查看地图</span>
-            <div>
-              <i class="el-icon-s-home"></i>{{ description }}
-              <span @click="viewMore" class="hint">查看更多</span>
-            </div>
-          </div>
 
-          <div
-            class="picture"
-            :style="{
-              backgroundImage: 'url(' + baseImg + ')',
-              backgroundSize: '100% 100%',
-              backgroundRepeat: 'no-repeat',
-            }"
-          ></div>
-        </div>
-        <div class="other" style="float: left">
-          <div class="clearfix">
-            <div style="float: left">
-              <div class="dianping">
-                <div class="dianping-icon">{{ grade }}</div>
-                <div class="dianping-wenzi">
-                  <p class="dianping-wenzi1">{{ level }}</p>
-                  <p class="dianping-wenzi2">
-                    共{{ dianping_number }}名房客评分
-                  </p>
+              <div class="Details">
+                <div class="leftstar">
+                  <div class="star">
+                    {{ item.star }}.0<i
+                      style="
+                        font-style: normal;
+                        font-size: 11px;
+                        color: #4880cf;
+                      "
+                      >/5</i
+                    >
+                  </div>
+                  <span class="dianping">{{ item.commentnum }}点评</span>
                 </div>
-              </div>
-              <a href="#comments" style="color: cornflowerblue; font-size: 12px"
-                >显示所有{{ dianping_number }}条点评</a
-              >
-            </div>
-            <div class="chooseRoom" style="float: right">
-              <div class="clearfix">
-                <div style="float: left">
-                  <span
-                    style="color: #003580; font-weight: 700; font-size: 24px"
-                  >
-                    ￥{{ minPrice }}
-                  </span>
-                  <span
-                    style="
-                      color: grey;
-                      height: 50px;
-                      line-height: 50px;
-                      font-weight: 700;
-                    "
-                    >起</span
+                <div class="rightprice">
+                  ￥{{ item.price
+                  }}<i style="font-size: 11px; font-style: normal; color: gray"
+                    >&nbsp;起</i
                   >
                 </div>
-
-                <a href="#rooms" class="choose_btn" style="float: left">
-                  选择房间
-                </a>
               </div>
             </div>
           </div>
-          <el-divider></el-divider>
-          <div class="clearfix">
-            <div class="map"><el-amap vid="amapDemo"></el-amap></div>
-            <div class="aboutMap">
-              <div>
-                <img
-                  src="../../assets/img/airport.svg"
-                  style="margin-top: 2px"
-                />{{ airport }}公里
-              </div>
-              <div>
-                <img
-                  src="../../assets/img/train.svg"
-                  style="margin-top: 2px"
-                />{{ train }}公里
-              </div>
-              <div>
-                <img
-                  src="../../assets/img/subway.svg"
-                  style="margin-top: 2px"
-                />{{ subway }}公里
-              </div>
-              <p style="font-size: 8px; color: gray; margin-top: 5px">
-                附近1公里内有{{ attrationNum }}个景点
-              </p>
-              <div @click="viewMap" class="hint" style="margin-top: 75px">
-                查看完整地图
-              </div>
-            </div>
-          </div>
-          <el-divider></el-divider>
-          <div style="font-size: 12px; margin-top: 0px">
-            <span>接机服务</span><el-divider direction="vertical"></el-divider>
-            <span>24小时大堂经理</span>
-          </div>
         </div>
-      </div>
-    </el-card>
-    <el-card class="box-card" shadow="never">
-      <div class="clearfix">
-        <div style="float: left">
-          <span>超大优惠</span>
-          <span style="color: #f7ba2a; font-weight: 700; font-size: 14px">
-            新客最高减100
-          </span>
-        </div>
-        <div @click="onReceive" class="receive_btn">领取</div>
-      </div>
-    </el-card>
-    <br />
-    <div id="rooms">
-      <ul>
-        <li v-for="room in rooms" :key="room.roomName">
-          <Room
-            :roomName="room.roomName"
-            :customerNum="room.customerNum"
-            :bed="room.bed"
-            :dish="room.dish"
-            :smoke="room.smoke"
-            :window="room.window"
-            :cancel="room.cancel"
-            :price="room.price"
-            :originalPrice="room.originalPrice"
-            :coverImgUrl="room.coverImgUrl"
-          />
-        </li>
-      </ul>
+      </el-card>
     </div>
-    <br />
-    <el-card class="box-card" shadow="never">
-      <h1>
-        点评<span
-          style="
-            color: grey;
-            font-weight: 700;
-            font-size: 18px;
-            margin-left: 10px;
-          "
-          >({{ dianping_number }}名住客真实点评)</span
-        >
-      </h1>
-      <div class="sort">
-        <el-form :inline="true" :model="form_Select">
-          <el-form-item>
-            <el-select v-model="form_Select.roomType" @change="roomTypeChange">
-              <el-option label="所有房型" value="所有房型"></el-option>
-              <el-option label="大床房" value="大床房"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="form_Select.sortWay" @change="sortWayChange">
-              <el-option label="推荐排序" value="推荐排序"></el-option>
-              <el-option label="最近入住" value="最近入住"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-card>
-    <div id="comments">
-      <ul>
-        <li v-for="comment in comments" :key="comment.userName">
-          <Comment
-            :userName="comment.userName"
-            :userAvatar="comment.userAvatar"
-            :commentRoom="comment.commentRoom"
-            :bookTime="comment.bookTime"
-            :userCommentNum="comment.userCommentNum"
-            :commentRate="comment.commentRate"
-            :commentContent="comment.commentContent"
-            :commentTime="comment.commentTime"
-          />
-        </li>
-      </ul>
-      <!-- 得加个分页 -->
-    </div>
-    <br />
-    <!-- 酒店政策 -->
-    <el-card class="box-card policy" shadow="never">
-      <h1>酒店政策</h1>
-      <div class="bold">
-        <el-row type="flex" style="margin-top: 20px">
-          <el-col :span="6">入住及退房</el-col>
-          <el-col :span="18"
-            >入住时间： 14:00后 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            退房时间： 12:00前</el-col
-          >
-        </el-row>
-        <el-divider></el-divider>
-        <el-row type="flex">
-          <el-col :span="6">入住方式</el-col>
-          <el-col :span="18" style="font-weight: 400"
-            >请到前台领取钥匙/门卡</el-col
-          >
-        </el-row>
-        <el-divider></el-divider>
-        <el-row type="flex">
-          <el-col :span="6">儿童及加床</el-col>
-          <el-col :span="18" style="font-weight: 400"
-            >酒店允许携带12岁及以上儿童入住
-            <div style="margin-top: 20px">
-              <div style="font-weight: 700">· 使用现有床铺</div>
-              <p>每房间可有1名12-17岁的儿童使用现有床铺。</p>
-              <div style="font-weight: 700">· 加床：</div>
-              <p>不可加床</p>
-              <div style="font-weight: 700">· 备注</div>
-              <p>
-                加床政策、儿童政策会根据客房类型而有所不同，房价仅适用于特定数量的客人。携带儿童与额外客人可能会产生额外费用，详情请咨询酒店。
-              </p>
-            </div>
-          </el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <el-row type="flex">
-          <el-col :span="6">早餐</el-col>
-          <el-col :span="18" style="font-weight: 400">
-            <p>早餐类型中式</p>
-            <el-divider></el-divider>
-            <p>菜单类型自助餐</p>
-            <el-divider></el-divider>
-            <p>营业时间07:00-09:00 [星期一 - 星期日]</p>
-          </el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <el-row type="flex">
-          <el-col :span="6">停车场</el-col>
-          <el-col :span="18" style="font-weight: 400">
-            不可预约：酒店内提供公共停车场（免费）。</el-col
-          >
-        </el-row>
-        <el-divider></el-divider>
-        <el-row type="flex">
-          <el-col :span="6">宠物</el-col>
-          <el-col :span="18" style="font-weight: 400"> 不可携带宠物。</el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <el-row type="flex">
-          <el-col :span="6">年龄限制</el-col>
-          <el-col :span="18" style="font-weight: 400"
-            >入住办理人需年满18岁</el-col
-          >
-        </el-row>
-        <el-divider></el-divider>
-        <el-row type="flex">
-          <el-col :span="6">到店付款方式</el-col>
-          <el-col :span="18" style="font-weight: 400"
-            >酒店接受以下付款方式
-            <div>
-              <img
-                src="https://tse1-mm.cn.bing.net/th/id/R-C.692de9abd94bc6a408ce5591e04403b1?rik=Pdt3a4ecCmrvQQ&riu=http%3a%2f%2fpic.ntimg.cn%2ffile%2f20191130%2f29554138_095901936699_2.jpg&ehk=deyCCJtpHBww4tY9QO9z8ZGsTCZWN%2fdTHjfZ3SYvktU%3d&risl=&pid=ImgRaw&r=0"
-                alt=""
-              />
-              <img
-                src="https://pic38.photophoto.cn/20160325/1155115744558206_b.jpg"
-                alt=""
-              />
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-card>
-    <br />
-
-    <!--附近的酒店  -->
-    <el-card class="box-card near" shadow="never">
-      <h1>附近的酒店</h1>
-      <div class="hotels">
-        <div
-          class="box"
-          v-for="(item, index) in hotels.slice(0, 8)"
-          :key="index"
-        >
-          <div
-            class="infoImg"
-            :style="{
-              backgroundImage: 'url(' + item.img + ')',
-              backgroundSize: '100% 100%',
-              backgroundRepeat: 'no-repeat',
-            }"
-          ></div>
-          <div class="infoDetail">
-            <div class="Name" style="font-size: 14px; font-weight: 700">
-              {{ item.name }}
-            </div>
-            <img
-              src="../../assets/img/diamond.svg"
-              v-for="i in item.star"
-              :key="i"
-              style="margin-top: 2px"
-            />
-
-            <div class="Details">
-              <div class="leftstar">
-                <div class="star">
-                  {{ item.star }}.0<i
-                    style="font-style: normal; font-size: 11px; color: #4880cf"
-                    >/5</i
-                  >
-                </div>
-                <span class="dianping">{{ item.commentnum }}点评</span>
-              </div>
-              <div class="rightprice">
-                ￥{{ item.price
-                }}<i style="font-size: 11px; font-style: normal; color: gray"
-                  >&nbsp;起</i
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-card>
     <br />
     <Footer1 />
   </el-container>
@@ -341,10 +352,6 @@
   margin-bottom: -105px;
   text-align: center;
   background-color: #f2f2f2;
-}
-.box-card {
-  margin-left: 10%;
-  margin-right: 10%;
 }
 .clearfix:before,
 .clearfix:after {
@@ -543,6 +550,7 @@ export default {
   },
   data() {
     return {
+      // 其他页面传过来的酒店ID给你用的，ｂｙ秦
       hotelId: "",
       hotelName: "速八酒店",
       starNum: 5,
@@ -767,5 +775,10 @@ export default {
     sortWayChange() {},
   },
   mounted() {},
+  created() {
+    if (this.$route.query.id) {
+      this.hotelId = this.$route.query.id;
+    }
+  },
 };
 </script>

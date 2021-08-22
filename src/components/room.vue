@@ -79,8 +79,6 @@
   margin-top: 5px;
 }
 .content {
-  margin-left: 10%;
-  margin-right: 10%;
   height: 150px;
   text-align: center;
 }

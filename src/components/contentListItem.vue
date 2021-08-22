@@ -27,6 +27,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+
     <div class="detail">
       <h1>{{ title }}</h1>
       <p>{{ address }}</p>
@@ -37,8 +38,17 @@
         </div>
         <div class="dianping-icon">{{ grade }}</div>
       </div>
-      <p style="color: red">最低{{ price }}元/人</p>
-      <button @click="Book">点击预定 ></button>
+      <p style="color: red; margin-left: 300px">{{ words }}{{ price }}元/人</p>
+      <div class="bottom">
+        <div class="label">
+          <span
+            v-for="(item, index) in (label || '').length ? label.split('_') : 0"
+            :key="index"
+            >{{ item }}</span
+          >
+        </div>
+        <button @click="Book">点击预定 ></button>
+      </div>
     </div>
   </div>
 </template>
@@ -79,24 +89,23 @@ h6 {
   height: 250px;
   padding: 25px 25px 0 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-
   border-radius: 5px;
 }
 .content:hover {
   border: 2px solid rgba(0, 0, 0, 0.1);
 }
+
 .detail {
-  float: left;
-  margin-left: 20px;
-  width: 400px;
+  float: right;
+  width: 420px;
   height: 230px;
 }
 
 .dianping {
   width: 155px;
   height: 50px;
-  position: relative;
-  left: 240px;
+  float: right;
+  margin-left: 60px;
   margin-bottom: 10px;
 }
 .dianping-wenzi {
@@ -124,10 +133,30 @@ h6 {
   color: white;
   background-color: #0071c2;
 }
-
+.bottom {
+  position: relative;
+  top: 22px;
+  width: 100%;
+  height: 58px;
+}
+.label {
+  float: left;
+  width: 150px;
+  height: 50px;
+}
+.label > span {
+  display: inline-block;
+  padding: 1px 5px;
+  color: rgba(255, 0, 0, 0.6);
+  font-size: 13px;
+  text-align: center;
+  margin: 5px 2px;
+  border: 1px solid rgba(255, 0, 0, 0.6);
+  border-radius: 3px;
+}
 .content button {
   float: right;
-  margin-top: 30px;
+  margin-top: 8px;
   width: 90px;
   height: 40px;
   border: none;
@@ -151,6 +180,8 @@ export default {
     coverImgUrl: String,
     dianping_number: Number,
     ID: String,
+    label: String,
+    words: String,
   },
   data() {
     return {
@@ -166,8 +197,7 @@ export default {
   },
   methods: {
     Book() {
-      let iPath =
-        this.type == "游客" ? "/attraction/AttrOrder" : "/hotel/HotelOrder";
+      let iPath = this.type == "游客" ? "/attraction/detail" : "/hotel/detail";
       this.$router.push({
         path: iPath,
         query: { id: this.ID },

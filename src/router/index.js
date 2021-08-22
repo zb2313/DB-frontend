@@ -203,8 +203,8 @@ const routes = [
         component: () => import('../view/attraction/Home.vue')
     },
     {
-        path: '/attraction/AttrOrder',
-        name: 'AttrOrder',
+        path: '/attraction/detail',
+        name: 'AttrDetail',
         component: () => import('../view/attraction/detail.vue')
     },
     {

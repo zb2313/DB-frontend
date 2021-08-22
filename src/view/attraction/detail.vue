@@ -1,244 +1,266 @@
 <template>
   <el-container direction="vertical">
     <Header activeIndex="2" />
-    <el-card class="box-card" shadow="never">
-      <div class="clearfix">
-        <div class="namePicture">
-          <div
-            class="picture"
-            :style="{
-              backgroundImage: 'url(' + baseImg + ')',
-              backgroundSize: '100% 100%',
-              backgroundRepeat: 'no-repeat',
-            }"
-          ></div>
-        </div>
-        <div class="other" style="float: left">
-          <div>
-            <div class="clearfix">
-              <div class="attrationName">
-                <h2>{{ attrationName }}</h2>
-              </div>
-              <div class="star">
-                <img
-                  src="../../assets/img/diamond.svg"
-                  v-for="i in starNum"
-                  :key="i"
-                  style="margin-top: 2px"
-                />
-              </div>
-            </div>
-          </div>
-          <el-divider></el-divider>
-          <div class="clearfix">
-            <div style="float: left">
-              <div class="dianping">
-                <div class="dianping-icon">{{ grade }}</div>
-                <div class="dianping-wenzi">
-                  <p class="dianping-wenzi1">{{ level }}</p>
-                  <p class="dianping-wenzi2">
-                    共{{ dianping_number }}名用户评分
-                  </p>
-                </div>
-              </div>
-              <a href="#comments" style="color: cornflowerblue; font-size: 14px"
-                >显示所有{{ dianping_number }}条点评</a
-              >
-            </div>
-            <div class="chooseRoom" style="float: right">
-              <div class="clearfix">
-                <div style="float: left">
-                  <span
-                    style="color: #003580; font-weight: 700; font-size: 24px"
-                  >
-                    ￥{{ minPrice }}
-                  </span>
-                  <span
-                    style="
-                      color: grey;
-                      height: 50px;
-                      line-height: 50px;
-                      font-weight: 700;
-                    "
-                    >起</span
-                  >
-                </div>
-
-                <a href="#rooms" class="choose_btn" style="float: left">
-                  购买门票
-                </a>
-              </div>
-            </div>
-          </div>
-          <br />
-          <div>
-            <i class="el-icon-location-outline"></i> &nbsp;&nbsp; {{ location }}
-            <br />
-            <br />
-            <div>
-              <i class="el-icon-date"></i> &nbsp;&nbsp;{{ openTime }}-{{
-                closeTime
-              }}开放（ {{ stopTime }}停止入园）
-            </div>
-            <br />
-            <div>
-              <i class="el-icon-phone-outline"></i> &nbsp;&nbsp; {{ call }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-card>
-    <br />
-
-    <div class="clearfix box-card">
-      <div style="float: left">
-        <el-card class="left-box-card" shadow="never">
-          <h1>
-            点评<span
-              style="
-                color: grey;
-                font-weight: 700;
-                font-size: 18px;
-                margin-left: 10px;
-              "
-              >({{ dianping_number }}名用户真实点评)</span
-            >
-          </h1>
-          <div class="sort">
-            <el-form :inline="true" :model="form_Select">
-              <el-form-item>
-                <el-select
-                  v-model="form_Select.commentLevel"
-                  @change="commentLevelChange"
-                >
-                  <el-option label="所有点评" value="所有点评"></el-option>
-                  <el-option
-                    label="好评（打分>3）"
-                    value="好评（打分>3）"
-                  ></el-option>
-                  <el-option
-                    label="非好评（打分<4）"
-                    value="非好评（打分<4）"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-select
-                  v-model="form_Select.sortWay"
-                  @change="sortWayChange"
-                >
-                  <el-option label="智能排序" value="智能排序"></el-option>
-                  <el-option label="最近购买" value="最近购买"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-card>
-        <div id="comments">
-          <ul>
-            <li v-for="comment in comments" :key="comment.userName">
-              <CommentOnAttr
-                :userName="comment.userName"
-                :userAvatar="comment.userAvatar"
-                :commentTicket="comment.commentTicket"
-                :bookTime="comment.bookTime"
-                :userCommentNum="comment.userCommentNum"
-                :commentRate="comment.commentRate"
-                :commentContent="comment.commentContent"
-                :commentTime="comment.commentTime"
-              />
-            </li>
-          </ul>
-          <!-- 得加个分页 -->
-        </div>
-        <br />
-        <!-- 景点详情 -->
-        <el-card class="left-box-card details" shadow="never">
-          <h1>景点介绍</h1>
-          <div>
-            <el-row type="flex" style="margin-top: 20px">
-              <el-col :span="24"
-                >{{description}}</el-col
-              >
-            </el-row>
-            <el-divider></el-divider>
-            <h1>开放时间</h1>
-            <el-row type="flex" style="margin-top: 20px">
-              <el-col :span="24"
-                >7月1日-8月31日 周一至周五 09:00-20:00(最晚入园19:00) 周六至周日 09:00-20:30(最晚入园19:30)；年卡中心开卡时间：开园前半小时至闭园前一个半小时。 景区现场停止售票时间：闭园前一个半小时。 闭园前1小时停止检票</el-col
-              >
-            </el-row>
-            <el-divider></el-divider>
-            <h1>优待政策</h1>
-            <el-row type="flex" style="margin-top: 20px">
-              <el-col :span="24" 
-                >儿童：身高1.0米（含）以下或者3周岁以下（需持本人身份证等有效证件原件，购票成人陪同），免费；身高1.0米（不含）-1.4米（含）之间，优惠 <br> 老人：65周岁（含）以上（持本人有效身份证件），优惠 <br> 军人：现役军人、残疾军人、烈士遗属、因公牺牲军人遗属、病故军人遗属、现役军人家属、在职/退休消防救援人员和消防救援院校学员（持本人有效证件至现场购买），优惠 <br> 残疾人：凭有效证件，优惠  <br> 补充说明：以上信息仅供参考，具体信息请以景区当天披露为准。</el-col
-              >
-            </el-row>
-            <el-divider></el-divider>
-            <h1>服务设施</h1>
-            <el-row type="flex" style="margin-top: 20px">
-              <el-col :span="24"
-                >停车场： 地址：{{location}};库位：约1000个；除了景区内停车场，周边还设有三个市政配套停车场，所有停车位总共约3000多个。 <br>行李寄存：行李寄存处位于园区正门右侧，大件60元/件，小件50元/件。 <br> 婴儿车租赁：婴儿车60元/车/天，押金300元；单人童车70元/车/天，押金200元；双人童车90元/车/天，押金200元。车辆乘坐体重限制标准：婴儿车限10kg，单人童车限25kg，双人童车限45kg。 <br> 轮椅租赁：免费租赁，押金300元。  <br> 卫生间：园区内设有多个卫生间，有明显标识。</el-col
-              >
-            </el-row>
-            <el-divider></el-divider>
-            <h1>交通攻略</h1>
-            <el-row type="flex" style="margin-top: 20px">
-              <el-col :span="24"
-                >距{{nearSubwayStation}}{{nearSubwayDistance}}m,步行12mins</el-col
-              >
-            </el-row>
-          </div>
-        </el-card>
-        <br />
-      </div>
-      <div style="float: right">
-        <el-card class="right-box-card" shadow="never">
-          <h4>附近景点</h4>
-          <div
-            class="box"
-            v-for="(item, index) in attrations.slice(0, 8)"
-            :key="index"
-          >
+    <div class="main">
+      <el-card class="box-card" shadow="never">
+        <div class="clearfix">
+          <div class="namePicture">
             <div
-              class="infoImg"
+              class="picture"
               :style="{
-                backgroundImage: 'url(' + item.img + ')',
+                backgroundImage: 'url(' + baseImg + ')',
                 backgroundSize: '100% 100%',
                 backgroundRepeat: 'no-repeat',
               }"
             ></div>
-            <div class="infoDetail">
-              <div class="Name" style="font-size: 14px; font-weight: 700">
-                {{ item.name }}
-              </div>
-              <div class="Details">
-                <div class="leftstar">
-                  <div class="star">
-                    {{ item.star
-                    }}<i
-                      style="
-                        font-style: normal;
-                        font-size: 11px;
-                        color: #4880cf;
-                      "
-                      >/5</i
-                    >
-                  </div>
-                  <i style="font-size: 11px; font-style: normal; color: gray"
-                    >{{ item.commentnum }}点评</i
-                  >
+          </div>
+          <div class="other" style="float: left">
+            <div>
+              <div class="clearfix">
+                <div class="attrationName">
+                  <h2>{{ attrationName }}</h2>
                 </div>
-                <div class="rightprice">
-                  <i style="font-size: 11px; font-style: normal; color: gray"
-                    >&nbsp;直线距离{{ item.distance }}米</i
-                  >
+                <div class="star">
+                  <img
+                    src="../../assets/img/diamond.svg"
+                    v-for="i in starNum"
+                    :key="i"
+                    style="margin-top: 2px"
+                  />
                 </div>
               </div>
             </div>
+            <el-divider></el-divider>
+            <div class="clearfix">
+              <div style="float: left">
+                <div class="dianping">
+                  <div class="dianping-icon">{{ grade }}</div>
+                  <div class="dianping-wenzi">
+                    <p class="dianping-wenzi1">{{ level }}</p>
+                    <p class="dianping-wenzi2">
+                      共{{ dianping_number }}名用户评分
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="#comments"
+                  style="color: cornflowerblue; font-size: 14px"
+                  >显示所有{{ dianping_number }}条点评</a
+                >
+              </div>
+              <div class="chooseRoom" style="float: right">
+                <div class="clearfix">
+                  <div style="float: left">
+                    <span
+                      style="color: #003580; font-weight: 700; font-size: 24px"
+                    >
+                      ￥{{ minPrice }}
+                    </span>
+                    <span
+                      style="
+                        color: grey;
+                        height: 50px;
+                        line-height: 50px;
+                        font-weight: 700;
+                      "
+                      >起</span
+                    >
+                  </div>
+
+                  <a href="#rooms" class="choose_btn" style="float: left">
+                    购买门票
+                  </a>
+                </div>
+              </div>
+            </div>
+            <br />
+            <div>
+              <i class="el-icon-location-outline"></i> &nbsp;&nbsp;
+              {{ location }}
+              <br />
+              <br />
+              <div>
+                <i class="el-icon-date"></i> &nbsp;&nbsp;{{ openTime }}-{{
+                  closeTime
+                }}开放（ {{ stopTime }}停止入园）
+              </div>
+              <br />
+              <div>
+                <i class="el-icon-phone-outline"></i> &nbsp;&nbsp; {{ call }}
+              </div>
+            </div>
           </div>
-        </el-card>
+        </div>
+      </el-card>
+      <br />
+
+      <div class="clearfix box-card">
+        <div style="float: left">
+          <el-card class="left-box-card" shadow="never">
+            <h1>
+              点评<span
+                style="
+                  color: grey;
+                  font-weight: 700;
+                  font-size: 18px;
+                  margin-left: 10px;
+                "
+                >({{ dianping_number }}名用户真实点评)</span
+              >
+            </h1>
+            <div class="sort">
+              <el-form :inline="true" :model="form_Select">
+                <el-form-item>
+                  <el-select
+                    v-model="form_Select.commentLevel"
+                    @change="commentLevelChange"
+                  >
+                    <el-option label="所有点评" value="所有点评"></el-option>
+                    <el-option
+                      label="好评（打分>3）"
+                      value="好评（打分>3）"
+                    ></el-option>
+                    <el-option
+                      label="非好评（打分<4）"
+                      value="非好评（打分<4）"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-select
+                    v-model="form_Select.sortWay"
+                    @change="sortWayChange"
+                  >
+                    <el-option label="智能排序" value="智能排序"></el-option>
+                    <el-option label="最近购买" value="最近购买"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+            </div>
+          </el-card>
+          <div id="comments">
+            <ul>
+              <li v-for="comment in comments" :key="comment.userName">
+                <CommentOnAttr
+                  :userName="comment.userName"
+                  :userAvatar="comment.userAvatar"
+                  :commentTicket="comment.commentTicket"
+                  :bookTime="comment.bookTime"
+                  :userCommentNum="comment.userCommentNum"
+                  :commentRate="comment.commentRate"
+                  :commentContent="comment.commentContent"
+                  :commentTime="comment.commentTime"
+                />
+              </li>
+            </ul>
+            <!-- 得加个分页 -->
+          </div>
+          <br />
+          <!-- 景点详情 -->
+          <el-card class="left-box-card details" shadow="never">
+            <h1>景点介绍</h1>
+            <div>
+              <el-row type="flex" style="margin-top: 20px">
+                <el-col :span="24">{{ description }}</el-col>
+              </el-row>
+              <el-divider></el-divider>
+              <h1>开放时间</h1>
+              <el-row type="flex" style="margin-top: 20px">
+                <el-col :span="24"
+                  >7月1日-8月31日 周一至周五 09:00-20:00(最晚入园19:00)
+                  周六至周日
+                  09:00-20:30(最晚入园19:30)；年卡中心开卡时间：开园前半小时至闭园前一个半小时。
+                  景区现场停止售票时间：闭园前一个半小时。
+                  闭园前1小时停止检票</el-col
+                >
+              </el-row>
+              <el-divider></el-divider>
+              <h1>优待政策</h1>
+              <el-row type="flex" style="margin-top: 20px">
+                <el-col :span="24"
+                  >儿童：身高1.0米（含）以下或者3周岁以下（需持本人身份证等有效证件原件，购票成人陪同），免费；身高1.0米（不含）-1.4米（含）之间，优惠
+                  <br />
+                  老人：65周岁（含）以上（持本人有效身份证件），优惠 <br />
+                  军人：现役军人、残疾军人、烈士遗属、因公牺牲军人遗属、病故军人遗属、现役军人家属、在职/退休消防救援人员和消防救援院校学员（持本人有效证件至现场购买），优惠
+                  <br />
+                  残疾人：凭有效证件，优惠 <br />
+                  补充说明：以上信息仅供参考，具体信息请以景区当天披露为准。</el-col
+                >
+              </el-row>
+              <el-divider></el-divider>
+              <h1>服务设施</h1>
+              <el-row type="flex" style="margin-top: 20px">
+                <el-col :span="24"
+                  >停车场： 地址：{{
+                    location
+                  }};库位：约1000个；除了景区内停车场，周边还设有三个市政配套停车场，所有停车位总共约3000多个。
+                  <br />行李寄存：行李寄存处位于园区正门右侧，大件60元/件，小件50元/件。
+                  <br />
+                  婴儿车租赁：婴儿车60元/车/天，押金300元；单人童车70元/车/天，押金200元；双人童车90元/车/天，押金200元。车辆乘坐体重限制标准：婴儿车限10kg，单人童车限25kg，双人童车限45kg。
+                  <br />
+                  轮椅租赁：免费租赁，押金300元。 <br />
+                  卫生间：园区内设有多个卫生间，有明显标识。</el-col
+                >
+              </el-row>
+              <el-divider></el-divider>
+              <h1>交通攻略</h1>
+              <el-row type="flex" style="margin-top: 20px">
+                <el-col :span="24"
+                  >距{{ nearSubwayStation
+                  }}{{ nearSubwayDistance }}m,步行12mins</el-col
+                >
+              </el-row>
+            </div>
+          </el-card>
+          <br />
+        </div>
+        <div style="float: right">
+          <el-card class="right-box-card" shadow="never">
+            <h4>附近景点</h4>
+            <div
+              class="box"
+              v-for="(item, index) in attrations.slice(0, 8)"
+              :key="index"
+            >
+              <div
+                class="infoImg"
+                :style="{
+                  backgroundImage: 'url(' + item.img + ')',
+                  backgroundSize: '100% 100%',
+                  backgroundRepeat: 'no-repeat',
+                }"
+              ></div>
+              <div class="infoDetail">
+                <div class="Name" style="font-size: 14px; font-weight: 700">
+                  {{ item.name }}
+                </div>
+                <div class="Details">
+                  <div class="leftstar">
+                    <div class="star">
+                      {{ item.star
+                      }}<i
+                        style="
+                          font-style: normal;
+                          font-size: 11px;
+                          color: #4880cf;
+                        "
+                        >/5</i
+                      >
+                    </div>
+                    <i style="font-size: 11px; font-style: normal; color: gray"
+                      >{{ item.commentnum }}点评</i
+                    >
+                  </div>
+                  <div class="rightprice">
+                    <i style="font-size: 11px; font-style: normal; color: gray"
+                      >&nbsp;直线距离{{ item.distance }}米</i
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </el-card>
+        </div>
       </div>
     </div>
 
@@ -256,15 +278,11 @@
   background-color: #f2f2f2;
 }
 
-.box-card {
-  margin-left: 10%;
-  margin-right: 10%;
-}
 .left-box-card {
-  width: 858px;
+  width: 800px;
 }
 .right-box-card {
-  width: 330px;
+  width: 290px;
 }
 .clearfix:before,
 .clearfix:after {
@@ -312,7 +330,7 @@
 .dianping-wenzi {
   float: left;
   margin-right: 5px;
-  width: 100px;
+  width: 95px;
   height: 100%;
 }
 
@@ -325,6 +343,7 @@
   color: grey;
 }
 .dianping-icon {
+  margin-right: 5px;
   float: left;
   width: 50px;
   height: 100%;
@@ -372,7 +391,6 @@
   font-size: 14px;
 }
 .sort {
-  background-color: #f0f2f5;
   height: 50px;
 }
 .el-select {
@@ -446,7 +464,8 @@ export default {
   },
   data() {
     return {
-      hotelId: "",
+      // 景点id已经传过来,可直接使用
+      AttrId: "",
       attrationName: "上海海昌海洋公园",
       starNum: 5,
       location: "上海市浦东新区南汇新城镇银飞路166号",
@@ -456,8 +475,8 @@ export default {
       closeTime: "20:30",
       stopTime: "19:30",
       minPrice: 59,
-      nearSubwayStation:"临港中运量1号线杞青路站",
-      nearSubwayDistance:793,
+      nearSubwayStation: "临港中运量1号线杞青路站",
+      nearSubwayDistance: 793,
       description:
         "上海海昌海洋公园被评定为国家4A级旅游景区，以海洋文化为主题，缔造五大区域和一个度假酒店，拥有《虎鲸科普秀》《海象嘻游记》《海豚恋曲》等十六大明星剧目；设有南极企鹅馆、海兽探秘馆等六大动物展示场馆，提供火山漂流、海豚过山车等十余项游乐设施，汇聚三万余只海洋生物，展现海洋梦幻花车巡游及百场演艺！",
       baseImg:
@@ -626,5 +645,10 @@ export default {
     sortWayChange() {},
   },
   mounted() {},
+  created() {
+    if (this.$route.query.id) {
+      this.AttrId = this.$route.query.id;
+    }
+  },
 };
 </script>

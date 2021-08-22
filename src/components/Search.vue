@@ -188,6 +188,10 @@ export default {
   border-radius: 0px;
   cursor: text;
 }
+.el-date-editor /deep/ .el-range__icon {
+  margin-left: 25px;
+  line-height: 50px;
+}
 .el-date-editor--daterange.el-input__inner {
   width: 345px;
   height: 60px;

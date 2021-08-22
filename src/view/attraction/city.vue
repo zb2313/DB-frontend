@@ -19,11 +19,11 @@
             <div class="type">
               <p>类别</p>
               <el-checkbox-group v-model="checkList">
-                <el-checkbox label="1">地标</el-checkbox>
-                <el-checkbox label="2">博物馆</el-checkbox>
-                <el-checkbox label="3">亲子</el-checkbox>
-                <el-checkbox label="4">自然</el-checkbox>
-                <el-checkbox label="3">蜜月</el-checkbox>
+                <el-checkbox label="地标"></el-checkbox>
+                <el-checkbox label="亲子"></el-checkbox>
+                <el-checkbox label="建筑"></el-checkbox>
+                <el-checkbox label="休闲"></el-checkbox>
+                <el-checkbox label="历史"></el-checkbox>
               </el-checkbox-group>
             </div>
 
@@ -39,15 +39,13 @@
             <div class="grade">
               <p>评分</p>
               <el-checkbox-group v-model="checkList2">
-                <el-checkbox label="1">好极了：5分</el-checkbox>
-                <el-checkbox label="2">非常好：4分</el-checkbox>
+                <el-checkbox label="5">好极了：5分</el-checkbox>
+                <el-checkbox label="4">非常好：4分</el-checkbox>
                 <el-checkbox label="3">一般般：3分</el-checkbox>
-                <el-checkbox label="4">不太好：2分</el-checkbox>
-                <el-checkbox label="5">非常差：1分</el-checkbox>
+                <el-checkbox label="2">不太好：2分</el-checkbox>
+                <el-checkbox label="1">非常差：1分</el-checkbox>
               </el-checkbox-group>
             </div>
-
-            <div class="select" @click="Select">点击筛选</div>
           </div>
         </div>
 
@@ -71,7 +69,7 @@
 
           <div class="sort">
             <div class="sortBox">
-              <el-dropdown @command="handleCommand">
+              <el-dropdown @command="Sort">
                 <span class="el-dropdown-link">
                   {{ sortBy }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
@@ -93,15 +91,18 @@
                   :grade="item.star"
                   :coverImgUrl="item.picture"
                   type="游客"
+                  words="平均"
                   :price="item.price"
                   :ID="item.attractionid"
                   :dianping_number="item.commentnum"
+                  :label="item.label"
                 />
               </li>
             </ul>
           </div>
         </div>
       </div>
+      <el-backtop :right="20"> </el-backtop>
     </el-main>
 
     <Footer1 />
@@ -120,7 +121,6 @@
   float: left;
   width: 750px;
   margin-left: 27px;
-  text-align: right;
 }
 .title {
   font-size: 16px;
@@ -166,23 +166,11 @@
   margin: 10px 0;
 }
 
-.select {
-  height: 50px;
-  line-height: 50px;
-  cursor: pointer;
-  color: white;
-  font-size: 17px;
-  font-weight: 600;
-  background-color: #0071c2;
-  text-align: center;
-}
 .type,
-.budget,
-.grade {
+.budget {
   border-bottom: 1px solid rgb(189, 178, 178);
 }
 
-.select:hover,
 .mapshow-btn:hover,
 .searchBtn:hover {
   background-color: #003680;
@@ -240,162 +228,148 @@ export default {
         city: "广州",
         num: "333",
       },
+      label: "",
       checkList: [],
       checkList1: [],
       checkList2: [],
+      withList: [],
+      withList1: [],
+      withList2: [],
       items: [],
-      orginData: [],
+      originData: [],
       input: "",
       sortBy: "热门推荐",
     };
   },
   methods: {
-    onSelect() {
-      if (this.input) {
-        this.title.city = this.input;
-        this.$axios
-          .get(
-            "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
-              this.title.city
-          )
-          .then((response) => {
-            this.items = response.data.sort(function (a, b) {
-              return b.star - a.star;
-            });
+    getAttrbyCity() {
+      this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
+            this.title.city
+        )
+        .then((response) => {
+          this.originData = JSON.parse(JSON.stringify(response.data));
+          var items;
+          if ((items = this.checkLabel(this.label, response.data))) {
+            this.items = items;
+            this.title.num = items.length;
+          } else {
+            this.items = response.data;
             this.title.num = response.data.length;
-          });
-      }
+          }
+        });
     },
-    Select() {
-      var newitems = [];
-      this.items = this.orginData;
-      for (var i = 0; i < this.items.length; i++) {
-        if (!this.checkList1.length) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
+    // 回到顶部
+    goTop() {
+      // document.documentElement.scrollTop = document.body.scrollTop = 0;
+      let top = document.documentElement.scrollTop || document.body.scrollTop;
+      // 实现过度滚动效果
+      const timeTop = setInterval(() => {
+        document.body.scrollTop =
+          document.documentElement.scrollTop =
+          top -=
+            50;
+        if (top <= 0) {
+          clearInterval(timeTop);
+        }
+      }, 30);
+    },
+    // 检查是否有某标签
+    checkLabel(label, data) {
+      if (label) {
+        var newitems = [];
+        for (var i = 0; i < data.length; i++) {
+          var labels = (data[i].label || "").split("_");
+          if (labels.includes(label)) {
+            newitems.push(data[i]);
           }
-        } else if (this.checkList1.includes("1") && this.items[i].price <= 50) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        } else if (
-          this.checkList1.includes("2") &&
-          this.items[i].price > 50 &&
-          this.items[i].price <= 100
-        ) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        } else if (this.checkList1.includes("3") && this.items[i].price > 100) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
+        }
+        return newitems;
+      }
+      return false;
+    },
+    narrow(List) {
+      this.withList = [];
+      for (var i = 0; i < this.originData.length; i++) {
+        var labels = (this.originData[i].label || "").split("_");
+        for (var j = 0; j < List.length; j++) {
+          if (labels.includes(List[j])) {
+            this.$set(this.withList, this.withList.length, i);
+            break;
           }
         }
       }
-      this.items = newitems;
-      this.title.num = newitems.length;
     },
-    handleCommand(command) {
+    narrow1(list) {
+      this.withList1 = [];
+
+      for (var i = 0; i < this.originData.length; i++) {
+        var price = this.originData[i].price;
+        if (
+          (list.includes("1") && price <= 50) ||
+          (list.includes("2") && price <= 100 && price > 50) ||
+          (list.includes("3") && price > 100)
+        ) {
+          this.$set(this.withList1, this.withList1.length, i);
+        }
+      }
+    },
+    narrow2(List) {
+      this.withList2 = [];
+      for (var i = 0; i < this.originData.length; i++) {
+        var star = this.originData[i].star;
+        if (List.includes(star.toString())) {
+          this.withList2.push(i);
+        }
+      }
+    },
+    intersect() {
+      if (this.withList.length === 0 && this.checkList.length === 0) {
+        for (var i = 0; i < this.originData.length; i++) {
+          this.withList.push(i);
+        }
+      }
+      if (this.withList1.length === 0 && this.checkList1.length === 0) {
+        for (var j = 0; j < this.originData.length; j++) {
+          this.withList1.push(j);
+        }
+      }
+      if (this.withList2.length === 0 && this.checkList2.length === 0) {
+        for (var k = 0; k < this.originData.length; k++) {
+          this.withList2.push(k);
+        }
+      }
+
+      var withList1 = this.withList1;
+      var withList2 = this.withList2;
+      var res = this.withList.filter(function (v) {
+        return withList1.includes(v);
+      });
+      res = res.filter(function (v) {
+        return withList2.includes(v);
+      });
+
+      this.items = [];
+      for (var n = 0; n < this.originData.length; n++) {
+        if (res.includes(n)) {
+          this.items.push(this.originData[n]);
+        }
+      }
+      this.title.num = this.items.length;
+    },
+    onSelect() {
+      if (this.input) {
+        this.$router.push({
+          path: "/attraction/city",
+          query: { search: this.input },
+        });
+      } else {
+        alert("请输入有效信息！");
+      }
+    },
+    // 改变排序
+    Sort(command) {
       if (command == "a") {
         this.sortBy = "热门推荐";
       } else if (command == "b") {
@@ -419,20 +393,29 @@ export default {
     } else {
       this.title.city = "全部";
     }
+    if (this.$route.query.label) {
+      this.label = this.$route.query.label;
+      this.$set(this.checkList, 0, this.label);
+    }
+    this.getAttrbyCity();
   },
-  mounted() {
-    this.$axios
-      .get(
-        "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
-          this.title.city
-      )
-      .then((response) => {
-        this.items = response.data.sort(function (a, b) {
-          return b.star - a.star;
-        });
-        this.title.num = response.data.length;
-        this.orginData = JSON.parse(JSON.stringify(response.data));
-      });
+  mounted() {},
+  watch: {
+    checkList(newValue, oldValue) {
+      this.narrow(newValue);
+      this.intersect();
+      this.goTop();
+    },
+    checkList1(newValue, oldValue) {
+      this.narrow1(newValue);
+      this.intersect();
+      this.goTop();
+    },
+    checkList2(newValue, oldValue) {
+      this.narrow2(newValue);
+      this.intersect();
+      this.goTop();
+    },
   },
 };
 </script>

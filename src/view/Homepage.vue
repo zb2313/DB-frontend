@@ -30,24 +30,31 @@
     <el-main>
       <div class="attraction main">
         <h2 class="title">
-          <span @click="onClick(0, 0)">热门<i v-show="show[0][0]"></i></span>
-          <span @click="onClick(0, 1)">周边游<i v-show="show[0][1]"></i></span>
-          <span @click="onClick(0, 2)">门票<i v-show="show[0][2]"></i></span>
+          <span @click="onClick(0, 0)" :class="{ titleClick: show[0] == 0 }"
+            >门票<i v-show="!show[0]"></i
+          ></span>
+          <span @click="onClick(0, 1)" :class="{ titleClick: show[0] == 1 }"
+            >周边游<i v-show="show[0]"></i
+          ></span>
 
-          <span class="dropdown" style="margin-left: 76%">
-            <span style="color: blue; font-size: 14px" class="drop-btn"
-              >{{ attrStart }}出发
-              <div class="el-icon-caret-bottom"></div
-            ></span>
-            <div class="drop-content">
-              <a
-                v-for="item in attrDropdown"
-                :key="item.index"
-                :href="item.link"
-                style="color: black"
-                >{{ item.city }}</a
-              >
-            </div>
+          <span class="dropdown" style="margin-left: 80%">
+            <el-popover placement="bottom-end" width="50" trigger="click"
+              ><div class="drop-content">
+                <span
+                  v-for="item in attrDropdown"
+                  :key="item.index"
+                  @click="changeCity1(item)"
+                  >{{ item }}</span
+                >
+              </div>
+              <span
+                slot="reference"
+                style="color: #0071c2; font-size: 14px"
+                class="drop-btn"
+                >玩在{{ attrStart }}
+                <div class="el-icon-caret-bottom"></div
+              ></span>
+            </el-popover>
           </span>
         </h2>
 
@@ -56,30 +63,36 @@
             <dl class="keyword-short">
               <dt>热门主题游</dt>
               <dd>
-                <span class="entrance-item" title="海岛">
-                  <a href="" target="_blank"> 海岛 </a>
+                <span title="地标">
+                  <router-link to="/attraction/city?search=全部&label=地标">
+                    地标
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="亲子游">
-                  <a href="" target="_blank"> 亲子游 </a>
+                <span title="亲子">
+                  <router-link to="/attraction/city?search=全部&label=亲子">
+                    亲子
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="蜜月">
-                  <a href="" target="_blank"> 蜜月 </a>
+                <span title="建筑">
+                  <router-link to="/attraction/city?search=全部&label=建筑">
+                    建筑
+                  </router-link>
                 </span>
               </dd>
 
               <dd style="margin-top: 10px">
-                <span class="entrance-item" title="美食">
-                  <a href="" target="_blank"> 美食 </a>
+                <span title="休闲">
+                  <router-link to="/attraction/city?search=全部&label=休闲">
+                    休闲
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="古镇">
-                  <a href="" target="_blank"> 古镇 </a>
-                </span>
-                <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="星空">
-                  <a href="" target="_blank"> 星空 </a>
+                <span title="历史">
+                  <router-link to="/attraction/city?search=全部&label=历史">
+                    历史
+                  </router-link>
                 </span>
               </dd>
             </dl>
@@ -87,30 +100,42 @@
             <dl class="keyword-short" style="margin-top: 30px">
               <dt>热门目的地</dt>
               <dd>
-                <span class="entrance-item" title="北京">
-                  <a href="" target="_blank"> 北京 </a>
+                <span title="北京">
+                  <router-link to="/attraction/city?search=北京">
+                    北京
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="上海">
-                  <a href="" target="_blank"> 上海 </a>
+                <span title="上海">
+                  <router-link to="/attraction/city?search=上海">
+                    上海
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="三亚">
-                  <a href="" target="_blank"> 三亚 </a>
+                <span title="南京">
+                  <router-link to="/attraction/city?search=南京">
+                    南京
+                  </router-link>
                 </span>
               </dd>
 
               <dd style="margin-top: 10px">
-                <span class="entrance-item" title="南京">
-                  <a href="" target="_blank"> 南京 </a>
+                <span title="成都">
+                  <router-link to="/attraction/city?search=成都">
+                    成都
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="古镇">
-                  <a href="" target="_blank"> 乌鲁木齐 </a>
+                <span title="乌鲁木齐">
+                  <router-link to="/attraction/city?search=成都">
+                    乌鲁木齐
+                  </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
-                <span class="entrance-item" title="成都">
-                  <a href="" target="_blank"> 成都 </a>
+                <span title="拉萨">
+                  <router-link to="/attraction/city?search=成都">
+                    拉萨
+                  </router-link>
                 </span>
               </dd>
             </dl>
@@ -120,18 +145,31 @@
               class="attriInfo"
               v-for="(item, index) in attractions.slice(0, 6)"
               :key="index"
+              @click="toArrDetail(item.attractionid)"
             >
               <div
                 class="infoImg"
                 :style="{
-                  backgroundImage: 'url(' + item.img + ')',
+                  backgroundImage: 'url(' + item.picture + ')',
                   backgroundSize: '100% 100%',
                   backgroundRepeat: 'no-repeat',
                 }"
               ></div>
               <div class="infoDetail">
                 <div class="Name" style="font-size: 14px">
-                  {{ item.name }}
+                  {{ item.attractionname }}
+                </div>
+                <div
+                  v-show="!item.star"
+                  style="
+                    height: 20px;
+                    width: 50px;
+                    font-size: 12px;
+                    margin-top: 2px;
+                    color: lightgray;
+                  "
+                >
+                  暂无评分
                 </div>
                 <img
                   src="../assets/img/star.svg"
@@ -140,7 +178,7 @@
                   style="margin-top: 2px"
                 />
                 <div class="Details">
-                  <span class="address">{{ item.address }}</span>
+                  <span class="address">{{ fun_district(item.location) }}</span>
                   <span class="price price1">{{ item.price }}元</span>
                 </div>
               </div>
@@ -151,12 +189,32 @@
 
       <div class="hotel main">
         <h2 class="title">
-          <span @click="onClick(1, 0)"
-            >国内酒店<i v-show="show[1][0]"></i
+          <span @click="onClick(1, 0)" :class="{ titleClick: show[1] == 0 }"
+            >国内酒店<i v-show="!show[1]"></i
           ></span>
-          <span @click="onClick(1, 1)"
-            >国外酒店<i v-show="show[1][1]"></i
+          <span @click="onClick(1, 1)" :class="{ titleClick: show[1] == 1 }"
+            >国外酒店<i v-show="show[1]"></i
           ></span>
+
+          <span class="dropdown" style="margin-left: 76%">
+            <el-popover placement="bottom-end" width="50" trigger="click"
+              ><div class="drop-content">
+                <span
+                  v-for="item in attrDropdown"
+                  :key="item.index"
+                  @click="changeCity2(item)"
+                  >{{ item }}</span
+                >
+              </div>
+              <span
+                slot="reference"
+                style="color: #0071c2; font-size: 14px"
+                class="drop-btn"
+                >住在{{ hotelStart }}
+                <div class="el-icon-caret-bottom"></div
+              ></span>
+            </el-popover>
+          </span>
         </h2>
 
         <div class="hotelBox Box1">
@@ -164,7 +222,7 @@
             <dl class="keyword-short">
               <dt>热门地标周边酒店</dt>
               <dd>
-                <span class="entrance-item">
+                <span>
                   <a href="" target="_blank"> 还没想好周末去哪玩？</a>
                 </span>
               </dd>
@@ -173,17 +231,17 @@
             <dl class="keyword-short" style="margin-top: 30px">
               <dt>促销</dt>
               <dd style="margin-top: 10px">
-                <span class="entrance-item">
+                <span>
                   <a href="" target="_blank"> 全国火车站周边酒店8折起</a>
                 </span>
               </dd>
               <dd style="margin-top: 10px">
-                <span class="entrance-item">
+                <span>
                   <a href="" target="_blank"> 全国机场周边酒店8折起</a>
                 </span>
               </dd>
               <dd style="margin-top: 10px">
-                <span class="entrance-item">
+                <span>
                   <a href="" target="_blank"> 优选酒店80元起</a>
                 </span>
               </dd>
@@ -194,18 +252,19 @@
               class="hotelInfo"
               v-for="(item, index) in hotels.slice(0, 6)"
               :key="index"
+              @click="toHotelDetail(item.hoteid)"
             >
               <div
                 class="infoImg"
                 :style="{
-                  backgroundImage: 'url(' + item.img + ')',
+                  backgroundImage: 'url(' + item.picture + ')',
                   backgroundSize: '100% 100%',
                   backgroundRepeat: 'no-repeat',
                 }"
               ></div>
               <div class="infoDetail">
                 <div class="Name" style="font-size: 14px">
-                  {{ item.name }}
+                  {{ item.hotelname.split("(")[0] }}
                 </div>
                 <img
                   src="../assets/img/diamond.svg"
@@ -214,9 +273,11 @@
                   style="margin-top: 2px"
                 />
                 <div class="Details">
-                  <span class="address">{{ item.address }}</span>
+                  <span class="address">{{
+                    fun_hotel_district(item.location)
+                  }}</span>
                   <span class="Price"
-                    ><span class="price"> ￥{{ item.price }}</span
+                    ><span class="price"> ￥{{ item.lowestprice }}</span
                     ><i>起</i></span
                   >
                 </div>
@@ -228,27 +289,31 @@
 
       <div class="tickets main">
         <h2 class="title">
-          <span @click="onClick(2, 0)"
-            >特价机票<i v-show="show[2][0]"></i
+          <span @click="onClick(2, 0)" :class="{ titleClick: show[2] == 0 }"
+            >国内特价机票<i v-show="!show[2]"></i
           ></span>
-          <span @click="onClick(2, 1)"
-            >特价火车票<i v-show="show[2][1]"></i
+          <span @click="onClick(2, 1)" :class="{ titleClick: show[2] == 1 }"
+            >国际特价机票<i v-show="show[2]"></i
           ></span>
 
-          <span class="dropdown" style="margin-left: 75%">
-            <span style="color: blue; font-size: 14px" class="drop-btn"
-              >{{ ticketStart }}出发
-              <div class="el-icon-caret-bottom"></div
-            ></span>
-            <div class="drop-content">
-              <a
-                v-for="item in ticketDropdown"
-                :key="item.index"
-                :href="item.link"
-                style="color: black"
-                >{{ item.city }}</a
-              >
-            </div>
+          <span class="dropdown" style="margin-left: 70%">
+            <el-popover placement="bottom-end" width="50" trigger="click"
+              ><div class="drop-content">
+                <span
+                  v-for="item in ticketDropdown"
+                  :key="item.index"
+                  @click="changeCity3(item)"
+                  >{{ item }}</span
+                >
+              </div>
+              <span
+                slot="reference"
+                style="color: #0071c2; font-size: 14px"
+                class="drop-btn"
+                >{{ ticketStart }}出发
+                <div class="el-icon-caret-bottom"></div
+              ></span>
+            </el-popover>
           </span>
         </h2>
         <div class="Box1">
@@ -259,12 +324,12 @@
               :key="item.index"
             >
               <div class="item-name">
-                {{ item.begin }}
+                {{ item.starT_LOCATION }}
                 <div class="dancheng"></div>
-                {{ item.end }}
+                {{ item.enD_LOCATION }}
               </div>
               <div class="item-date">
-                {{ item.date }}
+                {{ item.starT_TIME }}
               </div>
               <div class="item-info">
                 <strong>￥{{ item.price }}</strong
@@ -293,189 +358,167 @@ export default {
   data() {
     return {
       currentCity: "",
-      currentIng: "",
-      currentlat: "",
-      attrStart: "上海",
-      ticketStart: "上海",
+      attrStart: "北京",
+      hotelStart: "北京",
+      ticketStart: "北京",
       attrDropdown: [
-        { link: "https://music.163.com", city: "上海" },
-        { link: "https://music.163.com", city: "北京" },
-        { link: "https://music.163.com", city: "兰州" },
-        { link: "https://music.163.com", city: "南京" },
-        { link: "https://music.163.com", city: "重庆" },
-        { link: "https://music.163.com", city: "深圳" },
-        { link: "https://music.163.com", city: "桂林" },
-        { link: "https://music.163.com", city: "苏州" },
+        "上海",
+        "北京",
+        "兰州",
+        "南京",
+        "重庆",
+        "深圳",
+        "桂林",
+        "苏州",
       ],
       ticketDropdown: [
-        { link: "https://music.163.com", city: "上海" },
-        { link: "https://music.163.com", city: "北京" },
-        { link: "https://music.163.com", city: "兰州" },
-        { link: "https://music.163.com", city: "南京" },
-        { link: "https://music.163.com", city: "重庆" },
-        { link: "https://music.163.com", city: "深圳" },
-        { link: "https://music.163.com", city: "桂林" },
-        { link: "https://music.163.com", city: "苏州" },
+        "上海",
+        "北京",
+        "兰州",
+        "南京",
+        "重庆",
+        "深圳",
+        "桂林",
+        "苏州",
       ],
-      show: [
-        [true, false, false],
-        [true, false],
-        [true, false],
-      ],
-      attractions: [
-        {
-          name: "黄渡公园",
-          star: 3,
-          price: 10,
-          address: "同济大学周边",
-          img: "https://dimg04.c-ctrip.com/images/300r13000000uv525D82B_C_500_280.jpg",
-        },
-        {
-          name: "黄渡公园",
-          star: 3,
-          price: 10,
-          address: "同济大学周边",
-          img: "https://dimg04.c-ctrip.com/images/300r13000000uv525D82B_C_500_280.jpg",
-        },
-        {
-          name: "黄渡公园",
-          star: 3,
-          price: 10,
-          address: "同济大学周边",
-          img: "https://dimg04.c-ctrip.com/images/300r13000000uv525D82B_C_500_280.jpg",
-        },
-        {
-          name: "黄渡公园",
-          star: 3,
-          price: 10,
-          address: "同济大学周边",
-          img: "https://dimg04.c-ctrip.com/images/300r13000000uv525D82B_C_500_280.jpg",
-        },
-        {
-          name: "黄渡公园",
-          star: 3,
-          price: 10,
-          address: "同济大学周边",
-          img: "https://dimg04.c-ctrip.com/images/300r13000000uv525D82B_C_500_280.jpg",
-        },
-        {
-          name: "黄渡公园",
-          star: 3,
-          price: 10,
-          address: "同济大学周边",
-          img: "https://dimg04.c-ctrip.com/images/300r13000000uv525D82B_C_500_280.jpg",
-        },
-        {
-          name: "黄渡公园",
-          star: 3,
-          price: 10,
-          address: "同济大学周边",
-          img: "https://dimg04.c-ctrip.com/images/300r13000000uv525D82B_C_500_280.jpg",
-        },
-      ],
-
-      hotels: [
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-      ],
-      tickets: [
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-        { begin: "武汉", end: "上海", price: 300, date: "8月5日" },
-      ],
+      show: [0, 0, 0],
+      attractions: [],
+      hotels: [],
+      tickets: [],
     };
   },
   methods: {
     onClick(a, b) {
-      console.log(this.show);
-      for (var i = 0; i < this.show[a].length; i++) {
-        this.$set(this.show[a], i, false);
-      }
-      this.$set(this.show[a], b, true);
+      this.$set(this.show, a, b);
     },
+    // 改变景点推荐城市
+    changeCity1(newCity) {
+      this.attrStart = newCity;
+      this.getAttrbyCity(newCity);
+    },
+    toArrDetail(AttrID) {
+      this.$router.push({
+        path: "/attraction/detail",
+        query: { id: AttrID },
+      });
+    },
+    // 改变酒店推荐城市
+    changeCity2(newCity) {
+      this.hotelStart = newCity;
+      this.getHotelbyCity(newCity);
+    },
+    toHotelDetail(HotelID) {
+      this.$router.push({
+        path: "/hotel/detail",
+        query: { id: HotelID },
+      });
+    },
+    // 改变航班出发城市
+    changeCity3(newCity) {
+      this.ticketStart = newCity;
+      this.getTicketbyCity(newCity);
+    },
+    // 截取部分地址
+    fun_district(detail) {
+      var i = 0;
+      var len = detail.length;
+      var res = "";
+      while (detail[i] != "路" && isNaN(detail[i]) && i < len) {
+        res += detail[i];
+        i++;
+      }
+      if (detail[i] == "路") {
+        return res + "路";
+      } else {
+        return res;
+      }
+    },
+    // 酒店地址处理
+    fun_hotel_district(detail) {
+      var tmp;
+      if (detail[5] == "市") {
+        tmp = detail.slice(3, 6) + detail.slice(7);
+      } else {
+        tmp = detail;
+      }
+      return this.fun_district(tmp);
+    },
+    // 浏览器获得当前城市名
     getLocation() {
       let a = this;
       navigator.geolocation.getCurrentPosition(function (position) {
-        a.currentIng = position.coords.longitude.toFixed(6);
-        a.currentlat = position.coords.latitude.toFixed(6);
+        var Ing, Lat;
+        Ing = position.coords.longitude.toFixed(6);
+        Lat = position.coords.latitude.toFixed(6);
 
         fetch(
           "https://restapi.amap.com/v3/geocode/regeo?key=b46e001d88ea385075cc97e1c892ce37&location=" +
-            a.currentIng +
+            Ing +
             "," +
-            a.currentlat
+            Lat
         )
           .then(function (response) {
             return response.json();
           })
           .then(function (myJson) {
             a.currentCity = myJson.regeocode.addressComponent.province;
-            console.log(a.currentCity);
+            a.attrStart = a.currentCity.substr(0, a.currentCity.length - 1);
+            a.ticketStart = a.attrStart;
+            a.hotelStart = a.attrStart;
           });
       });
     },
+    // 根据城市名获取景点信息
+    getAttrbyCity(city) {
+      this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" + city
+        )
+        .then((response) => {
+          this.attractions = response.data;
+        });
+    },
+    // 根据城市名获取酒店信息
+    getHotelbyCity(city) {
+      this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
+            city
+        )
+        .then((response) => {
+          this.hotels = response.data;
+        });
+    },
+    // 根据城市名获取机票信息
+    getTicketbyCity(city) {
+      this.$axios
+        .get("http://49.234.18.247:8080/api/FunGetLowestPrice/" + city)
+        .then((response) => {
+          var date = new Date();
+          var day = date.getDate();
+          var month = date.getMonth() + 1;
+          for (var i = 0; i < response.data.length; i++) {
+            response.data[i].starT_TIME =
+              month + "月" + day + "日" + " " + response.data[i].starT_TIME;
+          }
+          this.tickets = response.data;
+        });
+    },
   },
-  mounted() {
+  created() {
     // 获取浏览器地理位置
     this.getLocation();
+    this.getAttrbyCity(this.attrStart);
+    this.getHotelbyCity(this.hotelStart);
+    // this.getTicketbyCity(this.ticketStart);
+  },
+  mounted() {},
+  watch: {
+    currentCity(newValue, oldValue) {
+      this.getAttrbyCity(newValue);
+      this.getHotelbyCity(newValue);
+      this.getTicketbyCity(newValue.slice(0, 2));
+    },
   },
 };
 </script>
@@ -620,8 +663,8 @@ export default {
   font-size: 12px;
 }
 .item-btn {
-  margin-left: 40px;
-  display: inline-block;
+  margin-right: 14px;
+  float: right;
   height: 26px;
   width: 55px;
   background-color: orange;
@@ -634,13 +677,18 @@ export default {
 .item-btn:hover {
   background-color: #ffb71b;
 }
+
+.titleClick {
+  color: #003680;
+}
+
 .title span {
   position: relative;
   margin-left: 15px;
 }
 
 .title > span:hover {
-  color: #ffd04b;
+  color: #003680;
   cursor: pointer;
 }
 .title span i {
@@ -660,30 +708,18 @@ export default {
   border-right: 6px solid transparent;
 }
 
-.dropdown {
-  position: relative;
-}
-.drop-content {
-  display: none;
-  position: absolute;
-  left: 10px;
-  background-color: #f9f9f9;
-  width: 90px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-}
-.dropdown:hover .drop-content {
+.drop-content span {
   display: block;
-}
-.drop-content a {
-  display: block;
+  color: black;
   font-size: 13px;
   height: 20px;
   line-height: 20px;
-  margin-left: 10px;
-  margin-right: 10px;
+  text-align: center;
 }
-.drop-content a:hover {
-  background-color: #ffd04b;
+.drop-content span:hover {
+  background-color: #2577e3;
+  color: white;
+  cursor: pointer;
 }
 
 dt {

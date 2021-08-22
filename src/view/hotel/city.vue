@@ -95,7 +95,15 @@
             top="20px"
           >
             <div class="amap-wrap">
-              <el-amap vid="amapDemo"></el-amap>
+              <el-amap
+                vid="amapDemo"
+                isHotspot="true"
+                :amap-manager="amapManager"
+                :center="center"
+                :zoom="zoom"
+                :lang="lang"
+                :events="events"
+              ></el-amap>
             </div>
           </el-dialog>
           <!-- 筛选框 -->
@@ -106,11 +114,11 @@
             <div class="type">
               <p>类别</p>
               <el-checkbox-group v-model="checkList">
-                <el-checkbox label="1">民宿</el-checkbox>
-                <el-checkbox label="2">酒店公寓</el-checkbox>
-                <el-checkbox label="3">带娃爱住</el-checkbox>
-                <el-checkbox label="4">闪住</el-checkbox>
-                <el-checkbox label="5">浪漫情侣</el-checkbox>
+                <el-checkbox label="民宿"></el-checkbox>
+                <el-checkbox label="酒店公寓"></el-checkbox>
+                <el-checkbox label="带娃爱住"></el-checkbox>
+                <el-checkbox label="闪住"></el-checkbox>
+                <el-checkbox label="浪漫情侣"></el-checkbox>
               </el-checkbox-group>
             </div>
 
@@ -127,15 +135,13 @@
             <div class="grade">
               <p>评分</p>
               <el-checkbox-group v-model="checkList2">
-                <el-checkbox label="1">好极了：5分</el-checkbox>
-                <el-checkbox label="2">非常好：4分</el-checkbox>
+                <el-checkbox label="5">好极了：5分</el-checkbox>
+                <el-checkbox label="4">非常好：4分</el-checkbox>
                 <el-checkbox label="3">一般般：3分</el-checkbox>
-                <el-checkbox label="4">不太好：2分</el-checkbox>
-                <el-checkbox label="5">非常差：1分</el-checkbox>
+                <el-checkbox label="2">不太好：2分</el-checkbox>
+                <el-checkbox label="1">非常差：1分</el-checkbox>
               </el-checkbox-group>
             </div>
-
-            <div class="select" @click="Select">筛选</div>
           </div>
         </div>
 
@@ -161,15 +167,18 @@
                   :grade="item.star"
                   :coverImgUrl="item.picture"
                   type="房客"
+                  words="最低"
                   :price="item.lowestprice"
                   :ID="item.hoteid"
                   :dianping_number="item.commentnum"
+                  :label="item.label"
                 />
               </li>
             </ul>
           </div>
         </div>
       </div>
+      <el-backtop :right="20"> </el-backtop>
     </el-main>
     <Footer1 />
   </el-container>
@@ -321,22 +330,10 @@
   margin: 10px 0;
 }
 
-.select {
-  height: 50px;
-  line-height: 50px;
-  cursor: pointer;
-  color: white;
-  font-size: 17px;
-  font-weight: 600;
-  background-color: #0071c2;
-}
 .type,
-.budget,
-.grade {
+.budget {
   border-bottom: 1px solid rgb(189, 178, 178);
 }
-
-.select:hover,
 .mapshow-btn:hover,
 .searchBtn:hover {
   background-color: #003680;
@@ -365,6 +362,8 @@
 import Header from "@/components/Header.vue";
 import contentListItem from "@/components/contentListItem.vue";
 import Footer1 from "@/components/Footer1.vue";
+import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
+const amapManager = new AMapManager();
 export default {
   components: {
     Header,
@@ -372,6 +371,7 @@ export default {
     Footer1,
   },
   data() {
+    const _this = this;
     return {
       searchForm: {
         location: "",
@@ -395,10 +395,50 @@ export default {
         child: 0,
         room: 1,
       },
+      position: [0, 0],
+      address: "",
+      map: null,
+      lang: "zh_en",
+      zoom: 18,
+      center: [116.397428, 39.90923],
+      amapManager,
+      events: {
+        init() {
+          lazyAMapApiLoaderInstance.load().then(() => {
+            _this.initMap();
+          });
+        },
+        click(e) {
+          // 点击获得经纬度和地址
+          let { lng, lat } = e.lnglat;
+          _this.position = [lng, lat];
+          // 更改地图中心点
+          _this.map.setCenter([lng, lat]);
+
+          var geocoder = new AMap.Geocoder({
+            radius: 1000,
+            extensions: "all",
+          });
+
+          geocoder.getAddress([lng, lat], function (status, result) {
+            if (status === "complete" && result.info === "OK") {
+              if (result && result.regeocode) {
+                console.log(result.regeocode);
+                _this.address = result.regeocode.formattedAddress;
+                _this.$nextTick();
+              }
+            }
+          });
+        },
+      },
       dialogVisible: false,
       checkList: [],
       checkList1: [],
       checkList2: [],
+      withList: [],
+      withList1: [],
+      withList2: [],
+
       title: {
         city: "上海",
         num: 400,
@@ -409,6 +449,177 @@ export default {
     };
   },
   methods: {
+    initMap() {
+      this.map = amapManager.getMap();
+      // 比例尺
+      this.map.addControl(new AMap.Scale());
+      // 工具条
+      this.map.addControl(
+        new AMap.ToolBar({
+          position: "LT",
+          useNative: true,
+          autoPosition: false,
+          locate: true,
+          ruler: false,
+          liteStyle: true,
+          // direction: false,
+        })
+      );
+      let a = this;
+      let marker = new AMap.Marker({
+        position: [121, 31],
+        title: "here",
+        // anchor: "bottom-left",
+        // icon: "@/assets/位置.png",
+        // content: "你好",
+        draggable: true,
+        raiseOnDrag: true,
+        animation: "AMAP_ANIMATION_DROP",
+      });
+      marker.setMap(this.map);
+
+      // 高德UI
+      AMapUI.loadUI(["overlay/SimpleMarker"], (SimpleMarker) => {
+        const marker = new SimpleMarker({
+          iconLabel: "A",
+          iconStyle: "red",
+          map: this.map,
+          position: this.map.getCenter(),
+          animation: "AMAP_ANIMATION_DROP",
+        });
+      });
+
+      // 热点信息展示
+      let placeSearch = new AMap.PlaceSearch(); //构造地点查询类
+      let infoWindow = new AMap.AdvancedInfoWindow({
+        // isCustom: true,  //使用自定义窗体
+        // anchor: 'top-left',  //设置锚点
+        // offset: new AMap.Pixel(1, 1),
+      });
+
+      // 地图的热点
+      this.map.on("hotspotclick", function (result) {
+        placeSearch.getDetails(result.id, function (status, result) {
+          if (status === "complete" && result.info === "OK") {
+            placeSearch_CallBack(result);
+          }
+        });
+      });
+      //回调函数
+
+      function placeSearch_CallBack(data) {
+        //infoWindow.open(map, result.lnglat);
+        let poiArr = data.poiList.pois;
+        let location = a.position;
+        infoWindow.setContent(createContent(poiArr[0]));
+        infoWindow.open(a.map, location);
+      }
+      function createContent(poi) {
+        //信息窗体内容
+        var s = [];
+        s.push(
+          '<div class="info-title">' +
+            poi.name +
+            '</div><div class="info-content">' +
+            "地址：" +
+            poi.address
+        );
+        s.push("电话：" + poi.tel);
+        s.push("类型：" + poi.type);
+        s.push("<div>");
+        return s.join("<br>");
+      }
+
+      //创建右键菜单
+      let contextMenu = new AMap.ContextMenu();
+      //右键放大
+      contextMenu.addItem(
+        "放大一级",
+        function () {
+          a.map.zoomIn();
+        },
+        0
+      );
+      //右键缩小
+      contextMenu.addItem(
+        "缩小一级",
+        function () {
+          a.map.zoomOut();
+        },
+        1
+      );
+      // 右键添加Marker标记
+      let contextMenuPositon;
+      contextMenu.addItem(
+        "添加标记",
+        function () {
+          AMapUI.loadUI(["overlay/SvgMarker"], function (SvgMarker) {
+            if (!SvgMarker.supportSvg) {
+              //当前环境并不支持SVG，此时SvgMarker会回退到父类，即SimpleMarker
+            }
+            //创建一个shape实例
+            var shape = new SvgMarker.Shape.TriangleFlagPin({
+              height: 50, //高度
+              //width: **, //不指定时会维持默认的宽高比
+              fillColor: "lightpink", //填充色
+              strokeWidth: 1, //描边宽度
+              strokeColor: "aliceblue", //描边颜色
+            });
+
+            //利用该shape构建SvgMarker
+            var marker = new SvgMarker(
+              //第一个参数传入shape实例
+              shape,
+              //第二个参数为SimpleMarker的构造参数（iconStyle除外）
+              {
+                showPositionPoint: false, //显示定位点
+                map: a.map,
+                position: contextMenuPositon,
+              }
+            );
+          });
+        },
+        2
+      );
+      //地图绑定鼠标右击事件——弹出右键菜单
+      this.map.on("rightclick", function (e) {
+        contextMenu.open(a.map, e.lnglat);
+        contextMenuPositon = e.lnglat;
+      });
+    },
+    getHotelbyCity() {
+      this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
+            this.title.city
+        )
+        .then((response) => {
+          for (var i = 0; i < response.data.length; i++) {
+            response.data[i].hotelname =
+              response.data[i].hotelname.split("(")[0];
+            response.data[i].location = this.fun_hotel_district(
+              response.data[i].location
+            );
+          }
+          this.originData = JSON.parse(JSON.stringify(response.data));
+          this.items = response.data;
+          this.title.num = response.data.length;
+        });
+    },
+    goTop() {
+      // document.documentElement.scrollTop = document.body.scrollTop = 0;
+      let top = document.documentElement.scrollTop || document.body.scrollTop;
+      // 实现过度滚动效果
+      const timeTop = setInterval(() => {
+        document.body.scrollTop =
+          document.documentElement.scrollTop =
+          top -=
+            50;
+        if (top <= 0) {
+          clearInterval(timeTop);
+        }
+      }, 30);
+    },
     sortClick: function (val) {
       if (val === "2") {
         this.items = this.items.sort(function (a, b) {
@@ -421,155 +632,88 @@ export default {
         });
       }
     },
-    Select: function () {
-      var newitems = [];
-      this.items = this.orginData;
-      for (var i = 0; i < this.items.length; i++) {
-        if (!this.checkList1.length) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        } else if (
-          this.checkList1.includes("1") &&
-          this.items[i].lowestprice <= 200
-        ) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        } else if (
-          this.checkList1.includes("2") &&
-          this.items[i].lowestprice > 200 &&
-          this.items[i].lowestprice <= 500
-        ) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
-          }
-        } else if (
-          this.checkList1.includes("3") &&
-          this.items[i].lowestprice > 500
-        ) {
-          if (!this.checkList2.length) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 5 &&
-            this.checkList2.includes("1")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 4 &&
-            this.checkList2.includes("2")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 3 &&
-            this.checkList2.includes("3")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 2 &&
-            this.checkList2.includes("4")
-          ) {
-            newitems.push(this.items[i]);
-          } else if (
-            this.items[i].star === 1 &&
-            this.checkList2.includes("5")
-          ) {
-            newitems.push(this.items[i]);
+    // 酒店地址处理
+    fun_hotel_district(detail) {
+      var tmp;
+      if (detail[5] == "市") {
+        tmp = detail.slice(3, 6) + detail.slice(7);
+      } else {
+        tmp = detail;
+      }
+      return tmp;
+    },
+    narrow(List) {
+      this.withList = [];
+      for (var i = 0; i < this.originData.length; i++) {
+        var labels = (this.originData[i].label || "").split("_");
+        for (var j = 0; j < List.length; j++) {
+          if (labels.includes(List[j])) {
+            this.$set(this.withList, this.withList.length, i);
+            break;
           }
         }
       }
-      this.items = newitems;
-      this.title.num = newitems.length;
+    },
+    narrow1(list) {
+      this.withList1 = [];
+
+      for (var i = 0; i < this.originData.length; i++) {
+        var price = this.originData[i].lowestprice;
+        if (
+          (list.includes("1") && price <= 200) ||
+          (list.includes("2") && price <= 500 && price > 200) ||
+          (list.includes("3") && price > 500)
+        ) {
+          this.$set(this.withList1, this.withList1.length, i);
+        }
+      }
+    },
+    narrow2(List) {
+      this.withList2 = [];
+      for (var i = 0; i < this.originData.length; i++) {
+        var star = this.originData[i].star;
+        if (List.includes(star.toString())) {
+          this.withList2.push(i);
+        }
+      }
+    },
+    intersect() {
+      if (this.withList.length === 0 && this.checkList.length === 0) {
+        for (var i = 0; i < this.originData.length; i++) {
+          this.withList.push(i);
+        }
+      }
+      if (this.withList1.length === 0 && this.checkList1.length === 0) {
+        for (var j = 0; j < this.originData.length; j++) {
+          this.withList1.push(j);
+        }
+      }
+      if (this.withList2.length === 0 && this.checkList2.length === 0) {
+        for (var k = 0; k < this.originData.length; k++) {
+          this.withList2.push(k);
+        }
+      }
+
+      var withList1 = this.withList1;
+      var withList2 = this.withList2;
+      var res = this.withList.filter(function (v) {
+        return withList1.includes(v);
+      });
+      res = res.filter(function (v) {
+        return withList2.includes(v);
+      });
+
+      this.items = [];
+      for (var n = 0; n < this.originData.length; n++) {
+        if (res.includes(n)) {
+          this.items.push(this.originData[n]);
+        }
+      }
+      this.title.num = this.items.length;
     },
   },
   created() {
-    this.$axios
-      .get(
-        "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
-          this.title.city
-      )
-      .then((response) => {
-        this.items = response.data.sort(function (a, b) {
-          return a.lowestprice - b.lowestprice;
-        });
-        this.title.num = response.data.length;
-        this.orginData = JSON.parse(JSON.stringify(response.data));
-      });
+    this.getHotelbyCity();
   },
   watch: {
     "searchForm.date1"(inew, iold) {
@@ -592,6 +736,21 @@ export default {
       }
     },
     deep: true,
+    checkList(newValue, oldValue) {
+      this.narrow(newValue);
+      this.intersect();
+      this.goTop();
+    },
+    checkList1(newValue, oldValue) {
+      this.narrow1(newValue);
+      this.intersect();
+      this.goTop();
+    },
+    checkList2(newValue, oldValue) {
+      this.narrow2(newValue);
+      this.intersect();
+      this.goTop();
+    },
   },
   mounted() {
     this.searchForm.date1 = Date.now();
