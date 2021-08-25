@@ -21,10 +21,46 @@
             </div>
             <div style="font-size: 12px">
               <i class="el-icon-location"></i>{{ location }}
-              <span @click="viewMap" class="hint">查看地图</span>
+              <span @click="mapVisible = true" class="hint">查看地图</span>
+              <el-dialog :visible.sync="mapVisible" width="90%" top="20px">
+                <div class="amap-wrap">
+                  <el-amap vid="amapDemo"></el-amap>
+                </div>
+              </el-dialog>
               <div>
-                <i class="el-icon-s-home"></i>{{ description }}
-                <span @click="viewMore" class="hint">查看更多</span>
+                <span style="width: 200px"
+                  ><i class="el-icon-s-home"></i>开业：{{ openTime }} 客房数：{{ totalRoom }} 联系电话：{{
+                      telephone
+                    }}</span
+                >
+                <span @click="moreInfoVisible = true" class="hint"
+                  >查看更多</span
+                >
+                <el-dialog
+                  :visible.sync="moreInfoVisible"
+                  width="70%"
+                  top="20px"
+                >
+                  <div>
+                    <h1>酒店简介</h1>
+                    <br>
+                    开业：{{ openTime }} 客房数：{{ totalRoom }} 联系电话：{{
+                      telephone
+                    }}
+                    <div
+                      class="picture"
+                      :style="{
+                        backgroundImage: 'url(' + baseImg + ')',
+                        backgroundSize: '100% 100%',
+                        backgroundRepeat: 'no-repeat',
+                      }"
+                    ></div>
+                    <p>{{ description }}</p>
+                    <br>
+                    <h3>住宿预订提供方</h3>
+                    <img :src="license" alt="" style="width:700px;height:400px">
+                  </div>
+                </el-dialog>
               </div>
             </div>
 
@@ -105,7 +141,7 @@
                 <p style="font-size: 8px; color: gray; margin-top: 5px">
                   附近1公里内有{{ attrationNum }}个景点
                 </p>
-                <div @click="viewMap" class="hint" style="margin-top: 75px">
+                <div @click="mapVisible=true" class="hint" style="margin-top: 75px">
                   查看完整地图
                 </div>
               </div>
@@ -145,6 +181,7 @@
               :price="room.price"
               :originalPrice="room.originalPrice"
               :coverImgUrl="room.coverImgUrl"
+              :roomID="room.ID"
             />
           </li>
         </ul>
@@ -531,6 +568,10 @@ img {
   color: red;
   margin-top: -5px;
 }
+.amap-wrap {
+  width: 100%;
+  height: 500px;
+}
 </style>
 
 
@@ -540,6 +581,7 @@ import Search from "@/components/Search.vue";
 import Room from "@/components/room.vue";
 import Comment from "@/components/comment.vue";
 import Footer1 from "@/components/Footer1.vue";
+
 export default {
   components: {
     Header,
@@ -552,13 +594,22 @@ export default {
     return {
       // 其他页面传过来的酒店ID给你用的，ｂｙ秦
       hotelId: "",
+      mapVisible: false,
+      moreInfoVisible: false,
+      license:
+        "http://dimg04.c-ctrip.com/images/0201z120008qyeks66EC1_Z_702_0_Q70.jpg",
       hotelName: "速八酒店",
       starNum: 5,
       location: "上海市嘉定区安亭镇曹安公路4800号",
       dianping_number: 999,
       grade: 5,
-      description: "开业：2021 客房数：198 联系方式：+86-19823483690",
+      openTime: "2000",
+      totalRoom: 198,
+      telephone: "+86-19823483690",
+      description:
+        "酒店毗邻以高新技术、金融、现代商贸、电子商务、文化创意产业为主力的中成智谷创意园区，距离玻璃博物馆约1.5公里。酒店设计理念是以阅读和户外游为主题，高品质的客房产品设施+细致温馨的服务，带给你“自然、静谧、温暖、朴实”的健康生活方式。所有客房均采用普兰特系列优质床品，分体式空调，全套高端Afu精油洗浴用品，100M高速光纤，全WIFI覆盖。",
       minPrice: 99,
+
       baseImg:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
@@ -571,6 +622,7 @@ export default {
       attrationNum: 7,
       rooms: [
         {
+          ID: "000001",
           roomName: "山系·城景大床房",
           customerNum: 2,
           bed: "1张大床",
@@ -584,6 +636,7 @@ export default {
             "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
         },
         {
+          ID: "000001",
           roomName: "山系·城景大床房",
           customerNum: 2,
           bed: "1张大床和1张双人床",
@@ -597,6 +650,7 @@ export default {
             "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
         },
         {
+          ID: "000001",
           roomName: "山系·城景大床房",
           customerNum: 2,
           bed: "1张大床和1张双人床",
@@ -610,6 +664,7 @@ export default {
             "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
         },
         {
+          ID: "000001",
           roomName: "山系·城景大床房",
           customerNum: 2,
           bed: "1张大床和1张双人床",
@@ -747,25 +802,12 @@ export default {
     },
   },
   methods: {
-    viewMap() {
+    onReceive() {
       const h = this.$createElement;
       this.$msgbox({
-        title: "消息",
-        message: h("p", null, [
-          h("span", null, "内容可以是 "),
-          h("i", { style: "color: teal" }, "VNode"),
-        ]),
-        showCancelButton: false,
-        confirmButtonText: "确定",
-      });
-    },
-    viewMore() {
-      const h = this.$createElement;
-      this.$msgbox({
-        title: "消息",
-        message: h("p", null, [
-          h("span", null, "内容可以是 "),
-          h("i", { style: "color: teal" }, "VNode"),
+        title: "领券",
+        message: h("div", { style: "width:500px" }, [
+          h("span", { style: "color: #003580;font-weight:700" }, "您已经领取完所有的优惠券"),
         ]),
         showCancelButton: false,
         confirmButtonText: "确定",

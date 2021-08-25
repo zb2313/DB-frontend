@@ -125,6 +125,7 @@ export default {
     price: Number,
     originalPrice: Number,
     coverImgUrl: String,
+    roomID: String,
   },
   data() {
     return {

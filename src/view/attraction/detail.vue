@@ -67,9 +67,24 @@
                     >
                   </div>
 
-                  <a href="#rooms" class="choose_btn" style="float: left">
+                  <button @click="payVisible=true" class="choose_btn" style="float: left">
                     购买门票
-                  </a>
+                  </button>
+                   <el-dialog
+                :visible.sync="payVisible"
+                width="30%"
+                :before-close="handleCloses"
+                @opened="creatQrCode()"
+              >
+                <div style="display: inline-block; vertical-align: middle">
+                  <div
+                    ref="qrCodeUrl"
+                    class-name="qrcode"
+                    style="display: inline-block"
+                  />
+                  <p class="">支付二维码</p>
+                </div>
+              </el-dialog>
                 </div>
               </div>
             </div>
@@ -456,6 +471,7 @@ img {
 import Header from "@/components/Header.vue";
 import CommentOnAttr from "@/components/commentOnAttr.vue";
 import Footer1 from "@/components/Footer1.vue";
+import QRCode from 'qrcodejs2';
 export default {
   components: {
     Header,
@@ -464,6 +480,7 @@ export default {
   },
   data() {
     return {
+      payVisible:false,
       // 景点id已经传过来,可直接使用
       AttrId: "",
       attrationName: "上海海昌海洋公园",
@@ -617,28 +634,14 @@ export default {
     },
   },
   methods: {
-    viewMap() {
-      const h = this.$createElement;
-      this.$msgbox({
-        title: "消息",
-        message: h("p", null, [
-          h("span", null, "内容可以是 "),
-          h("i", { style: "color: teal" }, "VNode"),
-        ]),
-        showCancelButton: false,
-        confirmButtonText: "确定",
-      });
-    },
-    viewMore() {
-      const h = this.$createElement;
-      this.$msgbox({
-        title: "消息",
-        message: h("p", null, [
-          h("span", null, "内容可以是 "),
-          h("i", { style: "color: teal" }, "VNode"),
-        ]),
-        showCancelButton: false,
-        confirmButtonText: "确定",
+     creatQrCode() {
+      this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        text: "扫描二维码", // 需要转换为二维码的内容
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
       });
     },
     commentLevelChange() {},

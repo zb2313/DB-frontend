@@ -2,14 +2,6 @@
   <el-container direction="vertical">
     <Header activeIndex="1" />
 
-    <!-- 步骤条部分 -->
-    <!-- <div>
-      <el-steps :space="200" :active="1" finish-status="success" simple="true">
-        <el-step title="已选酒店"></el-step>
-        <el-step title="个人信息"></el-step>
-        <el-step title="最后一步"></el-step>
-      </el-steps>
-    </div> -->
     <el-container>
       <el-aside width="800px">
         <div class="info">
@@ -35,7 +27,7 @@
                 {{ typeName }}
               </h4>
               <i class="el-icon-user"></i>{{ cNum }}人入住
-              <i class="el-icon-receiving"></i>{{ bedNum }}张床
+              <i class="el-icon-receiving"></i>{{ bed }}
               <i class="el-icon-dish"></i>{{ dish }}早餐
             </div>
             <el-divider></el-divider>
@@ -154,9 +146,28 @@
                 </span>
               </div>
 
-              <div @click="onPay" class="pay_btn" style="float: right">
+              <div
+                @click="payVisible = true"
+                class="pay_btn"
+                style="float: right"
+              >
                 去支付
               </div>
+              <el-dialog
+                :visible.sync="payVisible"
+                width="30%"
+                :before-close="handleCloses"
+                @opened="creatQrCode()"
+              >
+                <div style="display: inline-block; vertical-align: middle">
+                  <div
+                    ref="qrCodeUrl"
+                    class-name="qrcode"
+                    style="display: inline-block"
+                  />
+                  <p class="">支付二维码</p>
+                </div>
+              </el-dialog>
             </div>
           </el-card>
         </div>
@@ -312,18 +323,20 @@
         
 <script>
 import Header from "@/components/Header";
+import QRCode from "qrcodejs2";
 export default {
   components: {
     Header,
   },
   data() {
     return {
+      payVisible: false,
       hotelName: "速八酒店",
       starNum: 5,
       location: "上海市嘉定区安亭镇曹安公路4800号",
       typeName: "特惠大床房",
       cNum: 2,
-      bedNum: 1,
+      bed: "1张大床",
       dish: "无",
       price: 198.0,
       discount: 11.0,
@@ -339,7 +352,19 @@ export default {
       },
     };
   },
-  methods: { roomNumChange() {} },
+  methods: {
+    roomNumChange() {},
+    creatQrCode() {
+      this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        text: "扫描二维码", // 需要转换为二维码的内容
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+    },
+  },
   computed: {
     storePrice: function () {
       return this.price - this.discount;

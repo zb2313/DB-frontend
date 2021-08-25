@@ -14,6 +14,7 @@
     "element-plus": "^1.0.2-beta.55",
     "element-ui": "^2.15.3",
     "mavon-editor": "^2.9.1",
+    "qrcodejs2": "0.0.2",
     "v-distpicker": "^1.2.12",
     "vue": "^2.6.11",
     "vue-amap": "^0.5.10",
