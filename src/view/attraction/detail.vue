@@ -67,24 +67,28 @@
                     >
                   </div>
 
-                  <button @click="payVisible=true" class="choose_btn" style="float: left">
+                  <button
+                    @click="payVisible = true"
+                    class="choose_btn"
+                    style="float: left"
+                  >
                     购买门票
                   </button>
-                   <el-dialog
-                :visible.sync="payVisible"
-                width="30%"
-                :before-close="handleCloses"
-                @opened="creatQrCode()"
-              >
-                <div style="display: inline-block; vertical-align: middle">
-                  <div
-                    ref="qrCodeUrl"
-                    class-name="qrcode"
-                    style="display: inline-block"
-                  />
-                  <p class="">支付二维码</p>
-                </div>
-              </el-dialog>
+                  <el-dialog
+                    :visible.sync="payVisible"
+                    width="30%"
+                    :before-close="handleCloses"
+                    @opened="creatQrCode()"
+                  >
+                    <div style="display: inline-block; vertical-align: middle">
+                      <div
+                        ref="qrCodeUrl"
+                        class-name="qrcode"
+                        style="display: inline-block"
+                      />
+                      <p class="">支付二维码</p>
+                    </div>
+                  </el-dialog>
                 </div>
               </div>
             </div>
@@ -471,7 +475,7 @@ img {
 import Header from "@/components/Header.vue";
 import CommentOnAttr from "@/components/commentOnAttr.vue";
 import Footer1 from "@/components/Footer1.vue";
-import QRCode from 'qrcodejs2';
+import QRCode from "qrcodejs2";
 export default {
   components: {
     Header,
@@ -480,7 +484,7 @@ export default {
   },
   data() {
     return {
-      payVisible:false,
+      payVisible: false,
       // 景点id已经传过来,可直接使用
       AttrId: "",
       attrationName: "上海海昌海洋公园",
@@ -634,7 +638,7 @@ export default {
     },
   },
   methods: {
-     creatQrCode() {
+    creatQrCode() {
       this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
         text: "扫描二维码", // 需要转换为二维码的内容
         width: 200,
@@ -647,7 +651,19 @@ export default {
     commentLevelChange() {},
     sortWayChange() {},
   },
-  mounted() {},
+  mounted() {
+    let _this=this;
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Attraction/"+this.AttrId)
+      .then((response) => {
+        this.attrationName = response.data[0].attractioN_NAME;
+        this.openTime = response.data[0].opeN_TIME;
+        this.closeTime = response.data[0].closE_TIME;
+        this.price = response.data[0].price;
+        this.baseImg=response.data[0].picture;
+        this.location=response.data[0].alocation;
+      });
+  },
   created() {
     if (this.$route.query.id) {
       this.AttrId = this.$route.query.id;
