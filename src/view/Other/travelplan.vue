@@ -196,7 +196,7 @@ export default {
           var temp=this.select_cities.find(x => x.city_name === name);
             if(temp) this.$message('您已添加过该城市');
             else{
-                var json={city_name:name,day:1};
+                var json={city_name:name,day:3};
           this.select_cities.push(json);
             }
 
@@ -216,7 +216,7 @@ export default {
           this.$router.push({
           path: `/makeplan`,
           query: {
-            cities: this.select_cities,
+            cities: JSON.stringify(this.select_cities),
           },
         });
       }

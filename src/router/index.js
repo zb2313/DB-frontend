@@ -248,6 +248,11 @@ const routes = [
         component: () => import('../view/Other/makeplan.vue')
     },
     {
+        path: '/myplan',
+        name: 'myplan',
+        component: () => import('../view/Other/myplan.vue')
+    },
+    {
         path: '/Moment',
         name: 'Moment',
         component: () => import('../components/Home.vue'),
