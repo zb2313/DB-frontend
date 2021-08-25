@@ -659,9 +659,10 @@ export default {
         this.attrationName = response.data[0].attractioN_NAME;
         this.openTime = response.data[0].opeN_TIME;
         this.closeTime = response.data[0].closE_TIME;
-        this.price = response.data[0].price;
+        this.minPrice = response.data[0].price;
         this.baseImg=response.data[0].picture;
         this.location=response.data[0].alocation;
+        this.grade=response.data[0].star;
       });
   },
   created() {
