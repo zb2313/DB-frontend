@@ -88,16 +88,12 @@
               在地图上查看
             </div>
           </div>
-          <el-dialog
-            :visible.sync="dialogVisible"
-            width="90%"
-            center="true"
-            top="20px"
-          >
+          <el-dialog :visible.sync="dialogVisible" width="90%" top="20px">
             <div class="amap-wrap">
               <el-amap
                 vid="amapDemo"
                 isHotspot="true"
+                resizeEnable="true"
                 :amap-manager="amapManager"
                 :center="center"
                 :zoom="zoom"
@@ -399,8 +395,8 @@ export default {
       address: "",
       map: null,
       lang: "zh_en",
-      zoom: 18,
-      center: [116.397428, 39.90923],
+      zoom: 15,
+      center: [121.473701, 31.230416],
       amapManager,
       events: {
         init() {
@@ -412,8 +408,6 @@ export default {
           // 点击获得经纬度和地址
           let { lng, lat } = e.lnglat;
           _this.position = [lng, lat];
-          // 更改地图中心点
-          _this.map.setCenter([lng, lat]);
 
           var geocoder = new AMap.Geocoder({
             radius: 1000,
@@ -423,7 +417,6 @@ export default {
           geocoder.getAddress([lng, lat], function (status, result) {
             if (status === "complete" && result.info === "OK") {
               if (result && result.regeocode) {
-                console.log(result.regeocode);
                 _this.address = result.regeocode.formattedAddress;
                 _this.$nextTick();
               }
@@ -438,14 +431,15 @@ export default {
       withList: [],
       withList1: [],
       withList2: [],
-
       title: {
-        city: "上海",
+        city: "北京",
         num: 400,
       },
       radio: "1",
+      Lnglat: [],
+      test: [],
       items: [],
-      orginData: [],
+      originData: [],
     };
   },
   methods: {
@@ -462,40 +456,19 @@ export default {
           locate: true,
           ruler: false,
           liteStyle: true,
-          // direction: false,
         })
       );
       let a = this;
       let marker = new AMap.Marker({
         position: [121, 31],
-        title: "here",
-        // anchor: "bottom-left",
-        // icon: "@/assets/位置.png",
-        // content: "你好",
-        draggable: true,
-        raiseOnDrag: true,
+        anchor: "bottom-left",
         animation: "AMAP_ANIMATION_DROP",
       });
       marker.setMap(this.map);
 
-      // 高德UI
-      AMapUI.loadUI(["overlay/SimpleMarker"], (SimpleMarker) => {
-        const marker = new SimpleMarker({
-          iconLabel: "A",
-          iconStyle: "red",
-          map: this.map,
-          position: this.map.getCenter(),
-          animation: "AMAP_ANIMATION_DROP",
-        });
-      });
-
       // 热点信息展示
       let placeSearch = new AMap.PlaceSearch(); //构造地点查询类
-      let infoWindow = new AMap.AdvancedInfoWindow({
-        // isCustom: true,  //使用自定义窗体
-        // anchor: 'top-left',  //设置锚点
-        // offset: new AMap.Pixel(1, 1),
-      });
+      let infoWindow = new AMap.AdvancedInfoWindow({});
 
       // 地图的热点
       this.map.on("hotspotclick", function (result) {
@@ -506,9 +479,7 @@ export default {
         });
       });
       //回调函数
-
       function placeSearch_CallBack(data) {
-        //infoWindow.open(map, result.lnglat);
         let poiArr = data.poiList.pois;
         let location = a.position;
         infoWindow.setContent(createContent(poiArr[0]));
@@ -554,9 +525,6 @@ export default {
         "添加标记",
         function () {
           AMapUI.loadUI(["overlay/SvgMarker"], function (SvgMarker) {
-            if (!SvgMarker.supportSvg) {
-              //当前环境并不支持SVG，此时SvgMarker会回退到父类，即SimpleMarker
-            }
             //创建一个shape实例
             var shape = new SvgMarker.Shape.TriangleFlagPin({
               height: 50, //高度
@@ -586,6 +554,27 @@ export default {
         contextMenu.open(a.map, e.lnglat);
         contextMenuPositon = e.lnglat;
       });
+    },
+    addMarker() {
+      let marker = new AMap.Marker({
+        position: [121.473701, 31.230416],
+        anchor: "bottom-left",
+        animation: "AMAP_ANIMATION_DROP",
+      });
+
+      marker.setMap(this.map);
+    },
+    async addressToLnglat(address) {
+      return fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
+          address
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          return res.geocodes[0].location.split(",");
+        });
     },
     getHotelbyCity() {
       this.$axios
@@ -703,19 +692,36 @@ export default {
         return withList2.includes(v);
       });
 
-      this.items = [];
+      var items = [];
       for (var n = 0; n < this.originData.length; n++) {
         if (res.includes(n)) {
-          this.items.push(this.originData[n]);
+          items.push(this.originData[n]);
         }
       }
-      this.title.num = this.items.length;
+      this.items = items;
+      this.title.num = items.length;
     },
   },
   created() {
     this.getHotelbyCity();
   },
   watch: {
+    dialogVisible(newValue, oldValue) {
+      if (newValue == true) {
+        this.addMarker();
+      }
+    },
+    items(newValue, oldValue) {
+      var len = newValue.length;
+      for (let i = 0; i < len; i++) {
+        setTimeout(() => {
+          this.addressToLnglat(newValue[i].location).then((res) => {
+            this.Lnglat.push(res);
+            this.test.push(i);
+          });
+        }, 350 * i);
+      }
+    },
     "searchForm.date1"(inew, iold) {
       if (this.searchForm.date2) {
         if (inew > this.searchForm.date2) {
@@ -753,8 +759,14 @@ export default {
     },
   },
   mounted() {
+    // 搜索框日期初始化
     this.searchForm.date1 = Date.now();
     this.searchForm.date2 = Date.now() + 8.64e7;
+
+    // 地图初始化
+    this.addressToLnglat(this.title.city).then((res) => {
+      this.center = res;
+    });
   },
 };
 </script>

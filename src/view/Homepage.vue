@@ -510,7 +510,7 @@ export default {
     this.getLocation();
     this.getAttrbyCity(this.attrStart);
     this.getHotelbyCity(this.hotelStart);
-    // this.getTicketbyCity(this.ticketStart);
+    this.getTicketbyCity(this.ticketStart);
   },
   mounted() {},
   watch: {

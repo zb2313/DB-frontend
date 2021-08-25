@@ -16,6 +16,7 @@
         <p>address:{{ address }}</p>
       </div>
     </div>
+    <div id="button">Clickme</div>
   </div>
 </template>
 
@@ -107,16 +108,25 @@ export default {
       });
       marker.setMap(this.map);
 
-      // 高德UI
-      AMapUI.loadUI(["overlay/SimpleMarker"], (SimpleMarker) => {
-        const marker = new SimpleMarker({
-          iconLabel: "A",
-          iconStyle: "red",
-          map: this.map,
-          position: this.map.getCenter(),
-          animation: "AMAP_ANIMATION_DROP",
+      //bt1的click的绑定事件
+      var clickListener;
+      var bind = function () {
+        remove(); //防止重复绑定
+        clickListener = AMap.event.addListener(this.map, "click", function (e) {
+          new AMap.Marker({
+            position: e.lnglat,
+            map: this.map,
+          });
         });
-      });
+      };
+      //bt2的click的绑定事件
+      var remove = function () {
+        if (clickListener) {
+          AMap.event.removeListener(clickListener); //移除事件，以绑定时返回的对象作为参数
+        }
+      };
+      var button1 = document.getElementById("button");
+      var listener1 = AMap.event.addDomListener(button1, "click", bind); //给div绑定单击事件
 
       // 热点信息展示
       let placeSearch = new AMap.PlaceSearch(); //构造地点查询类
@@ -222,6 +232,16 @@ export default {
 </script>
 
 <style>
+#button {
+  width: 60px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border: 1px solid black;
+}
+#button:hover {
+  cursor: pointer;
+}
 .amap-wrap {
   height: 70vh;
   width: 70vw;
