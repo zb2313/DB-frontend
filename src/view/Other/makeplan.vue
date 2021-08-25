@@ -2,8 +2,12 @@
 
     <div class="travelplan">
         <Header activeIndex="5" />
-        <div style="width:100%;height:45px;padding-top:10px;font-size:25px">&nbsp;&nbsp;&nbsp;定制你的{{days}}日游
-        </div> 
+        <div style="width:100%;height:45px">
+        <div style="width:300px;height:45px;padding-top:10px;font-size:25px;float:left">&nbsp;&nbsp;&nbsp;定制你的{{days}}日游</div> 
+        <el-button type="primary" style="float:right;margin-top:10px;margin-right:10px" @click="submit()">完成</el-button>
+        </div>
+        
+        
         <div class="divider"></div>
         <div class="leftbox">
             <div class="rec_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我的行程单</div>
@@ -33,7 +37,7 @@
         }" ></div>
         
         <div style="color:#003680;font-size:18px;font-weight:bold;margin-top:10px;margin-bottom:10px">
-            {{index}}
+            {{index+1}}
             <span style="color:black">{{item.item_name}}</span>
         </div>
        
@@ -44,8 +48,10 @@
   <div class="right_box">
       <el-tabs v-model="att_or_hot" type="card" @tab-click="handleClick">
     <el-tab-pane label="景点" name="first">
+        <el-input style="width:310px;margin-left:10px;margin-right:10px" v-model="search_attraction" placeholder="搜索景点" @change="filt_attraction()"></el-input>
+         <el-button type="primary" icon="el-icon-search" circle></el-button>
         <div class="show_att"
-        v-for="(item,index) in attraction_list"
+        v-for="(item,index) in filt_attraction_list"
         :key="index+100">
         <div class="rightimg"
         :style="{
@@ -64,44 +70,31 @@
         </div>
     </el-tab-pane>
     <el-tab-pane label="酒店" name="second">
-        
+        <el-input style="width:310px;margin-left:10px;margin-right:10px" v-model="search_hotel" placeholder="搜索酒店" @change="filt_hotel()"></el-input>
+         <el-button type="primary" icon="el-icon-search" circle></el-button>
+        <div class="show_att"
+        v-for="(item,index) in filt_hotel_list"
+        :key="index+100">
+        <div class="rightimg"
+        :style="{
+          backgroundImage: 'url(' + item.picture + ')',
+        }" 
+        ></div>
+        <div class="show_att_content"> 
+            <div style="font-weight:bold;font-size:16px;margin-top:10px;margin-bottom:10px">{{item.hotelname}}</div>
+            <div style="font-size:13px;line-height:16px;margin-bottom:5px">地址：{{item.location}}
+                <br>
+                星级：{{item.star}}星
+            </div>
+            <el-button type="primary" icon="el-icon-plus"  style="float:bottom;margin-bottom:10px;height:30px;padding:5px 8px" @click="add(index,2)">添加到行程</el-button>
+            </div>
+           
+        </div>
     </el-tab-pane>
 
   </el-tabs>
   </div>
-        <!-- <div class="cities_list">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="国内"  name="first" >
-        
-        <div class="city_card" 
-        v-for="item in cities" 
-        :key="item.city_name"
-        :style="{
-          backgroundImage: 'url(' + item.img + ')',
-          backgroundSize: '100% 100%',
-          backgroundRepeat: 'no-repeat',
-        }" >
-        <div class="dark_and_button"><el-button type="primary" @click="add(item.city_name)">添加</el-button></div>
-         
-        {{item.city_name}}
-        </div>
-    </el-tab-pane>
-    <el-tab-pane label="国际·港澳台" name="second">
-    <div class="city_card" 
-        v-for="item in other_cities" 
-        :key="item.city_name"
-        :style="{
-          backgroundImage: 'url(' + item.img + ')',
-          backgroundSize: '100% 100%',
-          backgroundRepeat: 'no-repeat',
-        }" >
-        <div class="dark_and_button"><el-button type="primary" @click="add(item.city_name)">添加</el-button></div>
-         
-        {{item.city_name}}
-        </div>
-        </el-tab-pane>
-  </el-tabs>
-        </div> -->
+      
     </div>
 </template>
 <style>
@@ -229,16 +222,19 @@ components: {Header},
             day_schedule:[],
             select_active:0,
             attraction_list:[],
+            filt_attraction_list:[],
             hotel_list:[],
+            filt_hotel_list:[],
             att_or_hot:'first',
             selected_items:[],
-            
+            search_attraction:'',
+            search_hotel:'',
         }
     },
     mounted(){
-        let temp=this.$route.query.cities;
+        let temp=JSON.parse(this.$route.query.cities);
         let k=1;
-        for(let i=0;i<20;i++)this.selected_items[i] = new Array();
+        for(let i=0;i<50;i++)this.selected_items[i] = new Array();
         
         for(let i=0;i<temp.length;i++){
             let j=temp[i].day;
@@ -259,9 +255,21 @@ components: {Header},
           return b.star - a.star;
         });
         this.attraction_list = JSON.parse(JSON.stringify(response.data));
+        this.filt_attraction_list = JSON.parse(JSON.stringify(response.data));
+      });
+    this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
+            this.day_schedule[0].city_name
+        )
+        .then((response) => {
+         this.items = response.data.sort(function (a, b) {
+          return b.star - a.star;
+        });
+        this.hotel_list = JSON.parse(JSON.stringify(response.data));
+        this.filt_hotel_list = JSON.parse(JSON.stringify(response.data));
         //console.log(this.attraction_list);
       });
-   
     },
     methods:{
     changeSelect(index){
@@ -276,7 +284,19 @@ components: {Header},
           return b.star - a.star;
         });
         this.attraction_list = JSON.parse(JSON.stringify(response.data));
-        //console.log(this.attraction_list);
+        this.filt_attraction_list = JSON.parse(JSON.stringify(response.data));
+      });
+      this.$axios
+        .get(
+        "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
+          this.day_schedule[index].city_name
+      )
+      .then((response) => {
+        this.items = response.data.sort(function (a, b) {
+          return b.star - a.star;
+        });
+        this.hotel_list = JSON.parse(JSON.stringify(response.data));
+        this.filt_hotel_list = JSON.parse(JSON.stringify(response.data));
       });
     },
      handleClick(tab, event) {
@@ -284,19 +304,43 @@ components: {Header},
       },
       add(index,opt){
           if(opt==1){
-              var json={item_name:this.attraction_list[index].attractionname,picture:this.attraction_list[index].picture,location:this.attraction_list[index].location};
-              console.log(json);
-               console.log(this.select_active);
+              var json={item_name:this.filt_attraction_list[index].attractionname,picture:this.filt_attraction_list[index].picture,location:this.filt_attraction_list[index].location};
+              
               this.selected_items[this.select_active].push(json);
               this.$forceUpdate();
           }
           else if(opt==2){
-              this.selected_items.push(this.hotel_list[index]);
+            var jsonn={item_name:this.filt_hotel_list[index].hotelname,picture:this.filt_hotel_list[index].picture,location:this.filt_hotel_list[index].location};
+            this.selected_items[this.select_active].push(jsonn);
+            this.$forceUpdate();
           }
-          console.log(this.selected_items[this.select_active]);
+          
 
-      }
+      },
+      filt_attraction(){
 
+          let _this=this;
+          this.filt_attraction_list=this.attraction_list.filter(function (value) {
+        return value.attractionname.toLowerCase().indexOf(_this.search_attraction.toLowerCase()) != -1
+        });
+      },
+      filt_hotel(){
+
+          let _this=this;
+          this.filt_hotel_list=this.hotel_list.filter(function (value) {
+        return value.hotelname.toLowerCase().indexOf(_this.search_hotel.toLowerCase()) != -1
+        });
+      },
+    submit(){
+        console.log(this.selected_items);
+         this.$router.push({
+          path: `/myplan`,
+          query: {
+            plan: JSON.stringify(this.selected_items),
+            day: this.days,
+          },
+        });
+    },
     }
 }
 </script>
