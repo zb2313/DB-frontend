@@ -1,4 +1,5 @@
 <template>
+<div>
   <el-container class="home-container" direction="vertical">
     <!--头部区域-->
   <Header1/>
@@ -36,7 +37,7 @@
         <!-- 一级菜单模板区 -->
         <template slot="title" >
           <!-- 图标 -->
-          <i class="el-icon-view"></i>
+          <i class="el-icon-user"></i>
           <!-- 文本 -->
           <span>个人动态</span>
         </template>
@@ -51,6 +52,8 @@
     </el-main>
   </el-container>
 </el-container>
+<Footer1/>
+</div>
 </template>
 
 <style scopend>
@@ -85,9 +88,10 @@
 </style>
 <script>
 import Header1 from "@/components/Header1.vue";
+import Footer1 from "@/components/Footer1.vue";
   export default {
     components:{
-      Header1
+      Header1,Footer1
     },
      data () {
 

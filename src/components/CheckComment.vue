@@ -1,7 +1,6 @@
 <template>
 <div>
    <Header1/>
-<img src="../assets/img/faq.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
   <div class="ALLMoment">
 <div class="sss">
         <el-button type="success" plain icon="el-icon-back" size="medium" @click="goBack"
@@ -10,7 +9,7 @@
       </div>
     <!-- 动态区域 -->
     <div class="showMoment">
-      <span v-if="this.Moments.length===0">暂无数据···</span><br>
+     <el-card v-if="this.Moments.length===0"> <span>暂无数据···</span></el-card><br>
       <li
         class="show"
         v-for="(item, index) in Moments"
@@ -18,12 +17,21 @@
         style="list-style: none"
       >
         <el-card class="singleMoment">
+          <el-avatar
+          :size="55"
+          :src="user_avator"
+          style="float: left"
+        ></el-avatar>
+        <pre><span style="float: left">{{user_name}}</span>
+        <span style="float:left">发布于{{item.momenT_TIME}}</span>
+        <span style="float:left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
+		<!-- 动态发布地点信息和时间信息 --></pre>
           <router-link :to="'/3/' + item.momenT_ID">
             <span class="zhankai" type="primary"><i class="el-icon-arrow-down"> 查看动态详情</i></span>
           </router-link> 
           <!-- 动态中的文本 -->
-         
-            <p class="moment_text">{{ item.text }}</p>
+         <div><br><br>
+            <p >{{ item.text }}</p>
             <!-- 动态中的图片 -->
             <img
               class="moment_img"
@@ -42,12 +50,12 @@
               >
               </iframe>
             </div>
+         </div>
               <!-- 动态发布地点信息和时间信息 -->
-          <pre><br>
-           <span class="moment_location" style="float: right">{{item.momenT_TIME}}<br>发布于{{item.momenT_LOCATION}}</span></pre><br>
+         <br>
         </el-card>
       </li>
-    </div>
+    </div><Footer1/>
   </div>
 </div>
 </template>
@@ -55,13 +63,16 @@
 <script>
 import axios from "axios";
 import Header1 from "@/components/Header1.vue";
+import Footer1 from "@/components/Footer1.vue";
 export default {
   components:{
-      Header1
+      Header1,Footer1
     },
   data() {
     return {
       Moments: [],
+      user_avator:"",
+      user_name:"",
     };
   },
   methods: {
@@ -96,6 +107,13 @@ export default {
   // created()：在实例创建完成后被立即调用
   created() {
     this.getMoments();
+    this.user_avator=localStorage.getItem("pictrue");
+      this.user_avator="http://49.234.47.118:8080/pictures/user_uprofile_3.jpg";
+axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_username"))
+.then((res)=>
+{
+  this.user_name=res.data[0].useR_NAME;
+})
   },
 };
 </script>
@@ -107,9 +125,10 @@ export default {
   margin-left: 190px;
 }
 .ALLMoment {
-  max-height: 1000px;
+  min-height: 633px;
   width: 100%;
   position: absolute;
+  background-color: whitesmoke;
 }
 .zhankai {
   display: flex;
@@ -132,5 +151,6 @@ export default {
   background: #ecf8e0;
   border-radius: 10px;
   position: relative;
+  text-align: center;
 }
 </style>

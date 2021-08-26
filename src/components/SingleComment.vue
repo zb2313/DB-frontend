@@ -1,16 +1,16 @@
 <template>
 <div>
 <Header1/>
-<img src="../assets/img/faq.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
 <div class="singleShow">
+	<el-container>
 	<div class="singleMoment" v-for="(item,index) in Moments" :key="index">
     <el-avatar
-        size="large"
+        :size="55"
         :src="item.uprofile"
         style="float: left"
     ></el-avatar>
 		<pre><span style="float: left">{{item.useR_NAME}}</span>
-		<span style="float: left">{{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
+		<span style="float: left">发布于{{item.momenT_TIME}}</span><br><span style="float: left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
 		</pre>
 		<p>{{ item.text }}</p>
 		<br>
@@ -21,9 +21,13 @@
          allow='autoplay;encrypted-media' allowfullscreen style='width:100%;height:50%;'>
         </iframe>
 		</div>
-		<!-- 评论区 -->
+		<el-button type="danger" size="small" @click="deleteBlog">删除</el-button>
+		<el-button size="small" @click="goback">返回</el-button>
+	</div>
+	<el-aside style="width:400px">
+		<div><sapn style="font-size:20px">评论</sapn>({{Comments.length}})</div><br>
 		<li class="CommentMoment" v-for="(item1,index) in Comments" :key="index" style="list-style: none">
-		<div><pre>评论列表：</pre><br>
+		<div class="singlecomment" >
 			<el-avatar size=medium :src=item1.uprofile style="float:left"></el-avatar>
 			<pre><span class="user_id" style="float:left">{{item1.useR_ID}}</span>
 			<span class="user_name" style="float: left">{{item1.useR_NAME}}</span>
@@ -31,19 +35,20 @@
 			<p class="comment_text">{{item1.commenT_TEXT}}</p>
 		</div><br>
 		</li>
-		<el-button type="danger" size="small" @click="deleteBlog">删除</el-button>
-		<el-button size="small" @click="goback">返回</el-button>
-	</div>
+	</el-aside>
+	</el-container>
 </div>
+<Footer1/>
 </div>
 </template>
 
 <script>
 import axios from 'axios'
 import Header1 from "@/components/Header1.vue";
+import Footer1 from "@/components/Footer1.vue";
 export default { 
 	components:{
-      Header1
+      Header1,Footer1
     },
 	name: 'singleComment',
 	data() {
@@ -90,12 +95,24 @@ export default {
 }
 </script>
 <style scoped>
+.singleShow{
+	min-height: 633px;
+}
 .singleMoment {
+	max-width: 70%;
+	padding: 20px;
+	border: 1px dotted rgb(207, 229, 230);
+	background-color:#ECF8E0;
+	min-width: 60%;
+	margin: 12px auto;
+	border-radius: 10px;
+	margin-bottom: 30px;
+}
+.singlecomment {
 	max-width: 80%;
 	padding: 20px;
 	border: 1px dotted rgb(207, 229, 230);
 	background-color:#ECF8E0;
-	min-width: 500px;
 	margin: 12px auto;
 	border-radius: 10px;
 	margin-bottom: 30px;

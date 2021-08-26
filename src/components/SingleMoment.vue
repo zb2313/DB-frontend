@@ -1,20 +1,19 @@
 <template>
   <div class="singleShow">
-    <Header1/>
-<img src="../assets/img/login-bg.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
-    <!-- 动态区 -->
+    <Header1/> 
+    <!-- 动态区 --><el-container style="min-height:633px">
     <div class="singleMoment" v-for="(item, index) in Moments" :key="index">
-      <el-card class="momentCard">
+       
+      <el-card>
         <el-avatar
-          size="medium"
+          :size="55"
           :src="item.uprofile"
           style="float: left"
         ></el-avatar>
-        <pre><span style="float:left">{{ item.useR_ID }}</span>
-		<span style="float:left">{{item.useR_NAME}}</span>
-		<span style="float: right">{{item.momenT_LOCATION}}</span>
-		<span style="float: right">{{item.momenT_TIME}}</span></pre>
-        <div>
+        <pre><span style="float: left">{{item.useR_NAME}}</span>
+		<span style="float: left">发布于{{item.momenT_TIME}}</span><br><span style="float: left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
+		</pre>
+        <div style="text-align:center">
           <p>{{ item.text }}</p>
           <img
             class="moment_img"
@@ -32,8 +31,27 @@
             >
             </iframe>
           </div>
-        </div>
+        </div> <br>
+        <div id="end">~THE END~</div>
       </el-card>
+    </div>
+    <el-aside style="width:400px">
+    <!-- 发表评论区 -->
+    <div class="submit">
+      <div><sapn style="font-size:20px">评论</sapn>({{Comments.length}})</div><br>
+      <el-input
+        class="comment_input"
+        type="textarea"
+        :autosize="{ minRows: 2 }"
+        placeholder="输入你的评论"
+        v-model="comment_text"
+        maxlength="100"
+        show-word-limit
+      ></el-input>
+ <br /><br>
+      <el-button size="medium" type="primary" class="el-icon-s-promotion" @click="submit">发表</el-button>
+      <el-button size="medium" type="primary" plain @click="goback">返 回</el-button>
+      
     </div>
     <!-- 评论区 -->
     <div class="commentMoment_box">
@@ -43,46 +61,33 @@
         :key="index"
         style="list-style: none"
       >
-        <el-card class="moment_block">
+        <el-card>
           <el-avatar
-            size="medium"
+          :size="50"
             :src="item1.uprofile"
             style="float: left"
           ></el-avatar>
-          <pre><span class="user_id" style="float:left">{{item1.useR_ID}}</span>
-			<span class="user_name" style="float: left">{{item1.useR_NAME}}</span>
-			<span class="comment_time" style="float:right">{{item1.commenT_TIME}}</span></pre>
-          <p class="comment_text">{{ item1.commenT_TEXT }}</p>
+          <div>
+         <span> {{item1.useR_NAME}}</span><br>
+            <span style="color:gray" >发表于{{item1.commenT_TIME}}</span>
+           </div> <br>
+          <div >{{ item1.commenT_TEXT }}</div>
         </el-card>
       </li>
     </div>
-    <!-- 发表评论区 -->
-    <div class="submit">
-      <el-input
-        class="comment_input"
-        type="textarea"
-        :autosize="{ minRows: 2 }"
-        placeholder="评论"
-        v-model="comment_text"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-
-    </div>
-    <div class="submit">
-      <br /><br>
-      <el-button size="medium" type="primary" class="el-icon-s-promotion" @click="submit">发表</el-button>
-      <el-button size="medium" type="primary" plain @click="goback">返 回</el-button>
-    </div>
-
+    </el-aside>
+    </el-container>
+    <Footer1/>
   </div>
 </template>
 <script>
 import axios from "axios";
 import Header1 from "@/components/Header1.vue";
+import Footer1 from "@/components/Footer1.vue";
 export default {
    components:{
-      Header1
+      Header1,
+      Footer1
     },
   name: "singleMomment",
   data() {
@@ -179,32 +184,32 @@ export default {
 </script>
 <style scoped>
 .submit {
-  width: 100%;
-  height:40px;
+  width: 90%;
+  height:170px;
   padding-left:10%;
-
 }
 .comment_input {
-  width: 80%;
+  width: 100%;
   margin: auto;
 }
-.commentMoment_box {
-  height: auto;
-}
-.moment_block {
-  width: 100%;
-}
 .comment_input {
-  width: 80%;
+  width: 90%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 .singleMoment {
-  width: 80%;
+  width: 70%;
   margin: 12px auto;
- 
+ position: relative;
+ left: 1%;
+ right: 1%;
 }
 .CommentMoment {
   width: 80%;
   margin: 12px auto;
+}
+#end{
+  text-align: center;
+  font-size:30px;
+  color: gray;
 }
 </style>

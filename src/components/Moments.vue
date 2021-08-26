@@ -1,29 +1,25 @@
 <template>
   <div class="moment">
     <span v-if="this.Moments.length===0">暂无数据···</span>
-    <li
-      class="show"
-      v-for="(item, index) in Moments"
+    <el-row>
+      <el-col :span="8" v-for="(item, index) in Moments" 
       :key="index"
-      style="list-style: none"
-    >
-      <el-card class="singleMoment">
-        <router-link :to="'/1/' + item.momenT_ID">
-          <span class="zhankai" type="primary"><i class="el-icon-view"> 查看</i></span>
-        </router-link>
-        <el-avatar
-          size="large"
+      :offset="3">
+       <router-link :to="'/1/' + item.momenT_ID">
+        <el-card  class="singleMoment">
+          <el-avatar
+          :size="55"
           :src="item.uprofile"
           style="float: left"
         ></el-avatar>
         <pre>
-		<span class="user_name" style="float: left"> {{item.useR_NAME}}</span>
-		<span class="moment_time" style="float:left"> {{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
+		<span style="float: left"> {{item.useR_NAME}}</span>
+		<span style="float:left"> 发布于{{item.momenT_TIME}}<br> <i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
 		<!-- 动态发布地点信息和时间信息 -->
       </pre>
-      <div>
+        <div style="text-align:center">
           <!-- 动态中的文本 -->
-          <span style="float:left">{{ item.text }}</span>
+          <span >{{ item.text }}</span>
           <!-- 动态中的图片 -->
           <img
             class="moment_img"
@@ -43,8 +39,10 @@
             </iframe>
           </div>
       </div><br>
-      </el-card>
-    </li>
+        </el-card>
+       </router-link>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
@@ -133,10 +131,6 @@ export default {
 };
 </script>
 <style scoped>
-.moment {
-  max-height: 400px;
-  
-}
 .zhankai {
   display: flex;
   cursor: pointer;

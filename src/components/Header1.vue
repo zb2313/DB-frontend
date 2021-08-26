@@ -113,6 +113,7 @@ export default {
   },
   created() {
     this.coverImgUrl = localStorage.getItem("pictrue");
+      this.coverImgUrl="http://49.234.47.118:8080/pictures/user_uprofile_3.jpg";
   },
 };
 </script>

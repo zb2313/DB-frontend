@@ -23,6 +23,7 @@
     </el-main>
 
   </el-container>
+  <Footer1/>
 </div>
 </template>
 
@@ -35,8 +36,9 @@ import { mavonEditor } from "mavon-editor";
 import "mavon-editor/dist/css/index.css";
 axios.defaults.baseURL = "http://127.0.0.1:8081";
 import VDistpicker from 'v-distpicker'
+import Footer1 from "@/components/Footer1.vue";
 export default {
-  components: {VDistpicker,  Header1},
+  components: {VDistpicker,  Header1,Footer1},
   name: "pulishNav",
   data() {
     return {
@@ -168,7 +170,7 @@ export default {
 #editor {
   margin: auto;
   width: 100%;
-  height: 676px;
+  height: 633px;
 }
 .el-row {
   margin-bottom: 20px;
