@@ -1,7 +1,7 @@
 <template>
   <div>
     <admiHeader/>
-    <img src="../assets/img/audit2.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
+    <img src="../assets/img/audit2.jpg" width="100%" height="100%" style="z-index:-100;position:fixed;left:0;top:0">
     <div class="page">
       <el-card>
        <el-table :max-height="600"
