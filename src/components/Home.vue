@@ -58,7 +58,7 @@
 
 <style scopend>
 .home-container{
-  height :100vh;
+  height :84.5vh;
 }
 .el-header {
   background-color: #003680;

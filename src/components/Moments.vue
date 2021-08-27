@@ -1,11 +1,10 @@
 <template>
   <div class="moment">
     <span v-if="this.Moments.length===0">暂无数据···</span>
-    <el-row>
-      <el-col :span="8" v-for="(item, index) in Moments" 
+      <el-col :span="9" v-for="(item, index) in Moments" 
       :key="index"
-      :offset="3">
-       <router-link :to="'/1/' + item.momenT_ID">
+      :offset="2">
+       <router-link :to="'/1/' + item.momenT_ID" >
         <el-card  class="singleMoment">
           <el-avatar
           :size="55"
@@ -42,7 +41,6 @@
         </el-card>
        </router-link>
       </el-col>
-    </el-row>
   </div>
 </template>
 <script>

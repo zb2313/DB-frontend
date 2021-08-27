@@ -1,12 +1,51 @@
 <template>
 <div>
    <Header1/>
-  <div class="ALLMoment">
-<div class="sss">
-        <el-button type="success" plain icon="el-icon-back" size="medium" @click="goBack"
-        >返回
-        </el-button>
-      </div>
+   <el-container>
+   <!-- 侧边栏 -->
+    <el-aside width=240px>
+      <!-- 侧边栏菜单区域 -->
+      <el-menu
+      text-color="#black"
+      active-text-color="#224EFF"
+      router>
+      <!-- 一级菜单 -->
+      <el-menu-item index="1">
+        <!-- 一级菜单模板区 -->
+        <template slot="title">
+          <!-- 图标 -->
+          <i class="el-icon-chat-dot-square"></i>
+          <!-- 文本 -->
+          <span>动态广场</span>
+        </template>
+      </el-menu-item>
+      <!-- 发送动态路由 -->
+      <el-menu-item index="2">
+        <!-- 一级菜单模板区 -->
+        <template slot="title" >
+          <!-- 图标 -->
+         <i class="el-icon-s-promotion"></i>
+          <!-- 文本 -->
+           <span>发布动态</span>
+        </template>
+      </el-menu-item>
+        <!-- 查看动态路由  -->
+       <el-menu-item index="3">
+        <!-- 一级菜单模板区 -->
+        <template slot="title" >
+          <!-- 图标 -->
+          <i class="el-icon-user"></i>
+          <!-- 文本 -->
+          <span>个人动态</span>
+        </template>
+      </el-menu-item>
+    </el-menu>
+    </el-aside>
+    <!-- 右侧内容主体 -->
+    <el-main>
+     
+ <div class="ALLMoment">
+
     <!-- 动态区域 -->
     <div class="showMoment">
      <el-card v-if="this.Moments.length===0"> <span>暂无数据···</span></el-card><br>
@@ -57,6 +96,8 @@
       </li>
     </div><Footer1/>
   </div>
+    </el-main></el-container>
+  
 </div>
 </template>
 
@@ -127,7 +168,7 @@ axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_userna
 .ALLMoment {
   min-height: 633px;
   width: 100%;
-  position: absolute;
+  position: relative;
   background-color: whitesmoke;
 }
 .zhankai {
@@ -152,5 +193,11 @@ axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_userna
   border-radius: 10px;
   position: relative;
   text-align: center;
+}
+.el-aside{
+  background-color: white;
+}
+.el-main{
+  background-color: #f1f3f0;
 }
 </style>
