@@ -602,7 +602,7 @@ export default {
   data() {
     return {
       // 其他页面传过来的酒店ID给你用的，ｂｙ秦
-      hotelId: "0000000001",
+      hotelId: " ",
       mapVisible: false,
       moreInfoVisible: false,
       license:
@@ -792,9 +792,9 @@ export default {
         this.location = response.data[0].hlocation;
         this.grade = response.data[0].star;
       });
-
+    let temp = this.hotelId;
     this.$axios
-      .get("http://49.234.18.247:8080/api/FunGetCommentByHotelId/0000000001")
+      .get("http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + temp)
       .then((response) => {
         console.log(response.data);
         this.dianping_number = response.data.length;
