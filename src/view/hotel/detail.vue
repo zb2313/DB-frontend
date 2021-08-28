@@ -335,10 +335,10 @@
       <!--附近的酒店  -->
       <el-card class="box-card near" shadow="never">
         <h1>附近的酒店</h1>
-        <div class="hotels">
+        <div class="nearhotels">
           <div
             class="box"
-            v-for="(item, index) in hotels.slice(0, 8)"
+            v-for="(item, index) in nearhotels.slice(0, 8)"
             :key="index"
           >
             <div
@@ -618,7 +618,6 @@ export default {
       description:
         "酒店毗邻以高新技术、金融、现代商贸、电子商务、文化创意产业为主力的中成智谷创意园区，距离玻璃博物馆约1.5公里。酒店设计理念是以阅读和户外游为主题，高品质的客房产品设施+细致温馨的服务，带给你“自然、静谧、温暖、朴实”的健康生活方式。所有客房均采用普兰特系列优质床品，分体式空调，全套高端Afu精油洗浴用品，100M高速光纤，全WIFI覆盖。",
       minPrice: 99,
-      bbb: undefined,
       baseImg:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
@@ -689,7 +688,7 @@ export default {
       ],
       comments: [
         {
-          userName: "蔡蔡小游侠",
+          userName: " ",
           useR_ID: "0000000001",
           userAvatar:
             "https://ak-d.tripcdn.com/images/Z80p180000013uw9yF21F_R_100_100_R5_Q70_D.jpg",
@@ -697,8 +696,7 @@ export default {
           bookTime: "08/14/2021",
           userCommentNum: 1,
           commentRate: 4,
-          commentContent:
-            "楼下有个人的早餐店铺 豌杂面还不错，不能加床。 🛏️床确实是1.5米的，这个必须肯定。楼下有免费停车🅿️场 。 房间没有介绍的45平米，感觉被骗了。最多30平米左右，窗子对着居民楼，跟图片上完全不一样。整个旅途住宿费最贵的 真的是最差的一家。江边一直有施工，很乱。",
+          commentContent: " ",
           commentTime: "08/14/2021 20:53",
         },
         {
@@ -715,7 +713,7 @@ export default {
           commentTime: "08/14/2021 20:53",
         },
       ],
-      hotels: [
+      nearhotels: [
         {
           name: "格林豪泰酒店",
           star: 2,
@@ -800,59 +798,60 @@ export default {
       .get("http://49.234.18.247:8080/api/FunGetCommentByHotelId/0000000001")
       .then((response) => {
         console.log(response.data);
+        this.dianping_number = response.data.length;
         for (var i = 0; i < response.data.length; i++) {
           this.comments[i].userId = response.data[i].useR_ID;
-          // var hotelComentNum;
-          // var attrationComentNum;
-          // var temp = this.comments[i].userId;
+          var hotelComentNum;
+          var attrationComentNum;
+          var temp = this.comments[i].userId;
 
-          // let _this = this;
+          //获取用户评论过的订单数
+          let _i = i;
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
+                temp
+            )
+            .then((response) => {
+              this.comments[_i].userCommentNum =
+                response.data[0].hotelcommentnum;
+            });
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
+                temp
+            )
+            .then((response) => {
+              this.comments[_i].userCommentNum =
+                response.data[0].hotelcommentnum +
+                this.comments[_i].userCommentNum;
+            });
+          this.comments[i].userCommentNum = hotelComentNum + attrationComentNum;
 
           // //获取用户订单信息
-          // _this.$axios
+          // this.$axios
           //   .get(
           //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
           //       temp
           //   )
           //   .then((response) => {
-          //     _this.comments[i].commentRoom = response.data[0].typename;
-          //     _this.comments[i].bookTime = response.data[0].ordertime;
+          //     this.comments[_i].commentRoom = response.data[0].typename;
+          //     this.comments[_i].bookTime = response.data[0].ordertime;
           //   });
-
-          // //获取用户评论过的订单数
-          // _this.$axios
-          //   .get(
-          //     "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
-          //       temp
-          //   )
-          //   .then((response) => {
-          //     hotelComentNum = response.data[0].hotelcommentnum;
-          //   });
-          // _this.$axios
-          //   .get(
-          //     "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
-          //       temp
-          //   )
-          //   .then((response) => {
-          //     attrationComentNum = response.data[0].hotelcommentnum;
-          //   });
-          // this.comments[i].userCommentNum = hotelComentNum + attrationComentNum;
 
           // 获取评论用户的头像
-          let _this = this;
-          let aaa = this.comments[i].userId;
-         
           this.$axios
-            .get("http://49.234.18.247:8080/api/Users/" + aaa)
+            .get(
+              "http://49.234.18.247:8080/api/Users/" + this.comments[_i].userId
+            )
             .then((response) => {
-              this.bbb = response.data[0].uprofile;
-             console.log(this.bbb);
+              this.comments[_i].userAvatar = response.data[0].uprofile;
             });
-           
-          this.comments[i].userAvatar = this.bbb;//失败了呜呜
-        
-          this.comments[i].bookTime = response.data[i].commenT_TIME;
-          this.comments[i].userCommentNum = response.data[i].grade;
+
+          this.comments[i].bookTime = response.data[i].commenT_TIME.slice(
+            0,
+            10
+          );
           this.comments[i].commentRoom = "大床房";
 
           this.comments[i].userName = response.data[i].useR_NAME;
