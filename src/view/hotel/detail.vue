@@ -29,9 +29,10 @@
               </el-dialog>
               <div>
                 <span style="width: 200px"
-                  ><i class="el-icon-s-home"></i>开业：{{ openTime }} 客房数：{{ totalRoom }} 联系电话：{{
-                      telephone
-                    }}</span
+                  ><i class="el-icon-s-home"></i>开业：{{ openTime }} 客房数：{{
+                    totalRoom
+                  }}
+                  联系电话：{{ telephone }}</span
                 >
                 <span @click="moreInfoVisible = true" class="hint"
                   >查看更多</span
@@ -43,7 +44,7 @@
                 >
                   <div>
                     <h1>酒店简介</h1>
-                    <br>
+                    <br />
                     开业：{{ openTime }} 客房数：{{ totalRoom }} 联系电话：{{
                       telephone
                     }}
@@ -56,9 +57,13 @@
                       }"
                     ></div>
                     <p>{{ description }}</p>
-                    <br>
+                    <br />
                     <h3>住宿预订提供方</h3>
-                    <img :src="license" alt="" style="width:700px;height:400px">
+                    <img
+                      :src="license"
+                      alt=""
+                      style="width: 700px; height: 400px"
+                    />
                   </div>
                 </el-dialog>
               </div>
@@ -141,7 +146,11 @@
                 <p style="font-size: 8px; color: gray; margin-top: 5px">
                   附近1公里内有{{ attrationNum }}个景点
                 </p>
-                <div @click="mapVisible=true" class="hint" style="margin-top: 75px">
+                <div
+                  @click="mapVisible = true"
+                  class="hint"
+                  style="margin-top: 75px"
+                >
                   查看完整地图
                 </div>
               </div>
@@ -169,7 +178,7 @@
       <br />
       <div id="rooms">
         <ul>
-          <li v-for="room in rooms" :key="room.roomName">
+          <li v-for="room in rooms" :key="room.ID">
             <Room
               :roomName="room.roomName"
               :customerNum="room.customerNum"
@@ -221,7 +230,7 @@
       </el-card>
       <div id="comments">
         <ul>
-          <li v-for="comment in comments" :key="comment.userName">
+          <li v-for="comment in comments" :key="comment.userId">
             <Comment
               :userName="comment.userName"
               :userAvatar="comment.userAvatar"
@@ -326,10 +335,10 @@
       <!--附近的酒店  -->
       <el-card class="box-card near" shadow="never">
         <h1>附近的酒店</h1>
-        <div class="hotels">
+        <div class="nearhotels">
           <div
             class="box"
-            v-for="(item, index) in hotels.slice(0, 8)"
+            v-for="(item, index) in nearhotels.slice(0, 8)"
             :key="index"
           >
             <div
@@ -408,7 +417,7 @@
 .other {
   float: left;
   margin-top: 100px;
-  margin-left: 15px;
+  margin-left: 10px;
 }
 .hotelName {
   float: left;
@@ -593,7 +602,7 @@ export default {
   data() {
     return {
       // 其他页面传过来的酒店ID给你用的，ｂｙ秦
-      hotelId: "",
+      hotelId: " ",
       mapVisible: false,
       moreInfoVisible: false,
       license:
@@ -609,7 +618,6 @@ export default {
       description:
         "酒店毗邻以高新技术、金融、现代商贸、电子商务、文化创意产业为主力的中成智谷创意园区，距离玻璃博物馆约1.5公里。酒店设计理念是以阅读和户外游为主题，高品质的客房产品设施+细致温馨的服务，带给你“自然、静谧、温暖、朴实”的健康生活方式。所有客房均采用普兰特系列优质床品，分体式空调，全套高端Afu精油洗浴用品，100M高速光纤，全WIFI覆盖。",
       minPrice: 99,
-
       baseImg:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
@@ -680,77 +688,31 @@ export default {
       ],
       comments: [
         {
-          userName: "蔡蔡小游侠",
+          userName: " ",
+          useR_ID: "0000000001",
           userAvatar:
             "https://ak-d.tripcdn.com/images/Z80p180000013uw9yF21F_R_100_100_R5_Q70_D.jpg",
           commentRoom: "山系·城景大床房",
           bookTime: "08/14/2021",
-          commentPicture:
-            "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
           userCommentNum: 1,
           commentRate: 4,
-          commentContent:
-            "楼下有个人的早餐店铺 豌杂面还不错，不能加床。 🛏️床确实是1.5米的，这个必须肯定。楼下有免费停车🅿️场 。 房间没有介绍的45平米，感觉被骗了。最多30平米左右，窗子对着居民楼，跟图片上完全不一样。整个旅途住宿费最贵的 真的是最差的一家。江边一直有施工，很乱。",
+          commentContent: " ",
           commentTime: "08/14/2021 20:53",
         },
         {
           userName: "兰州潇洒哥",
+          useR_ID: "0000000001",
           userAvatar:
             "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
           commentRoom: "山系·城景大床房",
           bookTime: "08/14/2021",
-          commentPicture:
-            "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
           userCommentNum: 1,
           commentRate: 5.0,
-          commentContent:
-            "环境真的挺不错，价格对于学生党真的好实惠！离解放碑挺近，没想到这个价钱能订到这么好的酒店！我和闺蜜都很满意！保洁阿姨的态度也很好，见到还会问好！强烈推荐！下次来还会订！",
-          commentTime: "08/14/2021 20:53",
-        },
-        {
-          userName: "蔡蔡小游侠",
-          userAvatar:
-            "https://ak-d.tripcdn.com/images/Z80p180000013uw9yF21F_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
-          bookTime: "08/14/2021",
-          commentPicture:
-            "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 1,
-          commentRate: 4,
-          commentContent:
-            "楼下有个人的早餐店铺 豌杂面还不错，不能加床。 🛏️床确实是1.5米的，这个必须肯定。楼下有免费停车🅿️场 。 房间没有介绍的45平米，感觉被骗了。最多30平米左右，窗子对着居民楼，跟图片上完全不一样。整个旅途住宿费最贵的 真的是最差的一家。江边一直有施工，很乱。",
-          commentTime: "08/14/2021 20:53",
-        },
-        {
-          userName: "兰州潇洒哥",
-          userAvatar:
-            "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
-          bookTime: "08/14/2021",
-          commentPicture:
-            "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 1,
-          commentRate: 5.0,
-          commentContent:
-            "环境真的挺不错，价格对于学生党真的好实惠！离解放碑挺近，没想到这个价钱能订到这么好的酒店！我和闺蜜都很满意！保洁阿姨的态度也很好，见到还会问好！强烈推荐！下次来还会订！",
-          commentTime: "08/14/2021 20:53",
-        },
-        {
-          userName: "兰州潇洒哥",
-          userAvatar:
-            "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
-          bookTime: "08/14/2021",
-          commentPicture:
-            "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 1,
-          commentRate: 5.0,
-          commentContent:
-            "环境真的挺不错，价格对于学生党真的好实惠！离解放碑挺近，没想到这个价钱能订到这么好的酒店！我和闺蜜都很满意！保洁阿姨的态度也很好，见到还会问好！强烈推荐！下次来还会订！",
+          commentContent: "",
           commentTime: "08/14/2021 20:53",
         },
       ],
-      hotels: [
+      nearhotels: [
         {
           name: "格林豪泰酒店",
           star: 2,
@@ -807,7 +769,11 @@ export default {
       this.$msgbox({
         title: "领券",
         message: h("div", { style: "width:500px" }, [
-          h("span", { style: "color: #003580;font-weight:700" }, "您已经领取完所有的优惠券"),
+          h(
+            "span",
+            { style: "color: #003580;font-weight:700" },
+            "您已经领取完所有的优惠券"
+          ),
         ]),
         showCancelButton: false,
         confirmButtonText: "确定",
@@ -816,7 +782,84 @@ export default {
     roomTypeChange() {},
     sortWayChange() {},
   },
-  mounted() {},
+  mounted() {
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Hotel/" + this.hotelId)
+      .then((response) => {
+        this.hotelName = response.data[0].hoteL_NAME;
+        this.minPrice = response.data[0].lowesT_PRICE;
+        this.baseImg = response.data[0].picture;
+        this.location = response.data[0].hlocation;
+        this.grade = response.data[0].star;
+      });
+    let tempHotelId = this.hotelId;
+    this.$axios
+      .get("http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + tempHotelId)
+      .then((response) => {
+        console.log(response.data);
+        this.dianping_number = response.data.length;
+        for (var i = 0; i < response.data.length; i++) {
+          this.comments[i].userId = response.data[i].useR_ID;
+          var hotelComentNum;
+          var attrationComentNum;
+          var temp = this.comments[i].userId;
+
+          //获取用户评论过的订单数
+          let _i = i;
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
+                temp
+            )
+            .then((response) => {
+              this.comments[_i].userCommentNum =
+                response.data[0].hotelcommentnum;
+            });
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
+                temp
+            )
+            .then((response) => {
+              this.comments[_i].userCommentNum =
+                response.data[0].hotelcommentnum +
+                this.comments[_i].userCommentNum;
+            });
+          this.comments[i].userCommentNum = hotelComentNum + attrationComentNum;
+
+          // //获取用户订单信息
+          // this.$axios
+          //   .get(
+          //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+          //       temp
+          //   )
+          //   .then((response) => {
+          //     this.comments[_i].commentRoom = response.data[0].typename;
+          //     this.comments[_i].bookTime = response.data[0].ordertime;
+          //   });
+
+          // 获取评论用户的头像
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/Users/" + this.comments[_i].userId
+            )
+            .then((response) => {
+              this.comments[_i].userAvatar = response.data[0].uprofile;
+            });
+
+          this.comments[i].bookTime = response.data[i].commenT_TIME.slice(
+            0,
+            10
+          );
+          this.comments[i].commentRoom = "大床房";
+
+          this.comments[i].userName = response.data[i].useR_NAME;
+          this.comments[i].commentTime = response.data[i].commenT_TIME;
+          this.comments[i].commentRate = response.data[i].grade;
+          this.comments[i].commentContent = response.data[i].ctext;
+        }
+      });
+  },
   created() {
     if (this.$route.query.id) {
       this.hotelId = this.$route.query.id;
