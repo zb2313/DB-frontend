@@ -708,8 +708,7 @@ export default {
           bookTime: "08/14/2021",
           userCommentNum: 1,
           commentRate: 5.0,
-          commentContent:
-            "环境真的挺不错，价格对于学生党真的好实惠！离解放碑挺近，没想到这个价钱能订到这么好的酒店！我和闺蜜都很满意！保洁阿姨的态度也很好，见到还会问好！强烈推荐！下次来还会订！",
+          commentContent: "",
           commentTime: "08/14/2021 20:53",
         },
       ],
