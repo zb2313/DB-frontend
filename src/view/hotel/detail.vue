@@ -792,9 +792,9 @@ export default {
         this.location = response.data[0].hlocation;
         this.grade = response.data[0].star;
       });
-    let temp = this.hotelId;
+    let tempHotelId = this.hotelId;
     this.$axios
-      .get("http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + temp)
+      .get("http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + tempHotelId)
       .then((response) => {
         console.log(response.data);
         this.dianping_number = response.data.length;
