@@ -1,13 +1,15 @@
 <template>
 
-  <div class="login-wrap">
+  <div class="login-wrap" :style="{backgroundImage: 'url(' + coverImgUrl + ')', backgroundSize:'100% 100%', backgroundRepeat: 'no-repeat'}">
+
     <iframe id="geoPage" width=0 height=0 frameborder=0 style="display:none;" scrolling="no"
             src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp">
-
     </iframe>
+
     <div align="center">
-      <img src="../assets/img/lvdao.png" height="300" width="300">
+          <img src="../assets/img/lvdao.png" height="300" width="300">
     </div>
+
     <div class="ms-login">
       <div class="ms-title">旅游信息系统</div>
       <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
@@ -39,8 +41,9 @@
           <el-button type="primary" @click="submitForm()" style="width: 140px">登录</el-button>
           <el-button type="primary" @click="goRegister()" style="width: 140px">注册</el-button>
         </el-form-item>
-        <el-button type="text" @click="forgetPassword()" style="width: 140px">忘记密码</el-button>
-        <el-button type="text" @click="mailVisible=true" style="width: 140px">邮箱验证码登录</el-button>
+        <el-button type="text" @click="forgetPassword()" style="width: 100px">忘记密码</el-button>
+        <el-button type="text" @click="mailVisible=true" style="width: 100px">验证码登录</el-button>
+        <el-button type="text" @click="hotelRegister()" style="width: 70px">商家入驻</el-button>
       </el-form>
     </div>
 
@@ -50,12 +53,15 @@
     >
 
       <el-form ref="login" label-width="80px" class="ms-content">
-        <el-form-item label="邮箱">
+        <el-form-item label="邮箱/手机">
           <el-input style="width: 450px" v-model="param.userid">
           </el-input>
           <el-button type="primary" style="float: right;" @click="sendVerifyCodeLogin">发送验证码</el-button>
         </el-form-item>
-
+        <el-form-item label="验证方式">
+          <el-radio v-model="loginType" label="1">手机号验证</el-radio>
+          <el-radio v-model="loginType" label="2">邮箱验证</el-radio>
+        </el-form-item>
         <el-form-item label="验证码">
           <el-input style="width: 450px" v-model="verifycode">
           </el-input>
@@ -74,11 +80,16 @@
         :visible="forgetVisible"
     >
 
-      <el-form ref="login" label-width="80px" class="ms-content">
-        <el-form-item label="邮箱">
+      <el-form ref="login" label-width="90px" class="ms-content">
+        <el-form-item label="邮箱/手机号">
          <el-input style="width: 450px" v-model="param.userid">
          </el-input>
           <el-button type="primary" style="float: right;" @click="sendVerifyCodeFind">发送验证码</el-button>
+        </el-form-item>
+
+        <el-form-item label="验证方式">
+          <el-radio v-model="loginType" label="1">手机号验证</el-radio>
+          <el-radio v-model="loginType" label="2">邮箱验证</el-radio>
         </el-form-item>
 
         <el-form-item label="验证码">
@@ -88,6 +99,11 @@
 
         <el-form-item label="新密码">
           <el-input style="width: 450px" v-model="param.password">
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="确认新密码">
+          <el-input style="width: 450px" v-model="param.checkPassword">
           </el-input>
         </el-form-item>
 
@@ -107,6 +123,7 @@ export default {
   data()
   {
     return{
+      loginType:'1',
       verifycode:"",
       forgetVisible:false,
       mailVisible:false,
@@ -114,16 +131,22 @@ export default {
       userinfo:[],
       adminList:{},
       hotelList:{},
+      imgList:[
+
+      ]
+      ,
+      coverImgUrl:require("../assets/img/login-bg.jpg"),
       param:
       {
         password: "000001",
-        userid:"0000000001"
+        userid:"0000000001",
+        checkPassword: ""
       },
       rules:{
         username: [
             {
               required: true,
-              message: "请输入邮箱",
+              message: "请输入注册邮箱/手机号",
               trigger: "blur",
             },
           ],
@@ -135,6 +158,10 @@ export default {
   },
   methods:
       {
+        hotelRegister()
+        {
+          this.$router.push("/hotelRegister");
+        },
         submitForm()
         {
           // eslint-disable-next-line no-unused-vars
@@ -173,11 +200,21 @@ export default {
         },
         sendVerifyCodeFind()
         {
-          axios.get("http://49.234.18.247:8080/api/Email/"+this.param.userid+"&findpwd");
+          if(this.loginType=='1') {
+            axios.post("http://49.234.18.247:8080/api/Email/" + this.param.userid + "&findpwd");
+          }
+          else{
+            axios.post("http://49.234.18.247:8080/api/CellphoneCode/86"+this.param.userid+"&findpwd")
+          }
         },
         sendVerifyCodeLogin()
         {
-          axios.get("http://49.234.18.247:8080/api/Email/"+this.param.userid+"&login");
+          if(this.loginType=='2') {
+            axios.post("http://49.234.18.247:8080/api/Email/" + this.param.userid + "&login");
+          }
+          else {
+            axios.post("http://49.234.18.247:8080/api/CellphoneCode/86"+this.param.userid+"&login")
+          }
         },
         goRegister()
         {
@@ -217,7 +254,12 @@ export default {
         },
         resetPassword()
         {
-          axios.patch("http://49.234.18.247:8080/api/Users/"+this.param.userid+"&"+this.verifycode+"&"+this.param.password);
+          if(this.param.password!=this.param.checkPassword)
+          {
+            this.$message.error("两次输入的密码不一致");
+            return;
+          }
+          axios.patch("http://49.234.18.247:8080/api/Users/" + this.param.userid + "&" + this.verifycode + "&" + this.param.password);
         }
       },
   created() {
@@ -235,7 +277,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-image: url("../assets/img/login-bg.jpg");
+  /*background-image: url("../assets/img/login-bg.jpg");*/
   background-size: 100%;
 }
 .ms-title {
