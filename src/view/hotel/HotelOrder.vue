@@ -340,6 +340,8 @@ export default {
       dish: "无",
       price: 198.0,
       discount: 11.0,
+      qrcode:
+        "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
         time: "2021/08/11",
         room_num: undefined,
@@ -356,7 +358,7 @@ export default {
     roomNumChange() {},
     creatQrCode() {
       this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
-        text: "扫描二维码", // 需要转换为二维码的内容
+        text: "秦晓慧是世界上最___的人", // 需要转换为二维码的内容
         width: 200,
         height: 200,
         colorDark: "#000000",
@@ -369,6 +371,39 @@ export default {
     storePrice: function () {
       return this.price - this.discount;
     },
+  },
+  mounted() {
+    // 目前跨域？？
+    // this.$axios
+    //   .post("http://110.40.186.162:7001/api/order", {
+    //     order_id: 1,
+    //     order_type: "wechat",
+    //     order_price: 0.01,
+    //     order_name: "酒店",
+    //     sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+    //     redirect_url: "http://127.0.0.1/324",
+    //     extension: 1111,
+    //   })
+    //   .then((response) => {
+    //     this.qrcode = response.data.qr_url;
+    //     console.log(response.data.qr_url);
+    //   });
+
+    // 留给订房的post请求
+    // this.$axios
+    //   .post("http://110.40.186.162:7001/api/order", {
+    //     order_id: 1,
+    //     order_type: "wechat",
+    //     order_price: 0.01,
+    //     order_name: "酒店",
+    //     sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+    //     redirect_url: "http://127.0.0.1/324",
+    //     extension: 1111,
+    //   })
+    //   .then((response) => {
+    //     this.qrcode = response.data.qr_url;
+    //     console.log(response.data.qr_url);
+    //   });
   },
 };
 </script>
