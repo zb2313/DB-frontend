@@ -573,13 +573,35 @@ export default {
           return response.json();
         })
         .then((res) => {
-          return res.geocodes[0].location.split(",");
+          console.log(res);
+          // if (res.geocodes[0].location) {
+          //   return res.geocodes[0].location;
+          // } else return -1;
         });
     },
     getHotelbyCity() {
       this.$axios
         .get(
           "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
+            this.title.city
+        )
+        .then((response) => {
+          for (var i = 0; i < response.data.length; i++) {
+            response.data[i].hotelname =
+              response.data[i].hotelname.split("(")[0];
+            response.data[i].location = this.fun_hotel_district(
+              response.data[i].location
+            );
+          }
+          this.originData = JSON.parse(JSON.stringify(response.data));
+          this.items = response.data;
+          this.title.num = response.data.length;
+        });
+    },
+    getHotelbyName() {
+      this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetHotelInfoByName/" +
             this.title.city
         )
         .then((response) => {
@@ -703,7 +725,13 @@ export default {
     },
   },
   created() {
-    this.getHotelbyCity();
+    if (this.$route.query.find) {
+      this.title.city = this.$route.query.find;
+      this.getHotelbyName();
+    } else {
+      this.title.city = "全部";
+      this.getHotelbyCity();
+    }
   },
   watch: {
     dialogVisible(newValue, oldValue) {

@@ -113,33 +113,37 @@ export default {
           label: "热门城市",
           options: [
             {
-              value: "Shanghai",
+              value: "上海",
               label: "上海",
             },
             {
-              value: "Beijing",
+              value: "北京",
               label: "北京",
             },
           ],
         },
         {
-          label: "附近酒店",
+          label: "热门连锁酒店",
           options: [
             {
-              value: "Chengdu",
+              value: "格林豪泰",
               label: "格林豪泰快捷酒店",
             },
             {
-              value: "Shenzhen",
-              label: "七天酒店",
+              value: "7天",
+              label: "7天酒店",
             },
             {
-              value: "Guangzhou",
+              value: "速8",
+              label: "速8酒店",
+            },
+            {
+              value: "四季",
               label: "四季酒店",
             },
             {
-              value: "Dalian",
-              label: "秋果酒店",
+              value: "如家",
+              label: "如家酒店",
             },
           ],
         },
@@ -153,11 +157,16 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.form_Select.time);
-      // this.$router.push({
-      //   path: "/hotel/city",
-      //   query: { search: this.form_Select.location },
-      // });
+      this.$router.push({
+        path: "/hotel/city",
+        query: {
+          keyword: this.form_Select.location,
+          // time: this.form_Select.time,
+          room: this.form_Select.room_num,
+          adult: this.form_Select.adult_num,
+          child: this.form_Select.child_num,
+        },
+      });
     },
   },
 };
@@ -226,6 +235,7 @@ export default {
 .popover-item {
   width: 300px;
   margin: 0 auto;
+  margin-top: 10px;
 }
 .popover-item span {
   margin-right: 100px;

@@ -127,13 +127,13 @@
                 </span>
                 <el-divider direction="vertical"></el-divider>
                 <span title="乌鲁木齐">
-                  <router-link to="/attraction/city?search=成都">
+                  <router-link to="/attraction/city?search=乌鲁木齐">
                     乌鲁木齐
                   </router-link>
                 </span>
                 <el-divider direction="vertical"></el-divider>
                 <span title="拉萨">
-                  <router-link to="/attraction/city?search=成都">
+                  <router-link to="/attraction/city?search=拉萨">
                     拉萨
                   </router-link>
                 </span>
@@ -358,6 +358,8 @@ export default {
   data() {
     return {
       currentCity: "",
+      adcode: 110101,
+      weather: "",
       attrStart: "北京",
       hotelStart: "北京",
       ticketStart: "北京",
@@ -385,9 +387,60 @@ export default {
       attractions: [],
       hotels: [],
       tickets: [],
+      input: "",
     };
   },
   methods: {
+    onSearch() {
+      var cities = "上海市北京市南京市重庆市成都市";
+      if (cities.includes(this.input)) {
+        this.$notify({
+          title: "尊敬的用户",
+          message: "正在为您推荐" + this.input + "的相关信息！",
+          position: "top-left",
+        });
+        this.currentCity = this.input;
+        this.getAdcode(this.currentCity);
+        this.attrStart = this.input;
+        this.hotelStart = this.input;
+        this.ticketStart = this.input;
+      } else {
+        this.$axios
+          .get(
+            "http://49.234.18.247:8080/api/FunGetAttractionInfoByName/" +
+              this.input
+          )
+          .then((response) => {
+            if (response.data.length !== 0) {
+              this.$router.push({
+                path: "/attraction/city",
+                query: { find: this.input },
+              });
+            } else {
+              this.$axios
+                .get(
+                  "http://49.234.18.247:8080/api/FunGetHotelInfoByName/" +
+                    this.input
+                )
+                .then((response) => {
+                  if (response.data.length !== 0) {
+                    this.$router.push({
+                      path: "/hotel/city",
+                      query: { find: this.input },
+                    });
+                  } else {
+                    this.$notify({
+                      title: "尊敬的用户",
+                      message:
+                        "非常抱歉!我们暂无" + this.input + "的相关信息！",
+                      position: "top-left",
+                    });
+                  }
+                });
+            }
+          });
+      }
+    },
     onClick(a, b) {
       this.$set(this.show, a, b);
     },
@@ -423,12 +476,18 @@ export default {
       var i = 0;
       var len = detail.length;
       var res = "";
-      while (detail[i] != "路" && isNaN(detail[i]) && i < len) {
+      while (
+        detail[i] != "路" &&
+        detail[i] != "镇" &&
+        detail[i] != "村" &&
+        isNaN(detail[i]) &&
+        i < len
+      ) {
         res += detail[i];
         i++;
       }
-      if (detail[i] == "路") {
-        return res + "路";
+      if (detail[i] == "路" || detail[i] == "镇" || detail[i] == "村") {
+        return res + detail[i];
       } else {
         return res;
       }
@@ -438,6 +497,8 @@ export default {
       var tmp;
       if (detail[5] == "市") {
         tmp = detail.slice(3, 6) + detail.slice(7);
+      } else if (detail[5] == "省") {
+        tmp = detail.slice(3, 6) + detail.slice(7, 10) + detail.slice(11);
       } else {
         tmp = detail;
       }
@@ -462,6 +523,7 @@ export default {
           })
           .then(function (myJson) {
             a.currentCity = myJson.regeocode.addressComponent.province;
+            a.adcode = myJson.regeocode.addressComponent.adcode;
             a.attrStart = a.currentCity.substr(0, a.currentCity.length - 1);
             a.ticketStart = a.attrStart;
             a.hotelStart = a.attrStart;
@@ -492,7 +554,7 @@ export default {
     // 根据城市名获取机票信息
     getTicketbyCity(city) {
       this.$axios
-        .get("http://49.234.18.247:8080/api/FunGetLowestPrice/" + city)
+        .get("http://49.234.18.247:8080/api/FunGetLowestPrice/" + "上海")
         .then((response) => {
           var date = new Date();
           var day = date.getDate();
@@ -502,6 +564,20 @@ export default {
               month + "月" + day + "日" + " " + response.data[i].starT_TIME;
           }
           this.tickets = response.data;
+        });
+    },
+    getAdcode(city) {
+      let a = this;
+      fetch(
+        "https://restapi.amap.com/v3/geocode/geo?address=" +
+          city +
+          "&key=b46e001d88ea385075cc97e1c892ce37"
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (myJson) {
+          a.adcode = myJson.geocodes[0].adcode;
         });
     },
   },
@@ -514,10 +590,57 @@ export default {
   },
   mounted() {},
   watch: {
-    currentCity(newValue, oldValue) {
+    adcode(newValue, oldValue) {
+      let a = this;
+      fetch(
+        "https://restapi.amap.com/v3/weather/weatherInfo?city=" +
+          newValue +
+          "&key=b46e001d88ea385075cc97e1c892ce37&extensions=all"
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (myJson) {
+          var current = myJson.forecasts[0].casts[0];
+          var city = myJson.forecasts[0].city;
+          var time = myJson.forecasts[0].reporttime;
+          a.$notify({
+            title: "实时天气",
+            dangerouslyUseHTMLString: true,
+            message:
+              "<p>发布时间：" +
+              time +
+              "</p>" +
+              "<p>城市/区：" +
+              city +
+              "</p>" +
+              "<p>天气：" +
+              current.dayweather +
+              "</p>" +
+              "<p>温度：" +
+              current.nighttemp +
+              "~" +
+              current.daytemp +
+              "℃</p>" +
+              "<p>风力：" +
+              current.daypower +
+              "级</p>" +
+              "<p>风向：" +
+              current.daywind +
+              "</p>" +
+              "<h4>请注意天气合理出行！</h4>",
+            position: "top-left",
+          });
+        });
+    },
+    attrStart(newValue, oldValue) {
       this.getAttrbyCity(newValue);
+    },
+    hotelStart(newValue, oldValue) {
       this.getHotelbyCity(newValue);
-      this.getTicketbyCity(newValue.slice(0, 2));
+    },
+    ticketStart(newValue, oldValue) {
+      this.getTicketbyCity(newValue);
     },
   },
 };

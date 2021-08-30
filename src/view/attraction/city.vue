@@ -260,6 +260,25 @@ export default {
           }
         });
     },
+    gitAttrbyName() {
+      this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetAttractionInfoByName/" +
+            this.title.city
+        )
+        .then((response) => {
+          console.log(response.data);
+          this.originData = JSON.parse(JSON.stringify(response.data));
+          var items;
+          if ((items = this.checkLabel(this.label, response.data))) {
+            this.items = items;
+            this.title.num = items.length;
+          } else {
+            this.items = response.data;
+            this.title.num = response.data.length;
+          }
+        });
+    },
     // 回到顶部
     goTop() {
       // document.documentElement.scrollTop = document.body.scrollTop = 0;
@@ -390,14 +409,18 @@ export default {
   created() {
     if (this.$route.query.search) {
       this.title.city = this.$route.query.search;
+      this.getAttrbyCity();
+    } else if (this.$route.query.find) {
+      this.title.city = this.$route.query.find;
+      this.gitAttrbyName();
     } else {
       this.title.city = "全部";
+      this.getAttrbyCity();
     }
     if (this.$route.query.label) {
       this.label = this.$route.query.label;
       this.$set(this.checkList, 0, this.label);
     }
-    this.getAttrbyCity();
   },
   mounted() {},
   watch: {
