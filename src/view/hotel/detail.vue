@@ -191,6 +191,7 @@
               :originalPrice="room.originalPrice"
               :coverImgUrl="room.coverImgUrl"
               :roomID="room.ID"
+              :hotelID="hotelId"
             />
           </li>
         </ul>
@@ -644,7 +645,7 @@ export default {
             "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
         },
         {
-          ID: "000001",
+          ID: "000002",
           roomName: "山系·城景大床房",
           customerNum: 2,
           bed: "1张大床和1张双人床",
@@ -794,7 +795,9 @@ export default {
       });
     let tempHotelId = this.hotelId;
     this.$axios
-      .get("http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + tempHotelId)
+      .get(
+        "http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + tempHotelId
+      )
       .then((response) => {
         console.log(response.data);
         this.dianping_number = response.data.length;

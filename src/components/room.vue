@@ -109,6 +109,7 @@ button {
   line-height: 30px;
   border: none;
   margin-left: 5px;
+  cursor: pointer;
 }
 </style>
 
@@ -126,6 +127,7 @@ export default {
     originalPrice: Number,
     coverImgUrl: String,
     roomID: String,
+    hotelID: String,
   },
   data() {
     return {
@@ -144,6 +146,15 @@ export default {
         ]),
         showCancelButton: false,
         confirmButtonText: "确定",
+      });
+    },
+    Book() {
+      this.$router.push({
+        path: "/hotel/HotelOrder",
+        query: {
+          roomID: this.roomID,
+          hotelID: this.hotelID,
+        },
       });
     },
   },

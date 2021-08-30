@@ -601,6 +601,8 @@ export default {
           return response.json();
         })
         .then(function (myJson) {
+          console.log(myJson.forecasts[0]);
+          var future = myJson.forecasts[0].casts;
           var current = myJson.forecasts[0].casts[0];
           var city = myJson.forecasts[0].city;
           var time = myJson.forecasts[0].reporttime;
@@ -627,9 +629,45 @@ export default {
               "级</p>" +
               "<p>风向：" +
               current.daywind +
-              "</p>" +
-              "<h4>请注意天气合理出行！</h4>",
+              "</p>",
             position: "top-left",
+          });
+          a.$nextTick(() => {
+            a.$notify({
+              title: "未来三天",
+              dangerouslyUseHTMLString: true,
+              message:
+                "<p>" +
+                future[1].date +
+                "&nbsp;&nbsp;" +
+                future[1].nighttemp +
+                "~" +
+                future[1].daytemp +
+                "℃&nbsp;&nbsp;" +
+                future[1].dayweather +
+                "</p>" +
+                "<p>" +
+                future[2].date +
+                "&nbsp;&nbsp;" +
+                future[2].nighttemp +
+                "~" +
+                future[2].daytemp +
+                "℃&nbsp;&nbsp;" +
+                future[2].dayweather +
+                "</p>" +
+                "<p>" +
+                future[3].date +
+                "&nbsp;&nbsp;" +
+                future[3].nighttemp +
+                "~" +
+                future[3].daytemp +
+                "℃&nbsp;&nbsp;" +
+                future[3].dayweather +
+                "</p>" +
+                "<h4>请注意天气合理出行！</h4>",
+              position: "top-left",
+              duration: 5500,
+            });
           });
         });
     },

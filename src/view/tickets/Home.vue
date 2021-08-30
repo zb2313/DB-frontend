@@ -74,14 +74,13 @@
 
 <style scoped>
 .welcome {
-  width: 100px;
-  height: 30px;
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
   float: left;
   position: relative;
   top: 24vh;
   left: 14vw;
+  color: #003680;
 }
 .pic {
   width: 100%;

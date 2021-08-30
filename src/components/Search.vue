@@ -127,7 +127,7 @@ export default {
           options: [
             {
               value: "格林豪泰",
-              label: "格林豪泰快捷酒店",
+              label: "格林豪泰酒店",
             },
             {
               value: "7天",
@@ -157,16 +157,69 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$router.push({
-        path: "/hotel/city",
-        query: {
-          keyword: this.form_Select.location,
-          // time: this.form_Select.time,
-          room: this.form_Select.room_num,
-          adult: this.form_Select.adult_num,
-          child: this.form_Select.child_num,
-        },
-      });
+      var city = "北京市上海市重庆市成都市南京市";
+      var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
+      if (city.includes(this.form_Select.location)) {
+        if (this.form_Select.time) {
+          this.$router.push({
+            path: "/hotel/city",
+            query: {
+              city: this.form_Select.location,
+              time1: this.form_Select.time[0].getTime(),
+              time2: this.form_Select.time[1].getTime(),
+              room: this.form_Select.room_num,
+              adult: this.form_Select.adult_num,
+              child: this.form_Select.child_num,
+            },
+          });
+        } else {
+          this.$router.push({
+            path: "/hotel/city",
+            query: {
+              city: this.form_Select.location,
+              room: this.form_Select.room_num,
+              adult: this.form_Select.adult_num,
+              child: this.form_Select.child_num,
+            },
+          });
+        }
+      } else if (hotelname.includes(this.form_Select.location)) {
+        if (this.form_Select.time) {
+          this.$router.push({
+            path: "/hotel/city",
+            query: {
+              city: this.form_Select.location,
+              time1: this.form_Select.time[0].getTime(),
+              time2: this.form_Select.time[1].getTime(),
+              room: this.form_Select.room_num,
+              adult: this.form_Select.adult_num,
+              child: this.form_Select.child_num,
+            },
+          });
+        } else {
+          this.$router.push({
+            path: "/hotel/city",
+            query: {
+              city: this.form_Select.location,
+              room: this.form_Select.room_num,
+              adult: this.form_Select.adult_num,
+              child: this.form_Select.child_num,
+            },
+          });
+        }
+      } else {
+        this.$notify({
+          title: "温馨提醒",
+          dangerouslyUseHTMLString: true,
+          message:
+            "暂无" +
+            '"' +
+            this.form_Select.location +
+            '"' +
+            "相关的信息！&nbsp;请尝试搜索其他关键词！",
+          posotion: "top-left",
+        });
+      }
     },
   },
 };

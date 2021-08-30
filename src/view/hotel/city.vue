@@ -38,10 +38,10 @@
                   {{ searchForm.adult }}位成人
                 </div>
                 <div class="input-number-icon">
-                  <div class="input-number-up-icon">
+                  <div class="input-number-up-icon" @click="numberPlus(1)">
                     <i class="el-icon-arrow-up"></i>
                   </div>
-                  <div class="input-number-down-icon">
+                  <div class="input-number-down-icon" @click="numberMinus(1)">
                     <i class="el-icon-arrow-down"></i>
                   </div>
                 </div>
@@ -54,10 +54,10 @@
                   {{ searchForm.child }}名儿童
                 </div>
                 <div class="input-number-icon">
-                  <div class="input-number-up-icon">
+                  <div class="input-number-up-icon" @click="numberPlus(2)">
                     <i class="el-icon-arrow-up"></i>
                   </div>
-                  <div class="input-number-down-icon">
+                  <div class="input-number-down-icon" @click="numberMinus(3)">
                     <i class="el-icon-arrow-down"></i>
                   </div>
                 </div>
@@ -68,16 +68,16 @@
               >
                 <div class="input-number-text">{{ searchForm.room }}间房</div>
                 <div class="input-number-icon">
-                  <div class="input-number-up-icon">
+                  <div class="input-number-up-icon" @click="numberPlus(3)">
                     <i class="el-icon-arrow-up"></i>
                   </div>
-                  <div class="input-number-down-icon">
+                  <div class="input-number-down-icon" @click="numberMinus(3)">
                     <i class="el-icon-arrow-down"></i>
                   </div>
                 </div>
               </div>
 
-              <div class="searchBtn">点击搜索</div>
+              <div class="searchBtn" @click="onSubmit">点击搜索</div>
             </div>
           </div>
 
@@ -383,7 +383,7 @@ export default {
           disabledDate: (time) => {
             return (
               time.getTime() < this.searchForm.date1 ||
-              time.getTime() < Date.now() - 86400000
+              time.getTime() < Date.now() - 8.64e7
             );
           },
         },
@@ -443,6 +443,75 @@ export default {
     };
   },
   methods: {
+    numberPlus(n) {
+      if (n == 1 && this.searchForm.adult != 10) {
+        this.searchForm.adult++;
+      } else if (n == 2 && this.searchForm.child != 5) {
+        this.searchForm.child++;
+      } else if (n == 3 && this.searchForm.room != 10) {
+        this.searchForm.room++;
+      }
+    },
+    numberMinus(n) {
+      if (n == 1 && this.searchForm.adult != 1) {
+        this.searchForm.adult--;
+      } else if (n == 2 && this.searchForm.child != 0) {
+        this.searchForm.child--;
+      } else if (n == 3 && this.searchForm.room != 1) {
+        this.searchForm.room--;
+      }
+    },
+    onSubmit() {
+      console.log(this.searchForm.date1);
+      console.log(this.searchForm.date2);
+      var time1 = Number.isFinite(this.searchForm.date1)
+        ? this.searchForm.date1
+        : this.searchForm.date1.getTime();
+
+      var time2 = Number.isFinite(this.searchForm.date2)
+        ? this.searchForm.date2
+        : this.searchForm.date2.getTime();
+
+      // var city = "北京市上海市重庆市成都市南京市";
+      // var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
+      // if (city.includes(this.searchForm.location)) {
+      //   this.$router.push({
+      //     path: "/hotel/city",
+      //     query: {
+      //       city: this.searchForm.location,
+      //       time1: time1,
+      //       time2: time2,
+      //       room: this.searchForm.room,
+      //       adult: this.searchForm.adult,
+      //       child: this.searchForm.child,
+      //     },
+      //   });
+      // } else if (hotelname.includes(this.searchForm.location)) {
+      //   this.$router.push({
+      //     path: "/hotel/city",
+      //     query: {
+      //       hotelname: this.searchForm.location,
+      //       time1: time1,
+      //       time2: time2,
+      //       room: this.searchForm.room,
+      //       adult: this.searchForm.adult,
+      //       child: this.searchForm.child,
+      //     },
+      //   });
+      // } else {
+      //   this.$notify({
+      //     title: "温馨提醒",
+      //     dangerouslyUseHTMLString: true,
+      //     message:
+      //       "暂无" +
+      //       '"' +
+      //       this.searchForm.location +
+      //       '"' +
+      //       "相关的信息！&nbsp;请尝试搜索其他关键词！",
+      //     posotion: "top-left",
+      //   });
+      // }
+    },
     initMap() {
       this.map = amapManager.getMap();
       // 比例尺
@@ -573,7 +642,7 @@ export default {
           return response.json();
         })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           // if (res.geocodes[0].location) {
           //   return res.geocodes[0].location;
           // } else return -1;
@@ -653,6 +722,7 @@ export default {
       }
       return tmp;
     },
+    // 下面四个函数用于实现筛选框功能
     narrow(List) {
       this.withList = [];
       for (var i = 0; i < this.originData.length; i++) {
@@ -725,13 +795,36 @@ export default {
     },
   },
   created() {
+    // 搜索框日期初始化
+    this.searchForm.date1 = Date.now();
+    this.searchForm.date2 = Date.now() + 8.64e7;
+
     if (this.$route.query.find) {
       this.title.city = this.$route.query.find;
+      this.getHotelbyName();
+    } else if (this.$route.query.city) {
+      this.title.city = this.$route.query.city;
+      if (this.$route.query.time1) {
+        this.searchForm.date1 = parseInt(this.$route.query.time1);
+        this.searchForm.date2 = parseInt(this.$route.query.time2);
+      }
+      this.searchForm.adult = this.$route.query.adult;
+      this.searchForm.child = this.$route.query.child;
+      this.searchForm.room = this.$route.query.room;
+      this.getHotelbyCity();
+    } else if (this.$route.query.hotelname) {
+      this.title.city = this.$route.query.hotelname;
+      if (this.$route.query.time1) {
+        this.searchForm.date1 = parseInt(this.$route.query.time1);
+        this.searchForm.date2 = parseInt(this.$route.query.time2);
+      }
       this.getHotelbyName();
     } else {
       this.title.city = "全部";
       this.getHotelbyCity();
     }
+
+    this.searchForm.location = this.title.city;
   },
   watch: {
     dialogVisible(newValue, oldValue) {
@@ -752,10 +845,19 @@ export default {
     },
     "searchForm.date1"(inew, iold) {
       if (this.searchForm.date2) {
-        if (inew > this.searchForm.date2) {
-          var temp = this.searchForm.date1;
-          this.searchForm.date1 = this.searchForm.date2;
-          this.searchForm.date2 = temp;
+        var time1 = Number.isFinite(inew)
+          ? this.searchForm.date1
+          : this.searchForm.date1.getTime();
+
+        var time2 = Number.isFinite(this.searchForm.date2)
+          ? this.searchForm.date2
+          : this.searchForm.date2.getTime();
+
+        if (time1 > time2) {
+          this.searchForm.date1 = time2;
+          this.searchForm.date2 = time1;
+        } else if (time1 == time2) {
+          this.searchForm.date2 = time1 + 8.64e7;
         }
         this.searchForm.dates = Math.ceil(
           (this.searchForm.date2 - this.searchForm.date1) / 8.64e7
@@ -787,10 +889,6 @@ export default {
     },
   },
   mounted() {
-    // 搜索框日期初始化
-    this.searchForm.date1 = Date.now();
-    this.searchForm.date2 = Date.now() + 8.64e7;
-
     // 地图初始化
     this.addressToLnglat(this.title.city).then((res) => {
       this.center = res;
