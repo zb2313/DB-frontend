@@ -1,6 +1,6 @@
 <template>
   <div>
-    <admiHeader /> <img src="../assets/img/audit1.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0">
+    <admiHeader /> <img src="../assets/img/audit1.jpg" width="100%" height="100%" style="z-index:-100;position:fixed;left:0;top:0">
     <div class="page">
       <el-card id="nomoment" v-if="momentlist.length===0">暂无动态
       </el-card>
@@ -42,6 +42,8 @@
 <style>
 #moment{
     width: 1000px;
+    margin: 15px;
+    padding: 10px;
 }
 #nomoment
 {text-align: center;
@@ -49,7 +51,7 @@
 }
 .page{
   position:absolute;
-  top: 200px;
+  top: 150px;
   left:300px; 
 }
 </style>

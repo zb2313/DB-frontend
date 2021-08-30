@@ -1,9 +1,9 @@
 <template>
 <div>
 <admiHeader/>
-<img src="../assets/img/admi.jpg" width="100%" height="100%" style="z-index:-100;position:absolute;left:0;top:0">
+<img src="../assets/img/admi.jpg" width="100%" height="100%" style="z-index:-100;position:fixed;left:0;top:0">
 <div class="page" id="form">
- <el-tabs type="border-card" id="page">
+ <el-tabs type="border-card" id="info-card">
   <el-tab-pane>
     <span slot="label"><i class="el-icon-user"></i> 基础信息</span>
    <el-form>
@@ -42,7 +42,12 @@
 </div>
 </template>
 <style>
-#page{
+.page{
+  position:absolute;
+  top: 200px;
+  left:300px;
+}
+#info-card{
   position: relative;
   left: 20%;
   width: 60%;
