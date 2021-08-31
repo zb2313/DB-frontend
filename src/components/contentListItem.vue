@@ -189,7 +189,6 @@ export default {
       favs: [],
       command: "",
       last: 0,
-      user_ID: "", //测试记得删
       clicked: false,
       baseImg:
         "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
@@ -255,8 +254,10 @@ export default {
         return "一般般";
       } else if (this.grade == 2) {
         return "不太好";
-      } else {
+      } else if (this.grade == 1) {
         return "非常差";
+      } else {
+        return "暂无评分";
       }
     },
   },

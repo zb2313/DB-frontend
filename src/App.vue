@@ -57,4 +57,8 @@ a:visited {
 .amap-ui-control-theme-my-red .amap-ui-control-layer-toggle {
   color: #fff;
 }
+
+.el-notification.right {
+  right: 20%;
+}
 </style>

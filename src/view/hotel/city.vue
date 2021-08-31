@@ -286,8 +286,8 @@
   background-color: #0071c2;
   cursor: pointer;
 }
-
 .amap-wrap {
+  position: relative;
   width: 100%;
   height: 500px;
 }
@@ -391,8 +391,7 @@ export default {
         child: 0,
         room: 1,
       },
-      position: [0, 0],
-      address: "",
+
       map: null,
       lang: "zh_en",
       zoom: 15,
@@ -402,25 +401,6 @@ export default {
         init() {
           lazyAMapApiLoaderInstance.load().then(() => {
             _this.initMap();
-          });
-        },
-        click(e) {
-          // 点击获得经纬度和地址
-          let { lng, lat } = e.lnglat;
-          _this.position = [lng, lat];
-
-          var geocoder = new AMap.Geocoder({
-            radius: 1000,
-            extensions: "all",
-          });
-
-          geocoder.getAddress([lng, lat], function (status, result) {
-            if (status === "complete" && result.info === "OK") {
-              if (result && result.regeocode) {
-                _this.address = result.regeocode.formattedAddress;
-                _this.$nextTick();
-              }
-            }
           });
         },
       },
@@ -436,8 +416,6 @@ export default {
         num: 400,
       },
       radio: "1",
-      Lnglat: [],
-      test: [],
       items: [],
       originData: [],
     };
@@ -462,55 +440,26 @@ export default {
       }
     },
     onSubmit() {
-      console.log(this.searchForm.date1);
-      console.log(this.searchForm.date2);
-      var time1 = Number.isFinite(this.searchForm.date1)
-        ? this.searchForm.date1
-        : this.searchForm.date1.getTime();
-
-      var time2 = Number.isFinite(this.searchForm.date2)
-        ? this.searchForm.date2
-        : this.searchForm.date2.getTime();
-
-      // var city = "北京市上海市重庆市成都市南京市";
-      // var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
-      // if (city.includes(this.searchForm.location)) {
-      //   this.$router.push({
-      //     path: "/hotel/city",
-      //     query: {
-      //       city: this.searchForm.location,
-      //       time1: time1,
-      //       time2: time2,
-      //       room: this.searchForm.room,
-      //       adult: this.searchForm.adult,
-      //       child: this.searchForm.child,
-      //     },
-      //   });
-      // } else if (hotelname.includes(this.searchForm.location)) {
-      //   this.$router.push({
-      //     path: "/hotel/city",
-      //     query: {
-      //       hotelname: this.searchForm.location,
-      //       time1: time1,
-      //       time2: time2,
-      //       room: this.searchForm.room,
-      //       adult: this.searchForm.adult,
-      //       child: this.searchForm.child,
-      //     },
-      //   });
-      // } else {
-      //   this.$notify({
-      //     title: "温馨提醒",
-      //     dangerouslyUseHTMLString: true,
-      //     message:
-      //       "暂无" +
-      //       '"' +
-      //       this.searchForm.location +
-      //       '"' +
-      //       "相关的信息！&nbsp;请尝试搜索其他关键词！",
-      //     posotion: "top-left",
-      //   });
-      // }
+      var city = "全部北京市上海市重庆市成都市南京市";
+      var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
+      this.title.city = this.searchForm.location;
+      if (city.includes(this.searchForm.location)) {
+        this.getHotelbyCity();
+      } else if (hotelname.includes(this.searchForm.location)) {
+        this.getHotelbyName();
+      } else {
+        this.$notify({
+          title: "温馨提醒",
+          dangerouslyUseHTMLString: true,
+          message:
+            "暂无" +
+            '"' +
+            this.searchForm.location +
+            '"' +
+            "相关的信息！&nbsp;请尝试搜索其他关键词！",
+          posotion: "top-left",
+        });
+      }
     },
     initMap() {
       this.map = amapManager.getMap();
@@ -528,111 +477,33 @@ export default {
         })
       );
       let a = this;
+      var len = a.items.length;
+      for (let i = 0; i < len; i++) {
+        this.addressToLnglat(a.items[i].location).then((res) => {
+          let lnglat = res.split(",");
+          a.addMarker(lnglat, a.items[i]);
+        });
+      }
+    },
+    addMarker(position, item) {
       let marker = new AMap.Marker({
-        position: [121, 31],
-        anchor: "bottom-left",
+        position: position,
         animation: "AMAP_ANIMATION_DROP",
       });
-      marker.setMap(this.map);
 
-      // 热点信息展示
-      let placeSearch = new AMap.PlaceSearch(); //构造地点查询类
-      let infoWindow = new AMap.AdvancedInfoWindow({});
+      this.map.add(marker);
+      let a = this;
 
-      // 地图的热点
-      this.map.on("hotspotclick", function (result) {
-        placeSearch.getDetails(result.id, function (status, result) {
-          if (status === "complete" && result.info === "OK") {
-            placeSearch_CallBack(result);
-          }
+      marker.on("click", function () {
+        console.log(item);
+        a.$notify({
+          title: item.hotelname,
+          message: "这是一条不会自动关闭的消息",
+          offset: 50,
         });
       });
-      //回调函数
-      function placeSearch_CallBack(data) {
-        let poiArr = data.poiList.pois;
-        let location = a.position;
-        infoWindow.setContent(createContent(poiArr[0]));
-        infoWindow.open(a.map, location);
-      }
-      function createContent(poi) {
-        //信息窗体内容
-        var s = [];
-        s.push(
-          '<div class="info-title">' +
-            poi.name +
-            '</div><div class="info-content">' +
-            "地址：" +
-            poi.address
-        );
-        s.push("电话：" + poi.tel);
-        s.push("类型：" + poi.type);
-        s.push("<div>");
-        return s.join("<br>");
-      }
-
-      //创建右键菜单
-      let contextMenu = new AMap.ContextMenu();
-      //右键放大
-      contextMenu.addItem(
-        "放大一级",
-        function () {
-          a.map.zoomIn();
-        },
-        0
-      );
-      //右键缩小
-      contextMenu.addItem(
-        "缩小一级",
-        function () {
-          a.map.zoomOut();
-        },
-        1
-      );
-      // 右键添加Marker标记
-      let contextMenuPositon;
-      contextMenu.addItem(
-        "添加标记",
-        function () {
-          AMapUI.loadUI(["overlay/SvgMarker"], function (SvgMarker) {
-            //创建一个shape实例
-            var shape = new SvgMarker.Shape.TriangleFlagPin({
-              height: 50, //高度
-              //width: **, //不指定时会维持默认的宽高比
-              fillColor: "lightpink", //填充色
-              strokeWidth: 1, //描边宽度
-              strokeColor: "aliceblue", //描边颜色
-            });
-
-            //利用该shape构建SvgMarker
-            var marker = new SvgMarker(
-              //第一个参数传入shape实例
-              shape,
-              //第二个参数为SimpleMarker的构造参数（iconStyle除外）
-              {
-                showPositionPoint: false, //显示定位点
-                map: a.map,
-                position: contextMenuPositon,
-              }
-            );
-          });
-        },
-        2
-      );
-      //地图绑定鼠标右击事件——弹出右键菜单
-      this.map.on("rightclick", function (e) {
-        contextMenu.open(a.map, e.lnglat);
-        contextMenuPositon = e.lnglat;
-      });
     },
-    addMarker() {
-      let marker = new AMap.Marker({
-        position: [121.473701, 31.230416],
-        anchor: "bottom-left",
-        animation: "AMAP_ANIMATION_DROP",
-      });
 
-      marker.setMap(this.map);
-    },
     async addressToLnglat(address) {
       return fetch(
         "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
@@ -642,10 +513,9 @@ export default {
           return response.json();
         })
         .then((res) => {
-          // console.log(res);
-          // if (res.geocodes[0].location) {
-          //   return res.geocodes[0].location;
-          // } else return -1;
+          if (res.geocodes[0].location) {
+            return res.geocodes[0].location;
+          } else return -1;
         });
     },
     getHotelbyCity() {
@@ -799,6 +669,7 @@ export default {
     this.searchForm.date1 = Date.now();
     this.searchForm.date2 = Date.now() + 8.64e7;
 
+    // 接收其他页面传递的参数
     if (this.$route.query.find) {
       this.title.city = this.$route.query.find;
       this.getHotelbyName();
@@ -823,26 +694,15 @@ export default {
       this.title.city = "全部";
       this.getHotelbyCity();
     }
-
     this.searchForm.location = this.title.city;
+
+    if (this.title.city !== "全部") {
+      this.addressToLnglat(this.title.city).then((res) => {
+        this.center = res.split(",");
+      });
+    }
   },
   watch: {
-    dialogVisible(newValue, oldValue) {
-      if (newValue == true) {
-        this.addMarker();
-      }
-    },
-    items(newValue, oldValue) {
-      var len = newValue.length;
-      for (let i = 0; i < len; i++) {
-        setTimeout(() => {
-          this.addressToLnglat(newValue[i].location).then((res) => {
-            this.Lnglat.push(res);
-            this.test.push(i);
-          });
-        }, 350 * i);
-      }
-    },
     "searchForm.date1"(inew, iold) {
       if (this.searchForm.date2) {
         var time1 = Number.isFinite(inew)
@@ -888,11 +748,6 @@ export default {
       this.goTop();
     },
   },
-  mounted() {
-    // 地图初始化
-    this.addressToLnglat(this.title.city).then((res) => {
-      this.center = res;
-    });
-  },
+  mounted() {},
 };
 </script>

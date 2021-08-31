@@ -95,14 +95,16 @@
               <p style="font-size: 16px; margin-top: 7px; margin-bottom: 7px">
                 到达时间
               </p>
-              <el-select
+
+              <el-time-picker
                 v-model="form_Select.arrival"
-                @change="arriveTimeChange"
-                placeholder="14：00"
+                :picker-options="{
+                  selectableRange: '00:00:00 - 23:59:59',
+                }"
+                placeholder="请选择时间"
+                format="HH:mm"
               >
-                <el-option label="14：00" value="14：00"></el-option>
-                <el-option label="15：00" value="15：00"></el-option>
-              </el-select>
+              </el-time-picker>
               <p style="font-size: 16px; margin-top: 7px; margin-bottom: 7px">
                 房间整晚保留
               </p>
@@ -388,7 +390,6 @@ export default {
     //     this.qrcode = response.data.qr_url;
     //     console.log(response.data.qr_url);
     //   });
-
     // 留给订房的post请求
     // this.$axios
     //   .post("http://110.40.186.162:7001/api/order", {

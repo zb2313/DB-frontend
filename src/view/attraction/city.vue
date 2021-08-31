@@ -267,7 +267,6 @@ export default {
             this.title.city
         )
         .then((response) => {
-          console.log(response.data);
           this.originData = JSON.parse(JSON.stringify(response.data));
           var items;
           if ((items = this.checkLabel(this.label, response.data))) {
@@ -379,12 +378,30 @@ export default {
     },
     onSelect() {
       if (this.input) {
-        this.$router.push({
-          path: "/attraction/city",
-          query: { search: this.input },
-        });
+        var cities = "北京市上海市重庆市成都市苏州市南京市";
+        if (cities.includes(this.input)) {
+          this.$router.push({
+            path: "/attraction/city",
+            query: { search: this.input },
+          });
+        } else {
+          this.$router.push({
+            path: "/attraction/city",
+            query: { find: this.input },
+          });
+        }
       } else {
-        alert("请输入有效信息！");
+        this.$notify({
+          title: "温馨提醒",
+          dangerouslyUseHTMLString: true,
+          message:
+            "暂无" +
+            '"' +
+            this.input +
+            '"' +
+            "相关的信息！&nbsp;请尝试搜索其他关键词！",
+          posotion: "top-left",
+        });
       }
     },
     // 改变排序

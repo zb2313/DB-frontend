@@ -601,7 +601,6 @@ export default {
           return response.json();
         })
         .then(function (myJson) {
-          console.log(myJson.forecasts[0]);
           var future = myJson.forecasts[0].casts;
           var current = myJson.forecasts[0].casts[0];
           var city = myJson.forecasts[0].city;

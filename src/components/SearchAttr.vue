@@ -12,185 +12,254 @@
             <div id="hot" class="cityBox">
               <div class="label" style="font-size: 13px">热门</div>
               <div class="cities">
-                <span v-for="item in allcity.hotcity" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.hotcity"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div id="A" class="cityBox">
               <div class="label">A</div>
               <div class="cities">
-                <span v-for="item in allcity.A" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.A"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">B</div>
               <div class="cities">
-                <span v-for="item in allcity.B" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.B"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">C</div>
               <div class="cities">
-                <span v-for="item in allcity.C" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.C"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">D</div>
               <div class="cities">
-                <span v-for="item in allcity.D" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.D"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">E</div>
               <div class="cities">
-                <span v-for="item in allcity.E" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.E"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div id="F" class="label">F</div>
               <div class="cities">
-                <span v-for="item in allcity.F" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.F"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">G</div>
               <div class="cities">
-                <span v-for="item in allcity.G" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.G"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">H</div>
               <div class="cities">
-                <span v-for="item in allcity.H" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.H"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">J</div>
               <div class="cities">
-                <span v-for="item in allcity.J" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.J"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">K</div>
               <div class="cities">
-                <span v-for="item in allcity.K" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.K"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div id="L" class="label">L</div>
               <div class="cities">
-                <span v-for="item in allcity.L" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.L"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">M</div>
               <div class="cities">
-                <span v-for="item in allcity.M" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.M"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">N</div>
               <div class="cities">
-                <span v-for="item in allcity.N" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.N"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">P</div>
               <div class="cities">
-                <span v-for="item in allcity.P" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.P"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">Q</div>
               <div class="cities">
-                <span v-for="item in allcity.Q" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.Q"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div id="R" class="label">R</div>
               <div class="cities">
-                <span v-for="item in allcity.R" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.R"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">S</div>
               <div class="cities">
-                <span v-for="item in allcity.S" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.S"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">T</div>
               <div class="cities">
-                <span v-for="item in allcity.T" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.T"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">W</div>
               <div class="cities">
-                <span v-for="item in allcity.W" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.W"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">X</div>
               <div class="cities">
-                <span v-for="item in allcity.X" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.X"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div id="Y" class="label">Y</div>
               <div class="cities">
-                <span v-for="item in allcity.Y" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.Y"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
             <div class="cityBox">
               <div class="label">Z</div>
               <div class="cities">
-                <span v-for="item in allcity.Z" :key="item.index">{{
-                  item
-                }}</span>
+                <span
+                  v-for="item in allcity.Z"
+                  :key="item.index"
+                  @click="cityClick(item)"
+                  >{{ item }}</span
+                >
               </div>
             </div>
           </div>
@@ -208,17 +277,12 @@
           <div class="popover-content">
             <h4>热门景点</h4>
             <div>
-              <span v-for="item in hotAttr" :key="item.index">{{ item }}</span>
-            </div>
-            <h4>经典一日游路线</h4>
-            <div>
-              <span v-for="item in oneDayTrip" :key="item.index">{{
-                item
-              }}</span>
-            </div>
-            <h4>周边城市</h4>
-            <div>
-              <span v-for="item in around" :key="item.index">{{ item }}</span>
+              <span
+                v-for="item in hotAttr"
+                :key="item.index"
+                @click="hotClick(item)"
+                >{{ item }}</span
+              >
             </div>
           </div>
           <el-input
@@ -232,7 +296,7 @@
       </el-form-item>
 
       <el-form-item>
-        <div class="search-btn el-icon-search"></div>
+        <div class="search-btn el-icon-search" @click="searchClick"></div>
       </el-form-item>
     </el-form>
   </div>
@@ -347,15 +411,16 @@ export default {
           "北京",
           "上海",
           "成都",
+          "重庆",
+          "南京",
           "三亚",
           "西安",
           "厦门",
-          "重庆",
           "杭州",
           "广州",
           "哈尔滨",
           "苏州",
-          "南京",
+
           "丽江",
         ],
         A: [
@@ -805,15 +870,134 @@ export default {
         "迪士尼",
         "辰山植物园",
         "上海博物馆",
+        "朱家角",
+        "南京路",
+        "上海欢乐谷",
+      ],
+      shanghai: [
         "外滩",
         "嘉北郊野公园",
         "迪士尼",
         "辰山植物园",
         "上海博物馆",
+        "朱家角",
+        "南京街",
+        "上海欢乐谷",
       ],
-      oneDayTrip: ["东方明珠+外滩", "崇明岛", "上海迪士尼", "上海海昌海洋公园"],
-      around: ["乌镇", "普陀山", "苏州", "杭州", "南京"],
+      beijing: [
+        "故宫",
+        "天坛",
+        "鸟巢",
+        "国家大剧院",
+        "北京欢乐谷",
+        "北海公园",
+        "北京野生动物园",
+      ],
+      chengdu: [
+        "大熊猫",
+        "都江堰",
+        "武侯祠",
+        "杜甫草堂",
+        "宽窄巷子",
+        "海洋公园",
+      ],
+      nanjing: [
+        "夫子庙",
+        "秦淮河",
+        "科举博物馆",
+        "红山森林动物园",
+        "总统府",
+        "栖霞山",
+      ],
+      chongqing: [
+        "磁器口",
+        "天生三桥",
+        "湖广会馆",
+        "丰都鬼城",
+        "洪崖洞",
+        "长江索道",
+        "大足石刻",
+        "解放碑",
+      ],
     };
+  },
+  methods: {
+    cityClick(city) {
+      this.searchBox.input1 = city;
+      if (city.includes("上海")) {
+        this.hotAttr = this.shanghai;
+      } else if (city.includes("北京")) {
+        this.hotAttr = this.beijing;
+      } else if (city.includes("南京")) {
+        this.hotAttr = this.nanjing;
+      } else if (city.includes("成都")) {
+        this.hotAttr = this.chengdu;
+      } else if (city.includes("重庆")) {
+        this.hotAttr = this.chongqing;
+      } else {
+        this.hotAttr = "暂无数据";
+      }
+    },
+    searchClick() {
+      if (this.searchBox.input2) {
+        this.$axios
+          .get(
+            "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
+              this.searchBox.input2
+          )
+          .then((response) => {
+            if (response.data.length > 0) {
+              console.log(response.data);
+              this.$router.push({
+                path: "/attraction/city",
+                query: {
+                  search: this.searchBox.input2,
+                },
+              });
+            } else {
+              this.$axios
+                .get(
+                  "http://49.234.18.247:8080/api/FunGetAttractionInfoByName/" +
+                    this.searchBox.input2
+                )
+                .then((response) => {
+                  if (response.data.length !== 0) {
+                    this.$router.push({
+                      path: "/attraction/city",
+                      query: {
+                        find: this.searchBox.input2,
+                      },
+                    });
+                  } else {
+                    this.$notify({
+                      title: "尊敬的用户",
+                      message:
+                        "非常抱歉!我们暂无" +
+                        this.searchBox.input2 +
+                        "的相关信息！",
+                      position: "top-left",
+                    });
+                  }
+                });
+            }
+          });
+      } else {
+        this.$router.push({
+          path: "/attraction/city",
+          query: {
+            search: this.searchBox.input1,
+          },
+        });
+      }
+    },
+    hotClick(value) {
+      this.$router.push({
+        path: "/attraction/city",
+        query: {
+          find: value,
+        },
+      });
+    },
   },
 };
 </script>
