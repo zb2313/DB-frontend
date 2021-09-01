@@ -188,7 +188,7 @@ export default {
           this.$router.push({
             path: "/hotel/city",
             query: {
-              city: this.form_Select.location,
+              hotelname: this.form_Select.location,
               time1: this.form_Select.time[0].getTime(),
               time2: this.form_Select.time[1].getTime(),
               room: this.form_Select.room_num,
@@ -200,7 +200,7 @@ export default {
           this.$router.push({
             path: "/hotel/city",
             query: {
-              city: this.form_Select.location,
+              hotelname: this.form_Select.location,
               room: this.form_Select.room_num,
               adult: this.form_Select.adult_num,
               child: this.form_Select.child_num,

@@ -9,8 +9,37 @@
           </div>
 
           <!-- 地图 -->
+          <img
+            class="bigger-icon"
+            src="../../assets/img/bigger.svg"
+            title="点击放大"
+            @click="dialogVisible = true"
+          />
+          <el-dialog :visible.sync="dialogVisible" width="90%" top="20px">
+            <div class="amap-wrap1">
+              <el-amap
+                vid="amapDemo"
+                isHotspot="true"
+                resizeEnable="true"
+                :amap-manager="amapManager"
+                :center="center"
+                :zoom="zoom"
+                :lang="lang"
+                :events="events"
+              ></el-amap>
+            </div>
+          </el-dialog>
           <div class="amap-wrap">
-            <el-amap vid="amapDemo"></el-amap>
+            <el-amap
+              vid="amapDemo"
+              isHotspot="true"
+              resizeEnable="true"
+              :amap-manager="amapManager"
+              :center="center"
+              :zoom="zoom"
+              :lang="lang"
+              :events="events"
+            ></el-amap>
           </div>
 
           <div class="form2">
@@ -127,12 +156,25 @@
   text-align: left;
 }
 /* 地图css */
+.amap-wrap1 {
+  width: 100%;
+  height: 500px;
+}
 .amap-wrap {
+  position: relative;
   width: 270px;
   height: 300px;
   margin-top: 15px;
   border: 1px solid rgb(189, 178, 178);
   border-radius: 3px;
+}
+
+.bigger-icon {
+  position: absolute;
+  z-index: 999;
+  margin-top: 18px;
+  margin-left: 237px;
+  cursor: pointer;
 }
 /* 左侧筛选框 */
 .form2 {
@@ -215,7 +257,8 @@
 import Header from "@/components/Header.vue";
 import contentListItem from "@/components/contentListItem.vue";
 import Footer1 from "@/components/Footer1.vue";
-
+import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
+const amapManager = new AMapManager();
 export default {
   components: {
     Header,
@@ -223,10 +266,25 @@ export default {
     Footer1,
   },
   data() {
+    const _this = this;
     return {
       title: {
         city: "广州",
         num: "333",
+      },
+      // 地图的数据
+      dialogVisible: false,
+      map: null,
+      lang: "zh_en",
+      zoom: 12,
+      center: [121.473701, 31.230416],
+      amapManager,
+      events: {
+        init() {
+          lazyAMapApiLoaderInstance.load().then(() => {
+            _this.initMap();
+          });
+        },
       },
       label: "",
       checkList: [],
@@ -242,7 +300,146 @@ export default {
     };
   },
   methods: {
+    initMap() {
+      this.map = amapManager.getMap();
+      // 比例尺;
+      this.map.addControl(new AMap.Scale());
+      // 工具条;
+      this.map.addControl(
+        new AMap.ToolBar({
+          position: "LT",
+          useNative: true,
+          autoPosition: false,
+          locate: true,
+          ruler: false,
+          liteStyle: true,
+        })
+      );
+      let a = this;
+      var len = a.items.length;
+      for (let i = 0; i < len; i++) {
+        this.addressToLnglat(a.items[i].location).then((res) => {
+          let lnglat = res.split(",");
+          a.addMarker(lnglat, a.items[i]);
+        });
+      }
+    },
+    addMarker(position, item) {
+      let marker = new AMap.Marker({
+        position: position,
+        animation: "AMAP_ANIMATION_DROP",
+      });
+
+      this.map.add(marker);
+
+      let a = this;
+      marker.on("mouseover", function () {
+        a.openInfo(marker, item);
+      });
+    },
+    //在指定位置打开信息窗体
+    openInfo(marker, item) {
+      //实例化信息窗体
+      var title = item.attractionname,
+        content = [];
+      content.push(
+        "<img class='pic' src='" +
+          item.picture +
+          "'>地址：" +
+          item.location +
+          "<br/>"
+      );
+      if (item.star == 0) {
+        content.push(
+          "<span style='font-size:11px;color:grey;'>暂无评分</span>"
+        );
+      } else {
+        for (var i = 0; i < item.star; i++) {
+          content.push("<i class='star el-icon-star-on'></i>");
+        }
+      }
+      content.push(
+        '<br/><span style="font-size:11px;color:#F00;">价格:' +
+          item.price +
+          "元</span>"
+      );
+      content.push(
+        "<a href='http://localhost:8080/attraction/detail?id=" +
+          item.attractionid +
+          "'>了解详情</a>"
+      );
+
+      let a = this;
+      let infoWindow = new AMap.InfoWindow({
+        isCustom: true, //使用自定义窗体
+        content: a.createInfoWindow(title, content.join("")),
+        offset: new AMap.Pixel(16, -45),
+      });
+
+      infoWindow.open(this.map, marker.getPosition());
+    },
+    //构建自定义信息窗体
+    createInfoWindow(title, content) {
+      var info = document.createElement("div");
+      info.className = "custom-info input-card content-window-card";
+
+      //可以通过下面的方式修改自定义窗体的宽高
+      info.style.width = "300px";
+      // 定义顶部标题
+      var top = document.createElement("div");
+      var titleD = document.createElement("div");
+      var closeX = document.createElement("img");
+      top.className = "info-top";
+      titleD.innerHTML = title;
+      closeX.src = "https://webapi.amap.com/images/close2.gif";
+      closeX.onclick = this.closeInfoWindow;
+
+      top.appendChild(titleD);
+      top.appendChild(closeX);
+      info.appendChild(top);
+
+      // 定义中部内容
+      var middle = document.createElement("div");
+      middle.className = "info-middle";
+      middle.style.backgroundColor = "white";
+      middle.innerHTML = content;
+      info.appendChild(middle);
+
+      // 定义底部内容
+      var bottom = document.createElement("div");
+      bottom.className = "info-bottom";
+      bottom.style.position = "relative";
+      bottom.style.top = "0px";
+      bottom.style.margin = "0 auto";
+      var sharp = document.createElement("img");
+      sharp.src = "https://webapi.amap.com/images/sharp.png";
+      bottom.appendChild(sharp);
+      info.appendChild(bottom);
+      return info;
+    },
+
+    //关闭信息窗体
+    closeInfoWindow() {
+      this.map.clearInfoWindow();
+    },
+    async addressToLnglat(address) {
+      return fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
+          address
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          if (res.geocodes[0].location) {
+            return res.geocodes[0].location;
+          } else return -1;
+        });
+    },
     getAttrbyCity() {
+      if (this.title.city !== "全部") {
+        this.title.city += "市";
+      }
       this.$axios
         .get(
           "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
@@ -403,6 +600,12 @@ export default {
           posotion: "top-left",
         });
       }
+
+      if (this.title.city !== "全部") {
+        this.addressToLnglat(this.title.city).then((res) => {
+          this.center = res.split(",");
+        });
+      }
     },
     // 改变排序
     Sort(command) {
@@ -437,6 +640,12 @@ export default {
     if (this.$route.query.label) {
       this.label = this.$route.query.label;
       this.$set(this.checkList, 0, this.label);
+    }
+
+    if (this.title.city !== "全部") {
+      this.addressToLnglat(this.title.city).then((res) => {
+        this.center = res.split(",");
+      });
     }
   },
   mounted() {},

@@ -24,7 +24,16 @@
               <span @click="mapVisible = true" class="hint">查看地图</span>
               <el-dialog :visible.sync="mapVisible" width="90%" top="20px">
                 <div class="amap-wrap">
-                  <el-amap vid="amapDemo"></el-amap>
+                  <el-amap
+                    vid="amapDemo"
+                    isHotspot="true"
+                    resizeEnable="true"
+                    :amap-manager="amapManager"
+                    :center="center"
+                    :zoom="zoom"
+                    :lang="lang"
+                    :events="events1"
+                  ></el-amap>
                 </div>
               </el-dialog>
               <div>
@@ -123,7 +132,18 @@
             </div>
             <el-divider></el-divider>
             <div class="clearfix">
-              <div class="map"><el-amap vid="amapDemo"></el-amap></div>
+              <div class="map">
+                <el-amap
+                  vid="amapDemo"
+                  isHotspot="true"
+                  resizeEnable="true"
+                  :amap-manager="amapManager"
+                  :center="center"
+                  :zoom="zoom"
+                  :lang="lang"
+                  :events="events"
+                ></el-amap>
+              </div>
               <div class="aboutMap">
                 <div>
                   <img
@@ -149,7 +169,7 @@
                 <div
                   @click="mapVisible = true"
                   class="hint"
-                  style="margin-top: 75px"
+                  style="margin-top: 5px"
                 >
                   查看完整地图
                 </div>
@@ -339,20 +359,20 @@
         <div class="nearhotels">
           <div
             class="box"
-            v-for="(item, index) in nearhotels.slice(0, 8)"
+            v-for="(item, index) in nearhotels.slice(0, 4)"
             :key="index"
           >
             <div
               class="infoImg"
               :style="{
-                backgroundImage: 'url(' + item.img + ')',
+                backgroundImage: 'url(' + item.picture + ')',
                 backgroundSize: '100% 100%',
                 backgroundRepeat: 'no-repeat',
               }"
             ></div>
             <div class="infoDetail">
               <div class="Name" style="font-size: 14px; font-weight: 700">
-                {{ item.name }}
+                {{ item.hotelname }}
               </div>
               <img
                 src="../../assets/img/diamond.svg"
@@ -376,7 +396,7 @@
                   <span class="dianping">{{ item.commentnum }}点评</span>
                 </div>
                 <div class="rightprice">
-                  ￥{{ item.price
+                  ￥{{ item.lowestprice
                   }}<i style="font-size: 11px; font-style: normal; color: gray"
                     >&nbsp;起</i
                   >
@@ -433,6 +453,7 @@
   color: #003580;
   font-weight: 700;
   font-size: 12px;
+  cursor: pointer;
 }
 .hint:hover {
   text-decoration: underline;
@@ -494,6 +515,7 @@
   line-height: 30px;
   text-align: center;
   float: right;
+  cursor: pointer;
 }
 .map {
   width: 200px;
@@ -591,6 +613,8 @@ import Search from "@/components/Search.vue";
 import Room from "@/components/room.vue";
 import Comment from "@/components/comment.vue";
 import Footer1 from "@/components/Footer1.vue";
+import { AMapManager, lazyAMapApiLoaderInstance } from "vue-amap";
+const amapManager = new AMapManager();
 
 export default {
   components: {
@@ -601,7 +625,28 @@ export default {
     Footer1,
   },
   data() {
+    const _this = this;
     return {
+      // 地图的数据
+      map: null,
+      lang: "zh_en",
+      zoom: 12,
+      center: [121.473701, 31.230416],
+      amapManager,
+      events: {
+        init() {
+          lazyAMapApiLoaderInstance.load().then(() => {
+            _this.initMap();
+          });
+        },
+      },
+      events1: {
+        init() {
+          lazyAMapApiLoaderInstance.load().then(() => {
+            _this.initMap1();
+          });
+        },
+      },
       // 其他页面传过来的酒店ID给你用的，ｂｙ秦
       hotelId: " ",
       mapVisible: false,
@@ -659,7 +704,7 @@ export default {
             "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
         },
         {
-          ID: "000001",
+          ID: "000003",
           roomName: "山系·城景大床房",
           customerNum: 2,
           bed: "1张大床和1张双人床",
@@ -673,7 +718,7 @@ export default {
             "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
         },
         {
-          ID: "000001",
+          ID: "000004",
           roomName: "山系·城景大床房",
           customerNum: 2,
           bed: "1张大床和1张双人床",
@@ -702,7 +747,7 @@ export default {
         },
         {
           userName: "兰州潇洒哥",
-          useR_ID: "0000000001",
+          useR_ID: "0000000002",
           userAvatar:
             "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
           commentRoom: "山系·城景大床房",
@@ -715,38 +760,16 @@ export default {
       ],
       nearhotels: [
         {
-          name: "格林豪泰酒店",
+          hotelname: "格林豪泰酒店",
           star: 2,
-          price: 400,
-          address: "同济大学正门外",
+          lowestprice: 400,
+          location: "同济大学正门外",
           commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-        {
-          name: "格林豪泰酒店",
-          star: 3,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          picture:
+            "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
         },
       ],
+      items: [],
     };
   },
   computed: {
@@ -759,12 +782,69 @@ export default {
         return "一般般";
       } else if (this.grade == 2) {
         return "不太好";
-      } else {
+      } else if (this.grade == 1) {
         return "非常差";
+      } else {
+        return "暂无评分";
       }
     },
   },
   methods: {
+    initMap() {
+      this.map = amapManager.getMap();
+      // 比例尺;
+      this.map.addControl(new AMap.Scale());
+      this.addMarker(this.center);
+    },
+    initMap1() {
+      this.map = amapManager.getMap();
+      // 比例尺;
+      this.map.addControl(new AMap.Scale());
+      // 工具条;
+      this.map.addControl(
+        new AMap.ToolBar({
+          position: "LT",
+          useNative: true,
+          autoPosition: false,
+          locate: true,
+          ruler: false,
+          liteStyle: true,
+        })
+      );
+      this.addMarker(this.center);
+    },
+    addMarker(position) {
+      let marker = new AMap.Marker({
+        icon: new AMap.Icon({
+          // 图标尺寸
+          size: new AMap.Size(50, 70),
+          // 图标的取图地址
+          image:
+            "//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png",
+          // 图标所用图片大小
+          imageSize: new AMap.Size(40, 50),
+        }),
+        position: position,
+        animation: "AMAP_ANIMATION_DROP",
+      });
+
+      this.map.add(marker);
+    },
+    async addressToLnglat(address) {
+      return fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
+          address
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          console.log(res.geocodes[0]);
+          if (res.geocodes[0].location) {
+            return res.geocodes[0].location;
+          } else return -1;
+        });
+    },
     onReceive() {
       const h = this.$createElement;
       this.$msgbox({
@@ -793,6 +873,7 @@ export default {
         this.location = response.data[0].hlocation;
         this.grade = response.data[0].star;
       });
+
     let tempHotelId = this.hotelId;
     this.$axios
       .get(

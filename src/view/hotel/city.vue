@@ -287,7 +287,6 @@
   cursor: pointer;
 }
 .amap-wrap {
-  position: relative;
   width: 100%;
   height: 500px;
 }
@@ -391,10 +390,10 @@ export default {
         child: 0,
         room: 1,
       },
-
+      // 地图的数据
       map: null,
       lang: "zh_en",
-      zoom: 15,
+      zoom: 12,
       center: [121.473701, 31.230416],
       amapManager,
       events: {
@@ -405,6 +404,7 @@ export default {
         },
       },
       dialogVisible: false,
+      // 筛选需要
       checkList: [],
       checkList1: [],
       checkList2: [],
@@ -440,13 +440,41 @@ export default {
       }
     },
     onSubmit() {
-      var city = "全部北京市上海市重庆市成都市南京市";
+      var city = "北京市上海市重庆市成都市南京市";
       var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
-      this.title.city = this.searchForm.location;
+      var time1 =
+        typeof this.searchForm.date1 == "number"
+          ? this.searchForm.date1
+          : this.searchForm.date1.getTime();
+      var time2 =
+        typeof this.searchForm.date2 == "number"
+          ? this.searchForm.date2
+          : this.searchForm.date2.getTime();
+
       if (city.includes(this.searchForm.location)) {
-        this.getHotelbyCity();
+        this.$router.push({
+          path: "/hotel/city",
+          query: {
+            city: this.searchForm.location,
+            time1: time1,
+            time2: time2,
+            room: this.searchForm.room,
+            adult: this.searchForm.adult,
+            child: this.searchForm.child,
+          },
+        });
       } else if (hotelname.includes(this.searchForm.location)) {
-        this.getHotelbyName();
+        this.$router.push({
+          path: "/hotel/city",
+          query: {
+            hotelname: this.searchForm.location,
+            time1: time1,
+            time2: time2,
+            room: this.searchForm.room,
+            adult: this.searchForm.adult,
+            child: this.searchForm.child,
+          },
+        });
       } else {
         this.$notify({
           title: "温馨提醒",
@@ -492,18 +520,97 @@ export default {
       });
 
       this.map.add(marker);
-      let a = this;
 
-      marker.on("click", function () {
-        console.log(item);
-        a.$notify({
-          title: item.hotelname,
-          message: "这是一条不会自动关闭的消息",
-          offset: 50,
-        });
+      let a = this;
+      marker.on("mouseover", function () {
+        a.openInfo(marker, item);
       });
     },
+    //在指定位置打开信息窗体
+    openInfo(marker, item) {
+      //实例化信息窗体
+      var title = item.hotelname,
+        content = [];
+      content.push(
+        "<img class='pic' src='" +
+          item.picture +
+          "'>地址：" +
+          item.location +
+          "<br/>"
+      );
+      if (item.star == 0) {
+        content.push(
+          "<span style='font-size:11px;color:grey;'>暂无评分</span>"
+        );
+      } else {
+        for (var i = 0; i < item.star; i++) {
+          content.push("<i class='star el-icon-star-on'></i>");
+        }
+      }
+      content.push(
+        '<br/><span style="font-size:11px;color:#F00;">价格:' +
+          item.lowestprice +
+          "元</span>"
+      );
+      content.push(
+        "<a href='http://localhost:8080/hotel/detail?id=" +
+          item.hoteid +
+          "'>了解详情</a>"
+      );
 
+      let a = this;
+      let infoWindow = new AMap.InfoWindow({
+        isCustom: true, //使用自定义窗体
+        content: a.createInfoWindow(title, content.join("")),
+        offset: new AMap.Pixel(16, -45),
+      });
+
+      infoWindow.open(this.map, marker.getPosition());
+    },
+    //构建自定义信息窗体
+    createInfoWindow(title, content) {
+      var info = document.createElement("div");
+      info.className = "custom-info input-card content-window-card";
+
+      //可以通过下面的方式修改自定义窗体的宽高
+      info.style.width = "300px";
+      // 定义顶部标题
+      var top = document.createElement("div");
+      var titleD = document.createElement("div");
+      var closeX = document.createElement("img");
+      top.className = "info-top";
+      titleD.innerHTML = title;
+      closeX.src = "https://webapi.amap.com/images/close2.gif";
+      closeX.onclick = this.closeInfoWindow;
+
+      top.appendChild(titleD);
+      top.appendChild(closeX);
+      info.appendChild(top);
+
+      // 定义中部内容
+      var middle = document.createElement("div");
+      middle.className = "info-middle";
+      middle.style.backgroundColor = "white";
+      middle.innerHTML = content;
+      info.appendChild(middle);
+
+      // 定义底部内容
+      var bottom = document.createElement("div");
+      bottom.className = "info-bottom";
+      bottom.style.position = "relative";
+      bottom.style.top = "0px";
+      bottom.style.margin = "0 auto";
+      var sharp = document.createElement("img");
+      sharp.src = "https://webapi.amap.com/images/sharp.png";
+      bottom.appendChild(sharp);
+      info.appendChild(bottom);
+      return info;
+    },
+
+    //关闭信息窗体
+    closeInfoWindow() {
+      this.map.clearInfoWindow();
+    },
     async addressToLnglat(address) {
       return fetch(
         "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
