@@ -148,16 +148,11 @@
                 </span>
               </div>
 
-              <div
-                @click="onPay"
-                class="pay_btn"
-                style="float: right"
-              >
+              <div @click="onPay" class="pay_btn" style="float: right">
                 去支付
               </div>
               <el-dialog :visible.sync="payVisible" width="30%">
                 <div style="display: inline-block; vertical-align: middle">
-                  
                   <p class="">支付二维码</p>
                 </div>
               </el-dialog>
@@ -336,7 +331,7 @@ export default {
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
         time: " ",
-        room_num: undefined,
+        room_num: 1,
         arrival: " ",
       },
       pickerOptions: {
@@ -351,6 +346,30 @@ export default {
     onPay() {
       this.payVisible = true;
       console.log(this.form_Select.time);
+    },
+    // 时间格式化
+    timestampToTime(chinaStandard) {
+      var date = new Date(chinaStandard);
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      var h = date.getHours();
+      var minute = date.getMinutes();
+      minute = minute < 10 ? "0" + minute : minute;
+      var second = date.getSeconds();
+      second = second < 10 ? "0" + second : second;
+      var Time = y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
+      return Time;
+    },
+    GetNumberOfDays(date1, date2) {
+      //获得天数
+      //date1：开始日期，date2结束日期
+      var a1 = Date.parse(new Date(date1));
+      var a2 = Date.parse(new Date(date2));
+      var day = parseInt((a2 - a1) / (1000 * 60 * 60 * 24)); //核心：时间戳相减，然后除以天数
+      return day;
     },
   },
   computed: {
