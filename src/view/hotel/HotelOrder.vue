@@ -149,24 +149,15 @@
               </div>
 
               <div
-                @click="payVisible = true"
+                @click="onPay"
                 class="pay_btn"
                 style="float: right"
               >
                 去支付
               </div>
-              <el-dialog
-                :visible.sync="payVisible"
-                width="30%"
-                :before-close="handleCloses"
-                @opened="creatQrCode()"
-              >
+              <el-dialog :visible.sync="payVisible" width="30%">
                 <div style="display: inline-block; vertical-align: middle">
-                  <div
-                    ref="qrCodeUrl"
-                    class-name="qrcode"
-                    style="display: inline-block"
-                  />
+                  
                   <p class="">支付二维码</p>
                 </div>
               </el-dialog>
@@ -325,7 +316,6 @@
         
 <script>
 import Header from "@/components/Header";
-import QRCode from "qrcodejs2";
 export default {
   components: {
     Header,
@@ -345,7 +335,7 @@ export default {
       qrcode:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
-        time: "2021/08/11",
+        time: " ",
         room_num: undefined,
         arrival: " ",
       },
@@ -358,15 +348,9 @@ export default {
   },
   methods: {
     roomNumChange() {},
-    creatQrCode() {
-      this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
-        text: "秦晓慧是世界上最___的人", // 需要转换为二维码的内容
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-      });
+    onPay() {
+      this.payVisible = true;
+      console.log(this.form_Select.time);
     },
   },
   computed: {

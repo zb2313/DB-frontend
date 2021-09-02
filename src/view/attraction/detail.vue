@@ -54,7 +54,7 @@
                     <span
                       style="color: #003580; font-weight: 700; font-size: 24px"
                     >
-                      ￥{{ minPrice }}
+                      ￥{{ ticketPrice }}
                     </span>
                     <span
                       style="
@@ -63,32 +63,135 @@
                         line-height: 50px;
                         font-weight: 700;
                       "
-                      >起</span
-                    >
+                    ></span>
                   </div>
 
                   <button
-                    @click="payVisible = true"
+                    @click="beforePay"
                     class="choose_btn"
                     style="float: left"
                   >
                     购买门票
                   </button>
-                  <el-dialog
-                    :visible.sync="payVisible"
-                    width="30%"
-                    :before-close="handleCloses"
-                    @opened="creatQrCode()"
-                  >
-                    <div style="display: inline-block; vertical-align: middle">
-                      <div
-                        ref="qrCodeUrl"
-                        class-name="qrcode"
-                        style="display: inline-block"
-                      />
-                      <p class="">支付二维码</p>
-                    </div>
-                  </el-dialog>
+                  <div class="order">
+                    <el-dialog :visible.sync="payVisible" width="30%">
+                      <div slot="title">
+                        <h2 style="color: black">购买今日的门票</h2>
+                      </div>
+                      <el-row
+                        type="flex"
+                        justify="space-between"
+                        style="margin-top: 10px"
+                      >
+                        <el-col :span="7"><div>价格</div></el-col>
+                        <el-col :span="7"
+                          ><div>￥{{ ticketPrice }}</div></el-col
+                        >
+                      </el-row>
+                      <el-row
+                        type="flex"
+                        justify="space-between"
+                        style="margin-top: 20px"
+                      >
+                        <el-col :span="7"
+                          ><div style="margin-top: 5px">数量</div></el-col
+                        >
+                        <el-col :span="10"
+                          ><div>
+                            <el-input-number
+                              v-model="orderNum"
+                              @change="handleChange"
+                              :min="1"
+                              :max="leftOut"
+                              label="订票数量"
+                            ></el-input-number></div
+                        ></el-col>
+                      </el-row>
+                      <el-row
+                        type="flex"
+                        justify="space-between"
+                        style="margin-top: 10px"
+                      >
+                        <el-col :span="7">应付金额</el-col>
+                        <el-col :span="7"
+                          ><div
+                            style="
+                              color: #003680;
+                              font-weight: 700;
+                              font-size: 20px;
+                            "
+                          >
+                            ￥{{ storePrice }}
+                          </div></el-col
+                        >
+                      </el-row>
+
+                      <br />
+
+                      <!-- 订票人信息 -->
+                      <h3 style="color: black">订票人信息</h3>
+                      <div v-for="i in orderNum" :key="i">
+                        <div class="orderInfo">
+                          <br />
+                          <el-row
+                            type="flex"
+                            justify="space-between"
+                            style="margin-top: 10px"
+                          >
+                            <el-col :span="6"
+                              ><span>姓名{{ i }} </span>
+                            </el-col>
+                            <el-col :span="14"
+                              ><input
+                                type="text"
+                                placeholder="填写身份证上真实姓名"
+                            /></el-col>
+                          </el-row>
+
+                          <el-row
+                            type="flex"
+                            justify="space-between"
+                            style="margin-top: 10px"
+                          >
+                            <el-col :span="6"
+                              ><span>身份证号{{ i }}</span>
+                            </el-col>
+                            <el-col :span="14"
+                              ><input
+                                type="text"
+                                placeholder="填写18位身份证号"
+                            /></el-col>
+                          </el-row>
+                          <el-row
+                            type="flex"
+                            justify="space-between"
+                            style="margin-top: 10px"
+                          >
+                            <el-col :span="6"
+                              ><span
+                                style="margin-bottom: 5px; margin-top: 5px"
+                              >
+                                电话号码{{ i }}
+                              </span>
+                            </el-col>
+                            <el-col :span="14">
+                              <input
+                                type="text"
+                                placeholder="+86 中国内陆电话号码"
+                            /></el-col>
+                          </el-row>
+                        </div>
+                        <el-divider></el-divider>
+                      </div>
+                      <div style="text-align: right"><button @click="aliPay" class="pay_btn">
+                        支付宝支付
+                      </button>
+                      <button @click="wechatPay" class="pay_btn">
+                        微信支付
+                      </button></div>
+                      
+                    </el-dialog>
+                  </div>
                 </div>
               </div>
             </div>
@@ -101,7 +204,7 @@
               <div>
                 <i class="el-icon-date"></i> &nbsp;&nbsp;{{ openTime }}-{{
                   closeTime
-                }}开放（ {{ stopTime }}停止入园）
+                }}开放（ {{ stopTime }}停止检票）
               </div>
               <br />
               <div>
@@ -186,9 +289,9 @@
               <h1>开放时间</h1>
               <el-row type="flex" style="margin-top: 20px">
                 <el-col :span="24"
-                  >7月1日-8月31日 周一至周五 09:00-20:00(最晚入园19:00)
+                  >7月1日-8月31日 周一至周五 09:00-20:00(最晚检票19:00)
                   周六至周日
-                  09:00-20:30(最晚入园19:30)；年卡中心开卡时间：开园前半小时至闭园前一个半小时。
+                  09:00-20:30(最晚检票19:30)；年卡中心开卡时间：开园前半小时至闭园前一个半小时。
                   景区现场停止售票时间：闭园前一个半小时。
                   闭园前1小时停止检票</el-col
                 >
@@ -382,6 +485,14 @@
   border-radius: 4px;
   margin-left: 5px;
 }
+.pay_btn {
+  width: 80px;
+  font-size: 14px;
+  background-color: #003580;
+  color: white;
+  line-height: 30px;
+  text-align: center;
+}
 .picture {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -468,6 +579,24 @@ img {
   color: red;
   margin-top: -5px;
 }
+.orderInfo input {
+  background: #fff;
+  width: 200px;
+  height: 40px;
+  box-sizing: border-box;
+  border: solid #ced2d9;
+  border-width: 0 0 1px;
+  transition: border-color 0.25s;
+}
+.orderInfo p {
+  margin-top: 5px;
+}
+.el-dialog__body {
+  padding: 0px 25px 10px 25px !important;
+  color: #606266;
+  font-size: 14px;
+  word-break: break-all;
+}
 </style>
 
 
@@ -475,7 +604,6 @@ img {
 import Header from "@/components/Header.vue";
 import CommentOnAttr from "@/components/commentOnAttr.vue";
 import Footer1 from "@/components/Footer1.vue";
-import QRCode from "qrcodejs2";
 export default {
   components: {
     Header,
@@ -484,8 +612,9 @@ export default {
   },
   data() {
     return {
+      leftOut: 2,
+      orderNum: 2,
       payVisible: false,
-      // 景点id已经传过来,可直接使用
       AttrId: "",
       attrationName: "上海海昌海洋公园",
       starNum: 5,
@@ -495,7 +624,7 @@ export default {
       openTime: "09:00",
       closeTime: "20:30",
       stopTime: "19:30",
-      minPrice: 59,
+      ticketPrice: 59,
       nearSubwayStation: "临港中运量1号线杞青路站",
       nearSubwayDistance: 793,
       description:
@@ -636,33 +765,30 @@ export default {
         return "非常差";
       }
     },
+    storePrice: function () {
+      return this.ticketPrice * this.orderNum;
+    },
   },
   methods: {
-    creatQrCode() {
-      this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
-        text: "扫描二维码", // 需要转换为二维码的内容
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-      });
-    },
     commentLevelChange() {},
+    beforePay() {
+      this.payVisible = true;
+    },
     sortWayChange() {},
+    aliPay(){},
+    wechatPay(){},
   },
   mounted() {
-    let _this=this;
     this.$axios
-      .get("http://49.234.18.247:8080/api/Attraction/"+this.AttrId)
+      .get("http://49.234.18.247:8080/api/Attraction/" + this.AttrId)
       .then((response) => {
         this.attrationName = response.data[0].attractioN_NAME;
         this.openTime = response.data[0].opeN_TIME;
         this.closeTime = response.data[0].closE_TIME;
-        this.minPrice = response.data[0].price;
-        this.baseImg=response.data[0].picture;
-        this.location=response.data[0].alocation;
-        this.grade=response.data[0].star;
+        this.ticketPrice = response.data[0].price;
+        this.baseImg = response.data[0].picture;
+        this.location = response.data[0].alocation;
+        this.grade = response.data[0].star;
       });
   },
   created() {
