@@ -417,10 +417,20 @@ export default {
       },
       radio: "1",
       items: [],
+      Lnglat: [],
+      hotels: [],
       originData: [],
     };
   },
   methods: {
+    // 根据浏览器获得当前地理位置
+    getLocation() {
+      let a = this;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        a.Lnglat[0] = position.coords.longitude.toFixed(6);
+        a.Lnglat[1] = position.coords.latitude.toFixed(6);
+      });
+    },
     numberPlus(n) {
       if (n == 1 && this.searchForm.adult != 10) {
         this.searchForm.adult++;
@@ -606,7 +616,6 @@ export default {
       info.appendChild(bottom);
       return info;
     },
-
     //关闭信息窗体
     closeInfoWindow() {
       this.map.clearInfoWindow();
@@ -678,15 +687,35 @@ export default {
       }, 30);
     },
     sortClick: function (val) {
-      if (val === "2") {
-        this.items = this.items.sort(function (a, b) {
-          return b.star - a.star;
-        });
-      }
+      // 按低价排
       if (val === "1") {
         this.items = this.items.sort(function (a, b) {
           return a.lowestprice - b.lowestprice;
         });
+      } else if (val === "2") {
+        // 按星级排
+        this.items = this.items.sort(function (a, b) {
+          return b.star - a.star;
+        });
+      } else if (val === "3") {
+        let len = this.items.length;
+        for (let i = 0; i < len; i++) {
+          this.addressToLnglat(this.items[i].location).then((res) => {
+            var distance = AMap.GeometryUtil.distance(
+              res.split(","),
+              this.Lnglat
+            );
+
+            this.hotels.push([distance, this.items[i]]);
+          });
+        }
+        // 还有点问题
+        this.hotels.sort(function (a, b) {
+          return a[0] - b[0];
+        });
+
+        console.log(this.hotels);
+        console.log(this.hotels[0]);
       }
     },
     // 酒店地址处理
@@ -772,6 +801,8 @@ export default {
     },
   },
   created() {
+    this.getLocation();
+    this.center = this.Lnglat;
     // 搜索框日期初始化
     this.searchForm.date1 = Date.now();
     this.searchForm.date2 = Date.now() + 8.64e7;
@@ -802,12 +833,6 @@ export default {
       this.getHotelbyCity();
     }
     this.searchForm.location = this.title.city;
-
-    if (this.title.city !== "全部") {
-      this.addressToLnglat(this.title.city).then((res) => {
-        this.center = res.split(",");
-      });
-    }
   },
   watch: {
     "searchForm.date1"(inew, iold) {
