@@ -166,9 +166,7 @@
           <el-card class="box-card2" shadow="hover">
             <el-row type="flex" justify="space-between" class="">
               <el-col :span="7"
-                ><div>
-                  {{ form_Select.room_num }}间X{{ form_Select.room_num }}晚
-                </div></el-col
+                ><div>{{ form_Select.room_num }}间X{{ days  }}晚</div></el-col
               >
               <el-col :span="7"
                 ><div>￥{{ price }}</div></el-col
@@ -327,6 +325,7 @@ export default {
       dish: "无",
       price: 198.0,
       discount: 11.0,
+      bookTime:new Date(),
       qrcode:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
@@ -346,6 +345,7 @@ export default {
     onPay() {
       this.payVisible = true;
       console.log(this.form_Select.time);
+       console.log(this.timestampToTime(this.bookTime));
     },
     // 时间格式化
     timestampToTime(chinaStandard) {
@@ -375,6 +375,12 @@ export default {
   computed: {
     storePrice: function () {
       return this.price - this.discount;
+    },
+    days: function () {
+      return this.GetNumberOfDays(
+        this.timestampToTime(this.form_Select.time[0]),
+        this.timestampToTime(this.form_Select.time[1])
+      );
     },
   },
   mounted() {

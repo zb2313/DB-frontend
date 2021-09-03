@@ -76,7 +76,7 @@
                   <div class="order">
                     <el-dialog :visible.sync="payVisible" width="30%">
                       <div slot="title">
-                        <h2 style="color: black">购买今日的门票</h2>
+                        <h2 style="color: #003580">购买今日的门票</h2>
                       </div>
                       <el-row
                         type="flex"
@@ -216,7 +216,7 @@
       </el-card>
       <br />
 
-      <div class="clearfix box-card">
+      <div class="clearfix box-card"  id="comments">
         <div style="float: left">
           <el-card class="left-box-card" shadow="never">
             <h1>
@@ -230,7 +230,7 @@
                 >({{ dianping_number }}名用户真实点评)</span
               >
             </h1>
-            <div class="sort">
+            <div class="sort" >
               <el-form :inline="true" :model="form_Select">
                 <el-form-item>
                   <el-select
@@ -260,9 +260,9 @@
               </el-form>
             </div>
           </el-card>
-          <div id="comments">
+          <div>
             <ul>
-              <li v-for="comment in comments" :key="comment.userName">
+              <li v-for="comment in comments" :key="comment.commentTime">
                 <CommentOnAttr
                   :userName="comment.userName"
                   :userAvatar="comment.userAvatar"
@@ -790,6 +790,7 @@ export default {
         this.location = response.data[0].alocation;
         this.grade = response.data[0].star;
       });
+      
   },
   created() {
     if (this.$route.query.id) {

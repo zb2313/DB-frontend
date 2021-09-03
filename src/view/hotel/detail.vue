@@ -225,17 +225,19 @@
       </div>
       <br />
       <el-card class="box-card" shadow="never">
-        <h1>
-          点评<span
-            style="
-              color: grey;
-              font-weight: 700;
-              font-size: 18px;
-              margin-left: 10px;
-            "
-            >({{ dianping_number }}名住客真实点评)</span
-          >
-        </h1>
+        <div id="comments">
+          <h1>
+            点评<span
+              style="
+                color: grey;
+                font-weight: 700;
+                font-size: 18px;
+                margin-left: 10px;
+              "
+              >({{ dianping_number }}名住客真实点评)</span
+            >
+          </h1>
+        </div>
         <div class="sort">
           <el-form :inline="true" :model="form_Select">
             <el-form-item>
@@ -256,7 +258,7 @@
           </el-form>
         </div>
       </el-card>
-      <div id="comments">
+      <div>
         <ul>
           <li v-for="comment in comments" :key="comment.userId">
             <Comment
@@ -1092,64 +1094,130 @@ export default {
       .then((response) => {
         this.dianping_number = response.data.length;
         for (var i = 0; i < response.data.length; i++) {
-          this.comments[i].userId = response.data[i].useR_ID;
-          var hotelComentNum;
-          var attrationComentNum;
-          var temp = this.comments[i].userId;
+          if (i < this.comments.length) {
+            this.comments[i].userId = response.data[i].useR_ID;
+            var hotelComentNum;
+            var attrationComentNum;
+            var temp = this.comments[i].userId;
 
-          //获取用户评论过的订单数
-          let _i = i;
-          this.$axios
-            .get(
-              "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
-                temp
-            )
-            .then((response) => {
-              this.comments[_i].userCommentNum =
-                response.data[0].hotelcommentnum;
-            });
-          this.$axios
-            .get(
-              "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
-                temp
-            )
-            .then((response) => {
-              this.comments[_i].userCommentNum =
-                response.data[0].hotelcommentnum +
-                this.comments[_i].userCommentNum;
-            });
-          this.comments[i].userCommentNum = hotelComentNum + attrationComentNum;
+            //获取用户评论过的订单数
+            let _i = i;
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
+                  temp
+              )
+              .then((response) => {
+                this.comments[_i].userCommentNum =
+                  response.data[0].hotelcommentnum;
+              });
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
+                  temp
+              )
+              .then((response) => {
+                this.comments[_i].userCommentNum =
+                  response.data[0].hotelcommentnum +
+                  this.comments[_i].userCommentNum;
+              });
+            this.comments[i].userCommentNum =
+              hotelComentNum + attrationComentNum;
 
-          // //获取用户订单信息
-          // this.$axios
-          //   .get(
-          //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
-          //       temp
-          //   )
-          //   .then((response) => {
-          //     this.comments[_i].commentRoom = response.data[0].typename;
-          //     this.comments[_i].bookTime = response.data[0].ordertime;
+            // //获取用户订单信息
+            // this.$axios
+            //   .get(
+            //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+            //       temp
+            //   )
+            //   .then((response) => {
+            //     this.comments[_i].commentRoom = response.data[0].typename;
+            //     this.comments[_i].bookTime = response.data[0].ordertime;
+            //   });
+
+            // 获取评论用户的头像
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/Users/" +
+                  this.comments[_i].userId
+              )
+              .then((response) => {
+                this.comments[_i].userAvatar = response.data[0].uprofile;
+              });
+
+            this.comments[i].bookTime = response.data[i].commenT_TIME.slice(
+              0,
+              10
+            );
+            this.comments[i].commentRoom = "大床房";
+
+            this.comments[i].userName = response.data[i].useR_NAME;
+            this.comments[i].commentTime = response.data[i].commenT_TIME;
+            this.comments[i].commentRate = response.data[i].grade;
+            this.comments[i].commentContent = response.data[i].ctext;
+            }
+          //  else {
+          //   var userId = response.data[i].useR_ID;
+          //   var hotelComentNum;
+          //   var attrationComentNum;
+          //   var temp = userId;
+
+          //   //获取用户评论过的订单数
+          //   let _i = i;
+          //   this.$axios
+          //     .get(
+          //       "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
+          //         temp
+          //     )
+          //     .then((response) => {
+          //       this.comments[_i].userCommentNum =
+          //         response.data[0].hotelcommentnum;
+          //     });
+          //   this.$axios
+          //     .get(
+          //       "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
+          //         temp
+          //     )
+          //     .then((response) => {
+          //       this.comments[_i].userCommentNum =
+          //         response.data[0].hotelcommentnum +
+          //         this.comments[_i].userCommentNum;
+          //     });
+          //  var userCommentNum =
+          //     hotelComentNum + attrationComentNum;
+
+          //   // //获取用户订单信息
+          //   // this.$axios
+          //   //   .get(
+          //   //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+          //   //       temp
+          //   //   )
+          //   //   .then((response) => {
+          //   //     this.comments[_i].commentRoom = response.data[0].typename;
+          //   //     this.comments[_i].bookTime = response.data[0].ordertime;
+          //   //   });
+          //   var userAvatar;
+          //   // 获取评论用户的头像
+          //   this.$axios
+          //     .get("http://49.234.18.247:8080/api/Users/" + userId)
+          //     .then((response) => {
+          //       userAvatar = response.data[0].uprofile;
+          //     });
+
+          //   var bookTime = response.data[i].commenT_TIME.slice(0, 10);
+          //   var commentRoom = "大床房";
+          //   comments.push({
+          //     userName: response.data[i].useR_NAME,
+          //     useR_ID: userId,
+          //     userAvatar: userAvatar,
+          //     commentRoom: commentRoom,
+          //     bookTime: bookTime,
+          //     userCommentNum:userCommentNum,
+          //     commentRate: response.data[i].grade,
+          //     commentContent: response.data[i].ctext,
+          //     commentTime: response.data[i].commenT_TIME,
           //   });
-
-          // 获取评论用户的头像
-          this.$axios
-            .get(
-              "http://49.234.18.247:8080/api/Users/" + this.comments[_i].userId
-            )
-            .then((response) => {
-              this.comments[_i].userAvatar = response.data[0].uprofile;
-            });
-
-          this.comments[i].bookTime = response.data[i].commenT_TIME.slice(
-            0,
-            10
-          );
-          this.comments[i].commentRoom = "大床房";
-
-          this.comments[i].userName = response.data[i].useR_NAME;
-          this.comments[i].commentTime = response.data[i].commenT_TIME;
-          this.comments[i].commentRate = response.data[i].grade;
-          this.comments[i].commentContent = response.data[i].ctext;
+          // }
         }
       });
   },
