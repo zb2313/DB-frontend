@@ -918,11 +918,19 @@ export default {
           price +
           "元</span>"
       );
-      content.push(
-        "<a href='http://localhost:8080/hotel/detail?id=" +
-          item.hoteid +
-          "'>了解详情</a>"
-      );
+      if (item.hoteid) {
+        content.push(
+          "<a href='http://localhost:8080/hotel/detail?id=" +
+            item.hoteid +
+            "'>了解详情</a>"
+        );
+      } else if (item.attractionid) {
+        content.push(
+          "<a href='http://localhost:8080/attraction/detail?id=" +
+            item.attractionid +
+            "'>了解详情</a>"
+        );
+      }
 
       let a = this;
       let infoWindow = new AMap.InfoWindow({
@@ -1155,7 +1163,7 @@ export default {
             this.comments[i].commentTime = response.data[i].commenT_TIME;
             this.comments[i].commentRate = response.data[i].grade;
             this.comments[i].commentContent = response.data[i].ctext;
-            }
+          }
           //  else {
           //   var userId = response.data[i].useR_ID;
           //   var hotelComentNum;

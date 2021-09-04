@@ -451,8 +451,9 @@ export default {
     },
     // 点击搜索按钮
     onSubmit() {
-      var city = "北京市上海市重庆市成都市南京市";
-      var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
+      var city =
+        "上海市嘉定区浦东区黄埔区朱家松江区普陀区;北京市东城区昌平区海淀区丰台区西城区;南京市秦淮区玄武区栖霞区江宁区";
+      var hotelname = "民宿格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
       var time1 =
         typeof this.searchForm.date1 == "number"
           ? this.searchForm.date1
@@ -760,6 +761,8 @@ export default {
       var tmp;
       if (detail[5] == "市") {
         tmp = detail.slice(3, 6) + detail.slice(7);
+      } else if (detail[5] == "省") {
+        tmp = detail.slice(3, 6) + detail.slice(7, 10) + detail.slice(11);
       } else {
         tmp = detail;
       }
@@ -839,7 +842,6 @@ export default {
   },
   created() {
     this.getLocation();
-    this.center = this.Lnglat;
     // 搜索框日期初始化
     this.searchForm.date1 = Date.now();
     this.searchForm.date2 = Date.now() + 8.64e7;
@@ -872,6 +874,11 @@ export default {
     this.searchForm.location = this.title.city;
   },
   watch: {
+    items(newValue, oldValue) {
+      this.addressToLnglat(newValue[0].location).then((res) => {
+        this.center = res.split(",");
+      });
+    },
     "searchForm.date1"(inew, iold) {
       if (this.searchForm.date2) {
         var time1 = Number.isFinite(inew)
@@ -917,6 +924,5 @@ export default {
       this.goTop();
     },
   },
-  mounted() {},
 };
 </script>

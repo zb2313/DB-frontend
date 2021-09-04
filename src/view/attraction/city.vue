@@ -467,9 +467,6 @@ export default {
         });
     },
     getAttrbyCity() {
-      if (this.title.city !== "全部") {
-        this.title.city += "市";
-      }
       this.$axios
         .get(
           "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
@@ -607,7 +604,8 @@ export default {
     // 点击搜索框
     onSelect() {
       if (this.input) {
-        var cities = "北京市上海市重庆市成都市苏州市南京市";
+        var cities =
+          "全部;上海市嘉定区浦东区黄埔区朱家松江区普陀区;北京市东城区昌平区海淀区丰台区西城区;南京市秦淮区玄武区栖霞区江宁区;重庆市沙坪坝区武隆区北碚区九龙坡区渝中区大足区丰都县渝北区;成都市青羊区都江堰武侯区金牛区成华区";
         if (cities.includes(this.input)) {
           this.$router.push({
             path: "/attraction/city",
