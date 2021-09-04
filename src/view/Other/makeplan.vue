@@ -30,7 +30,18 @@
         <div class="selected_items"
         v-for="(item,index) in selected_items[select_active]"
         :key="index+200"
+        :style="{
+            height: compute_height(item),
+        }"
         >
+        <div>
+          <div 
+          v-if="item.dis_to_pre>1"
+          class="distance">
+          <i class="el-icon-d-caret"></i>
+          距离 {{item.dis_to_pre}} 千米
+          </div>
+        
         <div class="midimg"
         :style="{
           backgroundImage: 'url(' + item.picture + ')',
@@ -42,7 +53,7 @@
         </div>
        
        <div style="font-size:15px;">地址：{{item.location}}</div>
-        
+        </div>
         </div>
             </div>
   <div class="right_box">
@@ -129,6 +140,7 @@
     margin-left: 5px;
     padding-left: 20px;
 }
+
 .day_icon{
 width: 40px;
 height: 40px;
@@ -195,10 +207,16 @@ overflow-y:scroll;
      float: left;
 }
 .selected_items{
-height: 120px;
+height: 140px;
     margin: 10px 10px;
     padding-top: 10px;
     
+}
+.distance{
+  height: 25px;
+  margin-left: 10px;
+  color: rgb(108,131,151);
+  font-size: 14px;
 }
 .midimg{
     margin-top: 10px;
@@ -218,6 +236,7 @@ components: {Header},
     data(){
         return {
             days:0,
+            item_num:0,
             cities:[],
             day_schedule:[],
             select_active:0,
@@ -304,17 +323,78 @@ components: {Header},
       },
       add(index,opt){
           if(opt==1){
-              var json={item_name:this.filt_attraction_list[index].attractionname,picture:this.filt_attraction_list[index].picture,location:this.filt_attraction_list[index].location};
+            let len=this.selected_items[this.select_active].length;
+              if(len){
+                
+                let _this=this;
+                let dist;
+                this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.selected_items[this.select_active][len-1].location)
+                .then(function(response){
+                  let l1=response.data.geocodes[0].location.split(',');
+                  let l2='';
+                  _this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_attraction_list[index].location)
+                  .then(function(response2){
+                    l2=response2.data.geocodes[0].location.split(',');
+                    let lat1= l1[0] * Math.PI / 180;
+                    let lat2= l2[0] * Math.PI / 180;
+                    let lon1= l1[1] * Math.PI / 180;
+                    let lon2= l2[1] * Math.PI / 180;
+                    let a=Math.abs(lat1-lat2),b=Math.abs(lon1-lon2);
+                    dist = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(lat1)*Math.cos(lat2)*Math.pow(Math.sin(b/2),2)));
+                    dist = dist * 6378.137;
+                    dist = Math.round(dist * 10000) / 10000;
+         
+                    var json={day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,dis_to_pre:dist};
               
+              _this.selected_items[_this.select_active].push(json);
+              _this.$forceUpdate();
+                  })
+                })
+              }
+              else {
+              var json={day:this.select_active,item_name:this.filt_attraction_list[index].attractionname,picture:this.filt_attraction_list[index].picture,location:this.filt_attraction_list[index].location,dis_to_pre:0};
               this.selected_items[this.select_active].push(json);
               this.$forceUpdate();
+              }
+              
           }
           else if(opt==2){
-            var jsonn={item_name:this.filt_hotel_list[index].hotelname,picture:this.filt_hotel_list[index].picture,location:this.filt_hotel_list[index].location};
+            let len=this.selected_items[this.select_active].length;
+            if(len){
+                
+                let _this=this;
+                let dist;
+                this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.selected_items[this.select_active][len-1].location)
+                .then(function(response){
+                  let l1=response.data.geocodes[0].location.split(',');
+                  let l2='';
+                  _this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_hotel_list[index].location)
+                  .then(function(response2){
+                    l2=response2.data.geocodes[0].location.split(',');
+                    let lat1= l1[0] * Math.PI / 180;
+                    let lat2= l2[0] * Math.PI / 180;
+                    let lon1= l1[1] * Math.PI / 180;
+                    let lon2= l2[1] * Math.PI / 180;
+                    let a=Math.abs(lat1-lat2),b=Math.abs(lon1-lon2);
+                    dist = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(lat1)*Math.cos(lat2)*Math.pow(Math.sin(b/2),2)));
+                    dist = dist * 6378.137;
+                    dist = Math.round(dist * 10000) / 10000;
+ 
+                    var json={day:_this.select_active,item_name:_this.filt_hotel_list[index].hotelname,picture:_this.filt_hotel_list[index].picture,location:_this.filt_hotel_list[index].location,dis_to_pre:dist};
+              
+              _this.selected_items[_this.select_active].push(json);
+              _this.$forceUpdate();
+                  })
+                })
+              }
+              else {
+              var jsonn={day:this.select_active,item_name:this.filt_hotel_list[index].hotelname,picture:this.filt_hotel_list[index].picture,location:this.filt_hotel_list[index].location,dis_to_pre:0};
             this.selected_items[this.select_active].push(jsonn);
             this.$forceUpdate();
+              }
+            
           }
-          
+          this.item_num++;
 
       },
       filt_attraction(){
@@ -341,6 +421,9 @@ components: {Header},
           },
         });
     },
+    compute_height(item){
+            return item.dis_to_pre>1? "140px" :"115px";
+        },
     }
 }
 </script>
