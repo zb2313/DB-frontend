@@ -11,23 +11,177 @@
       ></div>
       <h5>{{ roomName }}</h5>
       <span @click="viewRoomInfo" class="hint">查看客房信息</span>
-      <el-dialog :visible.sync="roomInfoVisible" width="70%" top="20px">
-        <div>
-          <h1>酒店简介</h1>
-          <br />
-          开业：{{ openTime }} 客房数：{{ totalRoom }} 联系电话：{{ telephone }}
+      <el-dialog :visible.sync="roomInfoVisible" width="80%" top="20px">
+        <div style="text-align: left; height: 550px">
+          <div style="float: left; width: 720px; height: 500px">
+            <div slot="title">
+              <h1 style="color: black">{{ roomName }}</h1>
+            </div>
+            <br />
+            <div
+              class="infoPic"
+              :style="{
+                backgroundImage: 'url(' + baseImg + ')',
+                backgroundSize: '100% 100%',
+                backgroundRepeat: 'no-repeat',
+              }"
+            ></div>
+          </div>
           <div
-            class="picture"
-            :style="{
-              backgroundImage: 'url(' + baseImg + ')',
-              backgroundSize: '100% 100%',
-              backgroundRepeat: 'no-repeat',
-            }"
-          ></div>
-          <p>{{ description }}</p>
-          <br />
-          <h3>住宿预订提供方</h3>
-          <img :src="license" alt="" style="width: 700px; height: 400px" />
+            v-infinite-scroll="load"
+            style="
+              overflow: auto;
+              float: left;
+              backgroundcolor: white;
+              width: 450px;
+              height: 540px;
+            "
+          >
+            <br />
+            <h1>基本信息</h1>
+            <p><i class="el-icon-s-grid"></i> 20-27平方米</p>
+            <div>
+              <i class="el-icon-mobile"></i> {{ bed }}
+              <p>加床费用：该房型不可加床</p>
+            </div>
+            <p><i class="el-icon-school"></i> 5-7楼</p>
+            <h2>全部设施</h2>
+
+            <h3>洗浴用品</h3>
+            <p>
+              <i class="el-icon-circle-check"></i> 牙刷
+              <span style="margin-left: 150px">
+                <i class="el-icon-circle-check"></i> 牙膏</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 沐浴露
+              <span style="margin-left: 136px">
+                <i class="el-icon-circle-check"></i> 洗发水</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 护发素
+              <span style="margin-left: 136px">
+                <i class="el-icon-circle-check"></i> 香皂</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 浴帽
+              <span style="margin-left: 150px">
+                <i class="el-icon-circle-check"></i> 梳子</span
+              >
+            </p>
+            <p><i class="el-icon-circle-check"></i> 剃须刀</p>
+
+            <h3>便利设施</h3>
+            <p>
+              <i class="el-icon-circle-check"></i>
+              房间内高速上网
+              <span style="margin-left: 80px">
+                <i class="el-icon-circle-check"></i> 客房WIFI
+                <span style="color: green; font-weight: 600"
+                  >（免费）</span
+                ></span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 遮光窗
+              <span style="margin-left: 136px">
+                <i class="el-icon-circle-check"></i> 空调</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 衣柜/衣橱
+              <span style="margin-left: 118px">
+                <i class="el-icon-circle-check"></i> 休闲椅</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 床具:鸭绒被
+              <span style="margin-left: 104px">
+                <i class="el-icon-circle-check"></i> 衣架</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 地毯
+              <span style="margin-left: 150px">
+                <i class="el-icon-circle-check"></i> 220V电压插座</span
+              >
+            </p>
+
+            <h3>媒体科技</h3>
+            <p>
+              <i class="el-icon-circle-check"></i>
+              电话
+              <span style="margin-left: 150px">
+                <i class="el-icon-circle-check"></i>
+                液晶电视机</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i>
+              国内长途电话
+              <span style="margin-left: 94px">
+                <i class="el-icon-circle-check"></i>国际长途电话</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i>
+              有线频道
+              <span style="margin-left: 123px">
+                <i class="el-icon-circle-check"></i> 智能门锁</span
+              >
+            </p>
+
+            <h3>浴室</h3>
+            <p>
+              <i class="el-icon-circle-check"></i>
+              独立淋浴间
+              <span style="margin-left: 108px">
+                <i class="el-icon-circle-check"></i> 独立卫生间</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 智能马桶
+              <span style="margin-left: 123px">
+                <i class="el-icon-circle-check"></i> 吹风机</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 浴室化妆放大镜
+              <span style="margin-left: 80px">
+                <i class="el-icon-circle-check"></i> 浴衣</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 浴巾
+              <span style="margin-left: 150px">
+                <i class="el-icon-circle-check"></i> 24小时热水</span
+              >
+            </p>
+            <p>
+              <i class="el-icon-circle-check"></i> 拖鞋
+              <span style="margin-left: 150px">
+                <i class="el-icon-circle-check"></i>卫生纸</span
+              >
+            </p>
+
+            <h3>食品饮品</h3>
+            <p>
+              <i class="el-icon-circle-check"></i> 茶包
+              <span style="margin-left: 150px">
+                <i class="el-icon-circle-check"></i> 瓶装水</span
+              >
+            </p>
+            <p><i class="el-icon-circle-check"></i> 电热水壶</p>
+
+            <h3>其他</h3>
+            <p><i class="el-icon-circle-check"></i> 刷卡进门</p>
+
+            <h3>特别提示</h3>
+            无
+          </div>
         </div>
       </el-dialog>
     </div>
@@ -81,6 +235,10 @@
 </template>
 
 <style scoped>
+.infoPic {
+  width: 700px;
+  height: 500px;
+}
 .hint {
   color: cornflowerblue;
   font-size: 12px;
@@ -167,6 +325,9 @@ export default {
           hotelID: this.hotelID,
         },
       });
+    },
+    load() {
+      this.count += 2;
     },
   },
   created() {},
