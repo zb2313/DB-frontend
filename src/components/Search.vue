@@ -157,7 +157,8 @@ export default {
   },
   methods: {
     onSubmit() {
-      var city = "北京市上海市重庆市成都市南京市";
+      var city =
+        "上海市嘉定区浦东区黄埔区朱家松江区普陀区;北京市东城区昌平区海淀区丰台区西城区;南京市秦淮区玄武区栖霞区江宁区;成都市青羊区都江堰武侯区金牛区成华区";
       var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
       if (city.includes(this.form_Select.location)) {
         if (this.form_Select.time) {

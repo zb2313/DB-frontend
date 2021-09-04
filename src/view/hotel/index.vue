@@ -325,7 +325,6 @@ export default {
       cities: ["北京", "上海", "南京", "广州", "杭州"],
       sixth_city: "苏州",
       morecity: [
-        "上海", //测试记得删
         "武汉",
         "无锡",
         "重庆",
@@ -405,7 +404,6 @@ export default {
     this.getHotelbyCity("北京");
     this.getLocation();
   },
-  mounted() {},
   watch: {
     // 根据获得的当前地址推荐酒店，若被地址获取拒绝则推荐北京的
     currentCity(newValue, oldValue) {
