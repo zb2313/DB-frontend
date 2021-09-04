@@ -54,7 +54,7 @@
                     <span
                       style="color: #003580; font-weight: 700; font-size: 24px"
                     >
-                      ￥{{ minPrice }}
+                      ￥{{ ticketPrice }}
                     </span>
                     <span
                       style="
@@ -63,32 +63,136 @@
                         line-height: 50px;
                         font-weight: 700;
                       "
-                      >起</span
-                    >
+                    ></span>
                   </div>
 
                   <button
-                    @click="payVisible = true"
+                    @click="beforePay"
                     class="choose_btn"
                     style="float: left"
                   >
                     购买门票
                   </button>
-                  <el-dialog
-                    :visible.sync="payVisible"
-                    width="30%"
-                    :before-close="handleCloses"
-                    @opened="creatQrCode()"
-                  >
-                    <div style="display: inline-block; vertical-align: middle">
-                      <div
-                        ref="qrCodeUrl"
-                        class-name="qrcode"
-                        style="display: inline-block"
-                      />
-                      <p class="">支付二维码</p>
-                    </div>
-                  </el-dialog>
+                  <div class="order">
+                    <el-dialog :visible.sync="payVisible" width="30%">
+                      <div slot="title">
+                        <h2 style="color: #003580">购买今日的门票</h2>
+                      </div>
+                      <el-row
+                        type="flex"
+                        justify="space-between"
+                        style="margin-top: 10px"
+                      >
+                        <el-col :span="7"><div>价格</div></el-col>
+                        <el-col :span="7"
+                          ><div>￥{{ ticketPrice }}</div></el-col
+                        >
+                      </el-row>
+                      <el-row
+                        type="flex"
+                        justify="space-between"
+                        style="margin-top: 20px"
+                      >
+                        <el-col :span="7"
+                          ><div style="margin-top: 5px">数量</div></el-col
+                        >
+                        <el-col :span="10"
+                          ><div>
+                            <el-input-number
+                              v-model="orderNum"
+                              @change="handleChange"
+                              :min="1"
+                              :max="leftOut"
+                              label="订票数量"
+                            ></el-input-number></div
+                        ></el-col>
+                      </el-row>
+                      <el-row
+                        type="flex"
+                        justify="space-between"
+                        style="margin-top: 10px"
+                      >
+                        <el-col :span="7">应付金额</el-col>
+                        <el-col :span="7"
+                          ><div
+                            style="
+                              color: #003680;
+                              font-weight: 700;
+                              font-size: 20px;
+                            "
+                          >
+                            ￥{{ storePrice }}
+                          </div></el-col
+                        >
+                      </el-row>
+
+                      <br />
+
+                      <!-- 订票人信息 -->
+                      <h3 style="color: black">订票人信息</h3>
+                      <div v-for="i in orderNum" :key="i">
+                        <div class="orderInfo">
+                          <br />
+                          <el-row
+                            type="flex"
+                            justify="space-between"
+                            style="margin-top: 10px"
+                          >
+                            <el-col :span="6"
+                              ><span>姓名{{ i }} </span>
+                            </el-col>
+                            <el-col :span="14"
+                              ><input
+                                type="text"
+                                placeholder="填写身份证上真实姓名"
+                            /></el-col>
+                          </el-row>
+
+                          <el-row
+                            type="flex"
+                            justify="space-between"
+                            style="margin-top: 10px"
+                          >
+                            <el-col :span="6"
+                              ><span>身份证号{{ i }}</span>
+                            </el-col>
+                            <el-col :span="14"
+                              ><input
+                                type="text"
+                                placeholder="填写18位身份证号"
+                            /></el-col>
+                          </el-row>
+                          <el-row
+                            type="flex"
+                            justify="space-between"
+                            style="margin-top: 10px"
+                          >
+                            <el-col :span="6"
+                              ><span
+                                style="margin-bottom: 5px; margin-top: 5px"
+                              >
+                                电话号码{{ i }}
+                              </span>
+                            </el-col>
+                            <el-col :span="14">
+                              <input
+                                type="text"
+                                placeholder="+86 中国内陆电话号码"
+                            /></el-col>
+                          </el-row>
+                        </div>
+                        <el-divider></el-divider>
+                      </div>
+                      <div style="text-align: right">
+                        <button @click="aliPay" class="pay_btn">
+                          支付宝支付
+                        </button>
+                        <button @click="wechatPay" class="pay_btn">
+                          微信支付
+                        </button>
+                      </div>
+                    </el-dialog>
+                  </div>
                 </div>
               </div>
             </div>
@@ -101,7 +205,7 @@
               <div>
                 <i class="el-icon-date"></i> &nbsp;&nbsp;{{ openTime }}-{{
                   closeTime
-                }}开放（ {{ stopTime }}停止入园）
+                }}开放（ {{ stopTime }}停止检票）
               </div>
               <br />
               <div>
@@ -113,7 +217,7 @@
       </el-card>
       <br />
 
-      <div class="clearfix box-card">
+      <div class="clearfix box-card" id="comments">
         <div style="float: left">
           <el-card class="left-box-card" shadow="never">
             <h1>
@@ -157,9 +261,9 @@
               </el-form>
             </div>
           </el-card>
-          <div id="comments">
+          <div>
             <ul>
-              <li v-for="comment in comments" :key="comment.userName">
+              <li v-for="(comment, index) in comments" :key="index">
                 <CommentOnAttr
                   :userName="comment.userName"
                   :userAvatar="comment.userAvatar"
@@ -186,9 +290,9 @@
               <h1>开放时间</h1>
               <el-row type="flex" style="margin-top: 20px">
                 <el-col :span="24"
-                  >7月1日-8月31日 周一至周五 09:00-20:00(最晚入园19:00)
+                  >7月1日-8月31日 周一至周五 09:00-20:00(最晚检票19:00)
                   周六至周日
-                  09:00-20:30(最晚入园19:30)；年卡中心开卡时间：开园前半小时至闭园前一个半小时。
+                  09:00-20:30(最晚检票19:30)；年卡中心开卡时间：开园前半小时至闭园前一个半小时。
                   景区现场停止售票时间：闭园前一个半小时。
                   闭园前1小时停止检票</el-col
                 >
@@ -238,25 +342,26 @@
             <h4>附近景点</h4>
             <div
               class="box"
-              v-for="(item, index) in attrations.slice(0, 8)"
+              v-for="(item, index) in attractions"
               :key="index"
+              @click="toAttrDetail(item[1].attractionid)"
             >
               <div
                 class="infoImg"
                 :style="{
-                  backgroundImage: 'url(' + item.img + ')',
+                  backgroundImage: 'url(' + item[1].picture + ')',
                   backgroundSize: '100% 100%',
                   backgroundRepeat: 'no-repeat',
                 }"
               ></div>
               <div class="infoDetail">
                 <div class="Name" style="font-size: 14px; font-weight: 700">
-                  {{ item.name }}
+                  {{ item[1].attractionname }}
                 </div>
                 <div class="Details">
                   <div class="leftstar">
                     <div class="star">
-                      {{ item.star
+                      {{ item[1].star
                       }}<i
                         style="
                           font-style: normal;
@@ -267,12 +372,12 @@
                       >
                     </div>
                     <i style="font-size: 11px; font-style: normal; color: gray"
-                      >{{ item.commentnum }}点评</i
+                      >{{ item[1].commentnum }}点评</i
                     >
                   </div>
                   <div class="rightprice">
                     <i style="font-size: 11px; font-style: normal; color: gray"
-                      >&nbsp;直线距离{{ item.distance }}米</i
+                      >&nbsp;直线距离{{ parseInt(item[0]) }}米</i
                     >
                   </div>
                 </div>
@@ -382,6 +487,14 @@
   border-radius: 4px;
   margin-left: 5px;
 }
+.pay_btn {
+  width: 80px;
+  font-size: 14px;
+  background-color: #003580;
+  color: white;
+  line-height: 30px;
+  text-align: center;
+}
 .picture {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -468,6 +581,24 @@ img {
   color: red;
   margin-top: -5px;
 }
+.orderInfo input {
+  background: #fff;
+  width: 200px;
+  height: 40px;
+  box-sizing: border-box;
+  border: solid #ced2d9;
+  border-width: 0 0 1px;
+  transition: border-color 0.25s;
+}
+.orderInfo p {
+  margin-top: 5px;
+}
+.el-dialog__body {
+  padding: 0px 25px 10px 25px !important;
+  color: #606266;
+  font-size: 14px;
+  word-break: break-all;
+}
 </style>
 
 
@@ -475,7 +606,6 @@ img {
 import Header from "@/components/Header.vue";
 import CommentOnAttr from "@/components/commentOnAttr.vue";
 import Footer1 from "@/components/Footer1.vue";
-import QRCode from "qrcodejs2";
 export default {
   components: {
     Header,
@@ -484,8 +614,9 @@ export default {
   },
   data() {
     return {
+      leftOut: 2,
+      orderNum: 2,
       payVisible: false,
-      // 景点id已经传过来,可直接使用
       AttrId: "",
       attrationName: "上海海昌海洋公园",
       starNum: 5,
@@ -495,7 +626,7 @@ export default {
       openTime: "09:00",
       closeTime: "20:30",
       stopTime: "19:30",
-      minPrice: 59,
+      ticketPrice: 59,
       nearSubwayStation: "临港中运量1号线杞青路站",
       nearSubwayDistance: 793,
       description:
@@ -582,44 +713,8 @@ export default {
           commentTime: "08/14/2021 20:53",
         },
       ],
-      attrations: [
-        {
-          name: "南极企鹅馆",
-          star: 4.8,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg07.c-ctrip.com/images/10091f000001gsmc674CC_C_1600_1200.jpg",
-          distance: 300,
-        },
-        {
-          name: "海豚过山车",
-          star: 3.2,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg04.c-ctrip.com/images/100j0y000000m8x8jB7D9_C_1600_1200.jpg",
-          distance: 150,
-        },
-        {
-          name: "虎鲸剧场《虎鲸科普秀》",
-          star: 3.6,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg03.c-ctrip.com/images/350e19000001661l2B737_C_1600_1200.jpg",
-          distance: 400,
-        },
-        {
-          name: "深海奇航",
-          star: 4.6,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg06.c-ctrip.com/images/100v1f000001h1b2y1909_C_1600_1200.jpg",
-          distance: 130,
-        },
-      ],
+      attractions: [],
+      Lnglat: [],
     };
   },
   computed: {
@@ -632,43 +727,111 @@ export default {
         return "一般般";
       } else if (this.grade == 2) {
         return "不太好";
-      } else {
+      } else if (this.grade == 1) {
         return "非常差";
+      } else {
+        return "暂无评分";
       }
+    },
+    storePrice: function () {
+      return this.ticketPrice * this.orderNum;
     },
   },
   methods: {
-    creatQrCode() {
-      this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
-        text: "扫描二维码", // 需要转换为二维码的内容
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
+    commentLevelChange() {},
+    beforePay() {
+      this.payVisible = true;
+    },
+    handleChange() {},
+    sortWayChange() {},
+    aliPay() {},
+    wechatPay() {},
+    // 地址转经纬度
+    async addressToLnglat(address) {
+      return fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
+          address
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          if (res.geocodes[0].location) {
+            return res.geocodes[0].location;
+          } else return -1;
+        });
+    },
+    // 附近景点推荐
+    nearestAttraction(address) {
+      fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
+          address
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
+                res.geocodes[0].city
+            )
+            .then((response) => {
+              var len = response.data.length;
+              for (let i = 0; i < len; i++) {
+                this.addressToLnglat(response.data[i].location).then((res) => {
+                  var distance = AMap.GeometryUtil.distance(
+                    res.split(","),
+                    this.Lnglat
+                  );
+                  if (distance !== 0) {
+                    if (this.attractions.length < 8) {
+                      this.attractions.push([distance, response.data[i]]);
+                      this.attractions.sort(function (a, b) {
+                        return a[0] - b[0];
+                      });
+                    } else {
+                      if (this.attractions[7][0] > distance) {
+                        this.attractions[7] = [distance, response.data[i]];
+                        this.attractions.sort(function (a, b) {
+                          return a[0] - b[0];
+                        });
+                      }
+                    }
+                  }
+                });
+              }
+            });
+        });
+    },
+    // 跳转到景点详情页面
+    toAttrDetail(AttrID) {
+      this.$router.push({
+        path: "/attraction/detail",
+        query: { id: AttrID },
       });
     },
-    commentLevelChange() {},
-    sortWayChange() {},
   },
-  mounted() {
-    let _this=this;
-    this.$axios
-      .get("http://49.234.18.247:8080/api/Attraction/"+this.AttrId)
-      .then((response) => {
-        this.attrationName = response.data[0].attractioN_NAME;
-        this.openTime = response.data[0].opeN_TIME;
-        this.closeTime = response.data[0].closE_TIME;
-        this.minPrice = response.data[0].price;
-        this.baseImg=response.data[0].picture;
-        this.location=response.data[0].alocation;
-        this.grade=response.data[0].star;
-      });
-  },
+  mounted() {},
   created() {
     if (this.$route.query.id) {
       this.AttrId = this.$route.query.id;
     }
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Attraction/" + this.AttrId)
+      .then((response) => {
+        this.attrationName = response.data[0].attractioN_NAME;
+        this.openTime = response.data[0].opeN_TIME;
+        this.closeTime = response.data[0].closE_TIME;
+        this.ticketPrice = response.data[0].price;
+        this.baseImg = response.data[0].picture;
+        this.location = response.data[0].alocation;
+        this.grade = response.data[0].star;
+        this.addressToLnglat(this.location).then((res) => {
+          this.Lnglat = res.split(",");
+          this.nearestAttraction(this.location);
+        });
+      });
   },
 };
 </script>

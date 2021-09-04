@@ -138,4 +138,11 @@ a:visited {
   float: left;
   margin-right: 6px;
 }
+
+.order .el-dialog__body {
+  padding: 0px 25px 25px 25px !important;
+  color: #606266;
+  font-size: 14px;
+  word-break: break-all;
+}
 </style>

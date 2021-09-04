@@ -148,10 +148,10 @@
 
           <div class="sort">
             <el-radio-group v-model="radio" @change="sortClick">
+              <el-radio-button label="0">热门推荐</el-radio-button>
               <el-radio-button label="1">低价优先</el-radio-button>
               <el-radio-button label="2">高评分优先</el-radio-button>
               <el-radio-button label="3">距离(直线)最近</el-radio-button>
-              <el-radio-button label="4">热门推荐</el-radio-button>
             </el-radio-group>
           </div>
           <div class="contents">
@@ -415,12 +415,22 @@ export default {
         city: "北京",
         num: 400,
       },
-      radio: "1",
+      radio: "0",
       items: [],
+      Lnglat: [],
+      hotels: [],
       originData: [],
     };
   },
   methods: {
+    // 根据浏览器获得当前地理位置
+    getLocation() {
+      let a = this;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        a.Lnglat[0] = position.coords.longitude.toFixed(6);
+        a.Lnglat[1] = position.coords.latitude.toFixed(6);
+      });
+    },
     numberPlus(n) {
       if (n == 1 && this.searchForm.adult != 10) {
         this.searchForm.adult++;
@@ -439,9 +449,11 @@ export default {
         this.searchForm.room--;
       }
     },
+    // 点击搜索按钮
     onSubmit() {
-      var city = "北京市上海市重庆市成都市南京市";
-      var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
+      var city =
+        "上海市嘉定区浦东区黄埔区朱家松江区普陀区;北京市东城区昌平区海淀区丰台区西城区;南京市秦淮区玄武区栖霞区江宁区";
+      var hotelname = "民宿格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
       var time1 =
         typeof this.searchForm.date1 == "number"
           ? this.searchForm.date1
@@ -489,6 +501,7 @@ export default {
         });
       }
     },
+    // 初始化地图
     initMap() {
       this.map = amapManager.getMap();
       // 比例尺
@@ -505,6 +518,7 @@ export default {
         })
       );
       let a = this;
+      // a.addMarkerHere(a.center);
       var len = a.items.length;
       for (let i = 0; i < len; i++) {
         this.addressToLnglat(a.items[i].location).then((res) => {
@@ -513,6 +527,7 @@ export default {
         });
       }
     },
+    // 地图上添加marker
     addMarker(position, item) {
       let marker = new AMap.Marker({
         position: position,
@@ -524,6 +539,30 @@ export default {
       let a = this;
       marker.on("mouseover", function () {
         a.openInfo(marker, item);
+      });
+    },
+    addMarkerHere(center) {
+      let a = this;
+      AMapUI.loadUI(["overlay/SimpleMarker"], function (SimpleMarker) {
+        new SimpleMarker({
+          //设置节点属性
+          iconLabel: {
+            //普通文本
+            innerHTML: "我",
+            title: "我在这里",
+            //设置样式
+            style: {
+              color: "#fff",
+              fontSize: "120%",
+              marginTop: "2px",
+            },
+          },
+
+          iconStyle: "red",
+          map: a.map,
+          position: center,
+          animation: "AMAP_ANIMATION_DROP",
+        });
       });
     },
     //在指定位置打开信息窗体
@@ -606,11 +645,11 @@ export default {
       info.appendChild(bottom);
       return info;
     },
-
     //关闭信息窗体
     closeInfoWindow() {
       this.map.clearInfoWindow();
     },
+    // 地址转经纬度
     async addressToLnglat(address) {
       return fetch(
         "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
@@ -625,6 +664,7 @@ export default {
           } else return -1;
         });
     },
+    // 根据城市搜索当地所有的酒店
     getHotelbyCity() {
       this.$axios
         .get(
@@ -644,6 +684,7 @@ export default {
           this.title.num = response.data.length;
         });
     },
+    // 根据酒店名搜索
     getHotelbyName() {
       this.$axios
         .get(
@@ -663,6 +704,7 @@ export default {
           this.title.num = response.data.length;
         });
     },
+    // 返回顶部
     goTop() {
       // document.documentElement.scrollTop = document.body.scrollTop = 0;
       let top = document.documentElement.scrollTop || document.body.scrollTop;
@@ -677,16 +719,41 @@ export default {
         }
       }, 30);
     },
+    // 排序
     sortClick: function (val) {
-      if (val === "2") {
-        this.items = this.items.sort(function (a, b) {
-          return b.star - a.star;
-        });
-      }
+      // 按低价排
       if (val === "1") {
         this.items = this.items.sort(function (a, b) {
           return a.lowestprice - b.lowestprice;
         });
+      } else if (val === "2") {
+        // 按星级排
+        this.items = this.items.sort(function (a, b) {
+          return b.star - a.star;
+        });
+      } else if (val === "3") {
+        this.hotels = [];
+        let len = this.items.length;
+        for (let i = 0; i < len; i++) {
+          this.addressToLnglat(this.items[i].location).then((res) => {
+            var distance = AMap.GeometryUtil.distance(
+              res.split(","),
+              this.Lnglat
+            );
+            this.hotels.push([distance, this.items[i]]);
+            this.hotels.sort(function (a, b) {
+              return a[0] - b[0];
+            });
+            if (this.hotels.length == len) {
+              this.items = [];
+              for (var j = 0; j < len; j++) {
+                this.$set(this.items, j, this.hotels[j][1]);
+              }
+            }
+          });
+        }
+      } else {
+        this.items = this.originData;
       }
     },
     // 酒店地址处理
@@ -694,6 +761,8 @@ export default {
       var tmp;
       if (detail[5] == "市") {
         tmp = detail.slice(3, 6) + detail.slice(7);
+      } else if (detail[5] == "省") {
+        tmp = detail.slice(3, 6) + detail.slice(7, 10) + detail.slice(11);
       } else {
         tmp = detail;
       }
@@ -772,6 +841,7 @@ export default {
     },
   },
   created() {
+    this.getLocation();
     // 搜索框日期初始化
     this.searchForm.date1 = Date.now();
     this.searchForm.date2 = Date.now() + 8.64e7;
@@ -802,14 +872,13 @@ export default {
       this.getHotelbyCity();
     }
     this.searchForm.location = this.title.city;
-
-    if (this.title.city !== "全部") {
-      this.addressToLnglat(this.title.city).then((res) => {
-        this.center = res.split(",");
-      });
-    }
   },
   watch: {
+    items(newValue, oldValue) {
+      this.addressToLnglat(newValue[0].location).then((res) => {
+        this.center = res.split(",");
+      });
+    },
     "searchForm.date1"(inew, iold) {
       if (this.searchForm.date2) {
         var time1 = Number.isFinite(inew)
@@ -855,6 +924,5 @@ export default {
       this.goTop();
     },
   },
-  mounted() {},
 };
 </script>

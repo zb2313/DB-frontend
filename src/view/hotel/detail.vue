@@ -30,9 +30,9 @@
                     resizeEnable="true"
                     :amap-manager="amapManager"
                     :center="center"
-                    :zoom="zoom"
+                    :zoom="14"
                     :lang="lang"
-                    :events="events1"
+                    :events="events"
                   ></el-amap>
                 </div>
               </el-dialog>
@@ -141,7 +141,7 @@
                   :center="center"
                   :zoom="zoom"
                   :lang="lang"
-                  :events="events"
+                  :events="events1"
                 ></el-amap>
               </div>
               <div class="aboutMap">
@@ -163,8 +163,15 @@
                     style="margin-top: 2px"
                   />{{ subway }}公里
                 </div>
-                <p style="font-size: 8px; color: gray; margin-top: 5px">
-                  附近1公里内有{{ attrationNum }}个景点
+                <p
+                  style="
+                    font-size: 8px;
+                    color: gray;
+                    margin-top: 5px;
+                    width: 130px;
+                  "
+                >
+                  附近9公里内有{{ attrationNum }}个景点
                 </p>
                 <div
                   @click="mapVisible = true"
@@ -218,17 +225,19 @@
       </div>
       <br />
       <el-card class="box-card" shadow="never">
-        <h1>
-          点评<span
-            style="
-              color: grey;
-              font-weight: 700;
-              font-size: 18px;
-              margin-left: 10px;
-            "
-            >({{ dianping_number }}名住客真实点评)</span
-          >
-        </h1>
+        <div id="comments">
+          <h1>
+            点评<span
+              style="
+                color: grey;
+                font-weight: 700;
+                font-size: 18px;
+                margin-left: 10px;
+              "
+              >({{ dianping_number }}名住客真实点评)</span
+            >
+          </h1>
+        </div>
         <div class="sort">
           <el-form :inline="true" :model="form_Select">
             <el-form-item>
@@ -249,7 +258,7 @@
           </el-form>
         </div>
       </el-card>
-      <div id="comments">
+      <div>
         <ul>
           <li v-for="comment in comments" :key="comment.userId">
             <Comment
@@ -359,24 +368,25 @@
         <div class="nearhotels">
           <div
             class="box"
-            v-for="(item, index) in nearhotels.slice(0, 4)"
+            v-for="(item, index) in nearhotels"
             :key="index"
+            @click="toHotelDetail(item[1].hoteid)"
           >
             <div
               class="infoImg"
               :style="{
-                backgroundImage: 'url(' + item.picture + ')',
+                backgroundImage: 'url(' + item[1].picture + ')',
                 backgroundSize: '100% 100%',
                 backgroundRepeat: 'no-repeat',
               }"
             ></div>
             <div class="infoDetail">
               <div class="Name" style="font-size: 14px; font-weight: 700">
-                {{ item.hotelname }}
+                {{ item[1].hotelname.split("(")[0] }}
               </div>
               <img
                 src="../../assets/img/diamond.svg"
-                v-for="i in item.star"
+                v-for="i in item[1].star"
                 :key="i"
                 style="margin-top: 2px"
               />
@@ -384,7 +394,7 @@
               <div class="Details">
                 <div class="leftstar">
                   <div class="star">
-                    {{ item.star }}.0<i
+                    {{ item[1].star }}.0<i
                       style="
                         font-style: normal;
                         font-size: 11px;
@@ -393,10 +403,10 @@
                       >/5</i
                     >
                   </div>
-                  <span class="dianping">{{ item.commentnum }}点评</span>
+                  <span class="dianping">{{ item[1].commentnum }}点评</span>
                 </div>
                 <div class="rightprice">
-                  ￥{{ item.lowestprice
+                  ￥{{ item[1].lowestprice
                   }}<i style="font-size: 11px; font-style: normal; color: gray"
                     >&nbsp;起</i
                   >
@@ -633,17 +643,17 @@ export default {
       zoom: 12,
       center: [121.473701, 31.230416],
       amapManager,
-      events: {
-        init() {
-          lazyAMapApiLoaderInstance.load().then(() => {
-            _this.initMap();
-          });
-        },
-      },
       events1: {
         init() {
           lazyAMapApiLoaderInstance.load().then(() => {
             _this.initMap1();
+          });
+        },
+      },
+      events: {
+        init() {
+          lazyAMapApiLoaderInstance.load().then(() => {
+            _this.initMap();
           });
         },
       },
@@ -673,7 +683,7 @@ export default {
       airport: 22.78,
       train: 12.45,
       subway: 10.44,
-      attrationNum: 7,
+      attrationNum: 0,
       rooms: [
         {
           ID: "000001",
@@ -758,18 +768,10 @@ export default {
           commentTime: "08/14/2021 20:53",
         },
       ],
-      nearhotels: [
-        {
-          hotelname: "格林豪泰酒店",
-          star: 2,
-          lowestprice: 400,
-          location: "同济大学正门外",
-          commentnum: 250,
-          picture:
-            "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
-        },
-      ],
-      items: [],
+      nearhotels: [],
+      hotels: [],
+      attractions: [],
+      Lnglat: [],
     };
   },
   computed: {
@@ -790,13 +792,12 @@ export default {
     },
   },
   methods: {
-    initMap() {
+    initMap1() {
       this.map = amapManager.getMap();
       // 比例尺;
       this.map.addControl(new AMap.Scale());
-      this.addMarker(this.center);
     },
-    initMap1() {
+    initMap() {
       this.map = amapManager.getMap();
       // 比例尺;
       this.map.addControl(new AMap.Scale());
@@ -811,25 +812,179 @@ export default {
           liteStyle: true,
         })
       );
-      this.addMarker(this.center);
+      this.addMarker(this.Lnglat);
+
+      let a = this;
+      var len1 = a.hotels.length;
+      for (let i = 0; i < len1; i++) {
+        this.addressToLnglat(a.hotels[i].location).then((res) => {
+          let lnglat = res.split(",");
+          a.addMarker1(lnglat, a.hotels[i]);
+        });
+      }
+
+      var len2 = a.attractions.length;
+      for (let i = 0; i < len2; i++) {
+        this.addressToLnglat(a.attractions[i].location).then((res) => {
+          let lnglat = res.split(",");
+          a.addMarker2(lnglat, a.attractions[i]);
+        });
+      }
     },
-    addMarker(position) {
+    addMarker(position, n) {
       let marker = new AMap.Marker({
         icon: new AMap.Icon({
           // 图标尺寸
-          size: new AMap.Size(50, 70),
+          size: new AMap.Size(40, 50),
           // 图标的取图地址
-          image:
-            "//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png",
-          // 图标所用图片大小
-          imageSize: new AMap.Size(40, 50),
+          image: "https://pages.c-ctrip.com/hotels/IBU/online/map_sprite.png",
+          imageOffset: new AMap.Pixel(-238, -10),
         }),
         position: position,
         animation: "AMAP_ANIMATION_DROP",
       });
 
       this.map.add(marker);
+      let a = this;
+
+      marker.on("mouseover", function () {
+        a.openInfo(marker, a.hotel);
+      });
     },
+    addMarker1(position, item) {
+      let marker = new AMap.Marker({
+        icon: new AMap.Icon({
+          // 图标尺寸
+          size: new AMap.Size(32, 32),
+          // 图标的取图地址
+          image: "https://pages.c-ctrip.com/hotels/IBU/online/map_sprite.png",
+          imageOffset: new AMap.Pixel(-12, -186),
+        }),
+        position: position,
+        animation: "AMAP_ANIMATION_DROP",
+      });
+
+      this.map.add(marker);
+
+      let a = this;
+      marker.on("mouseover", function () {
+        a.openInfo(marker, item);
+      });
+    },
+    addMarker2(position, item) {
+      let marker = new AMap.Marker({
+        icon: new AMap.Icon({
+          // 图标尺寸
+          size: new AMap.Size(32, 32),
+          // 图标的取图地址
+          image: "https://pages.c-ctrip.com/hotels/IBU/online/map_sprite.png",
+          imageOffset: new AMap.Pixel(-240, -83),
+        }),
+        position: position,
+        animation: "AMAP_ANIMATION_DROP",
+      });
+
+      this.map.add(marker);
+
+      let a = this;
+      marker.on("mouseover", function () {
+        a.openInfo(marker, item);
+      });
+    },
+    //在指定位置打开信息窗体
+    openInfo(marker, item) {
+      //实例化信息窗体
+      var title = item.hotelname ? item.hotelname : item.attractionname,
+        content = [];
+      content.push(
+        "<img class='pic' src='" +
+          item.picture +
+          "'>地址：" +
+          item.location +
+          "<br/>"
+      );
+      if (item.star == 0) {
+        content.push(
+          "<span style='font-size:11px;color:grey;'>暂无评分</span>"
+        );
+      } else {
+        for (var i = 0; i < item.star; i++) {
+          content.push("<i class='star el-icon-star-on'></i>");
+        }
+      }
+      var price = item.lowestprice ? item.lowestprice : item.price;
+      content.push(
+        '<br/><span style="font-size:11px;color:#F00;">价格:' +
+          price +
+          "元</span>"
+      );
+      if (item.hoteid) {
+        content.push(
+          "<a href='http://localhost:8080/hotel/detail?id=" +
+            item.hoteid +
+            "'>了解详情</a>"
+        );
+      } else if (item.attractionid) {
+        content.push(
+          "<a href='http://localhost:8080/attraction/detail?id=" +
+            item.attractionid +
+            "'>了解详情</a>"
+        );
+      }
+
+      let a = this;
+      let infoWindow = new AMap.InfoWindow({
+        isCustom: true, //使用自定义窗体
+        content: a.createInfoWindow(title, content.join("")),
+        offset: new AMap.Pixel(16, -45),
+      });
+
+      infoWindow.open(this.map, marker.getPosition());
+    },
+    //构建自定义信息窗体
+    createInfoWindow(title, content) {
+      var info = document.createElement("div");
+      info.className = "custom-info input-card content-window-card";
+
+      //可以通过下面的方式修改自定义窗体的宽高
+      info.style.width = "300px";
+      // 定义顶部标题
+      var top = document.createElement("div");
+      var titleD = document.createElement("div");
+      var closeX = document.createElement("img");
+      top.className = "info-top";
+      titleD.innerHTML = title;
+      closeX.src = "https://webapi.amap.com/images/close2.gif";
+      closeX.onclick = this.closeInfoWindow;
+
+      top.appendChild(titleD);
+      top.appendChild(closeX);
+      info.appendChild(top);
+
+      // 定义中部内容
+      var middle = document.createElement("div");
+      middle.className = "info-middle";
+      middle.style.backgroundColor = "white";
+      middle.innerHTML = content;
+      info.appendChild(middle);
+
+      // 定义底部内容
+      var bottom = document.createElement("div");
+      bottom.className = "info-bottom";
+      bottom.style.position = "relative";
+      bottom.style.top = "0px";
+      bottom.style.margin = "0 auto";
+      var sharp = document.createElement("img");
+      sharp.src = "https://webapi.amap.com/images/sharp.png";
+      bottom.appendChild(sharp);
+      info.appendChild(bottom);
+      return info;
+    },
+    //关闭信息窗体
+    closeInfoWindow() {
+      this.map.clearInfoWindow();
+    },
+    // 地址转经纬度
     async addressToLnglat(address) {
       return fetch(
         "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
@@ -839,11 +994,86 @@ export default {
           return response.json();
         })
         .then((res) => {
-          console.log(res.geocodes[0]);
           if (res.geocodes[0].location) {
             return res.geocodes[0].location;
           } else return -1;
         });
+    },
+    // 附近酒店推荐+地图上酒店+地图上景点
+    nearestHotels(address) {
+      fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
+          address
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          // 附近7km有多少景点
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
+                res.geocodes[0].city
+            )
+            .then((response) => {
+              this.attractions = response.data;
+              for (let i = 0; i < response.data.length; i++) {
+                this.addressToLnglat(response.data[i].location).then(
+                  (lnglat) => {
+                    var distance = AMap.GeometryUtil.distance(
+                      lnglat.split(","),
+                      this.Lnglat
+                    );
+                    if (distance <= 5000) {
+                      this.attrationNum++;
+                    }
+                  }
+                );
+              }
+            });
+          // 酒店推荐
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetCommentNumByHotelLocation/" +
+                res.geocodes[0].city
+            )
+            .then((response) => {
+              var len = response.data.length;
+              for (let i = 0; i < len; i++) {
+                this.addressToLnglat(response.data[i].location).then((res) => {
+                  var distance = AMap.GeometryUtil.distance(
+                    res.split(","),
+                    this.Lnglat
+                  );
+                  if (distance === 0) {
+                    this.hotel = response.data[i];
+                  } else {
+                    this.hotels.push(response.data[i]);
+                    if (this.nearhotels.length < 4) {
+                      this.nearhotels.push([distance, response.data[i]]);
+                      this.nearhotels.sort(function (a, b) {
+                        return a[0] - b[0];
+                      });
+                    } else {
+                      if (this.nearhotels[3][0] > distance) {
+                        this.nearhotels[3] = [distance, response.data[i]];
+                        this.nearhotels.sort(function (a, b) {
+                          return a[0] - b[0];
+                        });
+                      }
+                    }
+                  }
+                });
+              }
+            });
+        });
+    },
+    // 跳转到酒店详情页面
+    toHotelDetail(HotelID) {
+      this.$router.push({
+        path: "/hotel/detail",
+        query: { id: HotelID },
+      });
     },
     onReceive() {
       const h = this.$createElement;
@@ -864,6 +1094,145 @@ export default {
     sortWayChange() {},
   },
   mounted() {
+    let tempHotelId = this.hotelId;
+    this.$axios
+      .get(
+        "http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + tempHotelId
+      )
+      .then((response) => {
+        this.dianping_number = response.data.length;
+        for (var i = 0; i < response.data.length; i++) {
+          if (i < this.comments.length) {
+            this.comments[i].userId = response.data[i].useR_ID;
+            var hotelComentNum;
+            var attrationComentNum;
+            var temp = this.comments[i].userId;
+
+            //获取用户评论过的订单数
+            let _i = i;
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
+                  temp
+              )
+              .then((response) => {
+                this.comments[_i].userCommentNum =
+                  response.data[0].hotelcommentnum;
+              });
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
+                  temp
+              )
+              .then((response) => {
+                this.comments[_i].userCommentNum =
+                  response.data[0].hotelcommentnum +
+                  this.comments[_i].userCommentNum;
+              });
+            this.comments[i].userCommentNum =
+              hotelComentNum + attrationComentNum;
+
+            // //获取用户订单信息
+            // this.$axios
+            //   .get(
+            //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+            //       temp
+            //   )
+            //   .then((response) => {
+            //     this.comments[_i].commentRoom = response.data[0].typename;
+            //     this.comments[_i].bookTime = response.data[0].ordertime;
+            //   });
+
+            // 获取评论用户的头像
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/Users/" +
+                  this.comments[_i].userId
+              )
+              .then((response) => {
+                this.comments[_i].userAvatar = response.data[0].uprofile;
+              });
+
+            this.comments[i].bookTime = response.data[i].commenT_TIME.slice(
+              0,
+              10
+            );
+            this.comments[i].commentRoom = "大床房";
+
+            this.comments[i].userName = response.data[i].useR_NAME;
+            this.comments[i].commentTime = response.data[i].commenT_TIME;
+            this.comments[i].commentRate = response.data[i].grade;
+            this.comments[i].commentContent = response.data[i].ctext;
+          }
+          //  else {
+          //   var userId = response.data[i].useR_ID;
+          //   var hotelComentNum;
+          //   var attrationComentNum;
+          //   var temp = userId;
+
+          //   //获取用户评论过的订单数
+          //   let _i = i;
+          //   this.$axios
+          //     .get(
+          //       "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
+          //         temp
+          //     )
+          //     .then((response) => {
+          //       this.comments[_i].userCommentNum =
+          //         response.data[0].hotelcommentnum;
+          //     });
+          //   this.$axios
+          //     .get(
+          //       "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
+          //         temp
+          //     )
+          //     .then((response) => {
+          //       this.comments[_i].userCommentNum =
+          //         response.data[0].hotelcommentnum +
+          //         this.comments[_i].userCommentNum;
+          //     });
+          //  var userCommentNum =
+          //     hotelComentNum + attrationComentNum;
+
+          //   // //获取用户订单信息
+          //   // this.$axios
+          //   //   .get(
+          //   //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+          //   //       temp
+          //   //   )
+          //   //   .then((response) => {
+          //   //     this.comments[_i].commentRoom = response.data[0].typename;
+          //   //     this.comments[_i].bookTime = response.data[0].ordertime;
+          //   //   });
+          //   var userAvatar;
+          //   // 获取评论用户的头像
+          //   this.$axios
+          //     .get("http://49.234.18.247:8080/api/Users/" + userId)
+          //     .then((response) => {
+          //       userAvatar = response.data[0].uprofile;
+          //     });
+
+          //   var bookTime = response.data[i].commenT_TIME.slice(0, 10);
+          //   var commentRoom = "大床房";
+          //   comments.push({
+          //     userName: response.data[i].useR_NAME,
+          //     useR_ID: userId,
+          //     userAvatar: userAvatar,
+          //     commentRoom: commentRoom,
+          //     bookTime: bookTime,
+          //     userCommentNum:userCommentNum,
+          //     commentRate: response.data[i].grade,
+          //     commentContent: response.data[i].ctext,
+          //     commentTime: response.data[i].commenT_TIME,
+          //   });
+          // }
+        }
+      });
+  },
+  created() {
+    if (this.$route.query.id) {
+      this.hotelId = this.$route.query.id;
+    }
     this.$axios
       .get("http://49.234.18.247:8080/api/Hotel/" + this.hotelId)
       .then((response) => {
@@ -872,82 +1241,11 @@ export default {
         this.baseImg = response.data[0].picture;
         this.location = response.data[0].hlocation;
         this.grade = response.data[0].star;
+        this.addressToLnglat(this.location).then((res) => {
+          this.center = this.Lnglat = res.split(",");
+          this.nearestHotels(this.location);
+        });
       });
-
-    let tempHotelId = this.hotelId;
-    this.$axios
-      .get(
-        "http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + tempHotelId
-      )
-      .then((response) => {
-        console.log(response.data);
-        this.dianping_number = response.data.length;
-        for (var i = 0; i < response.data.length; i++) {
-          this.comments[i].userId = response.data[i].useR_ID;
-          var hotelComentNum;
-          var attrationComentNum;
-          var temp = this.comments[i].userId;
-
-          //获取用户评论过的订单数
-          let _i = i;
-          this.$axios
-            .get(
-              "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
-                temp
-            )
-            .then((response) => {
-              this.comments[_i].userCommentNum =
-                response.data[0].hotelcommentnum;
-            });
-          this.$axios
-            .get(
-              "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
-                temp
-            )
-            .then((response) => {
-              this.comments[_i].userCommentNum =
-                response.data[0].hotelcommentnum +
-                this.comments[_i].userCommentNum;
-            });
-          this.comments[i].userCommentNum = hotelComentNum + attrationComentNum;
-
-          // //获取用户订单信息
-          // this.$axios
-          //   .get(
-          //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
-          //       temp
-          //   )
-          //   .then((response) => {
-          //     this.comments[_i].commentRoom = response.data[0].typename;
-          //     this.comments[_i].bookTime = response.data[0].ordertime;
-          //   });
-
-          // 获取评论用户的头像
-          this.$axios
-            .get(
-              "http://49.234.18.247:8080/api/Users/" + this.comments[_i].userId
-            )
-            .then((response) => {
-              this.comments[_i].userAvatar = response.data[0].uprofile;
-            });
-
-          this.comments[i].bookTime = response.data[i].commenT_TIME.slice(
-            0,
-            10
-          );
-          this.comments[i].commentRoom = "大床房";
-
-          this.comments[i].userName = response.data[i].useR_NAME;
-          this.comments[i].commentTime = response.data[i].commenT_TIME;
-          this.comments[i].commentRate = response.data[i].grade;
-          this.comments[i].commentContent = response.data[i].ctext;
-        }
-      });
-  },
-  created() {
-    if (this.$route.query.id) {
-      this.hotelId = this.$route.query.id;
-    }
   },
 };
 </script>

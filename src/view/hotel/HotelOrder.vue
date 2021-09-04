@@ -148,25 +148,11 @@
                 </span>
               </div>
 
-              <div
-                @click="payVisible = true"
-                class="pay_btn"
-                style="float: right"
-              >
+              <div @click="onPay" class="pay_btn" style="float: right">
                 去支付
               </div>
-              <el-dialog
-                :visible.sync="payVisible"
-                width="30%"
-                :before-close="handleCloses"
-                @opened="creatQrCode()"
-              >
+              <el-dialog :visible.sync="payVisible" width="30%">
                 <div style="display: inline-block; vertical-align: middle">
-                  <div
-                    ref="qrCodeUrl"
-                    class-name="qrcode"
-                    style="display: inline-block"
-                  />
                   <p class="">支付二维码</p>
                 </div>
               </el-dialog>
@@ -180,9 +166,7 @@
           <el-card class="box-card2" shadow="hover">
             <el-row type="flex" justify="space-between" class="">
               <el-col :span="7"
-                ><div>
-                  {{ form_Select.room_num }}间X{{ form_Select.room_num }}晚
-                </div></el-col
+                ><div>{{ form_Select.room_num }}间X{{ days  }}晚</div></el-col
               >
               <el-col :span="7"
                 ><div>￥{{ price }}</div></el-col
@@ -325,7 +309,6 @@
         
 <script>
 import Header from "@/components/Header";
-import QRCode from "qrcodejs2";
 export default {
   components: {
     Header,
@@ -342,11 +325,12 @@ export default {
       dish: "无",
       price: 198.0,
       discount: 11.0,
+      bookTime:new Date(),
       qrcode:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
-        time: "2021/08/11",
-        room_num: undefined,
+        time: " ",
+        room_num: 1,
         arrival: " ",
       },
       pickerOptions: {
@@ -358,20 +342,45 @@ export default {
   },
   methods: {
     roomNumChange() {},
-    creatQrCode() {
-      this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
-        text: "秦晓慧是世界上最___的人", // 需要转换为二维码的内容
-        width: 200,
-        height: 200,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-      });
+    onPay() {
+      this.payVisible = true;
+      console.log(this.form_Select.time);
+       console.log(this.timestampToTime(this.bookTime));
+    },
+    // 时间格式化
+    timestampToTime(chinaStandard) {
+      var date = new Date(chinaStandard);
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      var h = date.getHours();
+      var minute = date.getMinutes();
+      minute = minute < 10 ? "0" + minute : minute;
+      var second = date.getSeconds();
+      second = second < 10 ? "0" + second : second;
+      var Time = y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
+      return Time;
+    },
+    GetNumberOfDays(date1, date2) {
+      //获得天数
+      //date1：开始日期，date2结束日期
+      var a1 = Date.parse(new Date(date1));
+      var a2 = Date.parse(new Date(date2));
+      var day = parseInt((a2 - a1) / (1000 * 60 * 60 * 24)); //核心：时间戳相减，然后除以天数
+      return day;
     },
   },
   computed: {
     storePrice: function () {
       return this.price - this.discount;
+    },
+    days: function () {
+      return this.GetNumberOfDays(
+        this.timestampToTime(this.form_Select.time[0]),
+        this.timestampToTime(this.form_Select.time[1])
+      );
     },
   },
   mounted() {

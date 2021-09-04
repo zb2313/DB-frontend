@@ -38,7 +38,7 @@
               :center="center"
               :zoom="zoom"
               :lang="lang"
-              :events="events"
+              :events="events1"
             ></el-amap>
           </div>
 
@@ -286,6 +286,13 @@ export default {
           });
         },
       },
+      events1: {
+        init() {
+          lazyAMapApiLoaderInstance.load().then(() => {
+            _this.initMap1();
+          });
+        },
+      },
       label: "",
       checkList: [],
       checkList1: [],
@@ -295,6 +302,8 @@ export default {
       withList2: [],
       items: [],
       originData: [],
+      attractions: [],
+      Lnglat: [],
       input: "",
       sortBy: "热门推荐",
     };
@@ -324,6 +333,19 @@ export default {
         });
       }
     },
+    initMap1() {
+      this.map = amapManager.getMap();
+      // 比例尺;
+      this.map.addControl(new AMap.Scale());
+      let a = this;
+      var len = a.items.length;
+      for (let i = 0; i < len; i++) {
+        this.addressToLnglat(a.items[i].location).then((res) => {
+          let lnglat = res.split(",");
+          a.addMarker1(lnglat);
+        });
+      }
+    },
     addMarker(position, item) {
       let marker = new AMap.Marker({
         position: position,
@@ -336,6 +358,14 @@ export default {
       marker.on("mouseover", function () {
         a.openInfo(marker, item);
       });
+    },
+    addMarker1(position) {
+      let marker = new AMap.Marker({
+        position: position,
+        animation: "AMAP_ANIMATION_DROP",
+      });
+
+      this.map.add(marker);
     },
     //在指定位置打开信息窗体
     openInfo(marker, item) {
@@ -437,9 +467,6 @@ export default {
         });
     },
     getAttrbyCity() {
-      if (this.title.city !== "全部") {
-        this.title.city += "市";
-      }
       this.$axios
         .get(
           "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
@@ -504,6 +531,7 @@ export default {
       }
       return false;
     },
+    // 下面四个函数供筛选框使用
     narrow(List) {
       this.withList = [];
       for (var i = 0; i < this.originData.length; i++) {
@@ -573,9 +601,11 @@ export default {
       }
       this.title.num = this.items.length;
     },
+    // 点击搜索框
     onSelect() {
       if (this.input) {
-        var cities = "北京市上海市重庆市成都市苏州市南京市";
+        var cities =
+          "全部;上海市嘉定区浦东区黄埔区朱家松江区普陀区;北京市东城区昌平区海淀区丰台区西城区;南京市秦淮区玄武区栖霞区江宁区;重庆市沙坪坝区武隆区北碚区九龙坡区渝中区大足区丰都县渝北区;成都市青羊区都江堰武侯区金牛区成华区";
         if (cities.includes(this.input)) {
           this.$router.push({
             path: "/attraction/city",
@@ -611,6 +641,7 @@ export default {
     Sort(command) {
       if (command == "a") {
         this.sortBy = "热门推荐";
+        this.items = this.originData;
       } else if (command == "b") {
         this.sortBy = "低价优先";
         this.items = this.items.sort(function (a, b) {
@@ -623,6 +654,26 @@ export default {
         });
       } else if (command == "d") {
         this.sortBy = "距离最短";
+        this.attractions = [];
+        let len = this.items.length;
+        for (let i = 0; i < len; i++) {
+          this.addressToLnglat(this.items[i].location).then((res) => {
+            var distance = AMap.GeometryUtil.distance(
+              res.split(","),
+              this.Lnglat
+            );
+            this.attractions.push([distance, this.items[i]]);
+            this.attractions.sort(function (a, b) {
+              return a[0] - b[0];
+            });
+            if (this.attractions.length == len) {
+              this.items = [];
+              for (var j = 0; j < len; j++) {
+                this.$set(this.items, j, this.attractions[j][1]);
+              }
+            }
+          });
+        }
       }
     },
   },
@@ -644,7 +695,7 @@ export default {
 
     if (this.title.city !== "全部") {
       this.addressToLnglat(this.title.city).then((res) => {
-        this.center = res.split(",");
+        this.Lnglat = this.center = res.split(",");
       });
     }
   },

@@ -233,11 +233,6 @@ const routes = [
         component: () => import('../view/Other/questions.vue')
     },
     {
-        path: '/Recommend',
-        name: 'Recommend',
-        component: () => import('../view/Other/Recommend.vue')
-    },
-    {
         path: '/travelplan',
         name: 'travelplan',
         component: () => import('../view/Other/travelplan.vue')

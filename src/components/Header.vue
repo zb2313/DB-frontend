@@ -84,11 +84,6 @@
             >机/车票</router-link
           ></el-menu-item
         >
-        <el-menu-item index="4"
-          ><router-link class="url" to="/Recommend"
-            >攻略</router-link
-          ></el-menu-item
-        >
         <el-menu-item index="5"
           ><router-link class="url" to="/travelplan"
             >行程</router-link
