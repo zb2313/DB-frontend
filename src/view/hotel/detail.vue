@@ -684,6 +684,9 @@ export default {
       train: 12.45,
       subway: 10.44,
       attrationNum: 0,
+      attrationCommentNumTest: 2,
+      hotelCommentNumTest: 2,
+      avatarTest: "",
       rooms: [
         {
           ID: "000001",
@@ -743,18 +746,6 @@ export default {
         },
       ],
       comments: [
-        {
-          userName: " ",
-          useR_ID: "0000000001",
-          userAvatar:
-            "https://ak-d.tripcdn.com/images/Z80p180000013uw9yF21F_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
-          bookTime: "08/14/2021",
-          userCommentNum: 1,
-          commentRate: 4,
-          commentContent: " ",
-          commentTime: "08/14/2021 20:53",
-        },
         {
           userName: "兰州潇洒哥",
           useR_ID: "0000000002",
@@ -1101,14 +1092,24 @@ export default {
       )
       .then((response) => {
         this.dianping_number = response.data.length;
+        if (this.comments.length < response.data.length) {
+          for (var j = this.comments.length; j < response.data.length; j++)
+            this.comments.push({
+              userName: "兰州潇洒哥",
+              useR_ID: "0000000002",
+              userAvatar:
+                "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
+              commentRoom: "山系·城景大床房",
+              bookTime: "08/14/2021",
+              userCommentNum: 1,
+              commentRate: 5.0,
+              commentContent: "",
+              commentTime: "08/14/2021 20:53",
+            });
+        }
         for (var i = 0; i < response.data.length; i++) {
-          if (i < this.comments.length) {
             this.comments[i].userId = response.data[i].useR_ID;
-            var hotelComentNum;
-            var attrationComentNum;
             var temp = this.comments[i].userId;
-
-            //获取用户评论过的订单数
             let _i = i;
             this.$axios
               .get(
@@ -1129,8 +1130,6 @@ export default {
                   response.data[0].hotelcommentnum +
                   this.comments[_i].userCommentNum;
               });
-            this.comments[i].userCommentNum =
-              hotelComentNum + attrationComentNum;
 
             // //获取用户订单信息
             // this.$axios
@@ -1164,69 +1163,6 @@ export default {
             this.comments[i].commentRate = response.data[i].grade;
             this.comments[i].commentContent = response.data[i].ctext;
           }
-          //  else {
-          //   var userId = response.data[i].useR_ID;
-          //   var hotelComentNum;
-          //   var attrationComentNum;
-          //   var temp = userId;
-
-          //   //获取用户评论过的订单数
-          //   let _i = i;
-          //   this.$axios
-          //     .get(
-          //       "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
-          //         temp
-          //     )
-          //     .then((response) => {
-          //       this.comments[_i].userCommentNum =
-          //         response.data[0].hotelcommentnum;
-          //     });
-          //   this.$axios
-          //     .get(
-          //       "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
-          //         temp
-          //     )
-          //     .then((response) => {
-          //       this.comments[_i].userCommentNum =
-          //         response.data[0].hotelcommentnum +
-          //         this.comments[_i].userCommentNum;
-          //     });
-          //  var userCommentNum =
-          //     hotelComentNum + attrationComentNum;
-
-          //   // //获取用户订单信息
-          //   // this.$axios
-          //   //   .get(
-          //   //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
-          //   //       temp
-          //   //   )
-          //   //   .then((response) => {
-          //   //     this.comments[_i].commentRoom = response.data[0].typename;
-          //   //     this.comments[_i].bookTime = response.data[0].ordertime;
-          //   //   });
-          //   var userAvatar;
-          //   // 获取评论用户的头像
-          //   this.$axios
-          //     .get("http://49.234.18.247:8080/api/Users/" + userId)
-          //     .then((response) => {
-          //       userAvatar = response.data[0].uprofile;
-          //     });
-
-          //   var bookTime = response.data[i].commenT_TIME.slice(0, 10);
-          //   var commentRoom = "大床房";
-          //   comments.push({
-          //     userName: response.data[i].useR_NAME,
-          //     useR_ID: userId,
-          //     userAvatar: userAvatar,
-          //     commentRoom: commentRoom,
-          //     bookTime: bookTime,
-          //     userCommentNum:userCommentNum,
-          //     commentRate: response.data[i].grade,
-          //     commentContent: response.data[i].ctext,
-          //     commentTime: response.data[i].commenT_TIME,
-          //   });
-          // }
-        }
       });
   },
   created() {

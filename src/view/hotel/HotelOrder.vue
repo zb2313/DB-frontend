@@ -51,6 +51,7 @@
                 <el-form-item>
                   <el-date-picker
                     v-model="form_Select.time"
+                    @change="dateChange"
                     type="daterange"
                     format="yyyy/MM/dd"
                     range-separator="——"
@@ -62,14 +63,14 @@
                 </el-form-item>
 
                 <el-form-item>
-                  <el-select
+                  <span>房间数 &nbsp;&nbsp;</span>
+                  <el-input-number
                     v-model="form_Select.room_num"
                     @change="roomNumChange"
-                    placeholder="房间数"
-                  >
-                    <el-option label="1" value="1"></el-option>
-                    <el-option label="2" value="2"></el-option>
-                  </el-select>
+                    :min="1"
+                    :max="leftOut"
+                    label="订票数量"
+                  ></el-input-number>
                 </el-form-item>
               </el-form>
             </div>
@@ -81,10 +82,10 @@
               </p>
             </div>
             <br />
-            <div class="personInfo">
-              <p style="margin-bottom: 5px; margin-top: 5px">住客姓名</p>
+            <div class="personInfo" v-for="i in form_Select.room_num" :key="i">
+              <p style="margin-bottom: 5px; margin-top: 5px">住客姓名{{ i }}</p>
               <input type="text" placeholder="每间只需填1人" />
-              <p style="margin-bottom: 5px; margin-top: 5px">电话号码</p>
+              <p style="margin-bottom: 5px; margin-top: 5px">电话号码{{ i }}</p>
               <input type="text" placeholder="+86 中国内陆电话号码" />
             </div>
           </el-card>
@@ -166,10 +167,10 @@
           <el-card class="box-card2" shadow="hover">
             <el-row type="flex" justify="space-between" class="">
               <el-col :span="7"
-                ><div>{{ form_Select.room_num }}间X{{ days  }}晚</div></el-col
+                ><div>{{ form_Select.room_num }}间X{{ days }}晚</div></el-col
               >
               <el-col :span="7"
-                ><div>￥{{ price }}</div></el-col
+                ><div>￥{{ totalPrice }}</div></el-col
               >
             </el-row>
             <el-row type="flex" justify="space-between">
@@ -315,6 +316,8 @@ export default {
   },
   data() {
     return {
+      days: 1,
+      leftOut: 12,
       payVisible: false,
       hotelName: "速八酒店",
       starNum: 5,
@@ -323,9 +326,10 @@ export default {
       cNum: 2,
       bed: "1张大床",
       dish: "无",
-      price: 198.0,
+      price: 198,
+      totalPrice: 198,
       discount: 11.0,
-      bookTime:new Date(),
+      bookTime: new Date(),
       qrcode:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
@@ -341,11 +345,18 @@ export default {
     };
   },
   methods: {
-    roomNumChange() {},
+    dateChange() {
+      this.days = this.GetNumberOfDays(
+        this.timestampToTime(this.form_Select.time[0]),
+        this.timestampToTime(this.form_Select.time[1])
+      );
+      this.totalPrice = this.price * this.form_Select.room_num * this.days;
+    },
+    roomNumChange() {
+      this.totalPrice = this.price * this.form_Select.room_num * this.days;
+    },
     onPay() {
       this.payVisible = true;
-      console.log(this.form_Select.time);
-       console.log(this.timestampToTime(this.bookTime));
     },
     // 时间格式化
     timestampToTime(chinaStandard) {
@@ -374,13 +385,7 @@ export default {
   },
   computed: {
     storePrice: function () {
-      return this.price - this.discount;
-    },
-    days: function () {
-      return this.GetNumberOfDays(
-        this.timestampToTime(this.form_Select.time[0]),
-        this.timestampToTime(this.form_Select.time[1])
-      );
+      return this.totalPrice - this.discount;
     },
   },
   mounted() {
