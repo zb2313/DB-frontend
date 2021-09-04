@@ -515,6 +515,7 @@ export default {
         })
       );
       let a = this;
+      // a.addMarkerHere(a.center);
       var len = a.items.length;
       for (let i = 0; i < len; i++) {
         this.addressToLnglat(a.items[i].location).then((res) => {
@@ -534,6 +535,30 @@ export default {
       let a = this;
       marker.on("mouseover", function () {
         a.openInfo(marker, item);
+      });
+    },
+    addMarkerHere(center) {
+      let a = this;
+      AMapUI.loadUI(["overlay/SimpleMarker"], function (SimpleMarker) {
+        new SimpleMarker({
+          //设置节点属性
+          iconLabel: {
+            //普通文本
+            innerHTML: "我",
+            title: "我在这里",
+            //设置样式
+            style: {
+              color: "#fff",
+              fontSize: "120%",
+              marginTop: "2px",
+            },
+          },
+
+          iconStyle: "red",
+          map: a.map,
+          position: center,
+          animation: "AMAP_ANIMATION_DROP",
+        });
       });
     },
     //在指定位置打开信息窗体
@@ -698,6 +723,7 @@ export default {
           return b.star - a.star;
         });
       } else if (val === "3") {
+        this.hotels = [];
         let len = this.items.length;
         for (let i = 0; i < len; i++) {
           this.addressToLnglat(this.items[i].location).then((res) => {
@@ -705,17 +731,18 @@ export default {
               res.split(","),
               this.Lnglat
             );
-
             this.hotels.push([distance, this.items[i]]);
+            this.hotels.sort(function (a, b) {
+              return a[0] - b[0];
+            });
+            if (this.hotels.length == len) {
+              this.items = [];
+              for (var j = 0; j < len; j++) {
+                this.$set(this.items, j, this.hotels[j][1]);
+              }
+            }
           });
         }
-        // 还有点问题
-        this.hotels.sort(function (a, b) {
-          return a[0] - b[0];
-        });
-
-        console.log(this.hotels);
-        console.log(this.hotels[0]);
       }
     },
     // 酒店地址处理
