@@ -100,7 +100,7 @@
                           ><div>
                             <el-input-number
                               v-model="orderNum"
-                              @change="handleChange"
+                              @change="ticketNumChange"
                               :min="1"
                               :max="leftOut"
                               label="订票数量"
@@ -238,24 +238,27 @@
                     v-model="form_Select.commentLevel"
                     @change="commentLevelChange"
                   >
-                    <el-option label="所有点评" value="所有点评"></el-option>
-                    <el-option
-                      label="好评（打分>3）"
-                      value="好评（打分>3）"
-                    ></el-option>
-                    <el-option
-                      label="非好评（打分<4）"
-                      value="非好评（打分<4）"
-                    ></el-option>
+                    <el-option label="所有点评" value="1"></el-option>
+                    <el-option label="好评（打分>3）" value="2"></el-option>
+                    <el-option label="非好评（打分<4）" value="3"></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item>
                   <el-select
-                    v-model="form_Select.sortWay"
-                    @change="sortWayChange"
+                    v-model="form_Select.buySort"
+                    @change="sortWayChange1"
                   >
-                    <el-option label="智能排序" value="智能排序"></el-option>
-                    <el-option label="最近购买" value="最近购买"></el-option>
+                    <el-option label="智能排序" value="1"></el-option>
+                    <el-option label="最近购买" value="2"></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-select
+                    v-model="form_Select.commentSort"
+                    @change="sortWayChange2"
+                  >
+                    <el-option label="所有点评" value="1"></el-option>
+                    <el-option label="最近点评" value="2"></el-option>
                   </el-select>
                 </el-form-item>
               </el-form>
@@ -263,7 +266,7 @@
           </el-card>
           <div>
             <ul>
-              <li v-for="(comment, index) in comments" :key="index">
+              <li v-for="(comment, index) in commentList" :key="index">
                 <CommentOnAttr
                   :userName="comment.userName"
                   :userAvatar="comment.userAvatar"
@@ -615,7 +618,7 @@ export default {
   data() {
     return {
       leftOut: 12,
-      orderNum: 2,
+      orderNum: 1,
       payVisible: false,
       AttrId: "",
       attrationName: "上海海昌海洋公园",
@@ -627,6 +630,7 @@ export default {
       closeTime: "20:30",
       stopTime: "19:30",
       ticketPrice: 59,
+      storePrice: 59,
       nearSubwayStation: "临港中运量1号线杞青路站",
       nearSubwayDistance: 793,
       description:
@@ -635,7 +639,8 @@ export default {
         "https://dimg06.c-ctrip.com/images/100q11000000qcqie2920_C_1600_1200.jpg",
       form_Select: {
         commentLevel: "所有点评",
-        sortWay: "最近购买",
+        buySort: "最近购买",
+        commentSort: "最近点评",
       },
       airport: 22.78,
       train: 12.45,
@@ -672,6 +677,7 @@ export default {
           commentTime: "08/14/2021 20:53",
         },
       ],
+      commentList: [],
       attractions: [],
       Lnglat: [],
     };
@@ -692,17 +698,36 @@ export default {
         return "暂无评分";
       }
     },
-    storePrice: function () {
-      return this.ticketPrice * this.orderNum;
-    },
   },
   methods: {
-    commentLevelChange() {},
+    ticketNumChange() {
+      this.storePrice = this.ticketPrice * this.orderNum;
+    },
     beforePay() {
       this.payVisible = true;
     },
-    handleChange() {},
-    sortWayChange() {},
+    commentLevelChange(val) {
+      if (val === "1") {
+        this.commentList = [];
+        this.commentList = this.comments;
+      } else if (val === "2") {
+        this.commentList = [];
+        let _this=this;
+        for (var i; i < _this.comments.length; i++) {
+          this.console.log(i);
+          if (_this.comments[i].commentRate > 3)
+            _this.commentList.push(_this.comments[i]);
+        }
+      } else if (val === "3") {
+        this.commentList = [];
+        for (var k; k < this.comments.length; k++) {
+          if (this.comments[k].commentRate < 4)
+            this.commentList.push(this.comments[k]);
+        }
+      }
+    },
+    sortWayChange1() {},
+    sortWayChange2() {},
     aliPay() {},
     wechatPay() {},
     // 地址转经纬度
@@ -796,63 +821,61 @@ export default {
             });
         }
         for (var i = 0; i < response.data.length; i++) {
-         
-            this.comments[i].userId = response.data[i].useR_ID;
-            var temp = this.comments[i].userId;
-            let _i = i;
-            this.$axios
-              .get(
-                "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
-                  temp
-              )
-              .then((response) => {
-                this.comments[_i].userCommentNum =
-                  response.data[0].hotelcommentnum;
-              });
-            this.$axios
-              .get(
-                "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
-                  temp
-              )
-              .then((response) => {
-                this.comments[_i].userCommentNum =
-                  response.data[0].hotelcommentnum +
-                  this.comments[_i].userCommentNum;
-              });
+          this.comments[i].userId = response.data[i].useR_ID;
+          var temp = this.comments[i].userId;
+          let _i = i;
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
+                temp
+            )
+            .then((response) => {
+              this.comments[_i].userCommentNum =
+                response.data[0].hotelcommentnum;
+            });
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
+                temp
+            )
+            .then((response) => {
+              this.comments[_i].userCommentNum =
+                response.data[0].hotelcommentnum +
+                this.comments[_i].userCommentNum;
+            });
 
-            // //获取用户订单信息
-            // this.$axios
-            //   .get(
-            //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
-            //       temp
-            //   )
-            //   .then((response) => {
-            //     this.comments[_i].commentRoom = response.data[0].typename;
-            //     this.comments[_i].bookTime = response.data[0].ordertime;
-            //   });
+          // //获取用户订单信息
+          // this.$axios
+          //   .get(
+          //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+          //       temp
+          //   )
+          //   .then((response) => {
+          //     this.comments[_i].commentRoom = response.data[0].typename;
+          //     this.comments[_i].bookTime = response.data[0].ordertime;
+          //   });
 
-            // 获取评论用户的头像
-            this.$axios
-              .get(
-                "http://49.234.18.247:8080/api/Users/" +
-                  this.comments[_i].userId
-              )
-              .then((response) => {
-                this.comments[_i].userAvatar = response.data[0].uprofile;
-              });
+          // 获取评论用户的头像
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/Users/" + this.comments[_i].userId
+            )
+            .then((response) => {
+              this.comments[_i].userAvatar = response.data[0].uprofile;
+            });
 
-            this.comments[i].bookTime = response.data[i].acommenT_TIME.slice(
-              0,
-              10
-            );
-            this.comments[i].commentTicket = "成人票";
+          this.comments[i].bookTime = response.data[i].acommenT_TIME.slice(
+            0,
+            10
+          );
+          this.comments[i].commentTicket = "成人票";
 
-            this.comments[i].userName = response.data[i].useR_NAME;
-            this.comments[i].commentTime = response.data[i].acommenT_TIME;
-            this.comments[i].commentRate = response.data[i].grade;
-            this.comments[i].commentContent = response.data[i].ctext;
-          }
-        
+          this.comments[i].userName = response.data[i].useR_NAME;
+          this.comments[i].commentTime = response.data[i].acommenT_TIME;
+          this.comments[i].commentRate = response.data[i].grade;
+          this.comments[i].commentContent = response.data[i].ctext;
+        }
+        this.commentList=this.comments;
       });
   },
   created() {
@@ -866,6 +889,7 @@ export default {
         this.openTime = response.data[0].opeN_TIME;
         this.closeTime = response.data[0].closE_TIME;
         this.ticketPrice = response.data[0].price;
+        this.storePrice = response.data[0].price;
         this.baseImg = response.data[0].picture;
         this.location = response.data[0].alocation;
         this.grade = response.data[0].star;
