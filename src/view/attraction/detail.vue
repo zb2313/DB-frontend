@@ -614,7 +614,7 @@ export default {
   },
   data() {
     return {
-      leftOut: 2,
+      leftOut: 12,
       orderNum: 2,
       payVisible: false,
       AttrId: "",
@@ -669,47 +669,6 @@ export default {
           commentRate: 5.0,
           commentContent:
             "宝宝两岁还小，没有带他去比较贵的迪士尼，而是性价比相对高的海昌。 这次是他第二次来，第一次是他17个月的时候。 两次都在携程boss带货直播中抢购了房+两个成人票的套餐，1300左右的价格，玩两天住一晚太核算啦。 而且海昌海洋公园的酒店边门就是乐园的入口，玩累了，拉臭臭了，肚子饿了，衣服出汗湿了，回房间休整一下，不要太方便。 娃小，不懂什么IP，也不能玩刺激的项目，海昌乐园的项目就特别合适，人不多的时候，海洋木马项目的工作人员会让可以连续乘个两次。 乐园的动物也有很多，有北京熊、虎鲸、白鲸、海豚、企鹅、海豹等等大动物，也有各种好看的热带鱼、珊瑚等等。 总之，娃很开心，老母亲觉得性价比很高。",
-          commentTime: "08/14/2021 20:53",
-        },
-        {
-          userName: "加油干饭呀",
-          userAvatar:
-            "https://ak-d.tripcdn.com/images/Z80p180000013uw9yF21F_R_100_100_R5_Q70_D.jpg",
-          commentTicket: "成人票",
-          bookTime: "08/14/2021",
-          commentPicture:
-            "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 115,
-          commentRate: 4,
-          commentContent:
-            "不管年龄多大 总有人把你宠成孩子 不能出沪的春节假期，人山人海的除了迪士尼，还有海昌海洋公园，抓住小长假的尾巴错峰出行，分享一下省钱又省时的玩乐攻略💌 首先要告诉你们的是，海洋公园真的没有你们想象中那么大，但是由于标识不够清晰容易晕头转向，可以关注gzh获取电子地图和当日演出表 🎫行程紧凑的话游玩半天就够了，推荐购买7折夜场票，3点入园8点闭园，绝对值回票价 🚗不建议开车前往，有限的车位无法满足膨胀的人流，16号线打车5分钟即可抵达 🗺参观顺序完全被演出时间牵着走，虎鲸和海豚表演值得一看，还有人鱼公主从海底捞“福”，非常具有春节特色哟 🎆晚上7:30有光影水幕和无人机表演，江边最佳观景位先到先得，结束以后还会有烟花秀哦",
-          commentTime: "08/14/2021 20:53",
-        },
-        {
-          userName: "erin1227",
-          userAvatar:
-            "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-          commentTicket: "成人票",
-          bookTime: "08/14/2021",
-          commentPicture:
-            "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 12,
-          commentRate: 5.0,
-          commentContent:
-            "我们是上午11点半到的，根据场馆表演时间，先后去看了11:45海象表演，12:204D电影，13点的虎鲸表演，13:40晶彩奇航，13:45鲨鱼馆的人鱼表演，14:15海豚恋曲（海豚馆），15:00白鲸之恋，15:20水上飞人。看完表演，去了几个场馆看海洋动物，因为基本都是在室内的，所以整个下午都不算太热。4点半左右排队45分钟去了漂流，在漂流门口花10块钱买一次性雨披和鞋套。最后去儿童乐园玩了几个项目，6点半结束，没有看晚上的灯光秀，有点遗憾。",
-          commentTime: "08/14/2021 20:53",
-        },
-        {
-          userName: "大胃张😍",
-          userAvatar:
-            "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-          commentTicket: "成人票",
-          bookTime: "08/14/2021",
-          commentPicture:
-            "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
-          userCommentNum: 25,
-          commentRate: 3,
-          commentContent: "只能说一般般呀",
           commentTime: "08/14/2021 20:53",
         },
       ],
@@ -812,7 +771,90 @@ export default {
       });
     },
   },
-  mounted() {},
+  mounted() {
+    this.$axios
+      .get(
+        "http://49.234.18.247:8080/api/FunGetCommentByAttractionId/" +
+          this.AttrId
+      )
+      .then((response) => {
+        this.dianping_number = response.data.length;
+        if (this.comments.length < response.data.length) {
+          for (var j = this.comments.length; j < response.data.length; j++)
+            this.comments.push({
+              userName: "柏拉M兔",
+              userAvatar:
+                "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
+              commentTicket: "成人票",
+              bookTime: "08/14/2021",
+              commentPicture:
+                "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
+              userCommentNum: 13,
+              commentRate: 5.0,
+              commentContent: " ",
+              commentTime: "08/14/2021 20:53",
+            });
+        }
+        for (var i = 0; i < response.data.length; i++) {
+         
+            this.comments[i].userId = response.data[i].useR_ID;
+            var temp = this.comments[i].userId;
+            let _i = i;
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/FunGetHotelCommentNumByUserid/" +
+                  temp
+              )
+              .then((response) => {
+                this.comments[_i].userCommentNum =
+                  response.data[0].hotelcommentnum;
+              });
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/FunGetAttractionCommentNumByUserid/" +
+                  temp
+              )
+              .then((response) => {
+                this.comments[_i].userCommentNum =
+                  response.data[0].hotelcommentnum +
+                  this.comments[_i].userCommentNum;
+              });
+
+            // //获取用户订单信息
+            // this.$axios
+            //   .get(
+            //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+            //       temp
+            //   )
+            //   .then((response) => {
+            //     this.comments[_i].commentRoom = response.data[0].typename;
+            //     this.comments[_i].bookTime = response.data[0].ordertime;
+            //   });
+
+            // 获取评论用户的头像
+            this.$axios
+              .get(
+                "http://49.234.18.247:8080/api/Users/" +
+                  this.comments[_i].userId
+              )
+              .then((response) => {
+                this.comments[_i].userAvatar = response.data[0].uprofile;
+              });
+
+            this.comments[i].bookTime = response.data[i].acommenT_TIME.slice(
+              0,
+              10
+            );
+            this.comments[i].commentTicket = "成人票";
+
+            this.comments[i].userName = response.data[i].useR_NAME;
+            this.comments[i].commentTime = response.data[i].acommenT_TIME;
+            this.comments[i].commentRate = response.data[i].grade;
+            this.comments[i].commentContent = response.data[i].ctext;
+          }
+        
+      });
+  },
   created() {
     if (this.$route.query.id) {
       this.AttrId = this.$route.query.id;

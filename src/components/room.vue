@@ -11,6 +11,25 @@
       ></div>
       <h5>{{ roomName }}</h5>
       <span @click="viewRoomInfo" class="hint">查看客房信息</span>
+      <el-dialog :visible.sync="roomInfoVisible" width="70%" top="20px">
+        <div>
+          <h1>酒店简介</h1>
+          <br />
+          开业：{{ openTime }} 客房数：{{ totalRoom }} 联系电话：{{ telephone }}
+          <div
+            class="picture"
+            :style="{
+              backgroundImage: 'url(' + baseImg + ')',
+              backgroundSize: '100% 100%',
+              backgroundRepeat: 'no-repeat',
+            }"
+          ></div>
+          <p>{{ description }}</p>
+          <br />
+          <h3>住宿预订提供方</h3>
+          <img :src="license" alt="" style="width: 700px; height: 400px" />
+        </div>
+      </el-dialog>
     </div>
 
     <!-- 分割线 -->
@@ -131,22 +150,14 @@ export default {
   },
   data() {
     return {
+      roomInfoVisible: false,
       baseImg:
         "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
     };
   },
   methods: {
     viewRoomInfo() {
-      const h = this.$createElement;
-      this.$msgbox({
-        title: "消息",
-        message: h("p", null, [
-          h("span", null, "内容可以是 "),
-          h("i", { style: "color: teal" }, "VNode"),
-        ]),
-        showCancelButton: false,
-        confirmButtonText: "确定",
-      });
+      this.roomInfoVisible = true;
     },
     Book() {
       this.$router.push({
