@@ -183,13 +183,14 @@
                         </div>
                         <el-divider></el-divider>
                       </div>
-                      <div style="text-align: right"><button @click="aliPay" class="pay_btn">
-                        支付宝支付
-                      </button>
-                      <button @click="wechatPay" class="pay_btn">
-                        微信支付
-                      </button></div>
-                      
+                      <div style="text-align: right">
+                        <button @click="aliPay" class="pay_btn">
+                          支付宝支付
+                        </button>
+                        <button @click="wechatPay" class="pay_btn">
+                          微信支付
+                        </button>
+                      </div>
                     </el-dialog>
                   </div>
                 </div>
@@ -216,7 +217,7 @@
       </el-card>
       <br />
 
-      <div class="clearfix box-card"  id="comments">
+      <div class="clearfix box-card" id="comments">
         <div style="float: left">
           <el-card class="left-box-card" shadow="never">
             <h1>
@@ -230,7 +231,7 @@
                 >({{ dianping_number }}名用户真实点评)</span
               >
             </h1>
-            <div class="sort" >
+            <div class="sort">
               <el-form :inline="true" :model="form_Select">
                 <el-form-item>
                   <el-select
@@ -262,7 +263,7 @@
           </el-card>
           <div>
             <ul>
-              <li v-for="comment in comments" :key="comment.commentTime">
+              <li v-for="(comment, index) in comments" :key="index">
                 <CommentOnAttr
                   :userName="comment.userName"
                   :userAvatar="comment.userAvatar"
@@ -341,25 +342,26 @@
             <h4>附近景点</h4>
             <div
               class="box"
-              v-for="(item, index) in attrations.slice(0, 8)"
+              v-for="(item, index) in attractions"
               :key="index"
+              @click="toAttrDetail(item[1].attractionid)"
             >
               <div
                 class="infoImg"
                 :style="{
-                  backgroundImage: 'url(' + item.img + ')',
+                  backgroundImage: 'url(' + item[1].picture + ')',
                   backgroundSize: '100% 100%',
                   backgroundRepeat: 'no-repeat',
                 }"
               ></div>
               <div class="infoDetail">
                 <div class="Name" style="font-size: 14px; font-weight: 700">
-                  {{ item.name }}
+                  {{ item[1].attractionname }}
                 </div>
                 <div class="Details">
                   <div class="leftstar">
                     <div class="star">
-                      {{ item.star
+                      {{ item[1].star
                       }}<i
                         style="
                           font-style: normal;
@@ -370,12 +372,12 @@
                       >
                     </div>
                     <i style="font-size: 11px; font-style: normal; color: gray"
-                      >{{ item.commentnum }}点评</i
+                      >{{ item[1].commentnum }}点评</i
                     >
                   </div>
                   <div class="rightprice">
                     <i style="font-size: 11px; font-style: normal; color: gray"
-                      >&nbsp;直线距离{{ item.distance }}米</i
+                      >&nbsp;直线距离{{ parseInt(item[0]) }}米</i
                     >
                   </div>
                 </div>
@@ -711,44 +713,8 @@ export default {
           commentTime: "08/14/2021 20:53",
         },
       ],
-      attrations: [
-        {
-          name: "南极企鹅馆",
-          star: 4.8,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg07.c-ctrip.com/images/10091f000001gsmc674CC_C_1600_1200.jpg",
-          distance: 300,
-        },
-        {
-          name: "海豚过山车",
-          star: 3.2,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg04.c-ctrip.com/images/100j0y000000m8x8jB7D9_C_1600_1200.jpg",
-          distance: 150,
-        },
-        {
-          name: "虎鲸剧场《虎鲸科普秀》",
-          star: 3.6,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg03.c-ctrip.com/images/350e19000001661l2B737_C_1600_1200.jpg",
-          distance: 400,
-        },
-        {
-          name: "深海奇航",
-          star: 4.6,
-          price: 400,
-          address: "同济大学正门外",
-          commentnum: 250,
-          img: "https://dimg06.c-ctrip.com/images/100v1f000001h1b2y1909_C_1600_1200.jpg",
-          distance: 130,
-        },
-      ],
+      attractions: [],
+      Lnglat: [],
     };
   },
   computed: {
@@ -761,8 +727,10 @@ export default {
         return "一般般";
       } else if (this.grade == 2) {
         return "不太好";
-      } else {
+      } else if (this.grade == 1) {
         return "非常差";
+      } else {
+        return "暂无评分";
       }
     },
     storePrice: function () {
@@ -774,11 +742,81 @@ export default {
     beforePay() {
       this.payVisible = true;
     },
+    handleChange() {},
     sortWayChange() {},
-    aliPay(){},
-    wechatPay(){},
+    aliPay() {},
+    wechatPay() {},
+    // 地址转经纬度
+    async addressToLnglat(address) {
+      return fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
+          address
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          if (res.geocodes[0].location) {
+            return res.geocodes[0].location;
+          } else return -1;
+        });
+    },
+    // 附近景点推荐
+    nearestAttraction(address) {
+      fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
+          address
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetCommentNumByAttLocation/" +
+                res.geocodes[0].city
+            )
+            .then((response) => {
+              var len = response.data.length;
+              for (let i = 0; i < len; i++) {
+                this.addressToLnglat(response.data[i].location).then((res) => {
+                  var distance = AMap.GeometryUtil.distance(
+                    res.split(","),
+                    this.Lnglat
+                  );
+                  if (distance !== 0) {
+                    if (this.attractions.length < 8) {
+                      this.attractions.push([distance, response.data[i]]);
+                      this.attractions.sort(function (a, b) {
+                        return a[0] - b[0];
+                      });
+                    } else {
+                      if (this.attractions[7][0] > distance) {
+                        this.attractions[7] = [distance, response.data[i]];
+                        this.attractions.sort(function (a, b) {
+                          return a[0] - b[0];
+                        });
+                      }
+                    }
+                  }
+                });
+              }
+            });
+        });
+    },
+    // 跳转到景点详情页面
+    toAttrDetail(AttrID) {
+      this.$router.push({
+        path: "/attraction/detail",
+        query: { id: AttrID },
+      });
+    },
   },
-  mounted() {
+  mounted() {},
+  created() {
+    if (this.$route.query.id) {
+      this.AttrId = this.$route.query.id;
+    }
     this.$axios
       .get("http://49.234.18.247:8080/api/Attraction/" + this.AttrId)
       .then((response) => {
@@ -789,13 +827,11 @@ export default {
         this.baseImg = response.data[0].picture;
         this.location = response.data[0].alocation;
         this.grade = response.data[0].star;
+        this.addressToLnglat(this.location).then((res) => {
+          this.Lnglat = res.split(",");
+          this.nearestAttraction(this.location);
+        });
       });
-      
-  },
-  created() {
-    if (this.$route.query.id) {
-      this.AttrId = this.$route.query.id;
-    }
   },
 };
 </script>
