@@ -148,10 +148,10 @@
 
           <div class="sort">
             <el-radio-group v-model="radio" @change="sortClick">
+              <el-radio-button label="0">热门推荐</el-radio-button>
               <el-radio-button label="1">低价优先</el-radio-button>
               <el-radio-button label="2">高评分优先</el-radio-button>
               <el-radio-button label="3">距离(直线)最近</el-radio-button>
-              <el-radio-button label="4">热门推荐</el-radio-button>
             </el-radio-group>
           </div>
           <div class="contents">
@@ -415,7 +415,7 @@ export default {
         city: "北京",
         num: 400,
       },
-      radio: "1",
+      radio: "0",
       items: [],
       Lnglat: [],
       hotels: [],
@@ -449,6 +449,7 @@ export default {
         this.searchForm.room--;
       }
     },
+    // 点击搜索按钮
     onSubmit() {
       var city = "北京市上海市重庆市成都市南京市";
       var hotelname = "格林豪泰酒店如家酒店7天酒店速8酒店四季酒店";
@@ -499,6 +500,7 @@ export default {
         });
       }
     },
+    // 初始化地图
     initMap() {
       this.map = amapManager.getMap();
       // 比例尺
@@ -524,6 +526,7 @@ export default {
         });
       }
     },
+    // 地图上添加marker
     addMarker(position, item) {
       let marker = new AMap.Marker({
         position: position,
@@ -645,6 +648,7 @@ export default {
     closeInfoWindow() {
       this.map.clearInfoWindow();
     },
+    // 地址转经纬度
     async addressToLnglat(address) {
       return fetch(
         "https://restapi.amap.com/v3/geocode/geo?key=b46e001d88ea385075cc97e1c892ce37&address=" +
@@ -659,6 +663,7 @@ export default {
           } else return -1;
         });
     },
+    // 根据城市搜索当地所有的酒店
     getHotelbyCity() {
       this.$axios
         .get(
@@ -678,6 +683,7 @@ export default {
           this.title.num = response.data.length;
         });
     },
+    // 根据酒店名搜索
     getHotelbyName() {
       this.$axios
         .get(
@@ -697,6 +703,7 @@ export default {
           this.title.num = response.data.length;
         });
     },
+    // 返回顶部
     goTop() {
       // document.documentElement.scrollTop = document.body.scrollTop = 0;
       let top = document.documentElement.scrollTop || document.body.scrollTop;
@@ -711,6 +718,7 @@ export default {
         }
       }, 30);
     },
+    // 排序
     sortClick: function (val) {
       // 按低价排
       if (val === "1") {
@@ -743,6 +751,8 @@ export default {
             }
           });
         }
+      } else {
+        this.items = this.originData;
       }
     },
     // 酒店地址处理
