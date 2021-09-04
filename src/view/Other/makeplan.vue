@@ -50,6 +50,7 @@
         <div style="color:#003680;font-size:18px;font-weight:bold;margin-top:10px;margin-bottom:10px">
             {{index+1}}
             <span style="color:black">{{item.item_name}}</span>
+            <i class="el-icon-close" style="float:right" @click="delete_item(index)"></i>
         </div>
        
        <div style="font-size:15px;">地址：{{item.location}}</div>
@@ -324,15 +325,15 @@ components: {Header},
       add(index,opt){
           if(opt==1){
             let len=this.selected_items[this.select_active].length;
+            let _this=this;
               if(len){
                 
-                let _this=this;
+                
                 let dist;
-                this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.selected_items[this.select_active][len-1].location)
-                .then(function(response){
-                  let l1=response.data.geocodes[0].location.split(',');
+                let l1=this.selected_items[this.select_active][len-1].lat_lon;
+                
                   let l2='';
-                  _this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_attraction_list[index].location)
+                  this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_attraction_list[index].location)
                   .then(function(response2){
                     l2=response2.data.geocodes[0].location.split(',');
                     let lat1= l1[0] * Math.PI / 180;
@@ -344,29 +345,30 @@ components: {Header},
                     dist = dist * 6378.137;
                     dist = Math.round(dist * 10000) / 10000;
          
-                    var json={day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,dis_to_pre:dist};
+                    var json={day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,lat_lon:l2,dis_to_pre:dist};
               
               _this.selected_items[_this.select_active].push(json);
               _this.$forceUpdate();
                   })
-                })
+                
               }
               else {
-              var json={day:this.select_active,item_name:this.filt_attraction_list[index].attractionname,picture:this.filt_attraction_list[index].picture,location:this.filt_attraction_list[index].location,dis_to_pre:0};
-              this.selected_items[this.select_active].push(json);
-              this.$forceUpdate();
+                this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.filt_attraction_list[index].location)
+                .then(function(response){
+              var json={day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,lat_lon:response.data.geocodes[0].location.split(','),dis_to_pre:0};
+              _this.selected_items[_this.select_active].push(json);
+              _this.$forceUpdate();
+              })
               }
               
           }
           else if(opt==2){
             let len=this.selected_items[this.select_active].length;
+            let _this=this;
             if(len){
-                
-                let _this=this;
                 let dist;
-                this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.selected_items[this.select_active][len-1].location)
-                .then(function(response){
-                  let l1=response.data.geocodes[0].location.split(',');
+                let l1=this.selected_items[this.select_active][len-1].lat_lon;
+               
                   let l2='';
                   _this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_hotel_list[index].location)
                   .then(function(response2){
@@ -380,19 +382,22 @@ components: {Header},
                     dist = dist * 6378.137;
                     dist = Math.round(dist * 10000) / 10000;
  
-                    var json={day:_this.select_active,item_name:_this.filt_hotel_list[index].hotelname,picture:_this.filt_hotel_list[index].picture,location:_this.filt_hotel_list[index].location,dis_to_pre:dist};
+                    var json={day:_this.select_active,item_name:_this.filt_hotel_list[index].hotelname,picture:_this.filt_hotel_list[index].picture,location:_this.filt_hotel_list[index].location,lat_lon:l2,dis_to_pre:dist};
               
               _this.selected_items[_this.select_active].push(json);
               _this.$forceUpdate();
                   })
-                })
+              
               }
               else {
-              var jsonn={day:this.select_active,item_name:this.filt_hotel_list[index].hotelname,picture:this.filt_hotel_list[index].picture,location:this.filt_hotel_list[index].location,dis_to_pre:0};
+                this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.filt_hotel_list[index].location)
+                .then(function(response){
+              var jsonn={day:this.select_active,item_name:this.filt_hotel_list[index].hotelname,picture:this.filt_hotel_list[index].picture,location:this.filt_hotel_list[index].location,lat_lon:response.data.geocodes[0].location.split(','),dis_to_pre:0};
             this.selected_items[this.select_active].push(jsonn);
             this.$forceUpdate();
+             })
               }
-            
+             
           }
           this.item_num++;
 
@@ -424,6 +429,27 @@ components: {Header},
     compute_height(item){
             return item.dis_to_pre>1? "140px" :"115px";
         },
+    delete_item(index){
+      let len=this.selected_items[this.select_active].length;
+      this.selected_items[this.select_active].splice(index,1);
+      if(index==0&&len>1){//删多条里的第一条
+        this.selected_items[this.select_active][0].dis_to_pre=0;
+      }
+      else if(index<len-1){//删多条里的中间条
+        let l1=this.selected_items[this.select_active][index-1].lat_lon;
+        let l2=this.selected_items[this.select_active][index].lat_lon;
+        let lat1= l1[0] * Math.PI / 180;
+        let lat2= l2[0] * Math.PI / 180;
+        let lon1= l1[1] * Math.PI / 180;
+        let lon2= l2[1] * Math.PI / 180;
+        let a=Math.abs(lat1-lat2),b=Math.abs(lon1-lon2);
+        let dist = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(lat1)*Math.cos(lat2)*Math.pow(Math.sin(b/2),2)));
+        dist = dist * 6378.137;
+        dist = Math.round(dist * 10000) / 10000;
+        this.selected_items[this.select_active][index].dis_to_pre=dist;
+      }
+      this.$forceUpdate();
+    },
     }
 }
 </script>
