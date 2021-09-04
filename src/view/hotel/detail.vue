@@ -250,7 +250,10 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-select v-model="form_Select.bookSort" @change="sortWayChange1">
+              <el-select
+                v-model="form_Select.bookSort"
+                @change="sortWayChange1"
+              >
                 <el-option label="推荐排序" value="1"></el-option>
                 <el-option label="最近入住" value="2"></el-option>
               </el-select>
@@ -755,20 +758,7 @@ export default {
             "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
         },
       ],
-      comments: [
-        {
-          userName: "兰州潇洒哥",
-          useR_ID: "0000000002",
-          userAvatar:
-            "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-          commentRoom: "山系·城景大床房",
-          bookTime: "08/14/2021",
-          userCommentNum: 1,
-          commentRate: 5.0,
-          commentContent: "",
-          commentTime: "08/14/2021 20:53",
-        },
-      ],
+      comments: [],
       nearhotels: [],
       hotels: [],
       attractions: [],
