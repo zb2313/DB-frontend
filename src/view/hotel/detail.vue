@@ -251,6 +251,16 @@
             </el-form-item>
             <el-form-item>
               <el-select
+                v-model="form_Select.commentLevel"
+                @change="commentLevelChange"
+              >
+                <el-option label="所有点评" value="1"></el-option>
+                <el-option label="好评（打分>3）" value="2"></el-option>
+                <el-option label="非好评（打分<4）" value="3"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-select
                 v-model="form_Select.bookSort"
                 @change="sortWayChange1"
               >
@@ -272,7 +282,7 @@
       </el-card>
       <div>
         <ul>
-          <li v-for="comment in comments" :key="comment.userId">
+          <li v-for="comment in commentList" :key="comment.userId">
             <Comment
               :userName="comment.userName"
               :userAvatar="comment.userAvatar"
@@ -285,7 +295,18 @@
             />
           </li>
         </ul>
-        <!-- 得加个分页 -->
+        <div style="text-align: center; color: #003580">
+          <br />
+          <el-pagination
+            background="true"
+            layout="prev, pager, next"
+            :total="comments.length"
+            :page-size="10"
+            @prev-click="prevPage"
+            @next-click="nextPage"
+          >
+          </el-pagination>
+        </div>
       </div>
       <br />
       <!-- 酒店政策 -->
@@ -690,6 +711,7 @@ export default {
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
         roomType: "所有房型",
+        commentLevel: "所有点评",
         bookSort: "最近入住",
         commentSort: "最近点评",
       },
@@ -716,6 +738,8 @@ export default {
         },
       ],
       comments: [],
+      commentList:[],
+      commentPage:[],
       nearhotels: [],
       hotels: [],
       attractions: [],
@@ -1039,11 +1063,52 @@ export default {
       });
     },
     roomTypeChange() {},
+    commentLevelChange(val) {
+      if (val === "1") {
+        this.commentList = this.comments;
+      } else if (val === "2") {
+        var temp1 = [];
+        for (var i; i < this.comments.length; i++) {
+          if (this.comments[i].commentRate > 3) temp1.push(this.comments[i]);
+        }
+        this.commentList = this.commentList.filter(function (val) {
+          return temp1.indexOf(val) > -1;
+        });
+      } else if (val === "3") {
+        var temp2 = [];
+        for (var k; k < this.comments.length; k++) {
+          if (this.comments[k].commentRate < 4) temp2.push(this.comments[k]);
+        }
+        this.commentList = this.commentList.filter(function (val) {
+          return temp2.indexOf(val) > -1;
+        });
+      }
+    },
     sortWayChange1() {},
     sortWayChange2() {},
   },
   mounted() {
-    let tempHotelId = this.hotelId;
+   
+  },
+  created() {
+    if (this.$route.query.id) {
+      this.hotelId = this.$route.query.id;
+    }
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Hotel/" + this.hotelId)
+      .then((response) => {
+        this.hotelName = response.data[0].hoteL_NAME;
+        this.minPrice = response.data[0].lowesT_PRICE;
+        this.baseImg = response.data[0].picture;
+        this.location = response.data[0].hlocation;
+        this.grade = response.data[0].star;
+        this.addressToLnglat(this.location).then((res) => {
+          this.center = this.Lnglat = res.split(",");
+          this.nearestHotels(this.location);
+        });
+      });
+
+       let tempHotelId = this.hotelId;
     this.$axios
       .get(
         "http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + tempHotelId
@@ -1121,24 +1186,7 @@ export default {
           this.comments[i].commentContent = response.data[i].ctext;
         }
       });
-  },
-  created() {
-    if (this.$route.query.id) {
-      this.hotelId = this.$route.query.id;
-    }
-    this.$axios
-      .get("http://49.234.18.247:8080/api/Hotel/" + this.hotelId)
-      .then((response) => {
-        this.hotelName = response.data[0].hoteL_NAME;
-        this.minPrice = response.data[0].lowesT_PRICE;
-        this.baseImg = response.data[0].picture;
-        this.location = response.data[0].hlocation;
-        this.grade = response.data[0].star;
-        this.addressToLnglat(this.location).then((res) => {
-          this.center = this.Lnglat = res.split(",");
-          this.nearestHotels(this.location);
-        });
-      });
+      this.commentList=this.comments;
   },
 };
 </script>
