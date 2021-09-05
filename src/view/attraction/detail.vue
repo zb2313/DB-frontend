@@ -279,7 +279,18 @@
                 />
               </li>
             </ul>
-            <!-- 得加个分页 -->
+            <div style="text-align: center; color: #003580">
+              <br />
+              <el-pagination
+                background="true"
+                layout="prev, pager, next"
+                :total="comments.length"
+                :page-size="10"
+                @prev-click="prevPage"
+                @next-click="nextPage"
+              >
+              </el-pagination>
+            </div>
           </div>
           <br />
           <!-- 景点详情 -->
@@ -698,12 +709,8 @@ export default {
         });
       }
     },
-    sortWayChange1() {
-
-    },
-    sortWayChange2() {
-      
-    },
+    sortWayChange1() {},
+    sortWayChange2() {},
     aliPay() {},
     wechatPay() {},
     // 地址转经纬度
@@ -772,9 +779,7 @@ export default {
       });
     },
   },
-  mounted() {
-    
-  },
+  mounted() {},
   created() {
     if (this.$route.query.id) {
       this.AttrId = this.$route.query.id;
@@ -797,7 +802,7 @@ export default {
         });
       });
 
-      this.$axios
+    this.$axios
       .get(
         "http://49.234.18.247:8080/api/FunGetCommentByAttractionId/" +
           this.AttrId
@@ -811,7 +816,7 @@ export default {
               userAvatar:
                 "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
               commentTicket: "成人票",
-              bookTime: "08/14/2021",
+              bookTime: "2021-08-12",
               commentPicture:
                 "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
               userCommentNum: 13,
@@ -844,16 +849,20 @@ export default {
                 this.comments[_i].userCommentNum;
             });
 
-          // //获取用户订单信息
-          // this.$axios
-          //   .get(
-          //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
-          //       temp
-          //   )
-          //   .then((response) => {
-          //     this.comments[_i].commentRoom = response.data[0].typename;
-          //     this.comments[_i].bookTime = response.data[0].ordertime;
-          //   });
+          //获取用户订单信息
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetAllAttractionOrderByUserid/" +
+                temp +
+                "&" +
+                this.AttrId
+            )
+            .then((response) => {
+              this.comments[_i].bookTime = response.data[0].ordertime.slice(
+                0,
+                10
+              );
+            });
 
           // 获取评论用户的头像
           this.$axios
@@ -863,12 +872,6 @@ export default {
             .then((response) => {
               this.comments[_i].userAvatar = response.data[0].uprofile;
             });
-
-          this.comments[i].bookTime = response.data[i].acommenT_TIME.slice(
-            0,
-            10
-          );
-          this.comments[i].commentTicket = "成人票";
 
           this.comments[i].userName = response.data[i].useR_NAME;
           this.comments[i].commentTime = response.data[i].acommenT_TIME;

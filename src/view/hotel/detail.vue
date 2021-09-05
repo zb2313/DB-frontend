@@ -1154,16 +1154,19 @@ export default {
                 this.comments[_i].userCommentNum;
             });
 
-          // //获取用户订单信息
-          // this.$axios
-          //   .get(
-          //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
-          //       temp
-          //   )
-          //   .then((response) => {
-          //     this.comments[_i].commentRoom = response.data[0].typename;
-          //     this.comments[_i].bookTime = response.data[0].ordertime;
-          //   });
+          //获取用户订单信息
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+                temp+"&"+ tempHotelId
+            )
+            .then((response) => {
+              this.comments[_i].commentRoom = response.data[0].typename;
+              this.comments[_i].bookTime = response.data[0].ordertime.slice(
+            0,
+            10
+          );
+            });
 
           // 获取评论用户的头像
           this.$axios
@@ -1174,11 +1177,6 @@ export default {
               this.comments[_i].userAvatar = response.data[0].uprofile;
             });
 
-          this.comments[i].bookTime = response.data[i].commenT_TIME.slice(
-            0,
-            10
-          );
-          this.comments[i].commentRoom = "大床房";
 
           this.comments[i].userName = response.data[i].useR_NAME;
           this.comments[i].commentTime = response.data[i].commenT_TIME;
