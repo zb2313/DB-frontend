@@ -639,7 +639,6 @@ export default {
       grade: 5,
       openTime: "09:00",
       closeTime: "20:30",
-      stopTime: "19:30",
       ticketPrice: 59,
       storePrice: 59,
       nearSubwayStation: "临港中运量1号线杞青路站",
@@ -679,6 +678,9 @@ export default {
       } else {
         return "暂无评分";
       }
+    },
+    stopTime: function () {
+      return this.closeTime;
     },
   },
   methods: {
