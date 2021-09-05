@@ -94,10 +94,10 @@
          <br>
         </el-card>
       </li>
-    </div><Footer1/>
+    </div>
   </div>
     </el-main></el-container>
-  
+  <Footer1/>
 </div>
 </template>
 
