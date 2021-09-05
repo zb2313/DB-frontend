@@ -647,8 +647,7 @@ export default {
       subway: 10.44,
       attrationNum: 7,
       call: "400-601-6699,021-50606666",
-      comments: [
-      ],
+      comments: [],
       commentList: [],
       attractions: [],
       Lnglat: [],
@@ -680,26 +679,31 @@ export default {
     },
     commentLevelChange(val) {
       if (val === "1") {
-        this.commentList = [];
         this.commentList = this.comments;
       } else if (val === "2") {
-        this.commentList = [];
-        let _this=this;
-        for (var i; i < _this.comments.length; i++) {
-          this.console.log(i);
-          if (_this.comments[i].commentRate > 3)
-            _this.commentList.push(_this.comments[i]);
+        var temp1 = [];
+        for (var i; i < this.comments.length; i++) {
+          if (this.comments[i].commentRate > 3) temp1.push(this.comments[i]);
         }
+        this.commentList = this.commentList.filter(function (val) {
+          return temp1.indexOf(val) > -1;
+        });
       } else if (val === "3") {
-        this.commentList = [];
+        var temp2 = [];
         for (var k; k < this.comments.length; k++) {
-          if (this.comments[k].commentRate < 4)
-            this.commentList.push(this.comments[k]);
+          if (this.comments[k].commentRate < 4) temp2.push(this.comments[k]);
         }
+        this.commentList = this.commentList.filter(function (val) {
+          return temp2.indexOf(val) > -1;
+        });
       }
     },
-    sortWayChange1() {},
-    sortWayChange2() {},
+    sortWayChange1() {
+
+    },
+    sortWayChange2() {
+      
+    },
     aliPay() {},
     wechatPay() {},
     // 地址转经纬度
@@ -769,7 +773,31 @@ export default {
     },
   },
   mounted() {
+    
+  },
+  created() {
+    if (this.$route.query.id) {
+      this.AttrId = this.$route.query.id;
+    }
+
     this.$axios
+      .get("http://49.234.18.247:8080/api/Attraction/" + this.AttrId)
+      .then((response) => {
+        this.attrationName = response.data[0].attractioN_NAME;
+        this.openTime = response.data[0].opeN_TIME;
+        this.closeTime = response.data[0].closE_TIME;
+        this.ticketPrice = response.data[0].price;
+        this.storePrice = response.data[0].price;
+        this.baseImg = response.data[0].picture;
+        this.location = response.data[0].alocation;
+        this.grade = response.data[0].star;
+        this.addressToLnglat(this.location).then((res) => {
+          this.Lnglat = res.split(",");
+          this.nearestAttraction(this.location);
+        });
+      });
+
+      this.$axios
       .get(
         "http://49.234.18.247:8080/api/FunGetCommentByAttractionId/" +
           this.AttrId
@@ -847,28 +875,7 @@ export default {
           this.comments[i].commentRate = response.data[i].grade;
           this.comments[i].commentContent = response.data[i].ctext;
         }
-        this.commentList=this.comments;
-      });
-  },
-  created() {
-    if (this.$route.query.id) {
-      this.AttrId = this.$route.query.id;
-    }
-    this.$axios
-      .get("http://49.234.18.247:8080/api/Attraction/" + this.AttrId)
-      .then((response) => {
-        this.attrationName = response.data[0].attractioN_NAME;
-        this.openTime = response.data[0].opeN_TIME;
-        this.closeTime = response.data[0].closE_TIME;
-        this.ticketPrice = response.data[0].price;
-        this.storePrice = response.data[0].price;
-        this.baseImg = response.data[0].picture;
-        this.location = response.data[0].alocation;
-        this.grade = response.data[0].star;
-        this.addressToLnglat(this.location).then((res) => {
-          this.Lnglat = res.split(",");
-          this.nearestAttraction(this.location);
-        });
+        this.commentList = this.comments;
       });
   },
 };

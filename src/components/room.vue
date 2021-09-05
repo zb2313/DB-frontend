@@ -310,7 +310,7 @@ export default {
     return {
       roomInfoVisible: false,
       baseImg:
-        "https://cf.bstatic.com/xdata/images/hotel/square600/85559901.webp?k=7a865b31371310881afb72f105e70efa1d6dbc79aeb0190dae1334290997bdbb&o=",
+        "https://ak-d.tripcdn.com/images/0202u120008axc7o1A37D_R_1080_808_R5_D.jpg_.webp",
     };
   },
   methods: {

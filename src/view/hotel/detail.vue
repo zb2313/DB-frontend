@@ -712,8 +712,7 @@ export default {
           cancel: "不可取消",
           price: 999,
           originalPrice: 1314,
-          coverImgUrl:
-            "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          coverImgUrl: "",
         },
         {
           ID: "000002",
@@ -726,8 +725,7 @@ export default {
           cancel: "不可取消",
           price: 999,
           originalPrice: 1314,
-          coverImgUrl:
-            "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          coverImgUrl: "",
         },
         {
           ID: "000003",
@@ -740,8 +738,7 @@ export default {
           cancel: "不可取消",
           price: 999,
           originalPrice: 1314,
-          coverImgUrl:
-            "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          coverImgUrl: "",
         },
         {
           ID: "000004",
@@ -754,8 +751,7 @@ export default {
           cancel: "不可取消",
           price: 999,
           originalPrice: 1314,
-          coverImgUrl:
-            "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
+          coverImgUrl: "",
         },
       ],
       comments: [],

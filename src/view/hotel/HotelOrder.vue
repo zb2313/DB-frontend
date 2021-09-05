@@ -153,8 +153,15 @@
                 去支付
               </div>
               <el-dialog :visible.sync="payVisible" width="30%">
-                <div style="display: inline-block; vertical-align: middle">
-                  <p class="">支付二维码</p>
+                <div style="text-align: center">
+                  <h1 style="color: #003580; font-size: 30px">
+                    ￥{{ storePrice }}
+                  </h1>
+                  <br />
+                  <div>
+                    <button @click="aliPay" class="payBtn">支付宝支付</button>
+                    <button @click="wechatPay" class="payBtn">微信支付</button>
+                  </div>
                 </div>
               </el-dialog>
             </div>
@@ -228,6 +235,14 @@
 }
 .clearfix {
   *zoom: 1;
+}
+.payBtn {
+  width: 120px;
+  font-size: 16px;
+  background-color: #003580;
+  color: white;
+  line-height: 50px;
+  text-align: center;
 }
 .roomInfo {
   margin-top: 5px;
@@ -382,6 +397,8 @@ export default {
       var day = parseInt((a2 - a1) / (1000 * 60 * 60 * 24)); //核心：时间戳相减，然后除以天数
       return day;
     },
+    aliPay() {},
+    wechatPay() {},
   },
   computed: {
     storePrice: function () {
