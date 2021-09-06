@@ -435,21 +435,21 @@ export default {
     wechatPay() {
       this.qrCodeVisible = true;
       var data = Qs.stringify({
-        order_id: '1',
-        order_type: 'wechat',
+        order_id: "1",
+        order_type: "wechat",
         order_price: 0.01,
-        order_name: '酒店',
-        sign: '977ec4fe167433ae4eddf7c29f2f05c6',
-        redirect_url: 'http://127.0.0.1/324',
-        extension: '1111',
+        order_name: "酒店",
+        sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+        redirect_url: "http://127.0.0.1/324",
+        extension: "1111",
       });
       this.$axios({
-        method: 'post',
-        url: 'http://110.40.186.162:7001/api/order',
+        method: "post",
+        url: "http://110.40.186.162:7001/api/order",
         headers: {
-          "Content-Type": 'application/x-www-form-urlencoded; charset=UTF-8',
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         },
-        data
+        data,
       });
       // this.$axios
       //   .post("http://110.40.186.162:7001/api/order", {
