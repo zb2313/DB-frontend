@@ -157,6 +157,16 @@
                   <h1 style="color: #003580; font-size: 30px">
                     ￥{{ storePrice }}
                   </h1>
+                  <div v-if="qrCodeVisible" style="margin-left: 50px">
+                    <div
+                      style="width: 300px; height: 300px"
+                      :style="{
+                        backgroundImage: 'url(' + qrcode + ')',
+                        backgroundSize: '100% 100%',
+                        backgroundRepeat: 'no-repeat',
+                      }"
+                    ></div>
+                  </div>
                   <br />
                   <div>
                     <button @click="aliPay" class="payBtn">支付宝支付</button>
@@ -324,6 +334,7 @@
 </style>
         
 <script>
+import Qs from "qs";
 import Header from "@/components/Header";
 export default {
   components: {
@@ -334,6 +345,7 @@ export default {
       days: 1,
       leftOut: 12,
       payVisible: false,
+      qrCodeVisible: false,
       hotelId: "",
       roomTypeId: "",
       hotelName: "速八酒店",
@@ -347,7 +359,7 @@ export default {
       totalPrice: 996,
       discount: 11.0,
       bookTime: new Date(),
-      vacantRooms:[],
+      vacantRooms: [],
       qrcode:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
@@ -400,39 +412,59 @@ export default {
       var day = parseInt((a2 - a1) / (1000 * 60 * 60 * 24)); //核心：时间戳相减，然后除以天数
       return day;
     },
-    Pay(){
-          // 留给订房的post请求
-    // this.$axios
-    //   .post("http://110.40.186.162:7001/api/order", {
-    //     order_id: 1,
-    //     order_type: "wechat",
-    //     order_price: 0.01,
-    //     order_name: "酒店",
-    //     sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-    //     redirect_url: "http://127.0.0.1/324",
-    //     extension: 1111,
-    //   })
-    //   .then((response) => {
-    //     this.qrcode = response.data.qr_url;
-    //     console.log(response.data.qr_url);
-    //   });
+    Pay() {
+      for (var i = 0; i < this.form_Select.room_num; i++) {
+        let _i = i;
+        this.$axios
+          .post("http://49.234.18.247:8080/api/BookRoom", {
+            hoteL_ID: this.hotelId,
+            rooM_ID: this.vacantRooms[_i].rooM_ID,
+            useR_ID: "0000000001",
+            ordeR_AMOUNT: this.price,
+            ordeR_TIME: this.timestampToTime(this.form_Select.time[0]),
+          })
+          .then((response) => {
+            this.qrcode = response.data.qr_url;
+            console.log(response.data.qr_url);
+          });
+      }
     },
-    aliPay() {},
+    aliPay() {
+      this.qrCodeVisible = true;
+    },
     wechatPay() {
-      this.$axios
-        .post("http://110.40.186.162:7001/api/order", {
-          order_id: 1,
-          order_type: "wechat",
-          order_price: 0.01,
-          order_name: "酒店",
-          sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-          redirect_url: "http://127.0.0.1/324",
-          extension: 1111,
-        })
-        .then((response) => {
-          this.qrcode = response.data.qr_url;
-          console.log(response.data.qr_url);
-        });
+      this.qrCodeVisible = true;
+      var data = Qs.stringify({
+        order_id: '1',
+        order_type: 'wechat',
+        order_price: 0.01,
+        order_name: '酒店',
+        sign: '977ec4fe167433ae4eddf7c29f2f05c6',
+        redirect_url: 'http://127.0.0.1/324',
+        extension: '1111',
+      });
+      this.$axios({
+        method: 'post',
+        url: 'http://110.40.186.162:7001/api/order',
+        headers: {
+          "Content-Type": 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
+        data
+      });
+      // this.$axios
+      //   .post("http://110.40.186.162:7001/api/order", {
+      //     order_id: 1,
+      //     order_type: "wechat",
+      //     order_price: 0.01,
+      //     order_name: "酒店",
+      //     sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+      //     redirect_url: "http://127.0.0.1/324",
+      //     extension: 1111,
+      //   })
+      //   .then((response) => {
+      //     this.qrcode = response.data.qr_url;
+      //     console.log(response.data.qr_url);
+      //   });
     },
   },
   computed: {
@@ -440,9 +472,7 @@ export default {
       return this.totalPrice - this.discount;
     },
   },
-  mounted() {
-
-  },
+  mounted() {},
   created() {
     if (this.$route.query.hotelID) {
       this.hotelId = this.$route.query.hotelID;
@@ -479,7 +509,7 @@ export default {
       )
       .then((response) => {
         this.leftOut = response.data.length;
-        this.vacantRooms=this.response.data;
+        this.vacantRooms = response.data;
       });
   },
 };
