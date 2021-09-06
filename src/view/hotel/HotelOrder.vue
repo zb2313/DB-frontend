@@ -334,13 +334,15 @@ export default {
       days: 1,
       leftOut: 12,
       payVisible: false,
+      hotelId: "",
+      roomTypeId: "",
       hotelName: "速八酒店",
       starNum: 5,
       location: "上海市嘉定区安亭镇曹安公路4800号",
       typeName: "特惠大床房",
       cNum: 2,
-      bed: "1张大床",
-      dish: "无",
+      bed: "",
+      dish: "",
       price: 198,
       totalPrice: 198,
       discount: 11.0,
@@ -398,7 +400,22 @@ export default {
       return day;
     },
     aliPay() {},
-    wechatPay() {},
+    wechatPay() {
+      this.$axios
+        .post("http://110.40.186.162:7001/api/order", {
+          order_id: 1,
+          order_type: "wechat",
+          order_price: 0.01,
+          order_name: "酒店",
+          sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+          redirect_url: "http://127.0.0.1/324",
+          extension: 1111,
+        })
+        .then((response) => {
+          this.qrcode = response.data.qr_url;
+          console.log(response.data.qr_url);
+        });
+    },
   },
   computed: {
     storePrice: function () {
@@ -406,21 +423,6 @@ export default {
     },
   },
   mounted() {
-    // 目前跨域？？
-    // this.$axios
-    //   .post("http://110.40.186.162:7001/api/order", {
-    //     order_id: 1,
-    //     order_type: "wechat",
-    //     order_price: 0.01,
-    //     order_name: "酒店",
-    //     sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-    //     redirect_url: "http://127.0.0.1/324",
-    //     extension: 1111,
-    //   })
-    //   .then((response) => {
-    //     this.qrcode = response.data.qr_url;
-    //     console.log(response.data.qr_url);
-    //   });
     // 留给订房的post请求
     // this.$axios
     //   .post("http://110.40.186.162:7001/api/order", {
@@ -436,6 +438,41 @@ export default {
     //     this.qrcode = response.data.qr_url;
     //     console.log(response.data.qr_url);
     //   });
+  },
+  created() {
+    if (this.$route.query.hotelID) {
+      this.hotelId = this.$route.query.hotelID;
+    }
+    if (this.$route.query.roomId) {
+      this.roomTypeId = this.$route.query.roomId;
+    }
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Hotel/" + this.hotelId)
+      .then((response) => {
+        this.hotelName = response.data[0].hoteL_NAME;
+        this.location = response.data[0].hlocation;
+        this.starNum = response.data[0].star;
+      });
+    this.$axios
+      .get("http://49.234.18.247:8080/api/RoomType" + this.roomTypeId)
+      .then((response) => {
+        this.bed = response.data[0].bed;
+        this.dish = response.data[0].dish;
+        this.typeName = response.data[0].typE_NAME;
+        this.price = response.data[0].price;
+        this.cNum = response.data[0].customeR_NUM;
+      });
+    this.$axios
+      .get(
+        "http://49.234.18.247:8080/api/VacantRoom/" +
+          this.hotelId +
+          "&" +
+          this.roomTypeId
+      )
+      .then((response) => {
+        console.log(this.roomTypeId);
+        this.leftOut = response.data.length;
+      });
   },
 };
 </script>

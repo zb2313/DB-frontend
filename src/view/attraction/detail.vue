@@ -248,7 +248,7 @@
                     v-model="form_Select.buySort"
                     @change="sortWayChange1"
                   >
-                    <el-option label="智能排序" value="1"></el-option>
+                    <el-option label="所有点评" value="1"></el-option>
                     <el-option label="最近购买" value="2"></el-option>
                   </el-select>
                 </el-form-item>
@@ -257,7 +257,7 @@
                     v-model="form_Select.commentSort"
                     @change="sortWayChange2"
                   >
-                    <el-option label="所有点评" value="1"></el-option>
+                    <el-option label="推荐排序" value="1"></el-option>
                     <el-option label="最近点评" value="2"></el-option>
                   </el-select>
                 </el-form-item>
@@ -279,10 +279,10 @@
                 />
               </li>
             </ul>
-            <div style="text-align: center; color: #003580">
+            <!-- 分页 -->
+            <!-- <div style="text-align: center; color: #003580">
               <br />
               <el-pagination
-                background="true"
                 layout="prev, pager, next"
                 :total="comments.length"
                 :page-size="10"
@@ -290,7 +290,7 @@
                 @next-click="nextPage"
               >
               </el-pagination>
-            </div>
+            </div> -->
           </div>
           <br />
           <!-- 景点详情 -->
@@ -649,8 +649,8 @@ export default {
         "https://dimg06.c-ctrip.com/images/100q11000000qcqie2920_C_1600_1200.jpg",
       form_Select: {
         commentLevel: "所有点评",
-        buySort: "最近购买",
-        commentSort: "最近点评",
+        buySort: "所有点评",
+        commentSort: "推荐排序",
       },
       airport: 22.78,
       train: 12.45,
@@ -684,6 +684,8 @@ export default {
     },
   },
   methods: {
+    // prevPage() {},
+    // nextPage() {},
     ticketNumChange() {
       this.storePrice = this.ticketPrice * this.orderNum;
     },
@@ -691,28 +693,56 @@ export default {
       this.payVisible = true;
     },
     commentLevelChange(val) {
-      if (val === "1") {
+       if (val === "1") {
         this.commentList = this.comments;
       } else if (val === "2") {
         var temp1 = [];
-        for (var i; i < this.comments.length; i++) {
+        for (var i = 0; i < this.comments.length; i++) {
           if (this.comments[i].commentRate > 3) temp1.push(this.comments[i]);
         }
-        this.commentList = this.commentList.filter(function (val) {
+        this.commentList = this.comments.filter(function (val) {
           return temp1.indexOf(val) > -1;
         });
       } else if (val === "3") {
         var temp2 = [];
-        for (var k; k < this.comments.length; k++) {
+        for (var k = 0; k < this.comments.length; k++) {
           if (this.comments[k].commentRate < 4) temp2.push(this.comments[k]);
         }
-        this.commentList = this.commentList.filter(function (val) {
+        this.commentList = this.comments.filter(function (val) {
           return temp2.indexOf(val) > -1;
+        });
+       
+      }
+    },
+sortWayChange1(val) {
+      if (val === "1") {
+        this.commentList = this.comments.filter(function (val) {
+          return this.commentList.indexOf(val) > -1;
+        });
+      } else if (val === "2") {
+        this.form_Select.commentSort="推荐排序";
+        this.commentList = this.commentList.sort(function (a, b) {
+          return parseInt(
+            Date.parse(new Date(b.bookTime)) - Date.parse(new Date(a.bookTime))
+          );
         });
       }
     },
-    sortWayChange1() {},
-    sortWayChange2() {},
+    sortWayChange2(val) {
+      if (val === "1") {
+        this.commentList = this.commentList.sort(function (a, b) {
+          return b.commentContent.length-a.commentContent.length;
+        });
+      } else if (val === "2") {
+        this.form_Select.bookSort="所有点评";
+        this.commentList = this.commentList.sort(function (a, b) {
+          return parseInt(
+            Date.parse(new Date(b.commentTime)) -
+              Date.parse(new Date(a.commentTime))
+          );
+        });
+      }
+    },
     aliPay() {},
     wechatPay() {},
     // 地址转经纬度
@@ -781,7 +811,6 @@ export default {
       });
     },
   },
-  mounted() {},
   created() {
     if (this.$route.query.id) {
       this.AttrId = this.$route.query.id;
