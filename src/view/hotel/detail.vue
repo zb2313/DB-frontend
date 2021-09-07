@@ -38,10 +38,13 @@
               </el-dialog>
               <div>
                 <span style="width: 200px"
-                  ><i class="el-icon-s-home"></i>开业：{{ openTime }} 客房数：{{
-                    totalRoom
+                  ><i class="el-icon-s-home"></i
+                  >{{ openTime ? openTime : "1988" }} 客房数：{{
+                    totalRoom ? totalRoom : "99"
                   }}
-                  联系电话：{{ telephone }}</span
+                  联系电话：{{
+                    telephone ? telephone : "07752185，18877525662"
+                  }}</span
                 >
                 <span @click="moreInfoVisible = true" class="hint"
                   >查看更多</span
@@ -54,9 +57,10 @@
                   <div>
                     <h1>酒店简介</h1>
                     <br />
-                    开业：{{ openTime }} 客房数：{{ totalRoom }} 联系电话：{{
-                      telephone
+                    开业：{{ openTime ? openTime : "1988" }} 客房数：{{
+                      totalRoom ? totalRoom : "99"
                     }}
+                    联系电话：{{ telephone ? telephone : "637412,18877525662" }}
                     <div
                       class="picture"
                       :style="{
@@ -65,7 +69,13 @@
                         backgroundRepeat: 'no-repeat',
                       }"
                     ></div>
-                    <p>{{ description }}</p>
+                    <p>
+                      {{
+                        description
+                          ? description
+                          : "酒店毗邻以高新技术、金融、现代商贸、电子商务、文化创意产业为主力的中成智谷创意园区，距离玻璃博物馆约1.5公里。酒店设计理念是以阅读和户外游为主题，高品质的客房产品设施+细致温馨的服务，带给你“自然、静谧、温暖、朴实”的健康生活方式。所有客房均采用普兰特系列优质床品，分体式空调，全套高端Afu精油洗浴用品，100M高速光纤，全WIFI覆盖。"
+                      }}
+                    </p>
                     <br />
                     <h3>住宿预订提供方</h3>
                     <img
@@ -706,11 +716,10 @@ export default {
       location: "上海市嘉定区安亭镇曹安公路4800号",
       dianping_number: 999,
       grade: 5,
-      openTime: "2000",
-      totalRoom: 198,
-      telephone: "+86-19823483690",
-      description:
-        "酒店毗邻以高新技术、金融、现代商贸、电子商务、文化创意产业为主力的中成智谷创意园区，距离玻璃博物馆约1.5公里。酒店设计理念是以阅读和户外游为主题，高品质的客房产品设施+细致温馨的服务，带给你“自然、静谧、温暖、朴实”的健康生活方式。所有客房均采用普兰特系列优质床品，分体式空调，全套高端Afu精油洗浴用品，100M高速光纤，全WIFI覆盖。",
+      openTime: undefined,
+      totalRoom: null,
+      telephone: "",
+      description: "",
       minPrice: 99,
       baseImg:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
@@ -1170,6 +1179,10 @@ export default {
         this.baseImg = response.data[0].picture;
         this.location = response.data[0].hlocation;
         this.grade = response.data[0].star;
+        this.totalRoom = response.data[0].totaL_NUM;
+        this.openTime = response.data[0].opeN_TIME;
+        this.telephone = response.data[0].telephone;
+        this.description = response.data[0].description;
         this.addressToLnglat(this.location).then((res) => {
           this.center = this.Lnglat = res.split(",");
           this.nearestHotels(this.location);
@@ -1184,7 +1197,7 @@ export default {
           tempHotelId
       )
       .then((response) => {
-        this.rooms=response.data;
+        this.rooms = response.data;
       });
 
     // 获得评论信息

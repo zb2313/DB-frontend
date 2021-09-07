@@ -157,9 +157,10 @@
                   <h1 style="color: #003580; font-size: 30px">
                     ￥{{ storePrice }}
                   </h1>
+                  
+                  <h1>{{ payWay }}</h1>
                   <br />
-                  <h1> {{ payWay }}</h1>
-                  <div id="qrcode"></div>
+                  <div id="qrcode" style="margin-left:100px;"></div>
                   <br />
                   <div>
                     <button @click="aliPay" class="payBtn" v-if="buttonVisible">
@@ -336,7 +337,8 @@
   cursor: pointer;
 }
 </style>
-        
+
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>    
 <script>
 import QRCode from "qrcodejs2";
 import Header from "@/components/Header";
@@ -363,7 +365,7 @@ export default {
       dish: "",
       price: 996,
       totalPrice: 996,
-      discount: 11.0,
+      discount: 11,
       bookTime: new Date(),
       vacantRooms: [],
       qrcode:
@@ -433,25 +435,37 @@ export default {
             ordeR_TIME: "123",
           })
           .then((response) => {
-            console.log("成功！啊哈哈哈哈");
+            console.log("加订单成功");
+            this.$axios
+          .put("http://49.234.18.247:8080/api/Room/"+this.hotelId+"&"+this.vacantRooms[_i].rooM_ID, {
+            hoteL_ID: this.hotelId,
+            rooM_ID: this.vacantRooms[_i].rooM_ID,
+            typE_ID: this.vacantRooms[_i].typE_ID,
+            booK_STATUS: "Y",
+            price: this.vacantRooms[_i].price,
+          })
+          .then((response) => {
+            console.log("改房间状态成功");
+          });
           });
       }
     },
     aliPay() {
       this.buttonVisible = false;
       this.submitVisible = true;
+      var specialID = "2";
+      var specialConst="TJcfy";
+      var specialPrice = this.storePrice.toString();
+      var specialSign = md5(md5(specialID + specialPrice) + specialConst);
+      console.log(specialSign);
       this.$axios
         .post("/qrcode", {
-          order_id: "1",
+          order_id: specialID,
           order_type: "alipay",
-          order_price: "0.01",
+          order_price: specialPrice,
           order_name: "酒店",
-          sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-          redirect_url:
-            "http://localhost:8080/hotel/HotelOrder?roomID=" +
-            this.roomTypeId +
-            "&hotelID=" +
-            this.hotelId,
+          sign: specialSign,
+          redirect_url: window.location.href,
           extension: "1111",
         })
         .then((response) => {
@@ -465,8 +479,8 @@ export default {
           );
           this.payWay = "支付宝支付";
           var qrCode = new QRCode(document.getElementById("qrcode"), {
-            width: 96, //设置宽高
-            height: 96,
+            width: 200, //设置宽高
+            height: 200,
           });
           qrCode.makeCode(this.qrcode);
         });
@@ -474,33 +488,28 @@ export default {
     wechatPay() {
       this.buttonVisible = false;
       this.submitVisible = true;
+      var specialID = "3";
+      var specialConst="TJcfy";
+      var specialPrice = this.storePrice.toString();
+      var specialSign = md5(md5(specialID + specialPrice) + specialConst);
+       console.log(specialSign);
       this.$axios
         .post("/qrcode", {
-          order_id: "1",
+          order_id: specialID,
           order_type: "wechat",
-          order_price: "0.01",
+          order_price: specialPrice,
           order_name: "酒店",
-          sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-          redirect_url:
-            "http://localhost:8080/hotel/HotelOrder?roomID=" +
-            this.roomTypeId +
-            "&hotelID=" +
-            this.hotelId,
+          sign: specialSign,
+          redirect_url: window.location.href,
           extension: "1111",
         })
         .then((response) => {
           console.log(response.data.qr_url);
           this.qrcode = response.data.qr_url;
-          console.log(
-            "http://localhost:8080/hotel/HotelOrder?roomID=" +
-              this.roomTypeId +
-              "&hotelID=" +
-              this.hotelId
-          );
           this.payWay = "微信支付";
           var qrCode = new QRCode(document.getElementById("qrcode"), {
-            width: 96, //设置宽高
-            height: 96,
+            width: 200, //设置宽高
+            height: 200,
           });
           qrCode.makeCode(this.qrcode);
         });

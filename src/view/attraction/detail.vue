@@ -693,7 +693,7 @@ export default {
       this.payVisible = true;
     },
     commentLevelChange(val) {
-       if (val === "1") {
+      if (val === "1") {
         this.commentList = this.comments;
       } else if (val === "2") {
         var temp1 = [];
@@ -711,16 +711,15 @@ export default {
         this.commentList = this.comments.filter(function (val) {
           return temp2.indexOf(val) > -1;
         });
-       
       }
     },
-sortWayChange1(val) {
+    sortWayChange1(val) {
       if (val === "1") {
         this.commentList = this.comments.filter(function (val) {
           return this.commentList.indexOf(val) > -1;
         });
       } else if (val === "2") {
-        this.form_Select.commentSort="推荐排序";
+        this.form_Select.commentSort = "推荐排序";
         this.commentList = this.commentList.sort(function (a, b) {
           return parseInt(
             Date.parse(new Date(b.bookTime)) - Date.parse(new Date(a.bookTime))
@@ -731,10 +730,10 @@ sortWayChange1(val) {
     sortWayChange2(val) {
       if (val === "1") {
         this.commentList = this.commentList.sort(function (a, b) {
-          return b.commentContent.length-a.commentContent.length;
+          return b.commentContent.length - a.commentContent.length;
         });
       } else if (val === "2") {
-        this.form_Select.bookSort="所有点评";
+        this.form_Select.bookSort = "所有点评";
         this.commentList = this.commentList.sort(function (a, b) {
           return parseInt(
             Date.parse(new Date(b.commentTime)) -
