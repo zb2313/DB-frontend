@@ -205,19 +205,19 @@
       <br />
       <div id="rooms">
         <ul>
-          <li v-for="room in rooms" :key="room.ID">
+          <li v-for="room in rooms" :key="room.typE_ID">
             <Room
-              :roomName="room.roomName"
-              :customerNum="room.customerNum"
+              :roomName="room.typE_NAME"
+              :customerNum="room.customeR_NUM"
               :bed="room.bed"
               :dish="room.dish"
               :smoke="room.smoke"
               :window="room.window"
               :cancel="room.cancel"
               :price="room.price"
-              :originalPrice="room.originalPrice"
-              :coverImgUrl="room.coverImgUrl"
-              :roomID="room.ID"
+              :originalPrice="room.originaL_PRICE"
+              :coverImgUrl="room.coveR_IMG_URL"
+              :roomID="room.typE_ID"
               :hotelID="hotelId"
             />
           </li>
@@ -245,8 +245,13 @@
                 v-model="form_Select.roomType"
                 @change="roomTypeChange"
               >
-                <el-option label="所有房型" value="1"></el-option>
-                <el-option label="大床房" value="2"></el-option>
+                <el-option
+                  v-for="item in roomTypes"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -264,7 +269,7 @@
                 v-model="form_Select.bookSort"
                 @change="sortWayChange1"
               >
-                <el-option label="推荐排序" value="1"></el-option>
+                <el-option label="所有点评" value="1"></el-option>
                 <el-option label="最近入住" value="2"></el-option>
               </el-select>
             </el-form-item>
@@ -273,7 +278,7 @@
                 v-model="form_Select.commentSort"
                 @change="sortWayChange2"
               >
-                <el-option label="所有点评" value="1"></el-option>
+                <el-option label="推荐排序" value="1"></el-option>
                 <el-option label="最近点评" value="2"></el-option>
               </el-select>
             </el-form-item>
@@ -295,18 +300,18 @@
             />
           </li>
         </ul>
-        <div style="text-align: center; color: #003580">
+        <!-- 分页 -->
+        <!-- <div style="text-align: center; color: #003580">
           <br />
           <el-pagination
-            background="true"
             layout="prev, pager, next"
-            :total="comments.length"
+            :total="commentList.length"
             :page-size="10"
             @prev-click="prevPage"
             @next-click="nextPage"
           >
           </el-pagination>
-        </div>
+        </div> -->
       </div>
       <br />
       <!-- 酒店政策 -->
@@ -712,8 +717,8 @@ export default {
       form_Select: {
         roomType: "所有房型",
         commentLevel: "所有点评",
-        bookSort: "最近入住",
-        commentSort: "最近点评",
+        bookSort: "所有点评",
+        commentSort: "推荐排序",
       },
       airport: 22.78,
       train: 12.45,
@@ -722,24 +727,13 @@ export default {
       attrationCommentNumTest: 2,
       hotelCommentNumTest: 2,
       avatarTest: "",
-      rooms: [
-        {
-          ID: "000001",
-          roomName: "山系·城景大床房",
-          customerNum: 2,
-          bed: "一张大床",
-          dish: "无",
-          smoke: "可",
-          window: "有",
-          cancel: "不可取消",
-          price: 999,
-          originalPrice: 1314,
-          coverImgUrl: "",
-        },
-      ],
+
+      rooms: [],
       comments: [],
-      commentList:[],
-      commentPage:[],
+      commentList: [],
+      commentList1: [],
+      commentList2: [],
+      commentPage: [],
       nearhotels: [],
       hotels: [],
       attractions: [],
@@ -761,6 +755,31 @@ export default {
       } else {
         return "暂无评分";
       }
+    },
+    roomTypes: function () {
+      var tp = [
+        {
+          value: "0",
+          label: "所有房型",
+        },
+      ];
+      for (var i = 0; i < this.comments.length; i++) {
+        for (var j = 0; j < tp.length; j++) {
+          if (
+            j === tp.length - 1 &&
+            tp[j].label != this.comments[i].commentRoom
+          ) {
+            tp.push({
+              value: tp.length,
+              label: this.comments[i].commentRoom,
+            });
+          }
+
+          if (tp[j].label === this.comments[i].commentRoom) break;
+          else continue;
+        }
+      }
+      return tp;
     },
   },
   methods: {
@@ -1062,34 +1081,83 @@ export default {
         confirmButtonText: "确定",
       });
     },
-    roomTypeChange() {},
+    // prevPage() {},
+    // nextPage() {},
+    roomTypeChange(val) {
+      if (val === "0") {
+        this.commentList = this.commentList2;
+        this.commentList1 = this.commentList;
+      } else {
+        for (var count = 1; count < this.roomTypes.length; count++) {
+          if (val === count) {
+            var roomTypeTemp = [];
+            for (var i = 0; i < this.comments.length; i++) {
+              if (this.comments[i].commentRoom === this.roomTypes[count].label)
+                roomTypeTemp.push(this.comments[i]);
+            }
+            this.commentList = this.commentList2.filter(function (val) {
+              return roomTypeTemp.indexOf(val) > -1;
+            });
+            this.commentList1 = this.commentList;
+          }
+        }
+      }
+    },
     commentLevelChange(val) {
       if (val === "1") {
-        this.commentList = this.comments;
+        this.commentList = this.commentList1;
+        this.commentList2 = this.commentList;
       } else if (val === "2") {
         var temp1 = [];
-        for (var i; i < this.comments.length; i++) {
+        for (var i = 0; i < this.comments.length; i++) {
           if (this.comments[i].commentRate > 3) temp1.push(this.comments[i]);
         }
-        this.commentList = this.commentList.filter(function (val) {
+        this.commentList = this.commentList1.filter(function (val) {
           return temp1.indexOf(val) > -1;
         });
+        this.commentList2 = this.commentList;
       } else if (val === "3") {
         var temp2 = [];
-        for (var k; k < this.comments.length; k++) {
+        for (var k = 0; k < this.comments.length; k++) {
           if (this.comments[k].commentRate < 4) temp2.push(this.comments[k]);
         }
-        this.commentList = this.commentList.filter(function (val) {
+        this.commentList = this.commentList1.filter(function (val) {
           return temp2.indexOf(val) > -1;
+        });
+        this.commentList2 = this.commentList;
+      }
+    },
+    sortWayChange1(val) {
+      if (val === "1") {
+        this.commentList = this.comments.filter(function (val) {
+          return this.commentList.indexOf(val) > -1;
+        });
+      } else if (val === "2") {
+        this.form_Select.commentSort = "推荐排序";
+        this.commentList = this.commentList.sort(function (a, b) {
+          return parseInt(
+            Date.parse(new Date(b.bookTime)) - Date.parse(new Date(a.bookTime))
+          );
         });
       }
     },
-    sortWayChange1() {},
-    sortWayChange2() {},
+    sortWayChange2(val) {
+      if (val === "1") {
+        this.commentList = this.commentList.sort(function (a, b) {
+          return b.commentContent.length - a.commentContent.length;
+        });
+      } else if (val === "2") {
+        this.form_Select.bookSort = "所有点评";
+        this.commentList = this.commentList.sort(function (a, b) {
+          return parseInt(
+            Date.parse(new Date(b.commentTime)) -
+              Date.parse(new Date(a.commentTime))
+          );
+        });
+      }
+    },
   },
-  mounted() {
-   
-  },
+  mounted() {},
   created() {
     if (this.$route.query.id) {
       this.hotelId = this.$route.query.id;
@@ -1108,7 +1176,18 @@ export default {
         });
       });
 
-       let tempHotelId = this.hotelId;
+    let tempHotelId = this.hotelId;
+    // 获得空的房间类型
+    this.$axios
+      .get(
+        "http://49.234.18.247:8080/api/FunGetVacantRoomTypeByHotelId/" +
+          tempHotelId
+      )
+      .then((response) => {
+        this.rooms=response.data;
+      });
+
+    // 获得评论信息
     this.$axios
       .get(
         "http://49.234.18.247:8080/api/FunGetCommentByHotelId/" + tempHotelId
@@ -1122,12 +1201,12 @@ export default {
               useR_ID: "0000000002",
               userAvatar:
                 "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-              commentRoom: "山系·城景大床房",
-              bookTime: "08/14/2021",
+              commentRoom: "城景大床房",
+              bookTime: "2021-08-14",
               userCommentNum: 1,
-              commentRate: 5.0,
+              commentRate: 4,
               commentContent: "",
-              commentTime: "08/14/2021 20:53",
+              commentTime: "2021-08-14 20:53:25",
             });
         }
         for (var i = 0; i < response.data.length; i++) {
@@ -1154,16 +1233,21 @@ export default {
                 this.comments[_i].userCommentNum;
             });
 
-          // //获取用户订单信息
-          // this.$axios
-          //   .get(
-          //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
-          //       temp
-          //   )
-          //   .then((response) => {
-          //     this.comments[_i].commentRoom = response.data[0].typename;
-          //     this.comments[_i].bookTime = response.data[0].ordertime;
-          //   });
+          //获取用户订单信息
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
+                temp +
+                "&" +
+                tempHotelId
+            )
+            .then((response) => {
+              this.comments[_i].commentRoom = response.data[0].typename;
+              this.comments[_i].bookTime = response.data[0].ordertime.slice(
+                0,
+                10
+              );
+            });
 
           // 获取评论用户的头像
           this.$axios
@@ -1174,19 +1258,15 @@ export default {
               this.comments[_i].userAvatar = response.data[0].uprofile;
             });
 
-          this.comments[i].bookTime = response.data[i].commenT_TIME.slice(
-            0,
-            10
-          );
-          this.comments[i].commentRoom = "大床房";
-
           this.comments[i].userName = response.data[i].useR_NAME;
           this.comments[i].commentTime = response.data[i].commenT_TIME;
           this.comments[i].commentRate = response.data[i].grade;
           this.comments[i].commentContent = response.data[i].ctext;
         }
       });
-      this.commentList=this.comments;
+    this.commentList = this.comments;
+    this.commentList1 = this.comments;
+    this.commentList2 = this.comments;
   },
 };
 </script>

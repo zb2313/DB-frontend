@@ -1,7 +1,7 @@
 <template>
 
     <div class="travelplan">
-        <Header activeIndex="5" />
+        <!-- <Header activeIndex="5" /> -->
         <div class="leftbox">
             <div class="rec_title">&nbsp;&nbsp;已选目的地</div>
             <div class="divider"></div>
@@ -11,7 +11,7 @@
             >
             <i class="el-icon-s-opportunity"></i>
             {{item.city_name}}
-            <div style="float:right;margin-right:15px"> 
+            <div style="float:right;margin-left:10px;margin-right:5px"> 
                 <div class="count">
                 <el-input-number size="mini" v-model="item.day" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number>
                 天
@@ -23,7 +23,7 @@
            
         </div>
         <div class="create">
-               <el-button type="primary" @click="submit()">创建行程</el-button>
+               <el-button type="primary" @click="submit()">创建攻略</el-button>
                </div> 
         <div class="cities_list">
             <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -62,8 +62,8 @@
 </template>
 <style scoped>
 .leftbox{
-    width: 280px;
-    top: 120px;
+    width: 240px;
+    top: 0px;
     bottom:60px;
     left: 0px;
     border-style: none double none none;
@@ -85,12 +85,12 @@
 }
 .select_item{
     height: 40px;
-    width: 235px;
+    width: 200px;
     background-color: rgb(236,236,236);
     margin-top: 10px;
     padding-top: 20px;
     margin-left: 5px;
-    padding-left: 20px;
+    padding-left: 5px;
 
 }
 .count{
@@ -117,9 +117,9 @@
     width: 20px;
 }
 .cities_list{
-left: 330px;
+left: 280px;
 right:0px;
-top: 140px;
+top: 10px;
 bottom: 0px;
 position: absolute;
 overflow-y:scroll;
@@ -158,11 +158,12 @@ display: block;
 }
 </style>
 <script>
-import Header from "@/components/Header.vue";
+// import Header from "@/components/Header.vue";
 export default {
-    components: {
-    Header,
-  },
+//     components: {
+//     Header,
+//   },
+name: "travelplan",
   data(){
       return{
         activeName:'first',

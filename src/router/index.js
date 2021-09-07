@@ -46,6 +46,25 @@ const routes = [
                 component: () => import( /* webpackChunkName: "dashboard" */ "../view/Dashboard")
             },
             {
+                path: '/travelplan',
+                name: 'travelplan',
+                meta:
+                {
+                    title: '创建行程'
+                },
+                component: () => import("../view/Other/travelplan.vue")
+            },
+            {
+                path: '/makeplan',
+                name: 'makeplan',
+                component: () => import('../view/Other/makeplan.vue')
+            },
+            {
+                path: '/myplan',
+                name: 'myplan',
+                component: () => import('../view/Other/myplan.vue')
+            },
+            {
                 path: "/HistoryOrder",
                 name: "HistoryOrder",
                 meta:
@@ -233,19 +252,14 @@ const routes = [
         component: () => import('../view/Other/questions.vue')
     },
     {
-        path: '/travelplan',
-        name: 'travelplan',
-        component: () => import('../view/Other/travelplan.vue')
+        path: '/strategy',
+        name: 'strategy',
+        component: () => import('../view/Other/strategy.vue')
     },
     {
-        path: '/makeplan',
-        name: 'makeplan',
-        component: () => import('../view/Other/makeplan.vue')
-    },
-    {
-        path: '/myplan',
-        name: 'myplan',
-        component: () => import('../view/Other/myplan.vue')
+        path: '/strategyDetail',
+        name: 'strategyDetail',
+        component: () => import('../view/Other/strategyDetail.vue')
     },
     {
         path: '/Moment',

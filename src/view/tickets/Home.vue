@@ -178,7 +178,18 @@ export default {
           });
         }
         //this.$router.replace("/tickets/detail");}
-      } else {
+        else {
+          this.$router.push({
+            path: `/tickets/planequery`,
+            query: {
+              from: this.query_departure_trainstation,
+              to: this.query_arrival_trainstation,
+              date: this.formInline.departure_date,
+            },
+          });
+        }
+      } 
+      else {
         this.$alert("请填写所有选项再查询", "提示", {
           confirmButtonText: "确定",
         });

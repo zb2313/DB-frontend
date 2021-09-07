@@ -158,9 +158,23 @@
                     ￥{{ storePrice }}
                   </h1>
                   <br />
+                  <h1> {{ payWay }}</h1>
+                  <div id="qrcode"></div>
+                  <br />
                   <div>
-                    <button @click="aliPay" class="payBtn">支付宝支付</button>
-                    <button @click="wechatPay" class="payBtn">微信支付</button>
+                    <button @click="aliPay" class="payBtn" v-if="buttonVisible">
+                      支付宝支付
+                    </button>
+                    <button
+                      @click="wechatPay"
+                      class="payBtn"
+                      v-if="buttonVisible"
+                    >
+                      微信支付
+                    </button>
+                    <button @click="Pay" class="payBtn" v-if="submitVisible">
+                      完成支付
+                    </button>
                   </div>
                 </div>
               </el-dialog>
@@ -324,6 +338,7 @@
 </style>
         
 <script>
+import QRCode from "qrcodejs2";
 import Header from "@/components/Header";
 export default {
   components: {
@@ -334,17 +349,23 @@ export default {
       days: 1,
       leftOut: 12,
       payVisible: false,
+      submitVisible: false,
+      buttonVisible: true,
+      payWay: " ",
+      hotelId: "",
+      roomTypeId: "",
       hotelName: "速八酒店",
       starNum: 5,
       location: "上海市嘉定区安亭镇曹安公路4800号",
       typeName: "特惠大床房",
       cNum: 2,
-      bed: "1张大床",
-      dish: "无",
-      price: 198,
-      totalPrice: 198,
+      bed: "",
+      dish: "",
+      price: 996,
+      totalPrice: 996,
       discount: 11.0,
       bookTime: new Date(),
+      vacantRooms: [],
       qrcode:
         "https://dimg11.c-ctrip.com/images/0AD5d120008nj322zC5A7_R_300_120.jpg",
       form_Select: {
@@ -397,45 +418,138 @@ export default {
       var day = parseInt((a2 - a1) / (1000 * 60 * 60 * 24)); //核心：时间戳相减，然后除以天数
       return day;
     },
-    aliPay() {},
-    wechatPay() {},
+    Pay() {
+      for (var i = 0; i < this.form_Select.room_num; i++) {
+        let _i = i;
+        console.log(_i);
+        console.log(this.hotelId);
+
+        this.$axios
+          .post("http://49.234.18.247:8080/api/BookRoom", {
+            hoteL_ID: this.hotelId,
+            rooM_ID: this.vacantRooms[_i].rooM_ID,
+            useR_ID: "0000000001",
+            ordeR_AMOUNT: this.storePrice,
+            ordeR_TIME: "123",
+          })
+          .then((response) => {
+            console.log("成功！啊哈哈哈哈");
+          });
+      }
+    },
+    aliPay() {
+      this.buttonVisible = false;
+      this.submitVisible = true;
+      this.$axios
+        .post("/qrcode", {
+          order_id: "1",
+          order_type: "alipay",
+          order_price: "0.01",
+          order_name: "酒店",
+          sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+          redirect_url:
+            "http://localhost:8080/hotel/HotelOrder?roomID=" +
+            this.roomTypeId +
+            "&hotelID=" +
+            this.hotelId,
+          extension: "1111",
+        })
+        .then((response) => {
+          console.log(response.data.qr_url);
+          this.qrcode = response.data.qr_url;
+          console.log(
+            "http://localhost:8080/hotel/HotelOrder?roomID=" +
+              this.roomTypeId +
+              "&hotelID=" +
+              this.hotelId
+          );
+          this.payWay = "支付宝支付";
+          var qrCode = new QRCode(document.getElementById("qrcode"), {
+            width: 96, //设置宽高
+            height: 96,
+          });
+          qrCode.makeCode(this.qrcode);
+        });
+    },
+    wechatPay() {
+      this.buttonVisible = false;
+      this.submitVisible = true;
+      this.$axios
+        .post("/qrcode", {
+          order_id: "1",
+          order_type: "wechat",
+          order_price: "0.01",
+          order_name: "酒店",
+          sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+          redirect_url:
+            "http://localhost:8080/hotel/HotelOrder?roomID=" +
+            this.roomTypeId +
+            "&hotelID=" +
+            this.hotelId,
+          extension: "1111",
+        })
+        .then((response) => {
+          console.log(response.data.qr_url);
+          this.qrcode = response.data.qr_url;
+          console.log(
+            "http://localhost:8080/hotel/HotelOrder?roomID=" +
+              this.roomTypeId +
+              "&hotelID=" +
+              this.hotelId
+          );
+          this.payWay = "微信支付";
+          var qrCode = new QRCode(document.getElementById("qrcode"), {
+            width: 96, //设置宽高
+            height: 96,
+          });
+          qrCode.makeCode(this.qrcode);
+        });
+    },
   },
   computed: {
     storePrice: function () {
       return this.totalPrice - this.discount;
     },
   },
-  mounted() {
-    // 目前跨域？？
-    // this.$axios
-    //   .post("http://110.40.186.162:7001/api/order", {
-    //     order_id: 1,
-    //     order_type: "wechat",
-    //     order_price: 0.01,
-    //     order_name: "酒店",
-    //     sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-    //     redirect_url: "http://127.0.0.1/324",
-    //     extension: 1111,
-    //   })
-    //   .then((response) => {
-    //     this.qrcode = response.data.qr_url;
-    //     console.log(response.data.qr_url);
-    //   });
-    // 留给订房的post请求
-    // this.$axios
-    //   .post("http://110.40.186.162:7001/api/order", {
-    //     order_id: 1,
-    //     order_type: "wechat",
-    //     order_price: 0.01,
-    //     order_name: "酒店",
-    //     sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-    //     redirect_url: "http://127.0.0.1/324",
-    //     extension: 1111,
-    //   })
-    //   .then((response) => {
-    //     this.qrcode = response.data.qr_url;
-    //     console.log(response.data.qr_url);
-    //   });
+  mounted() {},
+  created() {
+    if (this.$route.query.hotelID) {
+      this.hotelId = this.$route.query.hotelID;
+    }
+    if (this.$route.query.roomID) {
+      this.roomTypeId = this.$route.query.roomID;
+    }
+
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Hotel/" + this.hotelId)
+      .then((response) => {
+        this.hotelName = response.data[0].hoteL_NAME;
+        this.location = response.data[0].hlocation;
+        this.starNum = response.data[0].star;
+      });
+
+    this.$axios
+      .get("http://49.234.18.247:8080/api/RoomType/" + this.roomTypeId)
+      .then((response) => {
+        this.bed = response.data[0].bed;
+        this.dish = response.data[0].dish;
+        this.typeName = response.data[0].typE_NAME;
+        this.price = response.data[0].price;
+        this.totalPrice = response.data[0].price;
+        this.cNum = response.data[0].customeR_NUM;
+      });
+
+    this.$axios
+      .get(
+        "http://49.234.18.247:8080/api/VacantRoom/" +
+          this.hotelId +
+          "&" +
+          this.roomTypeId
+      )
+      .then((response) => {
+        this.leftOut = response.data.length;
+        this.vacantRooms = response.data;
+      });
   },
 };
 </script>
