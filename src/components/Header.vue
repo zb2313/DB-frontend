@@ -36,6 +36,9 @@
                   <router-link to="/dashboard">
                     <el-dropdown-item>管理账户</el-dropdown-item></router-link
                   >
+                  <router-link to="/travelplan">
+                    <el-dropdown-item>创建行程</el-dropdown-item></router-link
+                  >
                   <router-link to="/AttractionOrder"
                     ><el-dropdown-item>订单</el-dropdown-item></router-link
                   >
@@ -84,11 +87,7 @@
             >机/车票</router-link
           ></el-menu-item
         >
-        <el-menu-item index="5"
-          ><router-link class="url" to="/travelplan"
-            >行程</router-link
-          ></el-menu-item
-        >
+        
       </el-menu>
     </div>
   </el-header>

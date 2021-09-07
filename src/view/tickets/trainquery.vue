@@ -216,25 +216,25 @@
                 <div v-if="item.ruanwo">{{item.ruanwo_price}}</div>
                 </div>
                 <div class="yuding_buttons">
-                <el-button v-if="item.yingzuo&&(item.yingzuo!='无')" type="primary"  @click="onSubmit(index)"
+                <el-button v-if="item.yingzuo&&(item.yingzuo!='无')" type="primary"  @click="onSubmit(index,'硬座',item.yingzuo_price)"
                   >预订 ></el-button >
                   <el-button v-else-if="item.yingzuo" type="warning" disabled>售完</el-button>
-                <el-button v-if="item.shangwuzuo&&(item.shangwuzuo!='无')" type="primary"  @click="onSubmit(index)"
+                <el-button v-if="item.shangwuzuo&&(item.shangwuzuo!='无')" type="primary"  @click="onSubmit(index,'商务座',item.shangwuzuo_price)"
                   >预订 ></el-button >
                   <el-button v-else-if="item.shangwuzuo" type="warning" disabled>售完</el-button>
-                <el-button v-if="item.yidengzuo&&(item.yidengzuo!='无')" type="primary" @click="onSubmit(index)"
+                <el-button v-if="item.yidengzuo&&(item.yidengzuo!='无')" type="primary" @click="onSubmit(index,'一等座',item.yidengzuo_price)"
                   >预订 ></el-button >
                 <el-button v-else-if="item.yidengzuo" type="warning" disabled>售完</el-button>
-                <el-button v-if="item.erdengzuo&&(item.erdengzuo!='无')" type="primary"  @click="onSubmit(index)"
+                <el-button v-if="item.erdengzuo&&(item.erdengzuo!='无')" type="primary"  @click="onSubmit(index,'二等座',item.erdengzuo_price)"
                   >预订 ></el-button >
                   <el-button v-else-if="item.erdengzuo" type="warning" disabled>售完</el-button>
-                <el-button v-if="item.wuzuo&&(item.wuzuo!='无')" type="primary"  @click="onSubmit(index)"
+                <el-button v-if="item.wuzuo&&(item.wuzuo!='无')" type="primary"  @click="onSubmit(index,'无座',item.wuzuo_price)"
                   >预订 ></el-button >
                   <el-button v-else-if="item.wuzuo" type="warning" disabled>售完</el-button>
-                <el-button v-if="item.yingwo&&(item.yingwo!='无')" type="primary"  @click="onSubmit(index)"
+                <el-button v-if="item.yingwo&&(item.yingwo!='无')" type="primary"  @click="onSubmit(index,'硬卧',item.yingwo_price)"
                   >预订 ></el-button >
                   <el-button v-else-if="item.yingwo" type="warning" disabled>售完</el-button>
-                <el-button v-if="item.ruanwo&&(item.ruanwo!='无')" type="primary"  @click="onSubmit(index)"
+                <el-button v-if="item.ruanwo&&(item.ruanwo!='无')" type="primary"  @click="onSubmit(index,'软卧',item.ruanwo_price)"
                   >预订 ></el-button >
                   <el-button v-else-if="item.ruanwo" type="warning" disabled>售完</el-button>
                 </div>
@@ -568,19 +568,22 @@ export default {
     };
   },
   methods: {
-    onSubmit(index){
-      this.$alert(" 预定成功","提示", {
-        confirmButtonText: "确定",
+    onSubmit(index,type,price){
+      // this.$alert(" 预定成功","提示", {
+      //   confirmButtonText: "确定",
 
-      })
-      // this.$router.push({
-      //   path:`/tickets/order`,
-      //   query:{
-      //     vehicle_id:this.tableData[index].vehiclE_ID,
-      //     seat_type:this.formInline.seat_type,
-      //   }
       // })
-    //  console.log(index);
+      console.log(type);
+      this.$router.push({
+        path:`/tickets/order`,
+        query:{
+          vehicle:JSON.stringify(this.tableData[index]),
+          seat_type:type,
+          price:price,
+          date:this.formInline.departure_date
+        }
+      })
+     console.log(index);
     },
    
  newQuery() {
