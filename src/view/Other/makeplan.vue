@@ -1,7 +1,7 @@
 <template>
 
     <div class="travelplan">
-        <Header activeIndex="5" />
+        <!-- <Header activeIndex="5" /> -->
         <div style="width:100%;height:45px">
         <div style="width:300px;height:45px;padding-top:10px;font-size:25px;float:left">&nbsp;&nbsp;&nbsp;定制你的{{days}}日游</div> 
         <el-button type="primary" style="float:right;margin-top:10px;margin-right:10px" @click="submit()">完成</el-button>
@@ -10,7 +10,7 @@
         
         <div class="divider"></div>
         <div class="leftbox">
-            <div class="rec_title">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我的行程单</div>
+            <div class="rec_title">&nbsp;&nbsp;&nbsp;我的行程单</div>
             <div class="divider"></div>
             
             <div class="select_item"
@@ -36,10 +36,10 @@
         >
         <div>
           <div 
-          v-if="item.dis_to_pre>1"
+          v-if="item.dis_to_pre>0.2"
           class="distance">
           <i class="el-icon-d-caret"></i>
-          距离 {{item.dis_to_pre}} 千米
+          相距 {{item.dis_to_pre}} 公里
           </div>
         
         <div class="midimg"
@@ -111,8 +111,8 @@
 </template>
 <style>
 .leftbox{
-    width: 280px;
-    top: 200px;
+    width: 180px;
+    top: 80px;
     bottom:0px;
     left: 0px;
     border-style: none double none none;
@@ -134,18 +134,18 @@
 }
 .select_item{
     height: 60px;
-    width: 235px;
+    width: 140px;
     background-color: rgb(236,236,236);
     margin-top: 10px;
     
     margin-left: 5px;
-    padding-left: 20px;
+    padding-left: 10px;
 }
 
 .day_icon{
 width: 40px;
 height: 40px;
-background-color: #5b93e0;
+background-color: rgb(163, 171, 184);
 color: white;
 font-size: 20px;
 text-align: center;
@@ -160,12 +160,12 @@ margin-top: 10px;
     line-height: 60px;
 }
 .selected{
-    background-color: #003680;
+    background-color: rgb(36,47,66);
 }
 .middle_box{
-left: 330px;
-right:430px;
-top: 200px;
+left: 200px;
+right:400px;
+top: 80px;
 bottom: 0px;
 position: absolute;
 overflow-y:scroll;
@@ -179,7 +179,7 @@ overflow-y:scroll;
 .right_box{
 right:0px;
 width: 400px;
-top: 200px;
+top: 80px;
 bottom: 0px;
 position: absolute;
 overflow-y:scroll;
@@ -231,9 +231,7 @@ height: 140px;
 }
 </style>
 <script>
-import Header from "@/components/Header.vue";
 export default {
-components: {Header},
     data(){
         return {
             days:0,
@@ -333,9 +331,12 @@ components: {Header},
                 let l1=this.selected_items[this.select_active][len-1].lat_lon;
                 
                   let l2='';
-                  this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_attraction_list[index].location)
+                  fetch("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_attraction_list[index].location+_this.filt_attraction_list[index].attractionname)
+                  .then(function (response) {
+                return response.json();
+                })
                   .then(function(response2){
-                    l2=response2.data.geocodes[0].location.split(',');
+                    l2=response2.geocodes[0].location.split(',');
                     let lat1= l1[0] * Math.PI / 180;
                     let lat2= l2[0] * Math.PI / 180;
                     let lon1= l1[1] * Math.PI / 180;
@@ -353,9 +354,13 @@ components: {Header},
                 
               }
               else {
-                this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.filt_attraction_list[index].location)
+                fetch("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.filt_attraction_list[index].location+this.filt_attraction_list[index].attractionname)
+                .then(function (response) {
+                return response.json();
+                })
                 .then(function(response){
-              var json={day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,lat_lon:response.data.geocodes[0].location.split(','),dis_to_pre:0};
+                  //console.log(response);
+              var json={day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,lat_lon:response.geocodes[0].location.split(','),dis_to_pre:0};
               _this.selected_items[_this.select_active].push(json);
               _this.$forceUpdate();
               })
@@ -370,9 +375,12 @@ components: {Header},
                 let l1=this.selected_items[this.select_active][len-1].lat_lon;
                
                   let l2='';
-                  _this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_hotel_list[index].location)
+                  fetch("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+_this.filt_hotel_list[index].location+_this.filt_hotel_list[index].hotelname)
+                  .then(function (response) {
+                return response.json();
+                })
                   .then(function(response2){
-                    l2=response2.data.geocodes[0].location.split(',');
+                    l2=response2.geocodes[0].location.split(',');
                     let lat1= l1[0] * Math.PI / 180;
                     let lat2= l2[0] * Math.PI / 180;
                     let lon1= l1[1] * Math.PI / 180;
@@ -390,11 +398,14 @@ components: {Header},
               
               }
               else {
-                this.$axios.get("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.filt_hotel_list[index].location)
+                fetch("https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address="+this.filt_hotel_list[index].location+this.filt_hotel_list[index].hotelname)
+                .then(function (response) {
+                return response.json();
+                })
                 .then(function(response){
-              var jsonn={day:this.select_active,item_name:this.filt_hotel_list[index].hotelname,picture:this.filt_hotel_list[index].picture,location:this.filt_hotel_list[index].location,lat_lon:response.data.geocodes[0].location.split(','),dis_to_pre:0};
-            this.selected_items[this.select_active].push(jsonn);
-            this.$forceUpdate();
+              var jsonn={day:_this.select_active,item_name:_this.filt_hotel_list[index].hotelname,picture:_this.filt_hotel_list[index].picture,location:_this.filt_hotel_list[index].location,lat_lon:response.geocodes[0].location.split(','),dis_to_pre:0};
+            _this.selected_items[_this.select_active].push(jsonn);
+            _this.$forceUpdate();
              })
               }
              
@@ -417,7 +428,20 @@ components: {Header},
         });
       },
     submit(){
-        console.log(this.selected_items);
+      this.$axios.get("http://49.234.18.247:8080/api/FunGetPlanIdByUserId/"+ localStorage.getItem("ms_username"))
+      .then((response) => {
+        this.$axios.post("http://49.234.18.247:8080/api/Plan", {
+      "useR_ID": localStorage.getItem("ms_username"),
+      "plaN_ID": response.planid,
+      "plan": JSON.stringify(this.selected_items),
+      "plaN_STAR": 0
+      })
+      .then((response) => {
+      
+        console.log('success');
+      });
+      })
+      
          this.$router.push({
           path: `/myplan`,
           query: {

@@ -43,6 +43,11 @@ export default {
              title: "个人信息",
            },
            {
+             icon: "el-icon-edit-outline",
+             index: "/travelplan",
+             title: "创建攻略",
+           },
+           {
              icon: "el-icon-s-grid",
              index: "/HistoryOrder",
              title: "历史订单",
