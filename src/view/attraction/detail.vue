@@ -248,7 +248,7 @@
                     v-model="form_Select.buySort"
                     @change="sortWayChange1"
                   >
-                    <el-option label="智能排序" value="1"></el-option>
+                    <el-option label="所有点评" value="1"></el-option>
                     <el-option label="最近购买" value="2"></el-option>
                   </el-select>
                 </el-form-item>
@@ -257,7 +257,7 @@
                     v-model="form_Select.commentSort"
                     @change="sortWayChange2"
                   >
-                    <el-option label="所有点评" value="1"></el-option>
+                    <el-option label="推荐排序" value="1"></el-option>
                     <el-option label="最近点评" value="2"></el-option>
                   </el-select>
                 </el-form-item>
@@ -279,7 +279,18 @@
                 />
               </li>
             </ul>
-            <!-- 得加个分页 -->
+            <!-- 分页 -->
+            <!-- <div style="text-align: center; color: #003580">
+              <br />
+              <el-pagination
+                layout="prev, pager, next"
+                :total="comments.length"
+                :page-size="10"
+                @prev-click="prevPage"
+                @next-click="nextPage"
+              >
+              </el-pagination>
+            </div> -->
           </div>
           <br />
           <!-- 景点详情 -->
@@ -628,7 +639,6 @@ export default {
       grade: 5,
       openTime: "09:00",
       closeTime: "20:30",
-      stopTime: "19:30",
       ticketPrice: 59,
       storePrice: 59,
       nearSubwayStation: "临港中运量1号线杞青路站",
@@ -639,8 +649,8 @@ export default {
         "https://dimg06.c-ctrip.com/images/100q11000000qcqie2920_C_1600_1200.jpg",
       form_Select: {
         commentLevel: "所有点评",
-        buySort: "最近购买",
-        commentSort: "最近点评",
+        buySort: "所有点评",
+        commentSort: "推荐排序",
       },
       airport: 22.78,
       train: 12.45,
@@ -669,8 +679,13 @@ export default {
         return "暂无评分";
       }
     },
+    stopTime: function () {
+      return this.closeTime;
+    },
   },
   methods: {
+    // prevPage() {},
+    // nextPage() {},
     ticketNumChange() {
       this.storePrice = this.ticketPrice * this.orderNum;
     },
@@ -678,31 +693,55 @@ export default {
       this.payVisible = true;
     },
     commentLevelChange(val) {
-      if (val === "1") {
+       if (val === "1") {
         this.commentList = this.comments;
       } else if (val === "2") {
         var temp1 = [];
-        for (var i; i < this.comments.length; i++) {
+        for (var i = 0; i < this.comments.length; i++) {
           if (this.comments[i].commentRate > 3) temp1.push(this.comments[i]);
         }
-        this.commentList = this.commentList.filter(function (val) {
+        this.commentList = this.comments.filter(function (val) {
           return temp1.indexOf(val) > -1;
         });
       } else if (val === "3") {
         var temp2 = [];
-        for (var k; k < this.comments.length; k++) {
+        for (var k = 0; k < this.comments.length; k++) {
           if (this.comments[k].commentRate < 4) temp2.push(this.comments[k]);
         }
-        this.commentList = this.commentList.filter(function (val) {
+        this.commentList = this.comments.filter(function (val) {
           return temp2.indexOf(val) > -1;
+        });
+       
+      }
+    },
+sortWayChange1(val) {
+      if (val === "1") {
+        this.commentList = this.comments.filter(function (val) {
+          return this.commentList.indexOf(val) > -1;
+        });
+      } else if (val === "2") {
+        this.form_Select.commentSort="推荐排序";
+        this.commentList = this.commentList.sort(function (a, b) {
+          return parseInt(
+            Date.parse(new Date(b.bookTime)) - Date.parse(new Date(a.bookTime))
+          );
         });
       }
     },
-    sortWayChange1() {
-
-    },
-    sortWayChange2() {
-      
+    sortWayChange2(val) {
+      if (val === "1") {
+        this.commentList = this.commentList.sort(function (a, b) {
+          return b.commentContent.length-a.commentContent.length;
+        });
+      } else if (val === "2") {
+        this.form_Select.bookSort="所有点评";
+        this.commentList = this.commentList.sort(function (a, b) {
+          return parseInt(
+            Date.parse(new Date(b.commentTime)) -
+              Date.parse(new Date(a.commentTime))
+          );
+        });
+      }
     },
     aliPay() {},
     wechatPay() {},
@@ -772,9 +811,6 @@ export default {
       });
     },
   },
-  mounted() {
-    
-  },
   created() {
     if (this.$route.query.id) {
       this.AttrId = this.$route.query.id;
@@ -797,7 +833,7 @@ export default {
         });
       });
 
-      this.$axios
+    this.$axios
       .get(
         "http://49.234.18.247:8080/api/FunGetCommentByAttractionId/" +
           this.AttrId
@@ -811,7 +847,7 @@ export default {
               userAvatar:
                 "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
               commentTicket: "成人票",
-              bookTime: "08/14/2021",
+              bookTime: "2021-08-12",
               commentPicture:
                 "https://ak-d.tripcdn.com/images/0230c120008um7i69E50B_R_150_150_R5_Q70_D.jpg",
               userCommentNum: 13,
@@ -844,16 +880,20 @@ export default {
                 this.comments[_i].userCommentNum;
             });
 
-          // //获取用户订单信息
-          // this.$axios
-          //   .get(
-          //     "http://49.234.18.247:8080/api/FunGetAllHotelOrderByUserid/" +
-          //       temp
-          //   )
-          //   .then((response) => {
-          //     this.comments[_i].commentRoom = response.data[0].typename;
-          //     this.comments[_i].bookTime = response.data[0].ordertime;
-          //   });
+          //获取用户订单信息
+          this.$axios
+            .get(
+              "http://49.234.18.247:8080/api/FunGetAllAttractionOrderByUserid/" +
+                temp +
+                "&" +
+                this.AttrId
+            )
+            .then((response) => {
+              this.comments[_i].bookTime = response.data[0].ordertime.slice(
+                0,
+                10
+              );
+            });
 
           // 获取评论用户的头像
           this.$axios
@@ -863,12 +903,6 @@ export default {
             .then((response) => {
               this.comments[_i].userAvatar = response.data[0].uprofile;
             });
-
-          this.comments[i].bookTime = response.data[i].acommenT_TIME.slice(
-            0,
-            10
-          );
-          this.comments[i].commentTicket = "成人票";
 
           this.comments[i].userName = response.data[i].useR_NAME;
           this.comments[i].commentTime = response.data[i].acommenT_TIME;

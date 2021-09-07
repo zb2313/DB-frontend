@@ -142,7 +142,7 @@ export default {
         userid:"0000000001",
         checkPassword: ""
       },
-      rules:{
+      rules: {
         username: [
             {
               required: true,
@@ -169,26 +169,23 @@ export default {
           //response: 204 重新检查 200 返回了token
           //user administrator hotel
           // eslint-disable-next-line no-unused-vars
-          let check=false;
-          let t="role="+this.role+"&id="+this.param.userid+"&password="+this.param.password+"&type=logbypwd";
-          axios.get("http://49.234.18.247:8080/api/OAuth/token?"+t)
-              .then((response)=>
-              {
-                if(response.status=="204")
-                {
-                  check=false;
-                  alert("用户id或密码输入有误");
-                  return;
-                }
-                else
-                {
-                  localStorage.setItem("token",response.data);
-                  localStorage.setItem("ms_username", this.param.userid);
-                  check=true;
-                  this.$message.success("登录成功");
-                  this.Login();
-                }
-              })
+            // eslint-disable-next-line no-unused-vars
+            let check = false;
+            let t = "role=" + this.role + "&id=" + this.param.userid + "&password=" + this.param.password + "&type=logbypwd";
+            axios.get("http://49.234.18.247:8080/api/OAuth/token?" + t)
+                .then((response) => {
+                  if (response.status == "204") {
+                    check = false;
+                    alert("用户id或密码输入有误");
+                    return;
+                  } else {
+                    localStorage.setItem("token", response.data);
+                    localStorage.setItem("ms_username", this.param.userid);
+                    check = true;
+                    this.$message.success("登录成功");
+                    this.Login();
+                  }
+                })
         },
         Login()
         {
@@ -196,6 +193,14 @@ export default {
           {
             localStorage.setItem("usertype",0);
             this.$router.push("/hotel");
+          }
+          else if(this.role=="hotel")
+          {
+            this.$router.push("/SellerHome");
+          }
+          else
+          {
+            this.$router.push("/")
           }
         },
         sendVerifyCodeFind()

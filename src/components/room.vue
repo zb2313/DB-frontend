@@ -21,7 +21,7 @@
             <div
               class="infoPic"
               :style="{
-                backgroundImage: 'url(' + baseImg + ')',
+                backgroundImage: 'url(' + coverImgUrl + ')',
                 backgroundSize: '100% 100%',
                 backgroundRepeat: 'no-repeat',
               }"
@@ -203,7 +203,7 @@
     </div>
     <!-- 烟及窗 -->
     <div class="detail">
-      <p>{{ smoke }}吸烟</p>
+      <p>{{ smoke }}烟</p>
       <br />
       <p>{{ window }}窗</p>
     </div>

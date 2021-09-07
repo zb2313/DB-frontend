@@ -251,8 +251,11 @@ const routes = [
         name: 'QA',
         component: () => import('../view/Other/questions.vue')
     },
-    
-    
+    {
+        path: '/strategy',
+        name: 'strategy',
+        component: () => import('../view/Other/strategy.vue')
+    },
     {
         path: '/Moment',
         name: 'Moment',

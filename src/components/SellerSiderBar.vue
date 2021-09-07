@@ -50,7 +50,7 @@ export default {
         {
           icon: "el-icon-s-comment",
           index: "/SellerEdit",
-          title: "商家修改",
+          title: "房源信息修改",
         },
         {
           icon: "el-icon-s-comment",
