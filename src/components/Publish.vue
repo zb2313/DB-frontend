@@ -18,10 +18,11 @@
       :on-preview="handlePreview"
        :on-remove="handleRemove"
      :file-list="fileList"
+     :auto-upload="false"
      :limit="1"
      list-type="picture">
       <el-button slot="trigger" size="large" type="primary" @click="creatMoment_ID()">添加图片</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5MB</div>
       </el-upload>
       </div>
       <div class="pick_location">
@@ -70,17 +71,13 @@ export default {
   },
   methods:{
       handleRemove(file, fileList) {
-        if(this.uploadurl!="")
-      axios.delete(''+this.uploadurl)
         console.log(file, fileList);
       },
       handlePreview(file) {
         console.log(file);
       },
-    goBack() {if(this.uploadurl!="")
-      axios.delete(''+this.uploadurl)
-      .then(()=>{this.$router.push('/1')})
-      else this.$router.push('/1')
+    goBack() {
+      this.$router.push('/1')
     },
     //打开选择地区
     onChangeProvince(data) {
@@ -158,7 +155,8 @@ export default {
           .then((res)=> {
             console.log("res:",res.data);
             if (res.status === 201) {
-              console.log('id:',this.momenT_ID)
+              console.log('id:',this.momenT_ID);
+              this.$refs.upload.submit();
             this.$message({
             type: 'success',
             message: '发布成功!'})
