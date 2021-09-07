@@ -17,9 +17,9 @@
           <div class="dropdowns">
             <el-popover placement="bottom" width="200" trigger="click">
               <div class="popover-content">
-                北京{{ beijing }}|上海{{ shanghai }}|云南{{ yunnan }}|四川{{
+                <!-- 北京{{ beijing }}|上海{{ shanghai }}|云南{{ yunnan }}|四川{{
                   sichuan
-                }}
+                }} -->
               </div>
               <div class="dropdown" slot="reference">
                 国内<span class="el-icon-caret-bottom"></span>
@@ -94,7 +94,7 @@
                 ></div>
                 <div class="detail">
                   <div class="text">
-                    {{ item.text }}
+                    {{ item.plaN_DESC }}
                   </div>
                   <div class="writer">
                     <el-avatar size="small" :src="item.uprofile"></el-avatar>
@@ -262,7 +262,7 @@ export default {
         "三亚",
         "成都",
         "重庆",
-        "自驾游",
+        "上海",
         "拉萨",
         "涠洲岛",
         "涠洲岛",
@@ -279,29 +279,8 @@ export default {
             "http://49.234.47.118:8080/pictures/attraction_picture_1.jpg",
           plaN_STAR: 2,
           plaN_TITLE: "芬兰瑞典 ▏感觉孤独的时候我就去北欧凛冽的世界尽头",
-          text: "仍记得3年前初见丽江的模样：蓝天、白云、青山、绿水，遥望雪山看着“印象丽江”，不设防地被剧情所渲染，以至于现在再与他邂逅时，如朋友般，可以随着旋律一起哼唱……这是一个神奇的地方，被雪山守护庇佑着，这是一个美丽的地方，赏风花雪月，不争朝夕，与苍山洱海为伴，闲来看云卷云舒，繁星点点……",
-        },
-        {
-          useR_ID: "0000000001",
-          useR_NAME: "张二",
-          uprofile: "http://49.234.47.118:8080/pictures/user_uprofile_3.jpg",
-          plaN_ID: "1",
-          picture:
-            "http://49.234.47.118:8080/pictures/attraction_picture_1.jpg",
-          plaN_STAR: 2,
-          plaN_TITLE: "芬兰瑞典 ▏感觉孤独的时候我就去北欧凛冽的世界尽头",
-          text: "仍记得3年前初见丽江的模样：蓝天、白云、青山、绿水，遥望雪山看着“印象丽江”，不设防地被剧情所渲染，以至于现在再与他邂逅时，如朋友般，可以随着旋律一起哼唱……这是一个神奇的地方，被雪山守护庇佑着，这是一个美丽的地方，赏风花雪月，不争朝夕，与苍山洱海为伴，闲来看云卷云舒，繁星点点……",
-        },
-        {
-          useR_ID: "0000000001",
-          useR_NAME: "张二",
-          uprofile: "http://49.234.47.118:8080/pictures/user_uprofile_3.jpg",
-          plaN_ID: "1",
-          picture:
-            "http://49.234.47.118:8080/pictures/attraction_picture_1.jpg",
-          plaN_STAR: 2,
-          plaN_TITLE: "芬兰瑞典 ▏感觉孤独的时候我就去北欧凛冽的世界尽头",
-          text: "仍记得3年前初见丽江的模样：蓝天、白云、青山、绿水，遥望雪山看着“印象丽江”，不设防地被剧情所渲染，以至于现在再与他邂逅时，如朋友般，可以随着旋律一起哼唱……这是一个神奇的地方，被雪山守护庇佑着，这是一个美丽的地方，赏风花雪月，不争朝夕，与苍山洱海为伴，闲来看云卷云舒，繁星点点……",
+          plaN_DESC:
+            "仍记得3年前初见丽江的模样：蓝天、白云、青山、绿水，遥望雪山看着“印象丽江”，不设防地被剧情所渲染，以至于现在再与他邂逅时，如朋友般，可以随着旋律一起哼唱……这是一个神奇的地方，被雪山守护庇佑着，这是一个美丽的地方，赏风花雪月，不争朝夕，与苍山洱海为伴，闲来看云卷云舒，繁星点点……",
         },
       ],
     };
@@ -310,13 +289,20 @@ export default {
     inputChange() {
       console.log("here");
     },
+    getUserInfoById(id) {
+      //   return this.$axios.get("http://49.234.18.247:8080/api/Users/"+id).then((res)=>{
+      //       return {
+      //           useR_NAME:res.da
+      //       }
+      //   })
+    },
   },
   created() {
-    // this.$axios.get("http://49.234.18.247:8080/api/Plan").then((response) => {
-    //   console.log(response.data);
-    //   //     var useR_ID=response.data[]
-    //   //   var plan = JSON.parse(response.data[2].plan);
-    // });
+    this.$axios.get("http://49.234.18.247:8080/api/Plan").then((response) => {
+      console.log(response.data);
+      //     var useR_ID=response.data[]
+      //   var plan = JSON.parse(response.data[2].plan);
+    });
   },
 };
 </script>
