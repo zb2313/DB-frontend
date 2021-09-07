@@ -233,6 +233,11 @@ const routes = [
         component: () => import('../view/Other/questions.vue')
     },
     {
+        path: '/strategy',
+        name: 'strategy',
+        component: () => import('../view/Other/strategy.vue')
+    },
+    {
         path: '/travelplan',
         name: 'travelplan',
         component: () => import('../view/Other/travelplan.vue')
