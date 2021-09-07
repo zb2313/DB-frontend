@@ -428,19 +428,7 @@ export default {
         });
       },
     submit(){
-      this.$axios.get("http://49.234.18.247:8080/api/FunGetPlanIdByUserId/"+ localStorage.getItem("ms_username"))
-      .then((response) => {
-        this.$axios.post("http://49.234.18.247:8080/api/Plan", {
-      "useR_ID": localStorage.getItem("ms_username"),
-      "plaN_ID": response.planid,
-      "plan": JSON.stringify(this.selected_items),
-      "plaN_STAR": 0
-      })
-      .then((response) => {
       
-        console.log('success');
-      });
-      })
       
          this.$router.push({
           path: `/myplan`,

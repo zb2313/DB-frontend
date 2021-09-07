@@ -573,6 +573,7 @@ export default {
       //   confirmButtonText: "确定",
 
       // })
+      console.log(md5('101151123412347tJsupCChsVpRHz4PxxjOtMuAeigUn47'));
       console.log(type);
       this.$router.push({
         path:`/tickets/order`,
@@ -604,7 +605,16 @@ export default {
           },
         });
       } 
-        //this.$router.replace("/tickets/detail");}
+        else {
+          this.$router.push({
+            path: `/tickets/planequery`,
+            query: {
+              from: this.query_departure_trainstation,
+              to: this.query_arrival_trainstation,
+              date: this.formInline.departure_date,
+            },
+          });
+        }
         
       }
      else {
@@ -709,6 +719,7 @@ async sleeping(time){
   
   
   async mounted() {
+ 
     document.getElementById("loading").style.visibility="visible";
     let _this=this;
     this.formInline.ticket_type="火车票";

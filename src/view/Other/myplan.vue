@@ -57,7 +57,7 @@
         <el-input
         style="margin:0px 20px"
         type="textarea"
-        :rows="6"
+        :rows="10"
         placeholder="请输入内容"
          v-model="textarea">
 </el-input>
@@ -120,6 +120,7 @@ export default {
         }
     },
     mounted(){
+
         this.plan=JSON.parse(this.$route.query.plan);
         this.days=this.$route.query.day;
         console.log(this.plan);
@@ -130,7 +131,7 @@ export default {
             return "第"+temp+"天"
         },
         compute_height(item){
-            return item.dis_to_pre>1? "140px" :"115px";
+            return item.dis_to_pre>0.2? "140px" :"115px";
         },
         submit(){
             this.$axios.get("http://49.234.18.247:8080/api/FunGetPlanIdByUserId/"+ localStorage.getItem("ms_username"))
