@@ -60,6 +60,11 @@ const routes = [
                 component: () => import('../view/Other/makeplan.vue')
             },
             {
+                path: '/completeplan',
+                name: 'completeplan',
+                component: () => import('../view/Other/completeplan.vue')
+            },
+            {
                 path: '/myplan',
                 name: 'myplan',
                 component: () => import('../view/Other/myplan.vue')

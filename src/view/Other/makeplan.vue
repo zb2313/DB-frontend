@@ -431,7 +431,7 @@ export default {
       
       
          this.$router.push({
-          path: `/myplan`,
+          path: `/completeplan`,
           query: {
             plan: JSON.stringify(this.selected_items),
             day: this.days,

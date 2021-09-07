@@ -42,11 +42,7 @@ export default {
              index: "/dashboard",
              title: "个人信息",
            },
-           {
-             icon: "el-icon-edit-outline",
-             index: "/travelplan",
-             title: "创建攻略",
-           },
+           
            {
              icon: "el-icon-s-grid",
              index: "/HistoryOrder",
@@ -66,6 +62,13 @@ export default {
                }
              ]
            },
+           
+           {
+             icon: "el-icon-tickets",
+             index: "/myplan",
+             title: "我的攻略",
+
+           },
            {
              icon: "el-icon-s-comment",
              index: "/tabs",
@@ -80,7 +83,13 @@ export default {
                {
                  index: "/form",
                  title: "修改个人信息",
-               }
+               },
+               {
+             icon: "el-icon-edit-outline",
+             index: "/travelplan",
+             title: "创建攻略",
+           },
+               
              ],
            },
            {

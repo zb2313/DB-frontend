@@ -37,7 +37,7 @@
                     <el-dropdown-item>管理账户</el-dropdown-item></router-link
                   >
                   <router-link to="/travelplan">
-                    <el-dropdown-item>创建行程</el-dropdown-item></router-link
+                    <el-dropdown-item>创建攻略</el-dropdown-item></router-link
                   >
                   <router-link to="/AttractionOrder"
                     ><el-dropdown-item>订单</el-dropdown-item></router-link
