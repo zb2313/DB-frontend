@@ -361,7 +361,7 @@
               <div class="item-name">
                 {{ item.starT_AIRPORT }}
                 <div class="dancheng"></div>
-                {{ item.enD_AIRPORT }}
+                {{ item.enD_AIRPORT.slice(2) }}
               </div>
               <div class="item-date">
                 {{ item.starT_TIME }} — {{ item.enD_TIME }}
@@ -369,7 +369,15 @@
               <div class="item-info">
                 <strong>￥{{ item.price }}</strong
                 ><i>起</i>
-                <div class="item-btn" @click="toTicketDetail(item.starT_TIME)">
+                <div
+                  class="item-btn"
+                  @click="
+                    toTicketDetail(
+                      item.starT_TIME,
+                      item.enD_AIRPORT.slice(0, 2)
+                    )
+                  "
+                >
                   立抢
                 </div>
               </div>
@@ -843,14 +851,14 @@ export default {
       this.ticketStart = newCity;
       this.getTicketbyCity(newCity);
     },
-    toTicketDetail(date) {
+    toTicketDetail(date, to) {
       var year = date.slice(0, 4);
       var month = date.slice(5, 7);
       var day = date.slice(8, 10);
       var d = year + "-" + month + "-" + day;
       this.$router.push({
         path: "/tickets/planequery",
-        query: { date: d, start: this.ticketStart, cheap: true },
+        query: { date: d, from: this.ticketStart, to: to },
       });
     },
     // 截取部分地址
@@ -947,6 +955,7 @@ export default {
         .then((response) => {
           var day = date.split("-");
           for (var i = 0; i < response.data.length; i++) {
+            response.data[i].enD_AIRPORT = to + response.data[i].enD_AIRPORT;
             response.data[i].starT_TIME =
               day[0] +
               "年" +
