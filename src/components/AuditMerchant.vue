@@ -3,23 +3,36 @@
     <admiHeader/>
     <img src="../assets/img/audit2.jpg" width="100%" height="100%" style="z-index:-100;position:fixed;left:0;top:0">
     <div class="page">
-      <el-card>
+      <el-card> 
+        <el-switch
+   v-model="value"
+  active-text="审核已通过"
+  inactive-text="审核未通过">
+  </el-switch>
        <el-table :max-height="600"
-    :data="tableData"
+       :data="tableData.filter(data => 
+         data.iS_CHECK==value&&data.hoteL_NAME.toLowerCase().includes(search.toLowerCase()))"
     style="width: 1000px">
     <el-table-column
       label="商家 ID"
-      prop="id">
+      prop="hoteL_ID">
     </el-table-column>
     <el-table-column
       label="商家名称"
-      prop="name">
+      prop="hoteL_NAME">
     </el-table-column>
     <el-table-column
-      label="基础信息"
-      prop="basicinfo">
+      label="位置信息"
+      prop="hlocation">
     </el-table-column>
-    <el-table-column align="right">
+     <el-table-column align="right"> 
+        <template slot="header" slot-scope="scope">
+              <el-input
+              v-model="search"
+              size="small"
+              placeholder="输入商家名称搜索"
+              @keyup.enter="empty(scope.row)"/>
+            </template>
      <template slot-scope="scope">
     <el-button icon="el-icon-info"
     size="mini"   v-if="tableData.length!=0"
@@ -30,14 +43,29 @@
   </el-table>
       </el-card>
       <el-dialog
-  title="商家信息"
+  title="商家入驻信息"
   :visible.sync="merchantDialogVisible"
   width="80%"
   center>
-  <span>{{dialog_name}}</span>
+  <div  style="text-align:left;font-size:18px">
+    商家ID：{{dialogrow.hoteL_ID}}<br>
+    商家名称：{{dialogrow.hoteL_NAME}}<br>
+    商家位置: <i class="el-icon-location-outline"/>{{dialogrow.hlocation}}<br>
+    <img
+    :src="dialogrow.picture"
+    v-if="dialogrow.picture!== null"
+    style="width: 30%"
+    /><br>
+    商家入驻执照：<br>
+    <img
+    :src="license"
+    v-if="license!== null"
+    style="width: 50%"
+    />
+  </div>
   <span slot="footer" class="dialog-footer">
-    <el-button size="medium" @click="merchantDialogVisible = false">不通过</el-button>
-    <el-button size="medium" @click="merchantDialogVisible = false">通 过</el-button>
+    <el-button class="el-icon-check" size="medium" @click="pass();merchantDialogVisible = false">通 过</el-button>
+    <el-button class="el-icon-close" size="medium" @click="dispass();merchantDialogVisible=false">不通过</el-button>
   </span>
 </el-dialog>
     </div>
@@ -51,40 +79,97 @@ import axios from 'axios';
     data() {
       return {
         merchantDialogVisible: false,
-        dialog_name:'',
-         tableData: [{
-          id: '12987122',
-          name: '蜜雪冰城',
-          basicinfo: '冰鲜柠檬水',
-        }, {
-          id: '12987123',
-          name: '茉沏',
-          basicinfo: '多肉瓜瓜',
-        }, {
-          id: '12987125',
-          name: '天猫超市',
-          basicinfo: '',
-        }, {
-          id: '12987126',
-          name: '教育超市',
-          basicinfo: '',
-        }]
+        license:'',
+        search:'',
+        dialogrow:"",
+        dialogindex:"",
+         tableData: [],
+         value:false,
       }
     },
     created()
-     {  // let that=this;
-    //       axios.get("http://49.234.18.247:8080/api/Faqs")
-    //     .then(res=>{
-    //         that.tableData=res.data;
-    //             })
-    //     .catch(err=>{
-    //     console.log(err)
-    //             });
+     {  
+         axios.get("http://49.234.18.247:8080/api/Hotel")
+         .then(res=>{
+          this.tableData=res.data;
+                })
+     .catch(err=>{
+       console.log(err)
+                });
     },
     methods: {
+      recreated()
+      {
+ 
+         axios.get("http://49.234.18.247:8080/api/Hotel")
+         .then(res=>{
+          this.tableData=res.data;
+                })
+     .catch(err=>{
+       console.log(err)
+                });
+      },
         view(index,row)
-    {
-       this.dialog_name=row.name;
+    {this.dialogrow=row;
+    this.dialogindex=index;
+    this.license=""
+      axios.get("http://49.234.18.247:8080/api/HotelLicense/"+row.hoteL_ID)
+      .then(res=>
+      {
+        if(res.data!="NULL")
+        this.license=res.data;
+      })
+    },
+   pass()
+   {
+axios.put("http://49.234.18.247:8080/api/Hotel/"+this.dialogrow.hoteL_ID,
+{
+"hoteL_ID":this.dialogrow.hoteL_ID, 
+  "hoteL_NAME": this.dialogrow.hoteL_NAME,
+  "hlocation":this.dialogrow.hlocation,
+  "picture": this.dialogrow.picture,
+  "star": this.dialogrow.star,
+  "lowesT_PRICE":this.dialogrow.lowesT_PRICE,
+  "hpassword":this.dialogrow.hpassword,
+  "label": this.dialogrow.label,
+  "iS_CHECK":1
+})
+.then(()=>
+{this.recreated();
+}
+)
+.catch(()=>
+{
+  this.$message({
+    type: 'error',
+     message: '网络错误!'
+    });
+})  
+    },
+    dispass()
+    {axios.put("http://49.234.18.247:8080/api/Hotel/"+this.dialogrow.hoteL_ID,
+{
+"hoteL_ID":this.dialogrow.hoteL_ID, 
+  "hoteL_NAME": this.dialogrow.hoteL_NAME,
+  "hlocation":this.dialogrow.hlocation,
+  "picture":this.dialogrow.picture,
+  "star": this.dialogrow.star,
+  "lowesT_PRICE":this.dialogrow.lowesT_PRICE,
+  "hpassword":this.dialogrow.hpassword,
+  "label": this.dialogrow.label,
+  "iS_CHECK":0
+})
+.then(()=>
+{this.recreated();
+}
+)
+.catch(()=>
+{
+  this.$message({
+    type: 'error',
+     message: '网络错误!'
+    });
+})  
     }
     }
   }
