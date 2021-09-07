@@ -35,15 +35,15 @@ module.exports = {
              
             }
         },
-          '/test': {       //此处并非和url一致
-            target:'https://yesno.wtf',
+          '/qrcode': {       //此处并非和url一致
+            target:'http://110.40.186.162:7001/api/order',
             changeOrigin:true, //允许跨域
             pathRewrite:{
-                '^/test': ''
+                '^/qrcode': ''
             },
-            //secure: false,
           },
           
+
           '/transaction': {       //此处并非和url一致
             target:'https://flights.ctrip.com',
             changeOrigin:true, //允许跨域
