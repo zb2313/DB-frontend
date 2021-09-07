@@ -183,6 +183,7 @@
 .star {
   float: right;
   margin-right: 2%;
+  margin-top: 2px;
   height: 30px;
   width: 110px;
   border: 1px solid #ea9518;
@@ -312,8 +313,9 @@ export default {
   },
   created() {
     // this.$axios.get("http://49.234.18.247:8080/api/Plan").then((response) => {
-    //     var useR_ID=response.data[]
-    //   var plan = JSON.parse(response.data[2].plan);
+    //   console.log(response.data);
+    //   //     var useR_ID=response.data[]
+    //   //   var plan = JSON.parse(response.data[2].plan);
     // });
   },
 };
