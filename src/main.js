@@ -18,7 +18,6 @@ Vue.use(ElementUI)
 Vue.use(mavonEditor)
 Vue.component('v-distpicker', Distpicker)
 Vue.prototype.$axios = axios;
-
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({
   key: '3c8d72e09340bbf72057257e264b65a2',

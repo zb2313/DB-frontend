@@ -30,7 +30,7 @@
         ><router-link to="/auditmoment">审核动态信息</router-link></el-menu-item
       >
        <el-menu-item index="4"
-        ><router-link to="/auditmerchant">商家入驻审核</router-link></el-menu-item
+        ><router-link to="/auditmerchant">审核商家入驻</router-link></el-menu-item
       >
     </el-menu>
   </el-header>

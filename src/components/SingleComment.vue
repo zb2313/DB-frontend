@@ -14,7 +14,7 @@
 		</pre>
 		<p>{{ item.text }}</p>
 		<br>
-		<img class="moment_img" :src="item.picture" v-if="item.picture!==null" style="width:40px;height:40px">
+		<img class="moment_img" :src="item.picture" v-if="item.picture!==null" style="width:80%">
 		<br>
 		<div class="moment_video" v-if="item.vedio!==null">
 		<iframe :src="item.vedio" frameborder='0'
@@ -64,8 +64,15 @@ export default {
 	// created()：在实例创建完成后被立即调用
 	created() {
 		const url = `http://49.234.18.247:8080/api/FunMoment/${this.$route.params.momenT_ID}`
-		axios.get(url).then((res) => {
-			this.Moments = res.data
+		axios.get(url)
+		.then((res)=>{
+			this.Moments=res.data;
+		axios.get("http://49.234.18.247:8080/api/MomentPic/"+this.Moments[0].momenT_ID)
+        .then(res=>{var pic=res.data;
+          if(pic!="NULL")
+          this.Moments[0].picture=pic;
+        });
+			console.log("lll",this.Moments)
 		}, err=>{
 			console.log(err)
 		})
@@ -86,7 +93,8 @@ export default {
 			this.$axios
 			.delete(`http://49.234.18.247:8080/api/FunDeleteMomentByMomentId/${this.$route.params.momenT_ID}`)
 			.then(()=>
-			{
+			{if(this.Moments[0].picture!=null)
+				axios.delete("http://49.234.18.247:8080/api/MomentPic/"+this.Moments[0].momenT_ID);
 				this.$message("删除成功")
 				this.$router.push('/3')
 			})

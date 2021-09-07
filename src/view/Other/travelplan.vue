@@ -183,7 +183,8 @@ name: "travelplan",
             img:"http://5b0988e595225.cdn.sohucs.com/images/20180702/8e2a168891ba42dca29bbcaf17f8265b.jpeg"},
             {city_name:"大理",
             img:"https://pic3-nc.pocoimg.cn/image/poco/works/81/2013/0415/01/4153885720130415094307025_41538857_H1920.jpg"},
-            
+            {city_name:"广州",
+            img:"http://photo.tuchong.com/1183782/f/28462921.jpg"},
         ],
         other_cities:[
             {city_name:"香港",

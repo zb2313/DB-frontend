@@ -61,6 +61,7 @@
             <div style="font-size: 14px">{{ vehicle.enD_LOCATION }}</div>
           </div>
         </div>
+       <span style="margin:10px 10px"> {{date}}</span>
         <div class="divide"></div>
         <div style="font-size:14px; float:left;margin-top:10px;margin-left:10px">{{seat_type}} &nbsp; {{seat_id}}</div>
         <div class="price">{{ price }}</div>

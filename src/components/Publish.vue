@@ -10,6 +10,20 @@
             ref="md"
         ></mavon-editor>
       </div>
+      <div class="upload">
+      <el-upload
+       class="upload-demo"
+       ref="upload"
+       :action="uploadurl"
+      :on-preview="handlePreview"
+       :on-remove="handleRemove"
+     :file-list="fileList"
+     :limit="1"
+     list-type="picture">
+      <el-button slot="trigger" size="large" type="primary" @click="creatMoment_ID()">添加图片</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      </el-upload>
+      </div>
       <div class="pick_location">
         <div class="notice">请选择地点</div>
         <div class="selects">
@@ -21,7 +35,6 @@
        <el-button type="primary" plain style="float:right;margin-right:10px" @click="goBack">取消发布</el-button>
       </div>
     </el-main>
-
   </el-container>
   <Footer1/>
 </div>
@@ -41,7 +54,7 @@ export default {
   components: {VDistpicker,  Header1,Footer1},
   name: "pulishNav",
   data() {
-    return {
+    return {fileList: [],
       md: "", // 文章内容
       momenT_ID:"",//动态ID
       momenTID_LIST:[],
@@ -52,11 +65,22 @@ export default {
       location:" ",
       time:"",
       value:0, //是否选择了地点
+      uploadurl:""
     };
   },
   methods:{
-    goBack() {
-      this.$router.push('/1')
+      handleRemove(file, fileList) {
+        if(this.uploadurl!="")
+      axios.delete(''+this.uploadurl)
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+    goBack() {if(this.uploadurl!="")
+      axios.delete(''+this.uploadurl)
+      .then(()=>{this.$router.push('/1')})
+      else this.$router.push('/1')
     },
     //打开选择地区
     onChangeProvince(data) {
@@ -75,6 +99,8 @@ export default {
       this.value=1
     },
     creatMoment_ID(){
+      if(this.momenT_ID=="")
+      {
       do{
       let chars = ['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
       var Moment_ID='';
@@ -98,6 +124,7 @@ export default {
       })
     }while(rep===true)//动态id重复时重新生成一个
       this.momenT_ID=Moment_ID;
+      this.uploadurl="http://49.234.18.247:8080/api/MomentPic/"+this.momenT_ID;}
     },
     gettime(){
       let date = new Date();
@@ -112,8 +139,9 @@ export default {
         if(this.value){
         // 获取文章之后的处理逻辑
         //自动生成一个momenT_ID
-        this.momenT_ID="",
-        this.creatMoment_ID()
+        //this.momenT_ID="";
+        if(this.uploadurl=="")
+         this.creatMoment_ID();
         this.gettime()
         this.$axios
           .post(
@@ -143,16 +171,13 @@ export default {
                       })
                   .then(()=>{
                     this.momenT_ID="";
-                    console.log("aId:",this.momenT_ID)
                   });
             }
-            this.$router.push('/1')
+           this.$router.push('/1')
           })
           .catch(()=> {
             console.log("error");
           });
-
-
       }
       else {
         alert("地址不能为空！");
@@ -170,12 +195,13 @@ export default {
 #editor {
   margin: auto;
   width: 100%;
-  height: 633px;
+  height: 575px;
 }
 .el-row {
   margin-bottom: 20px;
 }
 .pick_location{
+  position: relative;
   width: 90%;
   height: 40px;
   margin-left: 70px;
@@ -193,9 +219,13 @@ export default {
   text-align: left;
   margin-left: 20px;
 }
-
+.upload{
+  position: relative;
+  left: 80px;
+  bottom: 20px;
+  width: 300px;
+}
 .submit_button{
-
   margin-right: 20px;
 }
 </style>

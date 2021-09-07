@@ -52,12 +52,17 @@ const routes = [
                 {
                     title: '创建行程'
                 },
-                component: () => import(  "../view/Other/travelplan.vue")
+                component: () => import("../view/Other/travelplan.vue")
             },
             {
                 path: '/makeplan',
                 name: 'makeplan',
                 component: () => import('../view/Other/makeplan.vue')
+            },
+            {
+                path: '/completeplan',
+                name: 'completeplan',
+                component: () => import('../view/Other/completeplan.vue')
             },
             {
                 path: '/myplan',
@@ -255,6 +260,11 @@ const routes = [
         path: '/strategy',
         name: 'strategy',
         component: () => import('../view/Other/strategy.vue')
+    },
+    {
+        path: '/strategyDetail',
+        name: 'strategyDetail',
+        component: () => import('../view/Other/strategyDetail.vue')
     },
     {
         path: '/Moment',

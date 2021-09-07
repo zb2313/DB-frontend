@@ -18,13 +18,13 @@
       </pre>
         <div style="text-align:center">
           <!-- 动态中的文本 -->
-          <span >{{ item.text }}</span>
+          <span >{{ item.text }}</span><br>
           <!-- 动态中的图片 -->
           <img
             class="moment_img"
             :src="item.picture"
             v-if="item.picture !== null"
-            style="width: 30%; height: 80px"
+            style="width: 80%"
           />
           <!-- 动态中的视频 -->
           <div class="moment_video" v-if="item.vedio !== null">
@@ -73,7 +73,14 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.Moments = res.data;
-          console.log(this.Moments);
+        for(let i=0;i<this.Moments.length;i++)
+            {
+              axios.get("http://49.234.18.247:8080/api/MomentPic/"+this.Moments[i].momenT_ID)
+              .then(res=>
+              {if(res.data!="NULL")
+                this.Moments[i].picture=res.data;
+              })
+            }
           return res.data;
         });
     },

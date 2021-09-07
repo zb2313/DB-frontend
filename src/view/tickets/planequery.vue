@@ -20,10 +20,20 @@
                 }"
               ></div>
               <div class="infoDetail">
+                 <el-tooltip class="item" effect="dark"  placement="right">
+                    <div slot="content">{{ item.hotelname }}</div>
                 <div class="Name" style="font-size: 14px">
-                  {{ item.hotelname }}
+                  {{ item.hotelname.slice(0,14) }}
+                  <span v-if="item.hotelname.length>14 ">...</span> 
                 </div>
-                <span class="address">{{ item.location }}</span><br>
+                 </el-tooltip>
+                <el-tooltip class="item" effect="dark"  placement="right">
+                  <div slot="content">{{ item.location }}</div>
+      <span class="address">{{ item.location.slice(0,16) }}
+        <span v-if="item.location.length>16 ">...</span> </span>
+      
+    </el-tooltip>
+                <br>
                 <img
                   src="../../assets/img/diamond.svg"
                   v-for="i in item.star"
@@ -57,10 +67,19 @@
                 }"
               ></div>
               <div class="infoDetail">
+                 <el-tooltip class="item" effect="dark"  placement="right">
+                    <div slot="content">{{ item.attractionname }}</div>
                 <div class="Name" style="font-size: 14px">
-                  {{ item.attractionname }}
+                  {{ item.attractionname.slice(0,14) }}
+                  <span v-if="item.attractionname.length>14 ">...</span> 
                 </div>
-                <span class="address">{{ item.location }}</span><br>
+                 </el-tooltip>
+                  <el-tooltip class="item" effect="dark"  placement="right">
+                    <div slot="content">{{ item.location }}</div>
+                <span class="address">{{ item.location.slice(0,16) }}
+                <span v-if="item.location.length>16 ">...</span> </span>
+                </el-tooltip>
+                <br>
                 <img
                   src="../../assets/img/star.svg"
                   v-for="i in item.star"
@@ -97,29 +116,26 @@
                     <el-select
                       v-model="formInline.ticket_type"
                       placeholder="机票"
-                      @change="typechange"
                     >
-                      <el-option label="机票" value="1"></el-option>
-                      <el-option label="火车票" value="2"></el-option>
+                      <el-option label="机票" value="机票"></el-option>
+                      <el-option label="火车票" value="火车票"></el-option>
                     </el-select> </el-form-item
                 ></el-col>
 
                 <el-col :span="5"
                   ><el-form-item>
-                    <el-autocomplete
+                    <el-input
                       v-model="query_departure_airport"
-                      :fetch-suggestions="querySearch1"
                       placeholder="出发地"
-                    ></el-autocomplete> </el-form-item
+                    ></el-input> </el-form-item
                 ></el-col>
 
                 <el-col :span="5">
                   <el-form-item>
-                    <el-autocomplete
+                    <el-input
                       v-model="query_arrival_airport"
-                      :fetch-suggestions="querySearch2"
                       placeholder="目的地"
-                    ></el-autocomplete>
+                    ></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="5">
@@ -166,9 +182,10 @@
             
           >
             <div class="headers">
-              <div>{{ item.companY_NAME }}</div>
+              <div style="font-weight:bold;font-size:20px">{{ item.companY_NAME }}</div>
              <br>
-              {{ item.vehiclE_ID }}
+             <div style="color:rgb(0,54,128)">{{ item.vehiclE_ID }}</div>
+              
             </div>
             
             <div class="body">
@@ -179,7 +196,7 @@
                   <div style="font-size: 14px">{{ item.starT_AIRPORT }}</div>
                 </div>
               </div>
-              <div style="margin-top:30px;margin-left: 10px;margin-right: 10px;float: left;height: 100%;width: 100px;">&nbsp;&nbsp;&nbsp;{{item.drive_time}}<div class="dancheng"></div></div>
+              <div style="margin-top:15px;margin-left: 10px;margin-right: 10px;float: left;height: 100%;width: 100px;">&nbsp;&nbsp;&nbsp;{{item.drive_time}}<div class="dancheng"></div></div>
               <div class="time_place">
                 <div class="time">
                   {{ item.enD_TIME }}
@@ -209,7 +226,7 @@
             >
             <span>退改￥233起&nbsp;|&nbsp;托运行李额20KG&nbsp;|&nbsp;小食&nbsp;|&nbsp;行程单</span>
            <el-button
-           style="float:right;margin-right:100px;margin-left:10px"
+           style="float:right;margin-right:120px;margin-left:10px;background-color:rgb(0,54,128);"
            type="primary"
                     @click="onSubmit(index,x.seaT_TYPE,x.price)"
                     >选购</el-button>
@@ -225,7 +242,7 @@
   </el-container>
 </template>
 
-<style>
+<style scoped>
 .rec_title{
   font-size: 18px;
   font-weight: bold;
@@ -329,13 +346,14 @@
 }
 .cardstyle {
   width: 100%;
-  height: 150px;
+  height: 130px;
   margin-top: 20px;
   margin-bottom: 20px;
+
 }
 .prices{
   width: 100%;
-  height: 50px;
+  height: 30px;
   margin:10px 40px;
   font-size: 13px;
   color: #666;
@@ -353,13 +371,14 @@
 .magic_button{
   width: 60px;
   height: 30px;
-  margin: 50px 20px;
+  margin: 30px 20px;
   background-color: rgb(0,54,128);
   color: white;
   float: right;
   text-align: center;
   line-height: 30px;
   font-size: 14px;
+  cursor: pointer;
 }
 .changeStyle{
   background-color: white;
@@ -391,7 +410,6 @@
 
 .time {
   font-size: 30px;
-  margin-top: 15px;
   margin-bottom: 20px;
   margin-left: 0px;
   float: left;
@@ -418,12 +436,11 @@
   float: left;
 }
 .price {
-  font-size: 25px;
+  font-size: 30px;
   width: 100px;
   height: 100%;
   margin-left: 30px;
   margin-right: 10px;
-  margin-top: 10px;
   line-height: 100px;
   float: left;
 }
@@ -435,17 +452,17 @@
   margin-right: 50px;
 }
 .headers {
-  width: 100px;
+  width: 120px;
   height: 100px;
   float: left;
   margin-right: 20px;
-  margin-top: 30px;
+  margin-top: 10px;
   text-align: center;
   font-size:15px;
 }
 .body {
   float: left;
-  width: 800px;
+  width: 750px;
   height: 100px;
 }
 .el-button{
@@ -586,10 +603,11 @@ export default {
   },
   mounted(){
     this.vehicle_info=[];
-    this.formInline.ticket_type="飞机票";
+    this.formInline.ticket_type="机票";
     this.query_departure_airport=this.$route.query.from;
     this.query_arrival_airport=this.$route.query.to;
     this.formInline.departure_date=this.$route.query.date;
+    if(this.$route.query.cheap)this.sort_prior=2;
      this.$axios
         .get(
         "http://49.234.18.247:8080/api/FunGetFlightInfo/" +
@@ -704,6 +722,68 @@ export default {
         }
       })
      console.log(index);
+    },
+     newQuery() {
+      if (
+        this.formInline.ticket_type &&
+        this.query_departure_airport &&
+        this.query_departure_airport &&
+        this.formInline.departure_date
+      ) {
+        if(this.formInline.ticket_type=="火车票"){
+
+          this.$router.push({
+          path: `/tickets/trainquery`,
+          query: {
+            from: this.query_departure_airport,
+            to: this.query_arrival_airport,
+            date: this.formInline.departure_date,
+          },
+        });
+      } 
+        else {
+          this.$router.push({
+            path: `/tickets/planequery`,
+            query: {
+              from: this.query_departure_airport,
+              to: this.query_arrival_airport,
+              date: this.formInline.departure_date,
+            },
+          });
+        }
+        
+      }
+     else {
+        this.$alert("请填写所有选项再查询", "提示", {
+          confirmButtonText: "确定",
+        });
+        }
+    },
+    to_this_attraction(x){
+      this.$router.push({
+          path: "/attraction/detail",
+          query: { id: x },
+        });
+    },
+      to_this_hotel(x){
+      this.$router.push({
+        path: "/hotel/detail",
+        query: { id: x },
+        });
+    },
+    more(opt){
+      if(opt==1){
+        this.$router.push({
+        path: "/hotel/city",
+        query: { find: this.query_arrival_trainstation },
+      });
+      }
+      else {
+        this.$router.push({
+        path: "/attraction/city",
+        query: { search: this.query_arrival_trainstation },
+      });
+      }
     },
    
   }
