@@ -157,20 +157,24 @@
                   <h1 style="color: #003580; font-size: 30px">
                     ￥{{ storePrice }}
                   </h1>
-                  <div v-if="qrCodeVisible" style="margin-left: 50px">
-                    <div
-                      style="width: 300px; height: 300px"
-                      :style="{
-                        backgroundImage: 'url(' + qrcode + ')',
-                        backgroundSize: '100% 100%',
-                        backgroundRepeat: 'no-repeat',
-                      }"
-                    ></div>
-                  </div>
+                  <br />
+                  <h1> {{ payWay }}</h1>
+                  <div id="qrcode"></div>
                   <br />
                   <div>
-                    <button @click="aliPay" class="payBtn">支付宝支付</button>
-                    <button @click="wechatPay" class="payBtn">微信支付</button>
+                    <button @click="aliPay" class="payBtn" v-if="buttonVisible">
+                      支付宝支付
+                    </button>
+                    <button
+                      @click="wechatPay"
+                      class="payBtn"
+                      v-if="buttonVisible"
+                    >
+                      微信支付
+                    </button>
+                    <button @click="Pay" class="payBtn" v-if="submitVisible">
+                      完成支付
+                    </button>
                   </div>
                 </div>
               </el-dialog>
@@ -334,7 +338,7 @@
 </style>
         
 <script>
-import Qs from "qs";
+import QRCode from "qrcodejs2";
 import Header from "@/components/Header";
 export default {
   components: {
@@ -345,7 +349,9 @@ export default {
       days: 1,
       leftOut: 12,
       payVisible: false,
-      qrCodeVisible: false,
+      submitVisible: false,
+      buttonVisible: true,
+      payWay: " ",
       hotelId: "",
       roomTypeId: "",
       hotelName: "速八酒店",
@@ -415,56 +421,89 @@ export default {
     Pay() {
       for (var i = 0; i < this.form_Select.room_num; i++) {
         let _i = i;
+        console.log(_i);
+        console.log(this.hotelId);
+
         this.$axios
           .post("http://49.234.18.247:8080/api/BookRoom", {
             hoteL_ID: this.hotelId,
             rooM_ID: this.vacantRooms[_i].rooM_ID,
             useR_ID: "0000000001",
-            ordeR_AMOUNT: this.price,
-            ordeR_TIME: this.timestampToTime(this.form_Select.time[0]),
+            ordeR_AMOUNT: this.storePrice,
+            ordeR_TIME: "123",
           })
           .then((response) => {
-            this.qrcode = response.data.qr_url;
-            console.log(response.data.qr_url);
+            console.log("成功！啊哈哈哈哈");
           });
       }
     },
     aliPay() {
-      this.qrCodeVisible = true;
+      this.buttonVisible = false;
+      this.submitVisible = true;
+      this.$axios
+        .post("/qrcode", {
+          order_id: "1",
+          order_type: "alipay",
+          order_price: "0.01",
+          order_name: "酒店",
+          sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+          redirect_url:
+            "http://localhost:8080/hotel/HotelOrder?roomID=" +
+            this.roomTypeId +
+            "&hotelID=" +
+            this.hotelId,
+          extension: "1111",
+        })
+        .then((response) => {
+          console.log(response.data.qr_url);
+          this.qrcode = response.data.qr_url;
+          console.log(
+            "http://localhost:8080/hotel/HotelOrder?roomID=" +
+              this.roomTypeId +
+              "&hotelID=" +
+              this.hotelId
+          );
+          this.payWay = "支付宝支付";
+          var qrCode = new QRCode(document.getElementById("qrcode"), {
+            width: 96, //设置宽高
+            height: 96,
+          });
+          qrCode.makeCode(this.qrcode);
+        });
     },
     wechatPay() {
-      this.qrCodeVisible = true;
-      var data = Qs.stringify({
-        order_id: "1",
-        order_type: "wechat",
-        order_price: 0.01,
-        order_name: "酒店",
-        sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-        redirect_url: "http://127.0.0.1/324",
-        extension: "1111",
-      });
-      this.$axios({
-        method: "post",
-        url: "http://110.40.186.162:7001/api/order",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        },
-        data,
-      });
-      // this.$axios
-      //   .post("http://110.40.186.162:7001/api/order", {
-      //     order_id: 1,
-      //     order_type: "wechat",
-      //     order_price: 0.01,
-      //     order_name: "酒店",
-      //     sign: "977ec4fe167433ae4eddf7c29f2f05c6",
-      //     redirect_url: "http://127.0.0.1/324",
-      //     extension: 1111,
-      //   })
-      //   .then((response) => {
-      //     this.qrcode = response.data.qr_url;
-      //     console.log(response.data.qr_url);
-      //   });
+      this.buttonVisible = false;
+      this.submitVisible = true;
+      this.$axios
+        .post("/qrcode", {
+          order_id: "1",
+          order_type: "wechat",
+          order_price: "0.01",
+          order_name: "酒店",
+          sign: "977ec4fe167433ae4eddf7c29f2f05c6",
+          redirect_url:
+            "http://localhost:8080/hotel/HotelOrder?roomID=" +
+            this.roomTypeId +
+            "&hotelID=" +
+            this.hotelId,
+          extension: "1111",
+        })
+        .then((response) => {
+          console.log(response.data.qr_url);
+          this.qrcode = response.data.qr_url;
+          console.log(
+            "http://localhost:8080/hotel/HotelOrder?roomID=" +
+              this.roomTypeId +
+              "&hotelID=" +
+              this.hotelId
+          );
+          this.payWay = "微信支付";
+          var qrCode = new QRCode(document.getElementById("qrcode"), {
+            width: 96, //设置宽高
+            height: 96,
+          });
+          qrCode.makeCode(this.qrcode);
+        });
     },
   },
   computed: {

@@ -350,25 +350,36 @@
             </el-popover>
           </span>
         </h2>
-        <div class="Box1" v-if="!show[2]">
+        <div class="Box2" v-if="!show[2]">
           <div class="ticketBox">
             <div
               class="ticketInfo"
-              v-for="item in tickets.slice(0, 14)"
+              v-for="item in tickets.slice(0, 12)"
               :key="item.index"
             >
+              <div class="item-company">{{ item.companY_NAME }}</div>
               <div class="item-name">
-                {{ item.starT_LOCATION }}
+                {{ item.starT_AIRPORT }}
                 <div class="dancheng"></div>
-                {{ item.enD_LOCATION }}
+                {{ item.enD_AIRPORT.slice(2) }}
               </div>
               <div class="item-date">
-                {{ item.starT_TIME }}
+                {{ item.starT_TIME }} — {{ item.enD_TIME }}
               </div>
               <div class="item-info">
                 <strong>￥{{ item.price }}</strong
                 ><i>起</i>
-                <div class="item-btn">立抢</div>
+                <div
+                  class="item-btn"
+                  @click="
+                    toTicketDetail(
+                      item.starT_TIME,
+                      item.enD_AIRPORT.slice(0, 2)
+                    )
+                  "
+                >
+                  立抢
+                </div>
               </div>
             </div>
           </div>
@@ -400,6 +411,7 @@ export default {
       attrStart: "北京",
       hotelStart: "北京",
       ticketStart: "北京",
+      ticketEnd: "上海",
       attrDropdown: [
         "上海",
         "北京",
@@ -413,7 +425,7 @@ export default {
       ticketDropdown: [
         "上海",
         "北京",
-        "兰州",
+        "广州",
         "南京",
         "重庆",
         "深圳",
@@ -839,6 +851,16 @@ export default {
       this.ticketStart = newCity;
       this.getTicketbyCity(newCity);
     },
+    toTicketDetail(date, to) {
+      var year = date.slice(0, 4);
+      var month = date.slice(5, 7);
+      var day = date.slice(8, 10);
+      var d = year + "-" + month + "-" + day;
+      this.$router.push({
+        path: "/tickets/planequery",
+        query: { date: d, from: this.ticketStart, to: to },
+      });
+    },
     // 截取部分地址
     fun_district(detail) {
       var i = 0;
@@ -920,18 +942,33 @@ export default {
         });
     },
     // 根据城市名获取机票信息
-    getTicketbyCity(city) {
+    getTicketbyCity(from, to, date) {
       this.$axios
-        .get("http://49.234.18.247:8080/api/FunGetLowestPrice/" + "上海")
+        .get(
+          "http://49.234.18.247:8080/api/FunGetLowestFlightPrice/" +
+            from +
+            "&" +
+            to +
+            "&" +
+            date
+        )
         .then((response) => {
-          var date = new Date();
-          var day = date.getDate();
-          var month = date.getMonth() + 1;
+          var day = date.split("-");
           for (var i = 0; i < response.data.length; i++) {
+            response.data[i].enD_AIRPORT = to + response.data[i].enD_AIRPORT;
             response.data[i].starT_TIME =
-              month + "月" + day + "日" + " " + response.data[i].starT_TIME;
+              day[0] +
+              "年" +
+              day[1] +
+              "月" +
+              day[2] +
+              "日" +
+              " " +
+              response.data[i].starT_TIME;
           }
-          this.tickets = response.data;
+          for (let i = 0; i < response.data.length; i++) {
+            this.tickets.push(response.data[i]);
+          }
         });
     },
     getAdcode(city) {
@@ -954,7 +991,7 @@ export default {
     this.getLocation();
     this.getAttrbyCity(this.attrStart);
     this.getHotelbyCity(this.hotelStart);
-    this.getTicketbyCity(this.ticketStart);
+    // this.getTicketbyCity(this.ticketStart);
     this.loadCities(this.East);
   },
   mounted() {},
@@ -1046,7 +1083,22 @@ export default {
       this.getHotelbyCity(newValue);
     },
     ticketStart(newValue, oldValue) {
-      this.getTicketbyCity(newValue);
+      this.tickets = [];
+      if (newValue !== "广州") {
+        for (var i = 0; i < 3; i++) {
+          this.getTicketbyCity(newValue, "广州", "2021-09-" + (i + 12));
+        }
+      }
+      if (newValue !== "北京") {
+        for (var j = 0; j < 3; j++) {
+          this.getTicketbyCity(newValue, "北京", "2021-09-" + (j + 12));
+        }
+      }
+      if (newValue !== "上海") {
+        for (var k = 0; k < 3; k++) {
+          this.getTicketbyCity(newValue, "上海", "2021-09-" + (k + 12));
+        }
+      }
     },
   },
 };
@@ -1081,6 +1133,15 @@ export default {
 .Box1 {
   width: 100%;
   height: 390px;
+  background-color: #f2f2f2;
+  border: 1px solid #e0e0e0;
+  border-top: 2px solid #003680;
+  margin-bottom: 20px;
+  margin-top: 3px;
+}
+.Box2 {
+  width: 100%;
+  height: 456px;
   background-color: #f2f2f2;
   border: 1px solid #e0e0e0;
   border-top: 2px solid #003680;
@@ -1200,16 +1261,15 @@ export default {
   cursor: pointer;
 }
 .ticketBox {
-  width: 1050px;
+  width: 100%;
   height: 100%;
-  margin: auto;
-  padding: auto;
 }
 .ticketInfo {
   float: left;
-  margin: 19px 10px 0px 10px;
-  width: 190px;
-  height: 105px;
+  margin: 10px 5px 0px 5px;
+  padding-left: 10px;
+  width: 255px;
+  height: 140px;
   background-color: #fff;
   border-radius: 2px;
   font-family: "Microsoft YaHei", SimHei, SimSun, Tahoma, Verdana, Arial,
@@ -1221,20 +1281,23 @@ export default {
   height: 13px;
   background: center/100% url("../assets/img/dancheng.png") no-repeat;
 }
+.item-company {
+  margin-top: 15px;
+  font-weight: 600;
+  color: tomato;
+}
 .item-name {
   margin-top: 15px;
   margin-bottom: 5px;
-  margin-left: 20px;
   font-size: 15px;
 }
 .item-date {
-  margin-left: 20px;
   font-size: 13px;
   color: #666;
 }
 .item-info {
   margin-top: 11px;
-  margin-left: 16px;
+  margin-left: -3px;
 }
 .item-info > i {
   font-style: normal;
