@@ -14,12 +14,12 @@
 		<span style="float: left">发布于{{item.momenT_TIME}}</span><br><span style="float: left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
 		</pre>
         <div style="text-align:center">
-          <p>{{ item.text }}</p>
+           <p>{{ item.text }}</p>
           <img
             class="moment_img"
             :src="item.picture"
             v-if="item.picture !== null"
-            style="width: 40px; height: 40px"
+            style="width: 80% "
           />
           <div class="moment_video" v-if="item.vedio !== null">
             <iframe
@@ -30,6 +30,7 @@
               style="width: 80px; height: 50px"
             >
             </iframe>
+           
           </div>
         </div> <br>
         <div id="end">~THE END~</div>
@@ -109,7 +110,14 @@ export default {
     const url = `http://49.234.18.247:8080/api/FunMoment/${this.$route.params.momenT_ID}`;
     axios.get(url).then(
       (res) => {
-        this.Moments = res.data;
+        this.Moments = res.data; 
+        axios.get("http://49.234.18.247:8080/api/MomentPic/"+this.Moments[0].momenT_ID)
+        .then(res=>
+        {var pic=res.data;
+          if(pic!="NULL")
+          this.Moments[0].picture=pic;
+        });
+      
         console.log(this.Moments);
       },
       (err) => {

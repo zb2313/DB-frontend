@@ -15,11 +15,11 @@
     <span class="user_name" style="float: left"> 用户ID:{{item.useR_ID}}</span>
 		<span class="moment_time" style="float:left"> {{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
       </pre>
-          <div><br>{{item.text}}
+          <div><br>{{item.text}}<br>
           <img
             :src="item.picture"
             v-if="item.picture !== null"
-            style="width: 30%; height: 80px"
+            style="width: 80%"
           />
           <div v-if="item.vedio !== null">
             <iframe
@@ -71,6 +71,15 @@ export default {
   {axios.get("http://49.234.18.247:8080/api/FunGetAllMomentInfo")
         .then(res=>{
             this.momentlist=res.data;
+            for(let i=0;i<this.momentlist.length;i++)
+            {
+               axios.get("http://49.234.18.247:8080/api/MomentPic/"+this.momentlist[i].momenT_ID)
+        .then(res=>
+        {var pic=res.data;
+          if(pic!="NULL")
+          this.momentlist[i].picture=pic;
+        });
+            }
                 })
         .catch(err=>{
         console.log(err)
@@ -83,6 +92,15 @@ export default {
       axios.get("http://49.234.18.247:8080/api/FunGetAllMomentInfo")
         .then(res=>{
             this.momentlist=res.data;
+             for(let i=0;i<this.momentlist.length;i++)
+            {
+               axios.get("http://49.234.18.247:8080/api/MomentPic/"+this.momentlist[i].momenT_ID)
+        .then(res=>
+        {var pic=res.data;
+          if(pic!="NULL")
+          this.momentlist[i].picture=pic;
+        });
+            }
                 })
     },
       clear()
@@ -102,7 +120,8 @@ export default {
            "vedio": null
           })
           .then(()=>
-          {
+          {if(this.momentlist[this.del].picture!=null)
+            axios.delete("http://49.234.18.247:8080/api/MomentPic/"+this.momentlist[this.del].momenT_ID);
             this.recreated();
             this.$message({
               type: 'success',
@@ -132,7 +151,8 @@ export default {
         }).then(() => {
          axios.delete("http://49.234.18.247:8080/api/FunDeleteMomentByMomentId/"+this.momentlist[this.del].momenT_ID)
          .then(()=>
-         {
+         {if(this.momentlist[this.del].picture!=null)
+           axios.delete("http://49.234.18.247:8080/api/MomentPic/"+this.momentlist[this.del].momenT_ID);
            this.momentlist.splice(this.del,1);
            this.$message({
              type: 'success',
