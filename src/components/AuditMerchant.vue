@@ -56,10 +56,10 @@
     v-if="dialogrow.picture!== null"
     style="width: 30%"
     /><br>
-    商家入驻执照：<br>
+    商家入驻执照：<span v-if="license== ''">无</span><br>
     <img
     :src="license"
-    v-if="license!== null"
+    v-if="license!== ''"
     style="width: 50%"
     />
   </div>
