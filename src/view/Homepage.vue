@@ -37,6 +37,11 @@
             >周边游<i v-show="show[0]"></i
           ></span>
 
+          <span class="more">
+            <router-link to="/attraction/city?search=全部">
+              更多景点
+              <div class="el-icon-arrow-right right-arrow"></div> </router-link
+          ></span>
           <span class="dropdown" v-if="!show[0]">
             <el-popover placement="bottom-end" width="50" trigger="click"
               ><div class="drop-content">
@@ -226,6 +231,11 @@
             >国外酒店<i v-show="show[1]"></i
           ></span>
 
+          <span class="more">
+            <router-link to="/hotel/city?search=全部">
+              更多酒店
+              <div class="el-icon-arrow-right right-arrow"></div> </router-link
+          ></span>
           <span class="dropdown" v-if="!show[1]">
             <el-popover placement="bottom-end" width="50" trigger="click"
               ><div class="drop-content">
@@ -328,6 +338,12 @@
           ></span>
           <span @click="onClick(2, 1)" :class="{ titleClick: show[2] == 1 }"
             >国际特价机票<i v-show="show[2]"></i
+          ></span>
+
+          <span class="more"
+            ><router-link to="/tickets">
+              更多机票
+              <div class="el-icon-arrow-right right-arrow"></div> </router-link
           ></span>
 
           <span class="dropdown" v-if="!show[2]">
@@ -870,13 +886,19 @@ export default {
         detail[i] != "路" &&
         detail[i] != "镇" &&
         detail[i] != "村" &&
+        detail[i] != "嘴" &&
         isNaN(detail[i]) &&
         i < len
       ) {
         res += detail[i];
         i++;
       }
-      if (detail[i] == "路" || detail[i] == "镇" || detail[i] == "村") {
+      if (
+        detail[i] == "路" ||
+        detail[i] == "镇" ||
+        detail[i] == "村" ||
+        detail[i] == "嘴"
+      ) {
         return res + detail[i];
       } else {
         return res;
@@ -1154,6 +1176,22 @@ export default {
   height: 100%;
   border-right: 1px dashed #807c7c;
 }
+.more {
+  padding: 2px 4px;
+  height: 15px;
+  width: 60px;
+  font-size: 13px;
+}
+.more a {
+  color: #0a4fb1 !important;
+}
+.more:hover {
+  border: 1px solid #0a4fb1;
+  border-radius: 5px;
+}
+.right-arrow {
+  font-weight: 700;
+}
 .keyword-short {
   margin-left: 10%;
 }
@@ -1289,7 +1327,7 @@ export default {
 .item-name {
   margin-top: 15px;
   margin-bottom: 5px;
-  font-size: 15px;
+  font-size: 14px;
 }
 .item-date {
   font-size: 13px;

@@ -33,7 +33,7 @@
                 src="../../assets/img/starYellow.svg"
               />
               <img v-else class="star" src="../../assets/img/starGrey.svg" />
-              <div class="text">收藏 340</div>
+              <div class="text">收藏 {{ collectNum }}</div>
             </div>
             <div class="icons">
               <img class="eye" src="../../assets/img/eye.svg" />
@@ -47,7 +47,7 @@
         <div class="main">
           <div class="left">
             <div class="intro">
-              <span><i class="calendar"></i> 天数: {{ timeSpan }}天</span>
+              <span><i class="calendar"></i> 游玩天数: {{ timeSpan }}天</span>
               <span><i class="clock"></i> 时间：{{ plaY_TIME }}</span>
               <div class="positions">
                 <i class="position"></i> 作者去了这些地方：
@@ -74,14 +74,31 @@
                           <h3 class="popover-title">{{ item.item_name }}</h3>
                           <img
                             src="../../assets/img/star.svg"
-                            v-for="i in 4"
+                            v-for="i in item.star"
                             :key="i"
                             style="margin-top: 8px; margin-left: -1px"
                           />
+                          <div
+                            v-show="!item.star"
+                            style="
+                              height: 20px;
+                              width: 50px;
+                              font-size: 12px;
+                              margin-top: 8px;
+                              color: gray;
+                            "
+                          >
+                            暂无评分
+                          </div>
                           <div class="popover-address" style="margin-top: 8px">
                             {{ item.location }}
                           </div>
-                          <div class="popover-button">了解详情</div>
+                          <div
+                            class="popover-button"
+                            @click="toDetail(item.id, item.type)"
+                          >
+                            了解详情
+                          </div>
                         </div>
                       </div>
                       <span class="location" slot="reference">{{
@@ -93,27 +110,26 @@
               </div>
             </div>
             <el-divider></el-divider>
-            <div class="mainText">
-              <p v-for="i in 5" :key="i">
-                {{ plaN_DESC }}
-              </p>
+            <div class="mainText" style="white-space: pre-wrap">
+              <p v-for="txt in plaN_DESC" :key="txt.index">{{ txt }}</p>
             </div>
           </div>
+
           <div class="right">
             <div style="font-size: 17px">推荐相关攻略</div>
             <el-divider></el-divider>
-            <div class="rightBox" v-for="i in 4" :key="i">
+            <div class="rightBox" v-for="item in recommend" :key="item.index">
               <div
                 class="Img"
                 :style="{
-                  backgroundImage: 'url(' + picture + ')',
+                  backgroundImage: 'url(' + item.picture + ')',
                   backgroundSize: '100% 100%',
                   backgroundRepeat: 'no-repeat',
                 }"
               ></div>
-              <div class="boxTitle">感觉孤独的时候我就去北欧凛冽的世界尽头</div>
-              <div class="boxWriter">李四</div>
-              <div class="boxTime">2020-12-08</div>
+              <div class="boxTitle">{{ item.plaN_TITLE }}</div>
+              <div class="boxWriter">{{ item.useR_NAME }}</div>
+              <div class="boxTime">{{ item.pubL_TIME }}</div>
             </div>
           </div>
         </div>
@@ -186,14 +202,14 @@
 }
 .popover-picture {
   float: left;
-  width: 130px;
+  width: 150px;
   height: 130px;
 }
 .popover-detail {
   position: relative;
   float: left;
   margin-left: 13px;
-  width: 200px;
+  width: 180px;
 }
 .popover-address {
   font-size: 13px;
@@ -291,7 +307,7 @@
   height: 130px;
 }
 .boxTitle {
-  margin: 0 5px;
+  margin-left: -3px;
   font-size: 15px;
   margin-bottom: 5px;
 }
@@ -318,8 +334,7 @@ export default {
     return {
       liked: false,
       collected: false,
-      picture:
-        "https://marriotteventsasia.com.cn/wp-content/uploads/2020/10/mfmsi-attraction-tower-3410-ver-clsc.jpg",
+      collectNum: 340,
       useR_ID: "",
       plaN_ID: "",
       useR_NAME: "张三",
@@ -333,14 +348,92 @@ export default {
       plaN_TITLE: "这里是一片净土——同济大学嘉定校区一日游",
       days: [],
       bgc: "",
+      recommend: [],
     };
   },
   methods: {
     like() {
+      if (this.liked == false) {
+        this.plaN_STAR++;
+        fetch(
+          "http://49.234.18.247:8080/api/Plan/" +
+            this.useR_ID +
+            "&" +
+            this.plaN_ID
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then((res) => {
+            this.$axios.put(
+              "http://49.234.18.247:8080/api/Plan/" +
+                this.useR_ID +
+                "&" +
+                this.plaN_ID,
+              {
+                useR_ID: this.useR_ID,
+                plaN_ID: this.plaN_ID,
+                plan: res[0].plan,
+                plaN_STAR: res[0].plaN_STAR + 1,
+                plaN_TITLE: res[0].plaN_TITLE,
+                plaN_DESC: res[0].plaN_DESC,
+                plaY_TIME: res[0].plaY_TIME,
+                pubL_TIME: res[0].pubL_TIME,
+              }
+            );
+          });
+      } else {
+        this.plaN_STAR--;
+        fetch(
+          "http://49.234.18.247:8080/api/Plan/" +
+            this.useR_ID +
+            "&" +
+            this.plaN_ID
+        )
+          .then(function (response) {
+            return response.json();
+          })
+          .then((res) => {
+            this.$axios.put(
+              "http://49.234.18.247:8080/api/Plan/" +
+                this.useR_ID +
+                "&" +
+                this.plaN_ID,
+              {
+                useR_ID: this.useR_ID,
+                plaN_ID: this.plaN_ID,
+                plan: res[0].plan,
+                plaN_STAR: res[0].plaN_STAR - 1,
+                plaN_TITLE: res[0].plaN_TITLE,
+                plaN_DESC: res[0].plaN_DESC,
+                plaY_TIME: res[0].plaY_TIME,
+                pubL_TIME: res[0].pubL_TIME,
+              }
+            );
+          });
+      }
       this.liked = !this.liked;
     },
     collect() {
+      if (this.collected) {
+        this.collectNum--;
+      } else {
+        this.collectNum++;
+      }
       this.collected = !this.collected;
+    },
+    toDetail(id, type) {
+      if (type == "attraction") {
+        this.$router.push({
+          path: "/attraction/detail",
+          query: { id: id },
+        });
+      } else if (type == "hotel") {
+        this.$router.push({
+          path: "/hotel/detail",
+          query: { id: id },
+        });
+      }
     },
   },
   created() {
@@ -354,10 +447,43 @@ export default {
       })
       .then((res) => {
         this.pubL_TIME = res[0].pubL_TIME;
-        this.plaY_TIME = res[0].plaY_TIME;
+        this.plaY_TIME =
+          res[0].plaY_TIME.split("-")[0] +
+          "年" +
+          res[0].plaY_TIME.split("-")[1] +
+          "月";
         this.plaN_TITLE = res[0].plaN_TITLE;
+        this.$axios.get("http://49.234.18.247:8080/api/Plan").then((r) => {
+          for (let i = 0; i < r.data.length; i++) {
+            if (
+              !(
+                r.data[i].useR_ID == this.useR_ID &&
+                r.data[i].plaN_ID == this.plaN_ID
+              ) &&
+              r.data[i].plaN_TITLE.includes(res[0].plaN_TITLE.slice(1, 3))
+            ) {
+              fetch("http://49.234.18.247:8080/api/Users/" + this.useR_ID)
+                .then(function (response) {
+                  return response.json();
+                })
+                .then((re) => {
+                  var useR_NAME = re[0].useR_NAME;
+                  var plaN_TITLE = r.data[i].plaN_TITLE;
+                  var picture = JSON.parse(r.data[i].plan)[0][0].picture;
+                  var pubL_TIME = r.data[i].pubL_TIME.slice(0, 10);
+
+                  this.recommend.push({
+                    useR_NAME: useR_NAME,
+                    plaN_TITLE: plaN_TITLE,
+                    picture: picture,
+                    pubL_TIME: pubL_TIME,
+                  });
+                });
+            }
+          }
+        });
         this.plaN_STAR = res[0].plaN_STAR;
-        this.plaN_DESC = res[0].plaN_DESC;
+        this.plaN_DESC = res[0].plaN_DESC.split("\n");
         let plan = JSON.parse(res[0].plan);
         let picture = plan[0][0].picture;
         this.bgc = picture;
@@ -367,10 +493,8 @@ export default {
           if (plan[i].length !== 0) {
             this.days.push(plan[i]);
             this.timeSpan++;
-            // console.log(plan[i]);
           }
         }
-        console.log(this.days[0][0]);
       });
 
     fetch("http://49.234.18.247:8080/api/Users/" + this.useR_ID)

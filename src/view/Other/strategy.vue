@@ -11,15 +11,22 @@
             placeholder="目的地……"
             @change="inputChange"
           ></el-input>
+
+          <div class="create">
+            <router-link to="/travelplan"> 创建我的攻略 </router-link>
+          </div>
           <p>旅游攻略导航</p>
           <el-divider></el-divider>
 
           <div class="dropdowns">
-            <el-popover placement="bottom" width="200" trigger="click">
+            <el-popover placement="bottom" width="150" trigger="click">
               <div class="popover-content">
-                <!-- 北京{{ beijing }}|上海{{ shanghai }}|云南{{ yunnan }}|四川{{
-                  sichuan
-                }} -->
+                <span v-for="(item, index) in guoNei" :key="index"
+                  ><span v-show="index"> | </span
+                  ><span class="popover-place" @click="topClick(item.place)"
+                    >{{ item.place }} ({{ item.num }})</span
+                  >
+                </span>
               </div>
               <div class="dropdown" slot="reference">
                 国内<span class="el-icon-caret-bottom"></span>
@@ -34,13 +41,6 @@
                 国外<span class="el-icon-caret-bottom"></span>
               </div>
             </el-popover>
-
-            <el-popover placement="bottom" width="200" trigger="click">
-              <div class="popover-content"></div>
-              <div class="dropdown" slot="reference">
-                主题<span class="el-icon-caret-bottom"></span>
-              </div>
-            </el-popover>
           </div>
 
           <el-divider></el-divider>
@@ -48,7 +48,7 @@
           <div class="top" v-for="(item, index) in top" :key="index">
             <el-divider v-if="index"></el-divider>
             <span class="top-number">{{ index + 1 }}</span>
-            <span class="top-title">{{ item }}</span>
+            <span class="top-title" @click="topClick(item)">{{ item }}</span>
           </div>
         </div>
 
@@ -130,6 +130,25 @@
 }
 .el-input {
   margin-bottom: 20px;
+}
+.create {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 20px;
+  text-align: center;
+  line-height: 40px;
+  background-color: #0071c2;
+  border-radius: 5px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+.create:hover {
+  background-color: #003680;
+}
+.popover-place:hover {
+  color: #0071c2;
+  cursor: pointer;
 }
 .dropdown {
   display: inline-block;
@@ -263,23 +282,44 @@ export default {
   data() {
     return {
       input: "",
+      guoNei: [],
       top: [
-        "三亚",
+        "上海",
         "成都",
         "重庆",
-        "上海",
-        "拉萨",
-        "涠洲岛",
-        "涠洲岛",
-        "涠洲岛",
+        "北京",
+        "南京",
+        "广州",
+        "济南",
+        "秦皇岛",
         "涠洲岛",
       ],
       plans: [],
+      originData: [],
     };
   },
   methods: {
     inputChange() {
-      console.log("here");
+      if (this.input) {
+        var tmp = [];
+        for (let i = 0; i < this.originData.length; i++) {
+          if (this.originData[i].plaN_TITLE.includes(this.input)) {
+            tmp.push(this.originData[i]);
+          }
+        }
+        this.plans = tmp;
+      } else {
+        this.plans = this.originData;
+      }
+    },
+    topClick(city) {
+      var tmp = [];
+      for (let i = 0; i < this.originData.length; i++) {
+        if (this.originData[i].plaN_TITLE.includes(city)) {
+          tmp.push(this.originData[i]);
+        }
+      }
+      this.plans = tmp;
     },
     async getUserInfoById(id) {
       return fetch("http://49.234.18.247:8080/api/Users/" + id)
@@ -304,11 +344,31 @@ export default {
   },
   created() {
     this.$axios.get("http://49.234.18.247:8080/api/Plan").then((response) => {
-      console.log(response.data[0]);
       this.plans = [];
+      this.guoNei = [];
       for (let i = 0; i < response.data.length; i++) {
+        var endIndex = response.data[i].plaN_TITLE.indexOf("】");
+
+        let place = response.data[i].plaN_TITLE
+          .split("】")[0]
+          .slice(1, endIndex)
+          .split("|");
+        var j = 0;
+        var k = 0;
+        for (; k < place.length; k++) {
+          for (; j < this.guoNei.length; j++) {
+            if (this.guoNei[j].place == place[k].slice(0, 2)) {
+              this.guoNei[j].num++;
+              break;
+            }
+          }
+          if (j == this.guoNei.length) {
+            this.guoNei.push({ place: place[k].slice(0, 2), num: 1 });
+          }
+        }
+
         this.getUserInfoById(response.data[i].useR_ID).then((res) => {
-          let picture = JSON.parse(response.data[1].plan);
+          let picture = JSON.parse(response.data[i].plan);
           picture = picture[0][0].picture;
           let plan = {
             useR_ID: response.data[i].useR_ID,
@@ -324,6 +384,7 @@ export default {
                 : response.data[i].plaN_DESC.slice(0, 200) + "……",
           };
           this.plans.push(plan);
+          this.originData.push(plan);
         });
       }
     });

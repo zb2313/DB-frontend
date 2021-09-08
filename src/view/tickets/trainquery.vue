@@ -5,7 +5,7 @@
     <Header activeIndex="3" />
     <el-container>
       <el-aside width="250px" style="background-color: rgb(238, 241, 246)">
-      <div class="rec_title">&nbsp;&nbsp;&nbsp;精选酒店</div> 
+     <div class="rec_title">&nbsp;&nbsp;&nbsp;精选酒店</div> 
       
         <div
               class="hotelInfo"
@@ -22,10 +22,20 @@
                 }"
               ></div>
               <div class="infoDetail">
+                 <el-tooltip class="item" effect="dark"  placement="right">
+                    <div slot="content">{{ item.hotelname }}</div>
                 <div class="Name" style="font-size: 14px">
-                  {{ item.hotelname }}
+                  {{ item.hotelname.slice(0,14) }}
+                  <span v-if="item.hotelname.length>14 ">...</span> 
                 </div>
-                <span class="address">{{ item.location }}</span><br>
+                 </el-tooltip>
+                <el-tooltip class="item" effect="dark"  placement="right">
+                  <div slot="content">{{ item.location }}</div>
+      <span class="address">{{ item.location.slice(0,16) }}
+        <span v-if="item.location.length>16 ">...</span> </span>
+      
+    </el-tooltip>
+                <br>
                 <img
                   src="../../assets/img/diamond.svg"
                   v-for="i in item.star"
@@ -59,10 +69,19 @@
                 }"
               ></div>
               <div class="infoDetail">
+                 <el-tooltip class="item" effect="dark"  placement="right">
+                    <div slot="content">{{ item.attractionname }}</div>
                 <div class="Name" style="font-size: 14px">
-                  {{ item.attractionname }}
+                  {{ item.attractionname.slice(0,14) }}
+                  <span v-if="item.attractionname.length>14 ">...</span> 
                 </div>
-                <span class="address">{{ item.location }}</span><br>
+                 </el-tooltip>
+                  <el-tooltip class="item" effect="dark"  placement="right">
+                    <div slot="content">{{ item.location }}</div>
+                <span class="address">{{ item.location.slice(0,16) }}
+                <span v-if="item.location.length>16 ">...</span> </span>
+                </el-tooltip>
+                <br>
                 <img
                   src="../../assets/img/star.svg"
                   v-for="i in item.star"
@@ -573,8 +592,7 @@ export default {
       //   confirmButtonText: "确定",
 
       // })
-      console.log(md5('101151123412347tJsupCChsVpRHz4PxxjOtMuAeigUn47'));
-      console.log(type);
+
       this.$router.push({
         path:`/tickets/order`,
         query:{
