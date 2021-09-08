@@ -14,7 +14,7 @@
 		</pre>
 		<p>{{ item.text }}</p>
 		<br>
-		<img class="moment_img" :src="item.picture" v-if="item.picture!==null" style="width:80%">
+		<img class="moment_img" :src="item.picture" v-if="item.picture!==null" style="height:420px">
 		<br>
 		<div class="moment_video" v-if="item.vedio!==null">
 		<iframe :src="item.vedio" frameborder='0'

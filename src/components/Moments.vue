@@ -24,7 +24,7 @@
             class="moment_img"
             :src="item.picture"
             v-if="item.picture !== null"
-            style="width: 80%"
+            style="height: 150px"
           />
           <!-- 动态中的视频 -->
           <div class="moment_video" v-if="item.vedio !== null">
