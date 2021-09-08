@@ -15,11 +15,11 @@
           <el-divider></el-divider>
 
           <div class="dropdowns">
-            <el-popover placement="bottom" width="200" trigger="click">
+            <el-popover placement="bottom" width="150" trigger="click">
               <div class="popover-content">
-                <!-- 北京{{ beijing }}|上海{{ shanghai }}|云南{{ yunnan }}|四川{{
-                  sichuan
-                }} -->
+                <span v-for="item in guoNei" :key="item.index"
+                  >{{ item.place }} ({{ item.num }}) |
+                </span>
               </div>
               <div class="dropdown" slot="reference">
                 国内<span class="el-icon-caret-bottom"></span>
@@ -35,17 +35,22 @@
               </div>
             </el-popover>
 
-            <el-popover placement="bottom" width="200" trigger="click">
+            <!-- <el-popover placement="bottom" width="200" trigger="click">
               <div class="popover-content"></div>
               <div class="dropdown" slot="reference">
                 主题<span class="el-icon-caret-bottom"></span>
               </div>
-            </el-popover>
+            </el-popover> -->
           </div>
 
           <el-divider></el-divider>
 
-          <div class="top" v-for="(item, index) in top" :key="index">
+          <div
+            class="top"
+            v-for="(item, index) in top"
+            :key="index"
+            @click="topClick(item)"
+          >
             <el-divider v-if="index"></el-divider>
             <span class="top-number">{{ index + 1 }}</span>
             <span class="top-title">{{ item }}</span>
@@ -54,7 +59,12 @@
 
         <div class="right">
           <div style="text-indent: 2%; font-size: 18px">推荐攻略</div>
-          <div class="box" v-for="(item, index) in plans" :key="index">
+          <div
+            class="box"
+            v-for="(item, index) in plans"
+            :key="index"
+            @click="toDetail(item.useR_ID, item.plaN_ID)"
+          >
             <div class="divider"><el-divider></el-divider></div>
 
             <div class="box1">
@@ -235,7 +245,7 @@
 }
 .username {
   float: right;
-  width: 50px;
+  width: 70px;
   font-size: 13px;
   margin-left: 5px;
   color: #ea9518;
@@ -258,50 +268,107 @@ export default {
   data() {
     return {
       input: "",
+      guoNei: [
+        { place: "重庆", num: 5 },
+        { place: "重庆", num: 5 },
+        { place: "重庆", num: 5 },
+        { place: "重庆", num: 5 },
+      ],
       top: [
-        "三亚",
+        "上海",
         "成都",
         "重庆",
-        "上海",
-        "拉萨",
-        "涠洲岛",
+        "北京",
+        "南京",
+        "广州",
         "涠洲岛",
         "涠洲岛",
         "涠洲岛",
       ],
-      plans: [
-        {
-          useR_ID: "0000000001",
-          useR_NAME: "张二",
-          uprofile: "http://49.234.47.118:8080/pictures/user_uprofile_3.jpg",
-          plaN_ID: "1",
-          picture:
-            "http://49.234.47.118:8080/pictures/attraction_picture_1.jpg",
-          plaN_STAR: 2,
-          plaN_TITLE: "芬兰瑞典 ▏感觉孤独的时候我就去北欧凛冽的世界尽头",
-          plaN_DESC:
-            "仍记得3年前初见丽江的模样：蓝天、白云、青山、绿水，遥望雪山看着“印象丽江”，不设防地被剧情所渲染，以至于现在再与他邂逅时，如朋友般，可以随着旋律一起哼唱……这是一个神奇的地方，被雪山守护庇佑着，这是一个美丽的地方，赏风花雪月，不争朝夕，与苍山洱海为伴，闲来看云卷云舒，繁星点点……",
-        },
-      ],
+      plans: [],
+      originData: [],
     };
   },
   methods: {
     inputChange() {
-      console.log("here");
+      if (this.input) {
+        var tmp = [];
+        for (let i = 0; i < this.originData.length; i++) {
+          if (this.originData[i].plaN_TITLE.includes(this.input)) {
+            tmp.push(this.originData[i]);
+          }
+        }
+        this.plans = tmp;
+      } else {
+        this.plans = this.originData;
+      }
     },
-    getUserInfoById(id) {
-      //   return this.$axios.get("http://49.234.18.247:8080/api/Users/"+id).then((res)=>{
-      //       return {
-      //           useR_NAME:res.da
-      //       }
-      //   })
+    topClick(city) {
+      var tmp = [];
+      for (let i = 0; i < this.originData.length; i++) {
+        if (this.originData[i].plaN_TITLE.includes(city)) {
+          tmp.push(this.originData[i]);
+        }
+      }
+      this.plans = tmp;
+    },
+    async getUserInfoById(id) {
+      return fetch("http://49.234.18.247:8080/api/Users/" + id)
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          var useR_NAME = res[0].useR_NAME;
+          var uprofile = res[0].uprofile;
+          return { useR_NAME: useR_NAME, uprofile: uprofile };
+        });
+    },
+    toDetail(useR_ID, plaN_ID) {
+      this.$router.push({
+        path: "/strategyDetail",
+        query: {
+          useR_ID: useR_ID,
+          plaN_ID: plaN_ID,
+        },
+      });
     },
   },
   created() {
     this.$axios.get("http://49.234.18.247:8080/api/Plan").then((response) => {
-      console.log(response.data);
-      //     var useR_ID=response.data[]
-      //   var plan = JSON.parse(response.data[2].plan);
+      this.plans = [];
+      this.guoNei = [];
+      for (let i = 0; i < response.data.length; i++) {
+        let place = response.data[i].plaN_TITLE.split("】")[0].slice(1);
+        var j = 0;
+        for (; j < this.guoNei.length; j++) {
+          if (this.guoNei[j].place == place) {
+            this.guoNei[j].num++;
+            break;
+          }
+        }
+        if (j == this.guoNei.length) {
+          this.guoNei.push({ place: place, num: 1 });
+        }
+        this.getUserInfoById(response.data[i].useR_ID).then((res) => {
+          let picture = JSON.parse(response.data[i].plan);
+          picture = picture[0][0].picture;
+          let plan = {
+            useR_ID: response.data[i].useR_ID,
+            useR_NAME: res.useR_NAME,
+            uprofile: res.uprofile,
+            plaN_ID: response.data[i].plaN_ID,
+            picture: picture,
+            plaN_STAR: response.data[i].plaN_STAR,
+            plaN_TITLE: response.data[i].plaN_TITLE,
+            plaN_DESC:
+              response.data[i].plaN_DESC.length < 200
+                ? response.data[i].plaN_DESC
+                : response.data[i].plaN_DESC.slice(0, 200) + "……",
+          };
+          this.plans.push(plan);
+          this.originData.push(plan);
+        });
+      }
     });
   },
 };

@@ -1214,7 +1214,7 @@ export default {
               useR_ID: "0000000002",
               userAvatar:
                 "https://ak-d.tripcdn.com/images/t1/headphoto/424/398/503/0386f569fd0d4b488ff41b64bbc5743b_R_100_100_R5_Q70_D.jpg",
-              commentRoom: "城景大床房",
+              commentRoom: "经济大床房",
               bookTime: "2021-08-14",
               userCommentNum: 1,
               commentRate: 4,

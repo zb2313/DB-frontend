@@ -346,7 +346,7 @@ export default {
                     dist = dist * 6378.137;
                     dist = Math.round(dist * 10000) / 10000;
          
-                    var json={day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,lat_lon:l2,dis_to_pre:dist};
+                    var json={type:"attraction",id:_this.filt_attraction_list[index].attractionid,star:_this.filt_attraction_list[index].star,day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,lat_lon:l2,dis_to_pre:dist};
               
               _this.selected_items[_this.select_active].push(json);
               _this.$forceUpdate();
@@ -360,7 +360,7 @@ export default {
                 })
                 .then(function(response){
                   //console.log(response);
-              var json={day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,lat_lon:response.geocodes[0].location.split(','),dis_to_pre:0};
+              var json={type:"attraction",id:_this.filt_attraction_list[index].attractionid,star:_this.filt_attraction_list[index].star,day:_this.select_active,item_name:_this.filt_attraction_list[index].attractionname,picture:_this.filt_attraction_list[index].picture,location:_this.filt_attraction_list[index].location,lat_lon:response.geocodes[0].location.split(','),dis_to_pre:0};
               _this.selected_items[_this.select_active].push(json);
               _this.$forceUpdate();
               })
@@ -390,7 +390,7 @@ export default {
                     dist = dist * 6378.137;
                     dist = Math.round(dist * 10000) / 10000;
  
-                    var json={day:_this.select_active,item_name:_this.filt_hotel_list[index].hotelname,picture:_this.filt_hotel_list[index].picture,location:_this.filt_hotel_list[index].location,lat_lon:l2,dis_to_pre:dist};
+                    var json={type:"hotel",id:_this.filt_hotel_list[index].hoteid,star:_this.filt_hotel_list[index].star,day:_this.select_active,item_name:_this.filt_hotel_list[index].hotelname,picture:_this.filt_hotel_list[index].picture,location:_this.filt_hotel_list[index].location,lat_lon:l2,dis_to_pre:dist};
               
               _this.selected_items[_this.select_active].push(json);
               _this.$forceUpdate();
@@ -403,7 +403,7 @@ export default {
                 return response.json();
                 })
                 .then(function(response){
-              var jsonn={day:_this.select_active,item_name:_this.filt_hotel_list[index].hotelname,picture:_this.filt_hotel_list[index].picture,location:_this.filt_hotel_list[index].location,lat_lon:response.geocodes[0].location.split(','),dis_to_pre:0};
+              var jsonn={type:"hotel",id:_this.filt_hotel_list[index].hoteid,star:_this.filt_hotel_list[index].star,day:_this.select_active,item_name:_this.filt_hotel_list[index].hotelname,picture:_this.filt_hotel_list[index].picture,location:_this.filt_hotel_list[index].location,lat_lon:response.geocodes[0].location.split(','),dis_to_pre:0};
             _this.selected_items[_this.select_active].push(jsonn);
             _this.$forceUpdate();
              })

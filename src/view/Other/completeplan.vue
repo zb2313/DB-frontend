@@ -136,10 +136,9 @@ export default {
         submit(){
             this.$axios.get("http://49.234.18.247:8080/api/FunGetPlanIdByUserId/"+ localStorage.getItem("ms_username"))
       .then((response) => {
-          console.log(this.travel_date)
         this.$axios.post("http://49.234.18.247:8080/api/Plan", {
       "useR_ID": localStorage.getItem("ms_username"),
-      "plaN_ID": response.data[0].planid,
+      "plaN_ID": response.data.length? response.data[0].planid:0,
       "plan": JSON.stringify(this.plan),
       "plaN_STAR": 0,
        "plaN_TITLE": this.title,
@@ -156,8 +155,19 @@ export default {
     },
     computed:{
      storeTime: function () {
-      let now = new Date().toLocaleString();
-      return now.substring(5, 9) + "/" + now.substring(0, 4)+" "+now.substring(9, 16);
+      let date = new Date();
+       var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      var h = date.getHours();
+      var minute = date.getMinutes();
+      minute = minute < 10 ? "0" + minute : minute;
+      var second = date.getSeconds();
+      second = second < 10 ? "0" + second : second;
+      var Time = y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
+      return Time;
     },
   }
 }
