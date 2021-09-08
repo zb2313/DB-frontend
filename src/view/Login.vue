@@ -11,7 +11,7 @@
     </div>
 
     <div class="ms-login">
-      <div class="ms-title">旅游信息系统</div>
+      <div class="ms-title">lvdao旅游信息系统</div>
       <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
         <el-form-item prop="username">
           <el-input v-model="param.userid" placeholder="username">
