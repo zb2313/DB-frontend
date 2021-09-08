@@ -66,6 +66,15 @@ export default {
       ],
     };
   },
+  watch:{//跳转到该页面将重新获取动态
+    $route()
+    {
+      this.getMoments();
+    this.getuser_moments();
+    this.getuser();
+    this.getdisplay_users();
+    }
+  },
   methods: {
     getMoments() {
       axios
