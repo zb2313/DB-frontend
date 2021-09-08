@@ -157,10 +157,10 @@
                   <h1 style="color: #003580; font-size: 30px">
                     ￥{{ storePrice }}
                   </h1>
-                  
+
                   <h1>{{ payWay }}</h1>
                   <br />
-                  <div id="qrcode" style="margin-left:100px;"></div>
+                  <div id="qrcode" style="margin-left: 100px"></div>
                   <br />
                   <div>
                     <button @click="aliPay" class="payBtn" v-if="buttonVisible">
@@ -356,10 +356,12 @@ export default {
       payWay: " ",
       hotelId: "",
       roomTypeId: "",
-      hotelName: "速八酒店",
+      orderId: "",
+      orderStatus: undefined,
+      hotelName: "同济嘉定酒店",
       starNum: 5,
       location: "上海市嘉定区安亭镇曹安公路4800号",
-      typeName: "特惠大床房",
+      typeName: "14号楼双床房",
       cNum: 2,
       bed: "",
       dish: "",
@@ -383,6 +385,17 @@ export default {
     };
   },
   methods: {
+    async sleeping(time) {
+      return new Promise((resolve) => setTimeout(resolve, time));
+    },
+    innerWindow(para) {
+      this.$axios
+        .get("http://110.40.186.162:8080/api/GetOrderStatus/" + para)
+        .then((response) => {
+          console.log(response.data[0].pay_status);
+          this.orderStatus = response.data[0].pay_status;
+        });
+    },
     dateChange() {
       this.days = this.GetNumberOfDays(
         this.timestampToTime(this.form_Select.time[0]),
@@ -425,37 +438,46 @@ export default {
         let _i = i;
         console.log(_i);
         console.log(this.hotelId);
-
+        var Now = new Date();
+        this.bookTime = this.timestampToTime(Now);
         this.$axios
           .post("http://49.234.18.247:8080/api/BookRoom", {
             hoteL_ID: this.hotelId,
             rooM_ID: this.vacantRooms[_i].rooM_ID,
             useR_ID: "0000000001",
-            ordeR_AMOUNT: this.storePrice,
-            ordeR_TIME: "123",
+            ordeR_AMOUNT: this.price,
+            ordeR_TIME: this.bookTime,
           })
           .then((response) => {
             console.log("加订单成功");
             this.$axios
-          .put("http://49.234.18.247:8080/api/Room/"+this.hotelId+"&"+this.vacantRooms[_i].rooM_ID, {
-            hoteL_ID: this.hotelId,
-            rooM_ID: this.vacantRooms[_i].rooM_ID,
-            typE_ID: this.vacantRooms[_i].typE_ID,
-            booK_STATUS: "Y",
-            price: this.vacantRooms[_i].price,
-          })
-          .then((response) => {
-            console.log("改房间状态成功");
-          });
+              .put(
+                "http://49.234.18.247:8080/api/Room/" +
+                  this.hotelId +
+                  "&" +
+                  this.vacantRooms[_i].rooM_ID,
+                {
+                  hoteL_ID: this.hotelId,
+                  rooM_ID: this.vacantRooms[_i].rooM_ID,
+                  typE_ID: this.vacantRooms[_i].typE_ID,
+                  booK_STATUS: "Y",
+                  price: this.vacantRooms[_i].price,
+                }
+              )
+              .then((response) => {
+                console.log("改房间状态成功");
+              });
           });
       }
     },
     aliPay() {
       this.buttonVisible = false;
       this.submitVisible = true;
-      var specialID = "2";
-      var specialConst="TJcfy";
-      var specialPrice = this.storePrice.toString();
+      var Now = new Date();
+      var specialID = this.timestampToTime(Now);
+      this.orderId = specialID;
+      var specialConst = "TJcfy";
+      var specialPrice = "0.04";
       var specialSign = md5(md5(specialID + specialPrice) + specialConst);
       console.log(specialSign);
       this.$axios
@@ -483,16 +505,41 @@ export default {
             height: 200,
           });
           qrCode.makeCode(this.qrcode);
+
+          for (let i = 0; i < 30; i++) {
+            let _this = this;
+            window.setTimeout(function () {
+              _this.$axios
+                .get(
+                  "http://110.40.186.162:8080/api/GetOrderStatus/" +
+                    _this.orderId
+                )
+                .then((response) => {
+                  console.log(response.data[0].pay_status);
+                  this.orderStatus = response.data[0].pay_status;
+                });
+            }, 1000 * i);
+            if (_this.orderStatus === "已支付") {
+              _this.$message({
+                message: "恭喜你，成功预定本店房间！",
+                type: "success",
+              });
+              _this.payVisible=false;
+              break;
+            }
+          }
         });
     },
     wechatPay() {
       this.buttonVisible = false;
       this.submitVisible = true;
-      var specialID = "3";
-      var specialConst="TJcfy";
-      var specialPrice = this.storePrice.toString();
+      var Now = new Date();
+      var specialID = this.timestampToTime(Now);
+      this.orderId = specialID;
+      var specialConst = "TJcfy";
+      var specialPrice = "0.01";
       var specialSign = md5(md5(specialID + specialPrice) + specialConst);
-       console.log(specialSign);
+      console.log(specialSign);
       this.$axios
         .post("/qrcode", {
           order_id: specialID,
@@ -512,6 +559,34 @@ export default {
             height: 200,
           });
           qrCode.makeCode(this.qrcode);
+          console.log(this.orderId);
+
+          for (let i = 0; i < 30; i++) {
+            let _this = this;
+            window.setTimeout(function () {
+              _this.$axios
+                .get(
+                  "http://110.40.186.162:8080/api/GetOrderStatus/" +
+                    _this.orderId
+                )
+                .then((response) => {
+                  console.log(response.data[0].pay_status);
+                  this.orderStatus = response.data[0].pay_status;
+                });
+            }, 2000 * i);
+            if (_this.orderStatus === "已支付") {
+              _this.$message({
+                message: "恭喜你，成功预定本店房间！",
+                type: "success",
+              });
+              _this.payVisible=false;
+              break;
+            }
+            // else if (i === 29) {
+            //   this.$message("支付二维码已过期，请重新发起支付");
+            //   this.payVisible = false;
+            // }
+          }
         });
     },
   },
@@ -520,6 +595,19 @@ export default {
       return this.totalPrice - this.discount;
     },
   },
+  // watch: {
+  //   orderStatus: function () {
+  //     if (this.orderStatus === "已支付") {
+  //       this.$message({
+  //         message: "恭喜你，成功预定本店房间！",
+  //         type: "success",
+  //       });
+  //     } else if (this.orderStatus === "已过期") {
+  //       this.$message("支付二维码已过期，请重新发起支付");
+  //       this.payVisible = false;
+  //     }
+  //   },
+  // },
   mounted() {},
   created() {
     if (this.$route.query.hotelID) {
