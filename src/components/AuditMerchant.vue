@@ -8,8 +8,8 @@
    v-model="value"
   active-text="审核已通过"
   inactive-text="审核未通过">
-  </el-switch>
-       <el-table :max-height="600"
+  </el-switch><br><br>
+       <el-table :max-height="580"
        :data="tableData.filter(data => 
          data.iS_CHECK==value&&data.hoteL_NAME.toLowerCase().includes(search.toLowerCase()))"
     style="width: 1000px">
@@ -177,7 +177,7 @@ axios.put("http://49.234.18.247:8080/api/Hotel/"+this.dialogrow.hoteL_ID,
 <style scoped>
 .page{
   position:absolute;
-  top: 200px;
+  top: 180px;
   left:300px;
 }
  .demo-table-expand {
