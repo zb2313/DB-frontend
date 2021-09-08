@@ -54,7 +54,12 @@
 
         <div class="right">
           <div style="text-indent: 2%; font-size: 18px">推荐攻略</div>
-          <div class="box" v-for="(item, index) in plans" :key="index">
+          <div
+            class="box"
+            v-for="(item, index) in plans"
+            :key="index"
+            @click="toDetail(item.useR_ID, item.plaN_ID)"
+          >
             <div class="divider"><el-divider></el-divider></div>
 
             <div class="box1">
@@ -235,7 +240,7 @@
 }
 .username {
   float: right;
-  width: 50px;
+  width: 70px;
   font-size: 13px;
   margin-left: 5px;
   color: #ea9518;
@@ -269,39 +274,58 @@ export default {
         "涠洲岛",
         "涠洲岛",
       ],
-      plans: [
-        {
-          useR_ID: "0000000001",
-          useR_NAME: "张二",
-          uprofile: "http://49.234.47.118:8080/pictures/user_uprofile_3.jpg",
-          plaN_ID: "1",
-          picture:
-            "http://49.234.47.118:8080/pictures/attraction_picture_1.jpg",
-          plaN_STAR: 2,
-          plaN_TITLE: "芬兰瑞典 ▏感觉孤独的时候我就去北欧凛冽的世界尽头",
-          plaN_DESC:
-            "仍记得3年前初见丽江的模样：蓝天、白云、青山、绿水，遥望雪山看着“印象丽江”，不设防地被剧情所渲染，以至于现在再与他邂逅时，如朋友般，可以随着旋律一起哼唱……这是一个神奇的地方，被雪山守护庇佑着，这是一个美丽的地方，赏风花雪月，不争朝夕，与苍山洱海为伴，闲来看云卷云舒，繁星点点……",
-        },
-      ],
+      plans: [],
     };
   },
   methods: {
     inputChange() {
       console.log("here");
     },
-    getUserInfoById(id) {
-      //   return this.$axios.get("http://49.234.18.247:8080/api/Users/"+id).then((res)=>{
-      //       return {
-      //           useR_NAME:res.da
-      //       }
-      //   })
+    async getUserInfoById(id) {
+      return fetch("http://49.234.18.247:8080/api/Users/" + id)
+        .then(function (response) {
+          return response.json();
+        })
+        .then((res) => {
+          var useR_NAME = res[0].useR_NAME;
+          var uprofile = res[0].uprofile;
+          return { useR_NAME: useR_NAME, uprofile: uprofile };
+        });
+    },
+    toDetail(useR_ID, plaN_ID) {
+      this.$router.push({
+        path: "/strategyDetail",
+        query: {
+          useR_ID: useR_ID,
+          plaN_ID: plaN_ID,
+        },
+      });
     },
   },
   created() {
     this.$axios.get("http://49.234.18.247:8080/api/Plan").then((response) => {
-      console.log(response.data);
-      //     var useR_ID=response.data[]
-      //   var plan = JSON.parse(response.data[2].plan);
+      console.log(response.data[0]);
+      this.plans = [];
+      for (let i = 0; i < response.data.length; i++) {
+        this.getUserInfoById(response.data[i].useR_ID).then((res) => {
+          let picture = JSON.parse(response.data[1].plan);
+          picture = picture[0][0].picture;
+          let plan = {
+            useR_ID: response.data[i].useR_ID,
+            useR_NAME: res.useR_NAME,
+            uprofile: res.uprofile,
+            plaN_ID: response.data[i].plaN_ID,
+            picture: picture,
+            plaN_STAR: response.data[i].plaN_STAR,
+            plaN_TITLE: response.data[i].plaN_TITLE,
+            plaN_DESC:
+              response.data[i].plaN_DESC.length < 200
+                ? response.data[i].plaN_DESC
+                : response.data[i].plaN_DESC.slice(0, 200) + "……",
+          };
+          this.plans.push(plan);
+        });
+      }
     });
   },
 };

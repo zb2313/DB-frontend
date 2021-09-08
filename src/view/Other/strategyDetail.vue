@@ -3,26 +3,19 @@
     <Header activeIndex="4" />
 
     <el-main>
-      <img
-        class="bgc"
-        src="https://marriotteventsasia.com.cn/wp-content/uploads/2020/10/mfmsi-attraction-tower-3410-ver-clsc.jpg"
-        style="width: 100%; height: 400px"
-      />
+      <img class="bgc" :src="bgc" style="width: 100%; height: 400px" />
 
       <div class="main">
         <div class="titleBox">
-          <img
-            src="http://49.234.47.118:8080/pictures/user_uprofile_3.jpg"
-            class="avatar"
-          />
+          <img :src="uprofile" class="avatar" />
 
           <div class="title">
-            芬兰瑞典 ▏感觉孤独的时候我就去北欧凛冽的世界尽头
+            {{ plaN_TITLE }}
           </div>
 
           <div class="block">
-            <div class="username">张三</div>
-            <div class="update-time">2021-9-7 18:00</div>
+            <div class="username">{{ useR_NAME }}</div>
+            <div class="update-time">{{ pubL_TIME }}</div>
 
             <div class="icons" @click="like">
               <img
@@ -31,7 +24,7 @@
                 src="../../assets/img/heartPink.svg"
               />
               <img v-else class="heart" src="../../assets/img/heartGrey.svg" />
-              <div class="text">喜欢 520</div>
+              <div class="text">喜欢 {{ plaN_STAR }}</div>
             </div>
             <div class="icons" @click="collect">
               <img
@@ -54,12 +47,14 @@
         <div class="main">
           <div class="left">
             <div class="intro">
-              <span><i class="calendar"></i> 天数: 6天</span>
-              <span><i class="clock"></i> 时间：2021年5月</span>
+              <span><i class="calendar"></i> 天数: {{ timeSpan }}天</span>
+              <span><i class="clock"></i> 时间：{{ plaY_TIME }}</span>
               <div class="positions">
                 <i class="position"></i> 作者去了这些地方：
-                <p v-for="(day, i) in 3" :key="i">
-                  Day{{ i + 1 }}：<span v-for="(item, index) in 5" :key="index"
+                <p v-for="(day, i) in days" :key="i">
+                  Day{{ i + 1 }}：<span
+                    v-for="(item, index) in day"
+                    :key="index"
                     ><span class="el-icon-arrow-right" v-show="index"></span>
                     <el-popover
                       placement="bottom-start"
@@ -70,13 +65,13 @@
                         <div
                           class="popover-picture"
                           :style="{
-                            backgroundImage: 'url(' + picture + ')',
+                            backgroundImage: 'url(' + item.picture + ')',
                             backgroundSize: '100% 100%',
                             backgroundRepeat: 'no-repeat',
                           }"
                         ></div>
                         <div class="popover-detail">
-                          <h3 class="popover-title">天坛</h3>
+                          <h3 class="popover-title">{{ item.item_name }}</h3>
                           <img
                             src="../../assets/img/star.svg"
                             v-for="i in 4"
@@ -84,12 +79,14 @@
                             style="margin-top: 8px; margin-left: -1px"
                           />
                           <div class="popover-address" style="margin-top: 8px">
-                            上海市嘉定区曹安公路4800号
+                            {{ item.location }}
                           </div>
                           <div class="popover-button">了解详情</div>
                         </div>
                       </div>
-                      <span class="location" slot="reference">喜马拉雅</span>
+                      <span class="location" slot="reference">{{
+                        item.item_name
+                      }}</span>
                     </el-popover>
                   </span>
                 </p>
@@ -97,8 +94,8 @@
             </div>
             <el-divider></el-divider>
             <div class="mainText">
-              <p v-for="i in 10" :key="i">
-                仍记得3年前初见丽江的模样：蓝天、白云、青山、绿水，遥望雪山看着“印象丽江”，不设防地被剧情所渲染，以至于现在再与他邂逅时，如朋友般，可以随着旋律一起哼唱……这是一个神奇的地方，被雪山守护庇佑着，这是一个美丽的地方，赏风花雪月，不争朝夕，与苍山洱海为伴，闲来看云卷云舒，繁星点点……
+              <p v-for="i in 5" :key="i">
+                {{ plaN_DESC }}
               </p>
             </div>
           </div>
@@ -154,6 +151,7 @@
   margin-left: 20px;
   color: white;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-weight: 600;
 }
 .block {
   height: 20px;
@@ -322,6 +320,19 @@ export default {
       collected: false,
       picture:
         "https://marriotteventsasia.com.cn/wp-content/uploads/2020/10/mfmsi-attraction-tower-3410-ver-clsc.jpg",
+      useR_ID: "",
+      plaN_ID: "",
+      useR_NAME: "张三",
+      uprofile: "",
+      pubL_TIME: "2021-9-7 18:00",
+      plaY_TIME: "2021-09-02",
+      timeSpan: 6,
+      plaN_STAR: 520,
+      plaN_DESC:
+        "同济大学嘉定校区占地面积1900余亩，建筑总面积约45万平方米，建设总投资约25亿人民币。校区分为",
+      plaN_TITLE: "这里是一片净土——同济大学嘉定校区一日游",
+      days: [],
+      bgc: "",
     };
   },
   methods: {
@@ -331,6 +342,45 @@ export default {
     collect() {
       this.collected = !this.collected;
     },
+  },
+  created() {
+    this.useR_ID = this.$route.query.useR_ID;
+    this.plaN_ID = this.$route.query.plaN_ID;
+    fetch(
+      "http://49.234.18.247:8080/api/Plan/" + this.useR_ID + "&" + this.plaN_ID
+    )
+      .then(function (response) {
+        return response.json();
+      })
+      .then((res) => {
+        this.pubL_TIME = res[0].pubL_TIME;
+        this.plaY_TIME = res[0].plaY_TIME;
+        this.plaN_TITLE = res[0].plaN_TITLE;
+        this.plaN_STAR = res[0].plaN_STAR;
+        this.plaN_DESC = res[0].plaN_DESC;
+        let plan = JSON.parse(res[0].plan);
+        let picture = plan[0][0].picture;
+        this.bgc = picture;
+        this.days = [];
+        this.timeSpan = 0;
+        for (let i = 0; i < plan.length; i++) {
+          if (plan[i].length !== 0) {
+            this.days.push(plan[i]);
+            this.timeSpan++;
+            // console.log(plan[i]);
+          }
+        }
+        console.log(this.days[0][0]);
+      });
+
+    fetch("http://49.234.18.247:8080/api/Users/" + this.useR_ID)
+      .then(function (response) {
+        return response.json();
+      })
+      .then((res) => {
+        this.useR_NAME = res[0].useR_NAME;
+        this.uprofile = res[0].uprofile;
+      });
   },
 };
 </script>
