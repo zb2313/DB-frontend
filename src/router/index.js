@@ -46,6 +46,14 @@ const routes = [
                 component: () => import( /* webpackChunkName: "dashboard" */ "../view/Dashboard")
             },
             {
+                path: "/AnnualReport",
+                name: "AnnualReport",
+                meta: {
+                    title: '年度报告'
+                },
+                component: () => import( /* webpackChunkName: "dashboard" */ "../view/Other/AnnualReport")
+            },
+            {
                 path: '/travelplan',
                 name: 'travelplan',
                 meta:

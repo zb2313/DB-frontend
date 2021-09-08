@@ -67,7 +67,11 @@ export default {
              icon: "el-icon-tickets",
              index: "/myplan",
              title: "我的攻略",
-
+           },
+           {
+             icon: "el-icon-tickets",
+             index: "/AnnualReport",
+             title: "年度报告",
            },
            {
              icon: "el-icon-s-comment",
