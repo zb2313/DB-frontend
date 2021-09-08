@@ -184,11 +184,33 @@
                         <el-divider></el-divider>
                       </div>
                       <div style="text-align: right">
-                        <button @click="aliPay" class="pay_btn">
+                        <button
+                          @click="aliPay"
+                          class="pay_btn"
+                          v-if="buttonVisible"
+                        >
                           支付宝支付
                         </button>
-                        <button @click="wechatPay" class="pay_btn">
+                        <button
+                          @click="wechatPay"
+                          class="pay_btn"
+                          v-if="buttonVisible"
+                        >
                           微信支付
+                        </button>
+                        <button
+                          @click="close"
+                          class="pay_btn"
+                          v-if="afterPayVisible"
+                        >
+                          完成支付
+                        </button>
+                        <button
+                          @click="close"
+                          class="pay_btn"
+                          v-if="afterPayVisible"
+                        >
+                          取消支付
                         </button>
                       </div>
                     </el-dialog>
@@ -298,7 +320,13 @@
             <h1>景点介绍</h1>
             <div>
               <el-row type="flex" style="margin-top: 20px">
-                <el-col :span="24">{{ description }}</el-col>
+                <el-col :span="24"
+                  >{{
+                    description
+                      ? description
+                      : "该景点历史悠久，文化底蕴丰厚，与时俱进，不落俗套。全体职工人员倾心付出，诚恳地为您服务。春夏秋冬，不论寒暑，欢迎您的到来。"
+                  }}
+                </el-col>
               </el-row>
               <el-divider></el-divider>
               <h1>开放时间</h1>
@@ -587,10 +615,9 @@ img {
 }
 .rightprice {
   float: right;
-  width: 40%;
+  width: 42%;
   margin-right: 5px;
   text-align: right;
-  font-size: 22px;
   font-weight: 700;
   color: red;
   margin-top: -5px;
@@ -630,7 +657,9 @@ export default {
     return {
       leftOut: 12,
       orderNum: 1,
+      afterPayVisible: false,
       payVisible: false,
+      buttonVisible: true,
       AttrId: "",
       attrationName: "上海海昌海洋公园",
       starNum: 5,
@@ -643,8 +672,7 @@ export default {
       storePrice: 59,
       nearSubwayStation: "临港中运量1号线杞青路站",
       nearSubwayDistance: 793,
-      description:
-        "上海海昌海洋公园被评定为国家4A级旅游景区，以海洋文化为主题，缔造五大区域和一个度假酒店，拥有《虎鲸科普秀》《海象嘻游记》《海豚恋曲》等十六大明星剧目；设有南极企鹅馆、海兽探秘馆等六大动物展示场馆，提供火山漂流、海豚过山车等十余项游乐设施，汇聚三万余只海洋生物，展现海洋梦幻花车巡游及百场演艺！",
+      description: "",
       baseImg:
         "https://dimg06.c-ctrip.com/images/100q11000000qcqie2920_C_1600_1200.jpg",
       form_Select: {
@@ -686,11 +714,31 @@ export default {
   methods: {
     // prevPage() {},
     // nextPage() {},
+
+    // 时间格式化
+    timestampToTime(chinaStandard) {
+      var date = new Date(chinaStandard);
+      var y = date.getFullYear();
+      var m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      var d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      var h = date.getHours();
+      var minute = date.getMinutes();
+      minute = minute < 10 ? "0" + minute : minute;
+      var second = date.getSeconds();
+      second = second < 10 ? "0" + second : second;
+      var Time = y + "-" + m + "-" + d + " " + h + ":" + minute + ":" + second;
+      return Time;
+    },
     ticketNumChange() {
       this.storePrice = this.ticketPrice * this.orderNum;
     },
     beforePay() {
       this.payVisible = true;
+    },
+    close() {
+      this.payVisible = false;
     },
     commentLevelChange(val) {
       if (val === "1") {
