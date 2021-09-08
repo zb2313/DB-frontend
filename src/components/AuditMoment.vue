@@ -19,7 +19,7 @@
           <img
             :src="item.picture"
             v-if="item.picture !== null"
-            style="width: 80%"
+            style="height: 300px"
           />
           <div v-if="item.vedio !== null">
             <iframe
