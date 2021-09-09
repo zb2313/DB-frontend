@@ -15,7 +15,7 @@
     <span class="user_name" style="float: left"> 用户ID:{{item.useR_ID}}</span>
 		<span class="moment_time" style="float:left"> {{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
       </pre>
-          <div><br>{{item.text}}<br>
+          <div>{{item.text}}<br>
           <img
             :src="item.picture"
             v-if="item.picture !== null"

@@ -77,6 +77,7 @@ export default
     return{
       mailIDs:[],
       mails:[],
+      mailbox:"",
       mailDate:[],
       message:"first",
       state:{
@@ -127,18 +128,19 @@ export default
     axios.get("http://49.234.18.247:8080/api/SendMessage")
     .then((response)=>
     {
-      let t=response.data;
-      let t1=localStorage.getItem("mailbox_id");
-      for(let i=0;i<t.length;i++)
+      let t=response.data;console.log('l',t)
+     // let t1=localStorage.getItem("mailbox_id");
+      axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_username"))
+      .then(res=>{
+        this.mailbox=res.data[0].mailboX_ID;
+        for(let i=0;i<t.length;i++)
       {
-        if(t[i].mailboX_ID==t1)
+        if(t[i].mailboX_ID==this.mailbox)
         {
           this.mailIDs.push(t[i].maiL_ID);
           this.mailDate.push(t[i].senD_TIME);
         }
       }
-    })//获取所有的maiL_ID
-
      axios.get("http://49.234.18.247:8080/api/Mail")
          .then((response) =>
              {
@@ -157,6 +159,10 @@ export default
                }
              }
          );
+      })
+      
+    })//获取所有的maiL_ID
+
 
 
   }

@@ -49,12 +49,9 @@
     <!-- 动态区域 -->
     <div class="showMoment">
      <el-card v-if="this.Moments.length===0"> <span>暂无数据···</span></el-card><br>
-      <li
-        class="show"
-        v-for="(item, index) in Moments"
-        :key="index"
-        style="list-style: none"
-      >
+       <el-col :span="9" v-for="(item, index) in Moments" 
+      :key="index"
+      :offset="2">
         <el-card class="singleMoment">
           <el-avatar
           :size="55"
@@ -93,7 +90,7 @@
               <!-- 动态发布地点信息和时间信息 -->
          <br>
         </el-card>
-      </li>
+       </el-col>
     </div>
   </div>
     </el-main></el-container>
@@ -156,11 +153,9 @@ export default {
   // created()：在实例创建完成后被立即调用
   created() {
     this.getMoments();
-    this.user_avator=localStorage.getItem("pictrue");
-      this.user_avator="http://49.234.47.118:8080/pictures/user_uprofile_3.jpg";
 axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_username"))
 .then((res)=>
-{
+{this.user_avator=res.data[0].uprofile;
   this.user_name=res.data[0].useR_NAME;
 })
   },
@@ -168,11 +163,7 @@ axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_userna
 </script>
 
 <style scoped>
-.sss {
-  float:left;
-  margin-top:45px;
-  margin-left: 190px;
-}
+
 .ALLMoment {
   min-height: 633px;
   width: 100%;
@@ -189,7 +180,6 @@ axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_userna
 }
 .showMoment {
   height: auto;
-  max-width: 1000px;
   margin: 12px auto;
   border-radius: 10px;
 }
