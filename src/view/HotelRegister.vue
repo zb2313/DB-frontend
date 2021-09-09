@@ -32,7 +32,7 @@
 
         <el-upload
             class="upload-demo"
-            action="http://49.234.18.247:8080/api/HotelLicense/0000000002"
+            :action="getUploadUrl"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :file-list="fileList"
@@ -89,6 +89,10 @@ export default {
     };
   },
   methods: {
+    getUploadUrl()
+    {
+      return "http://49.234.18.247:8080/api/HotelLicense/"+this.setUserID();
+    },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
@@ -109,6 +113,7 @@ export default {
         ID+=chars[id];
       }
       this.form.user_ID=ID;
+      return ID;
     },
     setMailBoxID()
     {

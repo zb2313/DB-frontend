@@ -16,6 +16,11 @@ const routes = [
         component: () => import('@/view/Homepage')
     },
     {
+        path:'/hotelRegister',
+        name:"HotelRegister",
+        component:()=>import('@/view/HotelRegister')
+    },
+    {
         path: "/login",
         name: "Login",
         meta: {
