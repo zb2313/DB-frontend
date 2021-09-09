@@ -208,7 +208,7 @@ export default {
       this.$axios.post("http://49.234.18.247:8080/api/FavouriteContents", {
         favoR_ID: this.favs[command].favoR_ID,
         linK_ID: this.ID,
-        merchanT_LINK: this.ID,
+        merchanT_LINK: this.type + this.ID,
       });
       this.$axios.put(
         "http://49.234.18.247:8080/api/Favorites/" +
