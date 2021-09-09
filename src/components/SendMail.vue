@@ -6,7 +6,7 @@
       <el-card>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm"   label-width="100px" class="demo-ruleForm" style="width:900px">
           <el-form-item label="收件人" prop="mailboxID">
-             <el-select v-model="ruleForm.mailboxID" filterable placeholder="请选择">
+             <el-select v-model="ruleForm.mailboxID" filterable placeholder="请选择收件人">
               <el-option
               v-for="item in users"
               :key="item.useR_ID"
@@ -16,7 +16,7 @@
            </el-select>
           </el-form-item>
           <el-form-item label="收件人邮箱" prop="mailboxID">
-            <el-select v-model="ruleForm.mailboxID" filterable placeholder="请选择">
+            <el-select v-model="ruleForm.mailboxID" filterable placeholder="请选择收件人邮箱">
               <el-option
               v-for="item in users"
               :key="item.useR_ID"
