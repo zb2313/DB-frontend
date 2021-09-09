@@ -1,9 +1,6 @@
 <template>
   <div>
     <div style="margin: auto">
-      <!-- <el-button icon="el-icon-delete" @click="deleteElVisible = true"
-        >从收藏夹中删除</el-button
-      > -->
       <el-button icon="el-icon-back" @click="returnToFavorites"
         >返回收藏夹列表</el-button
       >
@@ -41,7 +38,12 @@
             >{{ label }}</span
           >
         </div>
-        <img class="more" src="../assets/img/more.svg" />
+
+        <el-popover placement="bottom-start" width="50" trigger="hover">
+          <div @click="myDelete(item.hoteL_ID, 1)">删除</div>
+          <!-- <div @click="myMove(item.hoteL_ID)">移动</div> -->
+          <img class="more" slot="reference" src="../assets/img/more.svg" />
+        </el-popover>
       </div>
     </div>
 
@@ -83,7 +85,11 @@
             >{{ label }}</span
           >
         </div>
-        <img class="more" src="../assets/img/more.svg" />
+        <el-popover placement="bottom-start" width="50" trigger="hover">
+          <div @click="myDelete(item.attractioN_ID, 2)">删除</div>
+          <!-- <div @click="myMove(item.attractioN_ID)">移动</div> -->
+          <img class="more" slot="reference" src="../assets/img/more.svg" />
+        </el-popover>
       </div>
     </div>
   </div>
@@ -122,41 +128,49 @@ export default {
         query: { id: AttrID },
       });
     },
-    deleteFromFavorites() {
-      for (let i = 0; i < this.favors.length; i++) {
-        if (this.favors[i].label == this.deleteFavoriteName) {
-          axios.delete(
-            "http://49.234.18.247:8080/api/FavouriteContents/" +
-              localStorage.getItem("favorites_num") +
-              "&" +
-              this.favors[i].id
+    myDelete(linK_ID, type) {
+      this.$axios.delete(
+        "http://49.234.18.247:8080/api/FavouriteContents/" +
+          localStorage.getItem("favorites_num") +
+          "&" +
+          linK_ID
+      );
+
+      this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/Favorites/" +
+            localStorage.getItem("favorites_num")
+        )
+        .then((response) => {
+          this.$axios.put(
+            "http://49.234.18.247:8080/api/Favorites/" +
+              localStorage.getItem("favorites_num"),
+            {
+              favoR_ID: response.data[0].favoR_ID,
+              favoR_NAME: response.data[0].favoR_NAME,
+              favoR_CONTENT_NUM: response.data[0].favoR_CONTENT_NUM - 1,
+            }
           );
-          this.deleteElVisible = false;
-          return;
+        });
+
+      if (type == 1) {
+        for (let i = 0; i < this.hotels.length; i++) {
+          if (this.hotels[i].hoteL_ID == linK_ID) {
+            this.hotels.splice(i, 1);
+          }
+        }
+      } else if (type == 2) {
+        for (let i = 0; i < this.attractions.length; i++) {
+          if (this.attractions[i].attractioN_ID == linK_ID) {
+            this.attractions.splice(i, 1);
+          }
         }
       }
+      //  else if(type==3){
+      //   for (let i = 0; i < this.strategies.length; i++) {
+      //   }
+      // }
       this.$message.success("删除成功");
-    },
-    setLinkID() {
-      let chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-      let ID = "";
-      for (let i = 0; i < 10; i++) {
-        let id = Math.ceil(Math.random() * 9);
-        ID += chars[id];
-      }
-      return ID;
-    },
-    createFavorite() {
-      this.createElVisible = true;
-      let newID = this.setLinkID();
-      let favorID = localStorage.getItem("favorites_num");
-      axios.post("http://49.234.18.247:8080/api/FavouriteContents", {
-        favoR_ID: favorID,
-        linK_ID: newID,
-        merchanT_LINK: this.newFavoriteName,
-      });
-      this.createElVisible = false;
-      this.$message("添加成功");
     },
   },
   created() {
@@ -173,19 +187,22 @@ export default {
                 .get("http://49.234.18.247:8080/api/Attraction/" + t[i].linK_ID)
                 .then((attr) => {
                   this.attractions.push(attr.data[0]);
-                  console.log(attr.data[0]);
                 });
             } else if (t[i].merchanT_LINK.includes("房客")) {
               axios
                 .get("http://49.234.18.247:8080/api/Hotel/" + t[i].linK_ID)
                 .then((hotel) => {
                   this.hotels.push(hotel.data[0]);
-                  console.log(this.hotels[0]);
                 });
+            } else if (t[i].merchanT_LINK.includes("攻略")) {
+              // axios
+              //   .get("http://49.234.18.247:8080/api/Hotel/" + t[i].linK_ID)
+              //   .then((hotel) => {
+              //     this.hotels.push(hotel.data[0]);
+              //     console.log(this.hotels[0]);
+              //   });
+              console.log(t[i]);
             }
-            // else if(t[i].merchanT_LINK.includes("攻略")){
-
-            // }
             this.favors.push({
               value: k + 1,
               label: t[i].merchanT_LINK,
@@ -268,6 +285,16 @@ export default {
   position: absolute;
   top: 145px;
   left: 215px;
+}
+.el-popover div {
+  width: 100%;
+  height: 20px;
+  text-align: center;
+}
+.el-popover div:hover {
+  cursor: pointer;
+  background-color: #0071c2;
+  color: white;
 }
 </style>
 

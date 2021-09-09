@@ -26,15 +26,33 @@
               <img v-else class="heart" src="../../assets/img/heartGrey.svg" />
               <div class="text">喜欢 {{ plaN_STAR }}</div>
             </div>
-            <div class="icons" @click="collect">
-              <img
-                v-if="collected"
-                class="star"
-                src="../../assets/img/starYellow.svg"
-              />
-              <img v-else class="star" src="../../assets/img/starGrey.svg" />
+
+            <!-- 收藏用 -->
+            <el-popover placement="bottom-start" width="50" trigger="hover">
+              <div
+                v-for="(item, index) in favs"
+                :key="index"
+                @click="collect(index)"
+                class="popover-collect"
+              >
+                {{ item.favoR_NAME }}
+              </div>
+              <div class="icons" slot="reference" v-show="!collected">
+                <img class="star" src="../../assets/img/starGrey.svg" />
+                <div class="text">收藏 {{ collectNum }}</div>
+              </div>
+            </el-popover>
+
+            <!-- <div class="icons" v-show="!collected">
+              <img class="star" src="../../assets/img/starGrey.svg" />
+              <div class="text">收藏 {{ collectNum }}</div>
+            </div> -->
+
+            <div class="icons" v-show="collected" @click="quitCollect()">
+              <img class="star" src="../../assets/img/starYellow.svg" />
               <div class="text">收藏 {{ collectNum }}</div>
             </div>
+
             <div class="icons">
               <img class="eye" src="../../assets/img/eye.svg" />
               <div class="text">浏览 34万+</div>
@@ -196,6 +214,16 @@
   margin-top: 3px;
   margin-left: 20px;
 }
+.popover-collect {
+  width: 100%;
+  height: 20px;
+  text-align: center;
+}
+.popover-collect:hover {
+  cursor: pointer;
+  background-color: #0071c2;
+  color: white;
+}
 .location:hover {
   cursor: pointer;
   color: #ea9518;
@@ -332,6 +360,9 @@ export default {
   },
   data() {
     return {
+      myUserId: "",
+      temp: [],
+      favs: [],
       liked: false,
       collected: false,
       collectNum: 340,
@@ -414,13 +445,29 @@ export default {
       }
       this.liked = !this.liked;
     },
-    collect() {
-      if (this.collected) {
-        this.collectNum--;
-      } else {
-        this.collectNum++;
-      }
-      this.collected = !this.collected;
+    collect(index) {
+      this.collectNum++;
+
+      this.collected = true;
+
+      // this.$axios.post("http://49.234.18.247:8080/api/FavouriteContents", {
+      //   favoR_ID: this.favs[index].favoR_ID,
+      //   linK_ID: this.useR_ID + this.plaN_ID,
+      //   merchanT_LINK: "攻略" + this.useR_ID + this.plaN_ID,
+      // });
+      // this.$axios.put(
+      //   "http://49.234.18.247:8080/api/Favorites/" + this.favs[index].favoR_ID,
+      //   {
+      //     favoR_ID: this.favs[index].favoR_ID,
+      //     favoR_NAME: this.favs[index].favoR_NAME,
+      //     favoR_CONTENT_NUM: this.favs[index].favoR_CONTENT_NUM + 1,
+      //   }
+      // );
+      this.$message("收藏成功！");
+    },
+    quitCollect() {
+      this.collected = false;
+      this.collectNum--;
     },
     toDetail(id, type) {
       if (type == "attraction") {
@@ -504,6 +551,26 @@ export default {
       .then((res) => {
         this.useR_NAME = res[0].useR_NAME;
         this.uprofile = res[0].uprofile;
+      });
+
+    this.myUserId = localStorage.getItem("ms_username");
+    this.$axios
+      .get("http://49.234.18.247:8080/api/HasFavorites")
+      .then((response) => {
+        for (let i = 0; i < response.data.length; i++) {
+          if (response.data[i].useR_ID == this.myUserId) {
+            this.temp.push(response.data[i].favoR_ID);
+          }
+        }
+        this.$axios
+          .get("http://49.234.18.247:8080/api/Favorites")
+          .then((response) => {
+            for (let i = 0; i < response.data.length; i++) {
+              if (this.temp.includes(response.data[i].favoR_ID)) {
+                this.favs.push(response.data[i]);
+              }
+            }
+          });
       });
   },
 };

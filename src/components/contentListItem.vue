@@ -280,19 +280,19 @@ export default {
               }
             }
           });
-      });
 
-    this.$axios
-      .get("http://49.234.18.247:8080/api/FavouriteContents")
-      .then((response) => {
-        for (var i = 0; i < response.data.length; i++) {
-          if (
-            this.temp.includes(response.data[i].favoR_ID) &&
-            response.data[i].linK_ID == this.ID
-          ) {
-            this.clicked = true;
-          }
-        }
+        this.$axios
+          .get("http://49.234.18.247:8080/api/FavouriteContents")
+          .then((response) => {
+            for (var i = 0; i < response.data.length; i++) {
+              if (
+                this.temp.includes(response.data[i].favoR_ID) &&
+                response.data[i].linK_ID == this.ID
+              ) {
+                this.clicked = true;
+              }
+            }
+          });
       });
   },
 };
