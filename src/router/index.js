@@ -3,6 +3,7 @@ import Vue from "vue";
 import Home from "@/view/Home";
 Vue.use(VueRouter)
 const routes = [
+ 
     {
         path: '/',
         redirect: '/Homepage'

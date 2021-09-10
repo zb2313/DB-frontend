@@ -19,6 +19,7 @@ module.exports = {
           // },
           
           // },
+         
           '/traininfo': {       //此处并非和url一致
             target:'https://kyfw.12306.cn/otn/leftTicket',
             changeOrigin:true, //允许跨域
