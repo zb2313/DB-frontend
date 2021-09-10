@@ -89,7 +89,7 @@
         </el-form>
       </div>
     </div>
-    <el-dialog title="验证码登录" :visible="mailVisible">
+    <el-dialog title="验证码登录" :visible="mailVisible" width="640px">
       <el-form ref="login" label-width="80px" class="ms-content">
         <el-form-item label="邮箱/手机">
           <el-input style="width: 340px" v-model="param.userid"> </el-input>
@@ -114,7 +114,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="找回密码" :visible="forgetVisible">
+    <el-dialog title="找回密码" :visible="forgetVisible" width="780px">
       <el-form ref="login" label-width="90px" class="ms-content">
         <el-form-item label="邮箱/手机号">
           <el-input style="width: 450px" v-model="param.userid"> </el-input>
@@ -144,7 +144,7 @@
           </el-input>
         </el-form-item>
       </el-form>
-      <div style="float: right">
+      <div style="margin-left: 260px">
         <el-button type="primary" @click="resetPassword">重置密码</el-button>
         <el-button @click="forgetVisible = false">关闭</el-button>
       </div>

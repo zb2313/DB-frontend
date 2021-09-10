@@ -2,7 +2,14 @@
   <el-container direction="vertical">
     <Header activeIndex="0" />
     <!-- 搜索区域 -->
-    <div class="search">
+    <div
+      class="search"
+      :style="{
+        backgroundImage: 'url(' + coverImgUrl + ')',
+        backgroundSize: '100% 100%',
+        backgroundRepeat: 'no-repeat',
+      }"
+    >
       <div class="block">
         <h1 style="font-size: 30px">搜索预订美好体验</h1>
         <p style="margin-top: 4px">发现目的地更多精彩活动，尽享欢乐旅程</p>
@@ -421,6 +428,7 @@ export default {
   },
   data() {
     return {
+      coverImgUrl: require("../assets/img/scene.jpg"),
       currentCity: "",
       adcode: 110101,
       weather: "",
@@ -1140,7 +1148,7 @@ export default {
 .block {
   margin-left: 24%;
   width: 70%;
-  color: #003680;
+  color: white;
 }
 .el-input /deep/ .el-input__inner {
   height: 55px;
