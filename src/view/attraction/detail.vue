@@ -183,6 +183,10 @@
                         </div>
                         <el-divider></el-divider>
                       </div>
+                      <h1>{{ payWay }}</h1>
+                      <br />
+                      <div id="qrcode" style="margin-left: 100px"></div>
+                      <br />
                       <div style="text-align: right">
                         <button
                           @click="aliPay"
@@ -201,14 +205,14 @@
                         <button
                           @click="close"
                           class="pay_btn"
-                          v-if="afterPayVisible"
+                          v-if="submitVisible"
                         >
                           完成支付
                         </button>
                         <button
                           @click="close"
                           class="pay_btn"
-                          v-if="afterPayVisible"
+                          v-if="submitVisible"
                         >
                           取消支付
                         </button>
@@ -225,7 +229,7 @@
               <br />
               <br />
               <div>
-                <i class="el-icon-date"></i> &nbsp;&nbsp;{{ openTime }}-{{
+                <i class="el-icon-date"></i> &nbsp;&nbsp; {{ openTime }}-{{
                   closeTime
                 }}开放（ {{ stopTime }}停止检票）
               </div>
@@ -332,9 +336,13 @@
               <h1>开放时间</h1>
               <el-row type="flex" style="margin-top: 20px">
                 <el-col :span="24"
-                  >7月1日-8月31日 周一至周五 09:00-20:00(最晚检票19:00)
-                  周六至周日
-                  09:00-20:30(最晚检票19:30)；年卡中心开卡时间：开园前半小时至闭园前一个半小时。
+                  >7月1日-8月31日 周一至周五 {{ openTime }}-{{
+                    closeTime
+                  }}(最晚检票{{ closeTime }}) 周六至周日 {{ openTime }}-{{
+                    closeTime
+                  }}(最晚检票{{ openTime }}-{{
+                    closeTime
+                  }})；年卡中心开卡时间：开园前半小时至闭园前一个半小时。
                   景区现场停止售票时间：闭园前一个半小时。
                   闭园前1小时停止检票</el-col
                 >
@@ -643,8 +651,10 @@ img {
 </style>
 
 
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>    
 <script>
-import Header from "@/components/Header.vue";
+import QRCode from "qrcodejs2";
+import Header from "@/components/Header";
 import CommentOnAttr from "@/components/commentOnAttr.vue";
 import Footer1 from "@/components/Footer1.vue";
 export default {
@@ -655,12 +665,14 @@ export default {
   },
   data() {
     return {
+      payWay: " ",
       leftOut: 12,
       orderNum: 1,
-      afterPayVisible: false,
+      submitVisible: false,
       payVisible: false,
       buttonVisible: true,
       AttrId: "",
+      purchaseTime: "",
       attrationName: "上海海昌海洋公园",
       starNum: 5,
       location: "上海市浦东新区南汇新城镇银飞路166号",
@@ -790,8 +802,97 @@ export default {
         });
       }
     },
-    aliPay() {},
-    wechatPay() {},
+    Pay() {
+      var Now = new Date();
+      this.purchaseTime = this.timestampToTime(Now);
+      this.$axios
+        .post("http://49.234.18.247:8080/api/PurchaseAttractionTicket", {
+          useR_ID: "0000000001",
+          attractioN_ID: this.AttrId,
+          price: this.storePrice,
+          ordeR_TIME: this.purchaseTime,
+        })
+        .then((response) => {
+          console.log("加订单成功");
+          this.$message({
+            message: "恭喜你，成功预定该景点票！",
+            type: "success",
+          });
+          this.payVisible = false;
+        });
+    },
+    aliPay() {
+      this.buttonVisible = false;
+      this.submitVisible = true;
+      var Now = new Date();
+      var specialID = this.timestampToTime(Now);
+      this.orderId = specialID;
+      var specialConst = "TJcfy";
+      var specialPrice = this.storePrice.toString();
+      var specialSign = md5(md5(specialID + specialPrice) + specialConst);
+      console.log(specialSign);
+      this.$axios
+        .post("/qrcode", {
+          order_id: specialID,
+          order_type: "alipay",
+          order_price: specialPrice,
+          order_name: "景点",
+          sign: specialSign,
+          redirect_url: window.location.href,
+          extension: "1111",
+        })
+        .then((response) => {
+          console.log(response.data.qr_url);
+          this.qrcode = response.data.qr_url;
+          this.payWay = "支付宝支付";
+          var qrCode = new QRCode(document.getElementById("qrcode"), {
+            width: 200, //设置宽高
+            height: 200,
+          });
+          qrCode.makeCode(this.qrcode);
+
+          for (let m = 10; m < 11; m++) {
+            let _this = this;
+            window.setTimeout(_this.Pay, 4000 * m);
+          }
+        });
+    },
+    wechatPay() {
+      this.buttonVisible = false;
+      this.submitVisible = true;
+      var Now = new Date();
+      var specialID = this.timestampToTime(Now);
+      this.orderId = specialID;
+      var specialConst = "TJcfy";
+      var specialPrice = this.storePrice.toString();
+      var specialSign = md5(md5(specialID + specialPrice) + specialConst);
+      console.log(specialSign);
+      this.$axios
+        .post("/qrcode", {
+          order_id: specialID,
+          order_type: "wechat",
+          order_price: specialPrice,
+          order_name: "景点",
+          sign: specialSign,
+          redirect_url: window.location.href,
+          extension: "1111",
+        })
+        .then((response) => {
+          console.log(response.data.qr_url);
+          this.qrcode = response.data.qr_url;
+          this.payWay = "微信支付";
+          var qrCode = new QRCode(document.getElementById("qrcode"), {
+            width: 200, //设置宽高
+            height: 200,
+          });
+          qrCode.makeCode(this.qrcode);
+          for (let m = 10; m < 11; m++) {
+            let _this = this;
+            window.setTimeout(_this.Pay, 4000 * m);
+          }
+        });
+    },
+
     // 地址转经纬度
     async addressToLnglat(address) {
       return fetch(
