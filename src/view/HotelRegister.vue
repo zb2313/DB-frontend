@@ -88,7 +88,7 @@ export default {
   methods: {
     getUploadUrl()
     {
-      return "http://49.234.18.247:8080/api/HotelLicense/"+this.setUserID();
+      return "http://49.234.18.247:8080/api/HotelLicense/"+this.form.hotel_id;
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
