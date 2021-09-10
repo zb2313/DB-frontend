@@ -7,67 +7,69 @@
       backgroundRepeat: 'no-repeat',
     }"
   >
-    <div class="dashboard-container">
-      <div class="title"><h1>注册</h1></div>
-      <br />
-      <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="用户昵称">
-          <el-input style="width: 380px" v-model="form.user_NAME" />
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input style="width: 380px" v-model="form.Password" />
-        </el-form-item>
-        <el-form-item label="确认密码">
-          <el-input
-            type="password"
-            style="width: 380px"
-            v-model="form.checkPassword"
-          />
-        </el-form-item>
-        <el-form-item label="身份证号">
-          <el-input style="width: 380px" v-model="form.id_number" />
-        </el-form-item>
-        <el-form-item label="注册方式">
-          <el-radio v-model="registerType" label="1">手机号注册</el-radio>
-          <el-radio v-model="registerType" label="2">邮箱注册</el-radio>
-        </el-form-item>
-        <el-form-item label="手机" v-if="registerType == 1">
-          <el-input style="width: 268px" v-model="form.tele_NUMBER" />
-          <el-button type="primary" @click="sendPhoneVerifyCode"
-            >发送验证码</el-button
-          >
-        </el-form-item>
-        <el-form-item label="E-mail" v-if="registerType == 2">
-          <el-input style="width: 268px" v-model="form.mail" />
-          <el-button type="primary" @click="sendMailVerifyCode"
-            >发送验证码</el-button
-          >
-        </el-form-item>
-        <el-form-item label="邮箱验证码" v-if="mailVerifyStatus">
-          <el-input style="width: 250px" v-model="form.verifycode"></el-input>
-        </el-form-item>
-        <el-form-item label="手机验证码" v-if="phoneVerifyStatus">
-          <el-input style="width: 250px" v-model="form.verifycode"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="form.Gender">
-            <el-radio label="男" />
-            <el-radio label="女" />
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="地点">
-          <v-distpicker
-            @province="onChangeProvince"
-            @city="onChangeCity"
-            @area="onChangeArea"
-          >
-          </v-distpicker>
-        </el-form-item>
-        <div style="text-align: center; margin-top: 40px">
-          <el-button type="primary" @click="onSubmit">注册</el-button>
-          <el-button @click="goBack">取消</el-button>
-        </div>
-      </el-form>
+    <div class="main">
+      <div class="dashboard-container">
+        <div class="title"><h1>注册</h1></div>
+        <br />
+        <el-form ref="form" :model="form" label-width="100px">
+          <el-form-item label="用户昵称">
+            <el-input style="width: 380px" v-model="form.user_NAME" />
+          </el-form-item>
+          <el-form-item label="密码">
+            <el-input style="width: 380px" v-model="form.Password" />
+          </el-form-item>
+          <el-form-item label="确认密码">
+            <el-input
+              type="password"
+              style="width: 380px"
+              v-model="form.checkPassword"
+            />
+          </el-form-item>
+          <el-form-item label="身份证号">
+            <el-input style="width: 380px" v-model="form.id_number" />
+          </el-form-item>
+          <el-form-item label="注册方式">
+            <el-radio v-model="registerType" label="1">手机号注册</el-radio>
+            <el-radio v-model="registerType" label="2">邮箱注册</el-radio>
+          </el-form-item>
+          <el-form-item label="手机" v-if="registerType == 1">
+            <el-input style="width: 268px" v-model="form.tele_NUMBER" />
+            <el-button type="primary" @click="sendPhoneVerifyCode"
+              >发送验证码</el-button
+            >
+          </el-form-item>
+          <el-form-item label="E-mail" v-if="registerType == 2">
+            <el-input style="width: 268px" v-model="form.mail" />
+            <el-button type="primary" @click="sendMailVerifyCode"
+              >发送验证码</el-button
+            >
+          </el-form-item>
+          <el-form-item label="邮箱验证码" v-if="mailVerifyStatus">
+            <el-input style="width: 250px" v-model="form.verifycode"></el-input>
+          </el-form-item>
+          <el-form-item label="手机验证码" v-if="phoneVerifyStatus">
+            <el-input style="width: 250px" v-model="form.verifycode"></el-input>
+          </el-form-item>
+          <el-form-item label="性别">
+            <el-radio-group v-model="form.Gender">
+              <el-radio label="男" />
+              <el-radio label="女" />
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="地点">
+            <v-distpicker
+              @province="onChangeProvince"
+              @city="onChangeCity"
+              @area="onChangeArea"
+            >
+            </v-distpicker>
+          </el-form-item>
+          <div style="text-align: center; margin-top: 40px">
+            <el-button type="primary" @click="onSubmit">注册</el-button>
+            <el-button @click="goBack">取消</el-button>
+          </div>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
@@ -265,10 +267,14 @@ h1 {
   padding: 0;
 }
 .bgc {
-  padding-top: 20px;
-  padding-bottom: 20px;
   height: 100%;
   width: 100%;
+}
+.main {
+  height: 100%;
+  width: 650px;
+  display: flex;
+  align-items: center;
 }
 .dashboard-container {
   padding-top: 10px;

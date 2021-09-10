@@ -92,7 +92,7 @@
     <el-dialog title="验证码登录" :visible="mailVisible">
       <el-form ref="login" label-width="80px" class="ms-content">
         <el-form-item label="邮箱/手机">
-          <el-input style="width: 450px" v-model="param.userid"> </el-input>
+          <el-input style="width: 340px" v-model="param.userid"> </el-input>
           <el-button
             type="primary"
             style="float: right"
@@ -105,10 +105,10 @@
           <el-radio v-model="loginType" label="2">邮箱验证</el-radio>
         </el-form-item>
         <el-form-item label="验证码">
-          <el-input style="width: 450px" v-model="verifycode"> </el-input>
+          <el-input style="width: 340px" v-model="verifycode"> </el-input>
         </el-form-item>
       </el-form>
-      <div style="float: right">
+      <div style="margin-left: 230px">
         <el-button type="primary" @click="mailLogin">登录</el-button>
         <el-button @click="mailVisible = false">关闭</el-button>
       </div>
@@ -329,7 +329,6 @@ export default {
 .ms-title {
   width: 100%;
   margin-top: 15px;
-  /* line-height: 50px; */
   text-align: center;
   font-size: 24px;
   color: #2d8cf0;

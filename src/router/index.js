@@ -3,10 +3,10 @@ import Vue from "vue";
 import Home from "@/view/Home";
 Vue.use(VueRouter)
 const routes = [
- 
+
     {
         path: '/',
-        redirect: '/Homepage'
+        redirect: '/login'
     },
     {
         path: "/Homepage",
@@ -17,9 +17,9 @@ const routes = [
         component: () => import('@/view/Homepage')
     },
     {
-        path:'/hotelRegister',
-        name:"HotelRegister",
-        component:()=>import('@/view/HotelRegister')
+        path: '/hotelRegister',
+        name: "HotelRegister",
+        component: () => import('@/view/HotelRegister')
     },
     {
         path: "/login",
