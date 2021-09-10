@@ -8,7 +8,8 @@
         <el-image
           :src="item.uprofile"
           style="float: left;border-radius: 100%;width:60px"
-        ></el-image>
+        ><div slot="error" style="font-size:13px">加载中...</div>
+        </el-image>
         <pre><span style="float: left">{{item.useR_NAME}}</span>
 		<span style="float: left">发布于{{item.momenT_TIME}}</span><br><span style="float: left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
 		</pre>
@@ -65,7 +66,8 @@
           <el-image
             :src="item1.uprofile"
             style="float: left;border-radius: 100%;width:60px"
-          ></el-image>
+          ><div slot="error" style="font-size:13px">加载中...</div>
+          </el-image>
           <div>
          <span> {{item1.useR_NAME}}</span><br>
             <span style="color:gray" >发表于{{item1.commenT_TIME}}</span>

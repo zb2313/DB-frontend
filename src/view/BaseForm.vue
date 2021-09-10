@@ -14,7 +14,7 @@
         :on-error="handleAvatarError"
         list-type="picture-card"
         :limit="1">
-        <img v-if="flag" :src="imageUrl"  class="avatar">
+        <el-tooltip content="点击上传头像" placement="top"><img v-if="flag" :src="imageUrl"  class="avatar"></el-tooltip>
       </el-upload><br>
         </el-form-item>
         <el-form-item label="用户昵称">

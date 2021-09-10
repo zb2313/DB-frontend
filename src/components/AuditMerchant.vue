@@ -45,7 +45,7 @@
       <el-dialog
   title="商家入驻信息"
   :visible.sync="merchantDialogVisible"
-  width="80%"
+  width="100%"
   center>
   <div  style="text-align:left;font-size:18px">
     商家ID：{{dialogrow.hoteL_ID}}<br>
@@ -59,13 +59,14 @@
     商家入驻执照：<span v-if="license== ''">无</span><br>
     <img
     :src="license"
-    v-if="license!== ''"
+    v-if="license!= ''"
     style="width: 50%"
     />
   </div>
   <span slot="footer" class="dialog-footer">
-    <el-button class="el-icon-check" size="medium" @click="pass();merchantDialogVisible = false">通 过</el-button>
-    <el-button class="el-icon-close" size="medium" @click="dispass();merchantDialogVisible=false">不通过</el-button>
+    <el-button class="el-icon-check" type="success" size="medium" @click="pass();merchantDialogVisible = false">通过审核</el-button>
+    <el-button class="el-icon-close" type="warning" size="medium" @click="dispass();merchantDialogVisible=false">不通过</el-button>
+    <el-button class="el-icon-delete" type="danger" size="medium" @click="dele();merchantDialogVisible=false">删除该商家</el-button>
   </span>
 </el-dialog>
     </div>
@@ -135,7 +136,11 @@ axios.put("http://49.234.18.247:8080/api/Hotel/"+this.dialogrow.hoteL_ID,
   "iS_CHECK":1
 })
 .then(()=>
-{this.recreated();
+{
+  this.$message({
+    type: 'success',
+     message: '已通过!'
+    });this.recreated();
 }
 )
 .catch(()=>
@@ -160,7 +165,11 @@ axios.put("http://49.234.18.247:8080/api/Hotel/"+this.dialogrow.hoteL_ID,
   "iS_CHECK":0
 })
 .then(()=>
-{this.recreated();
+{this.$message({
+    type: 'info',
+     message: '已驳回!'
+    });
+  this.recreated();
 }
 )
 .catch(()=>
@@ -170,6 +179,21 @@ axios.put("http://49.234.18.247:8080/api/Hotel/"+this.dialogrow.hoteL_ID,
      message: '网络错误!'
     });
 })  
+    },
+    dele()
+    {
+      axios.delete("http://49.234.18.247:8080/api/Hotel/"+this.dialogrow.hoteL_ID)
+      .then(()=>
+      {
+        axios.delete("http://49.234.18.247:8080/api/HotelLicense/"+this.dialogrow.hoteL_ID)
+      })
+      .then(()=>
+      {this.$message({
+      type: 'info',
+      message: '已删除!'
+      });
+        this.recreated();
+      })
     }
     }
   }

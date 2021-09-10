@@ -9,7 +9,8 @@
           <el-image
           :src="item.uprofile"
           style="float: left;border-radius: 100%;width:60px"
-        ></el-image>
+        ><div slot="error" style="font-size:13px">加载中...</div>
+        </el-image>
         <pre><span class="user_name" style="float: left"> 用户名：{{item.useR_NAME}}</span>
     <span class="user_name" style="float: left"> 用户ID:{{item.useR_ID}}</span>
 		<span class="moment_time" style="float:left"> {{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
