@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "TagCloud": "^2.2.0",
     "axios": "^0.21.1",
     "blueimp-md5": "^2.18.0",
     "core-js": "^3.6.5",
