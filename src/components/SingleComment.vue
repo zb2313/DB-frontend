@@ -72,7 +72,6 @@ export default {
           if(pic!="NULL")
           this.Moments[0].picture=pic;
         });
-			console.log("lll",this.Moments)
 		}, err=>{
 			console.log(err)
 		})

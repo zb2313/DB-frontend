@@ -15,8 +15,8 @@
               </el-option>
            </el-select>
           </el-form-item>
-          <el-form-item label="收件人邮箱" prop="mailboxID">
-            <el-select v-model="ruleForm.mailboxID" filterable placeholder="请选择收件人邮箱">
+          <el-form-item label="收件人信箱" prop="mailboxID">
+            <el-select v-model="ruleForm.mailboxID" filterable placeholder="请选择收件人信箱">
               <el-option
               v-for="item in users"
               :key="item.useR_ID"
@@ -31,7 +31,7 @@
               <el-radio label="系统通知"></el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="通知信息"  prop="message">
+          <el-form-item label="通知内容"  prop="message">
             <el-input type="textarea" rows="10" v-model="ruleForm.message"></el-input>
           </el-form-item>
           <el-form-item>
@@ -59,7 +59,7 @@ import axios from 'axios';
         },
         rules: {
           mailboxID: [
-            { required: true, message: '请输入收件人邮箱', trigger: 'blur' },
+            { required: true, message: '请输入收件人信箱', trigger: 'blur' },
           ],
           type: [
             { required: true, message: '请选择通知类型', trigger: 'change' }

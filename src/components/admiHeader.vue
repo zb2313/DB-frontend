@@ -24,7 +24,7 @@
         ><router-link to="/updateFAQ">更新常见问题</router-link></el-menu-item
       >
       <el-menu-item index="3"
-        ><router-link to="/sendmail">发送邮件通知</router-link></el-menu-item
+        ><router-link to="/sendmail">发送信件通知</router-link></el-menu-item
       >
       <el-menu-item index="1"
         ><router-link to="/auditmoment">审核动态信息</router-link></el-menu-item
