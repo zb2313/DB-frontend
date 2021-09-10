@@ -775,7 +775,7 @@ async sleeping(time){
             this.departure_trainstation_list.push({ value: station1[i+1] });
             this.arrival_trainstation_list.push({ value: station1[i+1] })
         }
-        const fake_cookie='_uab_collina=162807207009780108525228; JSESSIONID=4852A390137C7A5D101BA920AE6B88C7; _jc_save_wfdc_flag=dc; BIGipServerpool_passport=283378186.50215.0000; RAIL_EXPIRATION=1628386237113; RAIL_DEVICEID=m6zhN2F7jprQB9bL4xZ-v29EUGZQ5buSNaTzY9M9VTrvC9hoRB8vF9jbKqLDLgp63AL6ik2JXqlgptQRTjWXQ0yUtBNCW-aZmBNrUvZtTLaNhQj0CW6W8XGFdfoP0D8AO4qROZM3v_AiC3AzvDCtca1d6bpXMB0T; route=495c805987d0f5c8c84b14f60212447d; _jc_save_toDate=2021-08-04; BIGipServerotn=4074176778.24610.0000; _jc_save_fromDate=2021-08-07; _jc_save_fromStation=%u957F%u6C99%2CCSQ; _jc_save_toStation=%u8D35%u9633%2CGIW';
+        const fake_cookie='_uab_collina=162807207009780108525228; JSESSIONID=73B07E460CFFB2AC3095BE303274E211; _jc_save_wfdc_flag=dc; _jc_save_fromStation=%u4E0A%u6D77%2CSHH; _jc_save_toStation=%u5170%u5DDE%2CLZJ; BIGipServerotn=1457062154.24610.0000; RAIL_EXPIRATION=1631592538593; RAIL_DEVICEID=C7lobJiTK52LmipSvjL1ULC3RuglNx28qzxo2Zd2H3M9LWBKYA66wshFBovHInb6ASzp1o5nYgqoDBUhlmJGAQmQ3EvUqyT4W8I9js215M0Jcs4c09-TdLCDgXJQ6JXJg6620h_ewSmfpAFmGntxr5P5k9vl1XfJ; guidesStatus=off; highContrastMode=defaltMode; cursorStatus=off; BIGipServerpassport=1005060362.50215.0000; route=9036359bb8a8a461c164a04f8f50b252; _jc_save_fromDate=2021-09-11; _jc_save_toDate=2021-09-11';
 
         this.$axios.get(
           "/traininfo/query?leftTicketDTO.train_date="+this.formInline.departure_date+"&leftTicketDTO.from_station="+temp_station[this.query_departure_trainstation]+"&leftTicketDTO.to_station="+temp_station[this.query_arrival_trainstation]+"&purpose_codes=ADULT",{

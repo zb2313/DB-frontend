@@ -220,15 +220,17 @@ export default {
           "ordeR_AMOUNT": this.price.slice(1),
           "ordeR_TIME": this.storeTime,
           "telephone": this.tele_number,
+          "starT_LOCATION":this.vehicle.starT_LOCATION,
+         "enD_LOCATION":this.vehicle.enD_LOCATION,
           }
           )
           .then((response) => {
             console.log('succ');
-            this.$alert(_this.vehicle_id+" "+_this.seat_id+" 预定成功","提示", {confirmButtonText: "确定", })
+            this.$alert(_this.vehicle.vehiclE_ID+" 预定成功","提示", {confirmButtonText: "确定", })
           })
           .catch(function () {
   console.log('err');
-  _this.$alert(_this.vehicle_id+" "+_this.seat_id+" 预定失败","提示", {
+  _this.$alert(_this.vehicle.vehiclE_ID+" 预定失败","提示", {
         confirmButtonText: "确定",
 
       })
@@ -244,16 +246,18 @@ export default {
           "ordeR_AMOUNT": parseInt(this.price.slice(1)),
          "ordeR_TIME": this.storeTime,
          "telephone":this.tele_number,
-         "traiN_DATE": this.date
+         "traiN_DATE": this.date,
+         "starT_LOCATION":this.vehicle.starT_LOCATION,
+         "enD_LOCATION":this.vehicle.enD_LOCATION,
           }
           )
            .then((response) => {
             console.log('succ');
-            this.$alert(_this.vehicle_id+" "+_this.seat_id+" 预定成功","提示", {confirmButtonText: "确定", })
+            this.$alert(_this.vehicle.vehiclE_ID+" 预定成功","提示", {confirmButtonText: "确定", })
           })
           .catch(function () {
   console.log('err');
-  _this.$alert(_this.vehicle_id+" "+_this.seat_id+" 预定失败","提示", {
+  _this.$alert(_this.vehicle.vehiclE_ID+" 预定失败","提示", {
         confirmButtonText: "确定",
 
       })
@@ -277,10 +281,6 @@ export default {
   }},
    mounted(){
     let _this=this;
-
-    //await  _this.get_ticket_info() ;
-    //await  new Promise((resolve, reject) => {_this.get_checi_info() ;resolve()} );
-    //this.formInline.state1=this.$route.query.from;
     this.vehicle=JSON.parse(this.$route.query.vehicle);
     this.seat_type=this.$route.query.seat_type;
     this.date=this.$route.query.date;
@@ -290,36 +290,7 @@ export default {
       this.vehicle.starT_LOCATION=this.vehicle.starT_AIRPORT;
       this.vehicle.enD_LOCATION=this.vehicle.enD_AIRPORT;
     }
-// this.$axios.get(
-//           "http://49.234.18.247:8080/api/QueOptSeat/"+this.vehicle_id+'&'+this.seat_type,{
 
-//           }
-//           )
-//           .then(function(response){
-//             //console.log(response);
-//             _this.tableData=response.data;
-//             let temp=response.data[0];
-//            _this.from=temp.starT_LOCATION;
-//            _this.to=temp.enD_LOCATION;
-//            _this.start_time=temp.starT_TIME;
-//            _this.end_time=temp.enD_TIME;
-//           _this.seat_type=temp.seaT_TYPE;
-//            _this.price=temp.price;
-//            _this.company_name=temp.companY_NAME;
-//            const l=response.data.length;
-//           console.log(response.data.length);
-//           console.log(response.data);
-//           for(let i=0;i<l;i++){
-//             console.log(i);
-//             var json = {"value":response.data[i].seaT_ID};
-//             if(response.data[i].tradE_STATUS=="未售")_this.options.push(json);
-//           }}
-
-// )
-// .catch(function () {
-//   console.log('err');
-
-// })
   },
   computed:{
      storeTime: function () {
