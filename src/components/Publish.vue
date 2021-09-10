@@ -22,7 +22,7 @@
      :limit="1"
      list-type="picture">
       <el-button slot="trigger" size="large" type="primary" @click="creatMoment_ID()">添加图片</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5MB</div>
+      <div slot="tip" class="el-upload__tip">只能上传一个jpg/png文件，且不超过5MB</div>
       </el-upload>
       </div>
       <div class="pick_location">

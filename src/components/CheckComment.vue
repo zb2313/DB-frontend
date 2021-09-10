@@ -56,7 +56,8 @@
           <el-image
           :src="user_avator"
           style="float: left;border-radius: 100%;width:60px"
-        ></el-image>
+        ><div slot="error" style="font-size:13px">加载中...</div>
+      </el-image>
         <pre><span style="float: left">{{user_name}}</span>
         <span style="float:left">发布于{{item.momenT_TIME}}</span>
         <span style="float:left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
