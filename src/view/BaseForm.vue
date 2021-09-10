@@ -14,7 +14,7 @@
         :on-error="handleAvatarError"
         list-type="picture-card"
         :limit="1">
-        <img  :src="imageUrl"  class="avatar">
+        <img v-if="flag" :src="imageUrl"  class="avatar">
       </el-upload><br>
         </el-form-item>
         <el-form-item label="用户昵称">
@@ -57,6 +57,7 @@ export default {
         Password: "待修改",//密码 待修改
         tele_NUMBER: "待修改",//电话号码 待修改
       },
+      flag:true,
       imageUrl:"",
       avaurl:"",
       userid:"",
@@ -72,10 +73,10 @@ export default {
     };
   },
   methods: {
-      handleAvatarSuccess(res,file){
+      handleAvatarSuccess(res,file){this.flag=false;
   this.imageUrl = URL.createObjectURL(file.raw);
       },
-      handleAvatarError(res,file){
+      handleAvatarError(res,file){this.flag=true;
   this.imageUrl = URL.createObjectURL(file.raw);
       },
     deleteFormal()
