@@ -592,7 +592,7 @@ export default {
           "元</span>"
       );
       content.push(
-        "<a href='http://localhost:8080/hotel/detail?id=" +
+        "<a href='http://kefan-zheng.space/hotel/detail?id=" +
           item.hoteid +
           "'>了解详情</a>"
       );

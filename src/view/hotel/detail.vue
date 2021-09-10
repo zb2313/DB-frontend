@@ -920,13 +920,13 @@ export default {
       );
       if (item.hoteid) {
         content.push(
-          "<a href='http://localhost:8080/hotel/detail?id=" +
+          "<a href='http://kefan-zheng.space/hotel/detail?id=" +
             item.hoteid +
             "'>了解详情</a>"
         );
       } else if (item.attractionid) {
         content.push(
-          "<a href='http://localhost:8080/attraction/detail?id=" +
+          "<a href='http://kefan-zheng.space/attraction/detail?id=" +
             item.attractionid +
             "'>了解详情</a>"
         );

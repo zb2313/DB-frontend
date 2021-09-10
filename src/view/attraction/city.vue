@@ -394,7 +394,7 @@ export default {
           "元</span>"
       );
       content.push(
-        "<a href='http://localhost:8080/attraction/detail?id=" +
+        "<a href='http://kefan-zheng.space/attraction/detail?id=" +
           item.attractionid +
           "'>了解详情</a>"
       );
