@@ -1,6 +1,6 @@
 <template>
   <el-header height="100px">
-    <router-link to="/hotel"><div class="logo">LVDAO</div></router-link>
+    <router-link to="/homepage"><div class="logo">LVDAO</div></router-link>
 
     <div class="nav1">
       <ul>
@@ -113,7 +113,7 @@ export default {
   },
   created() {
     this.coverImgUrl = localStorage.getItem("pictrue");
-      this.coverImgUrl="http://49.234.47.118:8080/pictures/user_uprofile_3.jpg";
+    this.coverImgUrl = "http://49.234.47.118:8080/pictures/user_uprofile_3.jpg";
   },
 };
 </script>
