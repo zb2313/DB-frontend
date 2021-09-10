@@ -136,7 +136,12 @@
           <div class="right">
             <div style="font-size: 17px">推荐相关攻略</div>
             <el-divider></el-divider>
-            <div class="rightBox" v-for="item in recommend" :key="item.index">
+            <div
+              class="rightBox"
+              v-for="item in recommend"
+              :key="item.index"
+              @click="toDetail1(item.useR_ID, item.plaN_ID)"
+            >
               <div
                 class="Img"
                 :style="{
@@ -482,6 +487,12 @@ export default {
         });
       }
     },
+    toDetail1(useR_ID, plaN_ID) {
+      this.$router.push({
+        path: "/strategyDetail",
+        query: { useR_ID: useR_ID, plaN_ID: plaN_ID },
+      });
+    },
   },
   created() {
     this.useR_ID = this.$route.query.useR_ID;
@@ -509,17 +520,22 @@ export default {
               ) &&
               r.data[i].plaN_TITLE.includes(res[0].plaN_TITLE.slice(1, 3))
             ) {
-              fetch("http://49.234.18.247:8080/api/Users/" + this.useR_ID)
+              fetch("http://49.234.18.247:8080/api/Users/" + r.data[i].useR_ID)
                 .then(function (response) {
                   return response.json();
                 })
                 .then((re) => {
+                  console.log(re);
+                  var useR_ID = r.data[i].useR_ID;
+                  var plaN_ID = r.data[i].plaN_ID;
                   var useR_NAME = re[0].useR_NAME;
                   var plaN_TITLE = r.data[i].plaN_TITLE;
                   var picture = JSON.parse(r.data[i].plan)[0][0].picture;
                   var pubL_TIME = r.data[i].pubL_TIME.slice(0, 10);
 
                   this.recommend.push({
+                    useR_ID: useR_ID,
+                    plaN_ID: plaN_ID,
                     useR_NAME: useR_NAME,
                     plaN_TITLE: plaN_TITLE,
                     picture: picture,

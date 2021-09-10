@@ -92,7 +92,6 @@
             >攻略</router-link
           ></el-menu-item
         >
-        
       </el-menu>
     </div>
   </el-header>
@@ -169,7 +168,15 @@ export default {
     };
   },
   mounted() {
-    this.coverImgUrl = localStorage.getItem("pictrue");
+    console.log(localStorage.getItem("ms_username"));
+    this.$axios
+      .get(
+        "http://49.234.18.247:8080/api/Portrait/" +
+          localStorage.getItem("ms_username")
+      )
+      .then((response) => {
+        this.coverImgUrl = response.data;
+      });
   },
 };
 </script>
