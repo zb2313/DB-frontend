@@ -15,6 +15,7 @@
     >
       <el-card style="margin: 20px 20px; width: 450px; height: 90px">
         <p class="title">{{ item.label }}</p>
+        <p class="number">共{{ item.num }}项</p>
       </el-card>
     </li>
 
@@ -182,6 +183,7 @@ export default {
                 id: t[j].favoR_ID,
                 value: k + 1,
                 label: t[j].favoR_NAME,
+                num: t[j].favoR_CONTENT_NUM,
               });
               k = k + 1;
             }
@@ -205,10 +207,15 @@ export default {
   padding: 0;
 }
 .title {
-  font-size: 18px;
+  font-size: 20px;
   color: #003680;
   font-weight: 700;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+.number {
+  margin-top: 5px;
+  margin-left: 2px;
+  font-size: 14px;
 }
 li:hover {
   cursor: pointer;
