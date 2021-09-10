@@ -1013,7 +1013,10 @@ export default {
     this.getLocation();
     this.getAttrbyCity(this.attrStart);
     this.getHotelbyCity(this.hotelStart);
-    // this.getTicketbyCity(this.ticketStart);
+    for (var i = 0; i < 4; i++) {
+      this.getTicketbyCity("北京", "广州", "2021-09-" + (i + 12));
+      this.getTicketbyCity("北京", "上海", "2021-09-" + (i + 12));
+    }
     this.loadCities(this.East);
   },
   mounted() {},
@@ -1107,17 +1110,17 @@ export default {
     ticketStart(newValue, oldValue) {
       this.tickets = [];
       if (newValue !== "广州") {
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 4; i++) {
           this.getTicketbyCity(newValue, "广州", "2021-09-" + (i + 12));
         }
       }
       if (newValue !== "北京") {
-        for (var j = 0; j < 3; j++) {
+        for (var j = 0; j < 4; j++) {
           this.getTicketbyCity(newValue, "北京", "2021-09-" + (j + 12));
         }
       }
       if (newValue !== "上海") {
-        for (var k = 0; k < 3; k++) {
+        for (var k = 0; k < 4; k++) {
           this.getTicketbyCity(newValue, "上海", "2021-09-" + (k + 12));
         }
       }
