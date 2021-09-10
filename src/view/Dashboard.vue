@@ -38,7 +38,7 @@
               <span>通知大厅</span>
             </div>
           </template>
-          <el-table :show-header="false" :data="todoList" style="width: 100%">
+          <el-table :show-header="false" :data="state.recycle" style="width: 100%">
             <el-table-column width="40">
               <template #default="scope">
                 <el-checkbox v-model="scope.row.status"></el-checkbox>
@@ -99,6 +99,27 @@ export default {
   components: { Schart },
   data() {
     return {
+
+      state:{
+        recycle: [
+          {
+            date: "2018-04-19 20:00:00",
+            title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
+          },
+          {
+            date:"2021-09-10 21:00:00",
+            title:"【市政公告】同济大学嘉定校区门外将进行地铁站建设，请师生注意绕行"
+          },
+          {
+            date:"2021-09-12 21:20:00",
+            title:"【疫情资讯】目前南京市已无疫情中高风险地区，欢迎五湖四海的游客"
+          },
+          {
+            date:"2021-09-13 22:20:00",
+            title:"【天气预告】明日嘉定区阴转小雨，最高温度31度"
+          }
+        ],
+      },
       dragData: {
         lng: null,
         lat: null,
@@ -168,6 +189,14 @@ export default {
       .then((response) => {
         this.pictrue = response.data;
       });
+    axios.get("http://49.234.18.247:8080/api/Users/" +
+        localStorage.getItem("ms_username"))
+    .then(
+        (response)=>
+        {
+          this.name=response.data[0].useR_NAME;
+        }
+    )
     this.role = this.name === "admin" ? "超级管理员" : "普通用户";
   },
   methods: {
