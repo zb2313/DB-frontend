@@ -9,64 +9,66 @@
         backgroundRepeat: 'no-repeat',
       }"
     >
-      <div class="welcome">开启旅途</div>
-      <div class="search">
-        <el-form :inline="true" :model="formInline">
-          <el-form-item>
-            <el-select
-              v-model="formInline.ticket_type"
-              @change="typechange"
-              placeholder="机票"
-            >
-              <el-option label="机票" value="机票"></el-option>
-              <el-option label="火车票" value="火车票"></el-option>
-            </el-select>
-          </el-form-item>
+      <div class="main">
+        <div class="welcome">开启旅途</div>
+        <div class="search">
+          <el-form :inline="true" :model="formInline">
+            <el-form-item>
+              <el-select
+                v-model="formInline.ticket_type"
+                @change="typechange"
+                placeholder="机票"
+              >
+                <el-option label="机票" value="机票"></el-option>
+                <el-option label="火车票" value="火车票"></el-option>
+              </el-select>
+            </el-form-item>
 
-          <el-form-item>
-            <el-autocomplete
-              v-model="query_departure_trainstation"
-              :fetch-suggestions="querySearch1"
-              placeholder="出发地"
-              @select="handleSelect"
-            ></el-autocomplete>
-          </el-form-item>
+            <el-form-item>
+              <el-autocomplete
+                v-model="query_departure_trainstation"
+                :fetch-suggestions="querySearch1"
+                placeholder="出发地"
+                @select="handleSelect"
+              ></el-autocomplete>
+            </el-form-item>
 
-          <el-form-item>
-            <el-autocomplete
-              v-model="query_arrival_trainstation"
-              :fetch-suggestions="querySearch2"
-              placeholder="目的地"
-              @select="handleSelect"
-            ></el-autocomplete>
-          </el-form-item>
+            <el-form-item>
+              <el-autocomplete
+                v-model="query_arrival_trainstation"
+                :fetch-suggestions="querySearch2"
+                placeholder="目的地"
+                @select="handleSelect"
+              ></el-autocomplete>
+            </el-form-item>
 
-          <el-form-item>
-            <el-date-picker
-              v-model="formInline.departure_date"
-              type="date"
-              placeholder="选择日期"
-              :picker-options="pickerOptions"
-              value-format="yyyy-MM-dd"
-              style="width: 200px"
-            >
-            </el-date-picker>
-          </el-form-item>
+            <el-form-item>
+              <el-date-picker
+                v-model="formInline.departure_date"
+                type="date"
+                placeholder="选择日期"
+                :picker-options="pickerOptions"
+                value-format="yyyy-MM-dd"
+                style="width: 200px"
+              >
+              </el-date-picker>
+            </el-form-item>
 
-          <el-form-item>
-            <el-button
-              style="
-                height: 60px;
-                width: 100%;
-                background-color: #003680;
-                border-radius: 0px;
-              "
-              type="primary"
-              @click="onSubmit"
-              >查询</el-button
-            >
-          </el-form-item>
-        </el-form>
+            <el-form-item>
+              <el-button
+                style="
+                  height: 60px;
+                  width: 100%;
+                  background-color: #003680;
+                  border-radius: 0px;
+                "
+                type="primary"
+                @click="onSubmit"
+                >查询</el-button
+              >
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
     </div>
   </div>
@@ -74,13 +76,9 @@
 
 <style scoped>
 .welcome {
-  font-size: 30px;
+  font-size: 35px;
   font-weight: bold;
-  float: left;
-  position: relative;
-  top: 24vh;
-  left: 14vw;
-  color: #003680;
+  color: white;
 }
 .pic {
   width: 100%;
@@ -90,9 +88,9 @@
   content: "";
   display: table;
 }
-.search {
-  margin-left: 14vw;
-  margin-top: 30vh;
+.main {
+  margin-top: 26vh;
+  width: 920px;
 }
 .el-form--inline .el-form-item {
   margin-right: 0px;
@@ -149,7 +147,7 @@ export default {
   },
   methods: {
     typechange(val) {
-      if (val == "0000000002") {
+      if (val == "火车票") {
         this.holder = "一等座";
         this.baseImg =
           "https://images.unsplash.com/photo-1442570468985-f63ed5de9086?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1393&q=80";
@@ -188,8 +186,7 @@ export default {
             },
           });
         }
-      } 
-      else {
+      } else {
         this.$alert("请填写所有选项再查询", "提示", {
           confirmButtonText: "确定",
         });
