@@ -57,7 +57,7 @@
                   <div class="input-number-up-icon" @click="numberPlus(2)">
                     <i class="el-icon-arrow-up"></i>
                   </div>
-                  <div class="input-number-down-icon" @click="numberMinus(3)">
+                  <div class="input-number-down-icon" @click="numberMinus(2)">
                     <i class="el-icon-arrow-down"></i>
                   </div>
                 </div>
