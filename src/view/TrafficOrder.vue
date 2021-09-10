@@ -66,7 +66,7 @@ export default {
   },
   created(){
     let n=localStorage.getItem("ms_username");
-    axios.get("http://49.234.18.247:8080/api/FunGetTrafficTicketInfoByUserId/"+n)
+    axios.get("http://49.234.18.247:8080/api/PurchaseTrafficTicket/"+n)
         .then((response)=>{
           console.log("用户名",n);
           console.log(response.data)

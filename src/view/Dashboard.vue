@@ -125,9 +125,46 @@ export default {
             label: "交通票",
             data: [0, 1, 3, 2, 4],
           },
+<<<<<<< Updated upstream
           {
             label: "酒店订单",
             data: [1, 1, 0, 2, 3],
+=======
+          labels: ["6月", "7月", "8月", "9月", "10月"],
+          datasets: [
+            {
+              label: "家电",
+              data: [234, 278, 270, 190, 230],
+            },
+            {
+              label: "百货",
+              data: [164, 178, 150, 135, 160],
+            },
+            {
+              label: "食品",
+              data: [74, 118, 200, 235, 90],
+            },
+          ],
+        }
+
+      }
+    },
+    created(){
+      this.name=localStorage.getItem("ms_username");
+
+      axios.get("http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username"))
+          .then(
+              (response)=>
+              {
+                this.pictrue=response.data;
+              }
+          );
+      this.role= this.name === "admin" ? "超级管理员" : "普通用户";
+    },
+    methods:
+        {
+          createMap() {
+>>>>>>> Stashed changes
           },
         ],
       },
