@@ -5,11 +5,10 @@
     <div class="singleMoment" v-for="(item, index) in Moments" :key="index">
        
       <el-card>
-        <el-avatar
-          :size="55"
+        <el-image
           :src="item.uprofile"
-          style="float: left"
-        ></el-avatar>
+          style="float: left;border-radius: 100%;width:60px"
+        ></el-image>
         <pre><span style="float: left">{{item.useR_NAME}}</span>
 		<span style="float: left">发布于{{item.momenT_TIME}}</span><br><span style="float: left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
 		</pre>
@@ -63,11 +62,10 @@
         style="list-style: none"
       >
         <el-card>
-          <el-avatar
-          :size="50"
+          <el-image
             :src="item1.uprofile"
-            style="float: left"
-          ></el-avatar>
+            style="float: left;border-radius: 100%;width:60px"
+          ></el-image>
           <div>
          <span> {{item1.useR_NAME}}</span><br>
             <span style="color:gray" >发表于{{item1.commenT_TIME}}</span>
@@ -117,7 +115,12 @@ export default {
           if(pic!="NULL")
           this.Moments[0].picture=pic;
         });
-      
+      axios.get("http://49.234.18.247:8080/api/Portrait/"+this.Moments[0].useR_ID)
+        .then(res=>
+        {
+           if(res.data!="NULL")
+          this.Moments[0].uprofile=res.data;
+        })
         console.log(this.Moments);
       },
       (err) => {
@@ -130,6 +133,12 @@ export default {
       )
       .then((res) => {
         this.Comments = res.data;
+         axios.get("http://49.234.18.247:8080/api/Portrait/"+this.Comments[0].useR_ID)
+        .then(res=>
+        {
+           if(res.data!="NULL")
+          this.Comments[0].uprofile=res.data;
+        })
         console.log("comments", this.Comments);
       });
   },

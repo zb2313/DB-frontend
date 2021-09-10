@@ -6,11 +6,10 @@
       :offset="2">
        <router-link :to="'/1/' + item.momenT_ID" >
         <el-card  class="singleMoment">
-          <el-avatar
-          :size="55"
+          <el-image
           :src="item.uprofile"
-          style="float: left"
-        ></el-avatar>
+          style="float: left;border-radius: 100%;width:60px"
+        ></el-image>
         <pre>
 		<span style="float: left"> {{item.useR_NAME}}</span>
 		<span style="float:left"> 发布于{{item.momenT_TIME}}<br> <i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
@@ -89,6 +88,12 @@ export default {
               {if(res.data!="NULL")
                 this.Moments[i].picture=res.data;
               })
+              axios.get("http://49.234.18.247:8080/api/Portrait/"+this.Moments[i].useR_ID)
+        .then(res=>
+        {
+           if(res.data!="NULL")
+          this.Moments[i].uprofile=res.data;console.log(this.Moments[i].uprofile)
+        })
             }
           return res.data;
         });

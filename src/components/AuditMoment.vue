@@ -6,11 +6,10 @@
       </el-card>
       <el-card class="box-card" v-for="(item,i) in momentlist" :key="i" id="moment">
         <div>
-          <el-avatar
-          size="large"
+          <el-image
           :src="item.uprofile"
-          style="float: left"
-        ></el-avatar>
+          style="float: left;border-radius: 100%;width:60px"
+        ></el-image>
         <pre><span class="user_name" style="float: left"> 用户名：{{item.useR_NAME}}</span>
     <span class="user_name" style="float: left"> 用户ID:{{item.useR_ID}}</span>
 		<span class="moment_time" style="float:left"> {{item.momenT_TIME}}发布于{{item.momenT_LOCATION}}</span>
@@ -75,10 +74,17 @@ export default {
             {
                axios.get("http://49.234.18.247:8080/api/MomentPic/"+this.momentlist[i].momenT_ID)
         .then(res=>
-        {var pic=res.data;
+        {let  pic=res.data;
           if(pic!="NULL")
           this.momentlist[i].picture=pic;
         });
+        axios.get("http://49.234.18.247:8080/api/Portrait/"+this.momentlist[i].useR_ID)
+        .then(res=>
+        {
+           let pic=res.data;
+           if(pic!="NULL")
+          this.momentlist[i].uprofile=pic;
+        })
             }
                 })
         .catch(err=>{
@@ -100,6 +106,13 @@ export default {
           if(pic!="NULL")
           this.momentlist[i].picture=pic;
         });
+        axios.get("http://49.234.18.247:8080/api/Portrait/"+this.momentlist[i].useR_ID)
+        .then(res=>
+        {
+           let pic=res.data;
+           if(pic!="NULL")
+          this.momentlist[i].uprofile=pic;
+        })
             }
                 })
     },

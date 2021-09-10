@@ -53,11 +53,10 @@
       :key="index"
       :offset="2">
         <el-card class="singleMoment">
-          <el-avatar
-          :size="55"
+          <el-image
           :src="user_avator"
-          style="float: left"
-        ></el-avatar>
+          style="float: left;border-radius: 100%;width:60px"
+        ></el-image>
         <pre><span style="float: left">{{user_name}}</span>
         <span style="float:left">发布于{{item.momenT_TIME}}</span>
         <span style="float:left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
@@ -142,7 +141,7 @@ export default {
               .then(res=>
               {if(res.data!="NULL")
                 this.Moments[i].picture=res.data;
-              })
+              });
             }
           console.log("moment:", this.Moments);
           console.log("res:", this.$route.params.useR_ID);
@@ -157,6 +156,13 @@ axios.get("http://49.234.18.247:8080/api/Users/"+localStorage.getItem("ms_userna
 .then((res)=>
 {this.user_avator=res.data[0].uprofile;
   this.user_name=res.data[0].useR_NAME;
+              axios.get("http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username"))
+        .then(res=>
+        {
+           let pic=res.data;
+           if(pic!="NULL")
+          this.user_avator=pic;
+        })
 })
   },
 };

@@ -4,11 +4,10 @@
 <div class="singleShow">
 	<el-container>
 	<div class="singleMoment" v-for="(item,index) in Moments" :key="index">
-    <el-avatar
-        :size="55"
+    <el-image
         :src="item.uprofile"
-        style="float: left"
-    ></el-avatar>
+        style="float: left;border-radius: 100%;width:60px"
+    ></el-image>
 		<pre><span style="float: left">{{item.useR_NAME}}</span>
 		<span style="float: left">发布于{{item.momenT_TIME}}</span><br><span style="float: left"><i class="el-icon-location-outline"/>{{item.momenT_LOCATION}}</span>
 		</pre>
@@ -28,7 +27,7 @@
 		<div><sapn style="font-size:20px">评论</sapn>({{Comments.length}})</div><br>
 		<li class="CommentMoment" v-for="(item1,index) in Comments" :key="index" style="list-style: none">
 		<div class="singlecomment" >
-			<el-avatar size=medium :src=item1.uprofile style="float:left"></el-avatar>
+			<el-image  :src=item1.uprofile style="float:left;border-radius: 100%;width:60px"></el-image>
 			<pre><span class="user_id" style="float:left">{{item1.useR_ID}}</span>
 			<span class="user_name" style="float: left">{{item1.useR_NAME}}</span>
 			<span class="comment_time" style="float:right">{{item1.commenT_TIME}}</span></pre>
@@ -72,6 +71,13 @@ export default {
           if(pic!="NULL")
           this.Moments[0].picture=pic;
         });
+		axios.get("http://49.234.18.247:8080/api/Portrait/"+this.Moments[0].useR_ID)
+        .then(res=>
+        {
+           let pic=res.data;
+           if(pic!="NULL")
+          this.Moments[0].uprofile=pic;
+        })
 		}, err=>{
 			console.log(err)
 		})
@@ -82,7 +88,14 @@ export default {
 			this.$axios
 		.get(`http://49.234.18.247:8080/api/FunGetCommentByMomentId/${this.$route.params.momenT_ID}`)
 		.then((res)=>{
-			this.Comments=res.data
+			this.Comments=res.data;
+		axios.get("http://49.234.18.247:8080/api/Portrait/"+this.Comments[0].useR_ID)
+        .then(res=>
+        {
+           let pic=res.data;
+           if(pic!="NULL")
+          this.Comments[0].uprofile=pic;
+        })
 		})
 		},
 		goback(){
