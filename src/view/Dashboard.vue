@@ -83,6 +83,7 @@ import Schart from "vue-schart";
 import mapDrag from '@/components/mapDrag'
 import "@/assets/css/main.css";
 import "@/assets/css/color-dark.css";
+import axios from "axios";
 export default {
     name: "dashboard",
     components: { Schart,mapDrag },
@@ -149,7 +150,13 @@ export default {
     created(){
       this.name=localStorage.getItem("ms_username");
       this.pictrue=localStorage.getItem("pictrue");
-      this.pictrue="http://49.234.47.118:8080/pictures/user_uprofile_3.jpg";
+      axios.get("http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username"))
+          .then(
+              (response)=>
+              {
+                this.pictrue=response.data;
+              }
+          );
       this.role= this.name === "admin" ? "超级管理员" : "普通用户";
     },
     methods:
@@ -279,13 +286,7 @@ export default {
 }
 
 .schart {
-  width: 100%;
-  height: 400px;
+    width: 100%;
+    height: 300px;
 }
-.mapbox {
-  width: 550px;
-  height: 400px;
-  margin-bottom: 20px;
-  float: left;
-  }
 </style>
