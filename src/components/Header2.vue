@@ -28,10 +28,7 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <a href="https://github.com/zb2313/DB-frontend" target="_blank">
-                                <el-dropdown-item>项目仓库</el-dropdown-item>
-                            </a>
-                           <router-link to="/personalpage"><el-dropdown-item command="user">个人中心</el-dropdown-item></router-link>
+                          
                            <router-link to="/hotel"><el-dropdown-item command="user">返回浏览</el-dropdown-item></router-link>
                           <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
