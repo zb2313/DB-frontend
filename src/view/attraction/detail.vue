@@ -93,10 +93,10 @@
                         justify="space-between"
                         style="margin-top: 20px"
                       >
-                        <el-col :span="7"
+                        <el-col :span="12"
                           ><div style="margin-top: 5px">数量</div></el-col
                         >
-                        <el-col :span="10"
+                        <el-col :span="12"
                           ><div>
                             <el-input-number
                               v-model="orderNum"
@@ -185,7 +185,7 @@
                       </div>
                       <h1>{{ payWay }}</h1>
                       <br />
-                      <div id="qrcode" style="margin-left: 100px"></div>
+                      <div id="qrcode"></div>
                       <br />
                       <div style="text-align: right">
                         <button
@@ -666,7 +666,7 @@ export default {
   data() {
     return {
       payWay: " ",
-      leftOut: 12,
+      leftOut: 10,
       orderNum: 1,
       submitVisible: false,
       payVisible: false,

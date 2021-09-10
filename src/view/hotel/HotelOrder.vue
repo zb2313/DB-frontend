@@ -160,7 +160,7 @@
 
                   <h1>{{ payWay }}</h1>
                   <br />
-                  <div id="qrcode" style="margin-left: 100px"></div>
+                  <div id="qrcode" style="margin-left: 75px"></div>
                   <br />
                   <div>
                     <button @click="aliPay" class="payBtn" v-if="buttonVisible">

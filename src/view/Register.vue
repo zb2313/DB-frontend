@@ -1,5 +1,12 @@
 <template>
-  <div class="bgc">
+  <div
+    class="bgc"
+    :style="{
+      backgroundImage: 'url(' + coverImgUrl + ')',
+      backgroundSize: '100% 100%',
+      backgroundRepeat: 'no-repeat',
+    }"
+  >
     <div class="dashboard-container">
       <div class="title"><h1>注册</h1></div>
       <br />
@@ -11,7 +18,11 @@
           <el-input style="width: 380px" v-model="form.Password" />
         </el-form-item>
         <el-form-item label="确认密码">
-          <el-input type="password" style="width: 380px" v-model="form.checkPassword" />
+          <el-input
+            type="password"
+            style="width: 380px"
+            v-model="form.checkPassword"
+          />
         </el-form-item>
         <el-form-item label="身份证号">
           <el-input style="width: 380px" v-model="form.id_number" />
@@ -20,13 +31,17 @@
           <el-radio v-model="registerType" label="1">手机号注册</el-radio>
           <el-radio v-model="registerType" label="2">邮箱注册</el-radio>
         </el-form-item>
-        <el-form-item label="手机" v-if="registerType==1">
+        <el-form-item label="手机" v-if="registerType == 1">
           <el-input style="width: 268px" v-model="form.tele_NUMBER" />
-          <el-button type="primary" @click="sendPhoneVerifyCode">发送验证码</el-button>
+          <el-button type="primary" @click="sendPhoneVerifyCode"
+            >发送验证码</el-button
+          >
         </el-form-item>
-        <el-form-item label="E-mail" v-if="registerType==2">
+        <el-form-item label="E-mail" v-if="registerType == 2">
           <el-input style="width: 268px" v-model="form.mail" />
-          <el-button type="primary" @click="sendMailVerifyCode">发送验证码</el-button>
+          <el-button type="primary" @click="sendMailVerifyCode"
+            >发送验证码</el-button
+          >
         </el-form-item>
         <el-form-item label="邮箱验证码" v-if="mailVerifyStatus">
           <el-input style="width: 250px" v-model="form.verifycode"></el-input>
@@ -42,7 +57,10 @@
         </el-form-item>
         <el-form-item label="地点">
           <v-distpicker
-              @province="onChangeProvince" @city="onChangeCity" @area="onChangeArea">
+            @province="onChangeProvince"
+            @city="onChangeCity"
+            @area="onChangeArea"
+          >
           </v-distpicker>
         </el-form-item>
         <div style="text-align: center; margin-top: 40px">
@@ -61,185 +79,183 @@ import axios from "axios";
 //
 export default {
   name: "Register",
-  userList:{},
+  userList: {},
   computed: {},
   components: { VDistpicker },
   //用户id在注册完后生成
   data() {
     return {
       form: {
-        mail:"",
-        user_NAME: "",//用户名
-        Password: "",//密码
-        user_ID: "",//用户编号
-        id_number:"",
-        Gender:"",//性别
+        mail: "",
+        user_NAME: "", //用户名
+        Password: "", //密码
+        user_ID: "", //用户编号
+        id_number: "",
+        Gender: "", //性别
         desc: "",
-        tele_NUMBER: "",//电话号码
-        mailbox_ID: "",//
+        tele_NUMBER: "", //电话号码
+        mailbox_ID: "", //
         dState: true,
-        verifycode:"",
-        checkPassword:""
+        verifycode: "",
+        checkPassword: "",
       },
+      coverImgUrl: require("../assets/img/login-bg.jpg"),
       testInfo: "",
       //省市区
       province: "aaaaa",
       city: "",
       area: "",
-      location:"",
+      location: "",
       show: false,
-      mailVerifyStatus:false,
-      phoneVerifyStatus:false,
-      registerType:'1'
+      mailVerifyStatus: false,
+      phoneVerifyStatus: false,
+      registerType: "1",
     };
   },
   methods: {
-    returnToLogin()
-    {
+    returnToLogin() {
       this.$router.push("/Login");
     },
-    setUserID()
-    {
-      let chars = ['0','1','2','3','4','5','6','7','8','9'];
-      let ID='';
-      for(let i=0;i<10;i++)
-      {
-        let id = Math.ceil(Math.random()*9);
-        ID+=chars[id];
+    setUserID() {
+      let chars = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+      let ID = "";
+      for (let i = 0; i < 10; i++) {
+        let id = Math.ceil(Math.random() * 9);
+        ID += chars[id];
       }
-      this.form.user_ID=ID;
+      this.form.user_ID = ID;
     },
-    setMailBoxID()
-    {
-      this.form.mailbox_ID=this.form.user_ID;
+    setMailBoxID() {
+      this.form.mailbox_ID = this.form.user_ID;
     },
-    goBack()
-    {
+    goBack() {
       this.$router.push("/Login");
     },
-    onSubmit()
-    {
-      if(this.form.Password!=this.form.checkPassword)
-      {
+    onSubmit() {
+      if (this.form.Password != this.form.checkPassword) {
         this.$message.error("两次输入的密码不一致");
         return;
       }
-     if(this.registerType=='2')
-     {
-       axios.post("http://49.234.18.247:8080/api/OAuth/" + this.form.verifycode,
-           {
-             "useR_ID": this.form.mail,
-             "useR_NAME": this.form.user_NAME,
-             "iD_NUMBER": this.form.id_number,
-             "telE_NUMBER": this.form.tele_NUMBER,
-             "mailboX_ID": this.form.mail,
-             "uprofile": "http://49.234.47.118:8080/pictures/user_uprofile_0.jpg",
-             "upassword": this.form.Password,
-             "gender": this.form.Gender,
-             "ulocation": this.location,
-             "motto": null
-           }
-       )
-           .then((response) => {
-                 if (response.status == "204") {
-                   this.$message.error("验证码错误");
-                 } else if (response.status == "409") {
-                   //验证码正确 userid重复
-                 } else {
-                   //成功注册
-                   this.$message.success("注册成功");
-                   this.$alert(
-                       '用户id: ' + this.form.user_ID + '  密码: ' + this.form.Password,
-                       '确认账户',
-                       {
-                         confirmButtonText: '确定',
-                         callback: action => {
-                           this.$message({
-                             type: 'info',
-                             message: `action: ${action}`
-                           });
-                         }
-                       });
-                 }
-               }
-           );
-     }
-     else
-     {
-       axios.post("http://49.234.18.247:8080/api/OAuth/" + this.form.verifycode,
-           {
-             "useR_ID": this.form.tele_NUMBER,
-             "useR_NAME": this.form.user_NAME,
-             "iD_NUMBER": this.form.id_number,
-             "telE_NUMBER": this.form.tele_NUMBER,
-             "mailboX_ID": this.form.mail,
-             "uprofile": "http://49.234.47.118:8080/pictures/user_uprofile_0.jpg",
-             "upassword": this.form.Password,
-             "gender": this.form.Gender,
-             "ulocation": this.location,
-             "motto": null
-           }
-       )
-           .then((response) => {
-                 if (response.status == "204") {
-                   this.$message.error("验证码错误");
-                 } else if (response.status == "409") {
-                   //验证码正确 userid重复
-                 } else {
-                   //成功注册
-                   this.$message.success("注册成功");
-                   this.$alert(
-                       '用户id: ' + this.form.user_ID + '  密码: ' + this.form.Password,
-                       '确认账户',
-                       {
-                         confirmButtonText: '确定',
-                         callback: action => {
-                           this.$message({
-                             type: 'info',
-                             message: `action: ${action}`
-                           });
-                         }
-                       });
-                 }
-               }
-           );
-     }
+      if (this.registerType == "2") {
+        axios
+          .post("http://49.234.18.247:8080/api/OAuth/" + this.form.verifycode, {
+            useR_ID: this.form.mail,
+            useR_NAME: this.form.user_NAME,
+            iD_NUMBER: this.form.id_number,
+            telE_NUMBER: this.form.tele_NUMBER,
+            mailboX_ID: this.form.mail,
+            uprofile: "http://49.234.47.118:8080/pictures/user_uprofile_0.jpg",
+            upassword: this.form.Password,
+            gender: this.form.Gender,
+            ulocation: this.location,
+            motto: null,
+          })
+          .then((response) => {
+            if (response.status == "204") {
+              this.$message.error("验证码错误");
+            } else if (response.status == "409") {
+              //验证码正确 userid重复
+            } else {
+              //成功注册
+              this.$message.success("注册成功");
+              this.$alert(
+                "用户id: " +
+                  this.form.user_ID +
+                  "  密码: " +
+                  this.form.Password,
+                "确认账户",
+                {
+                  confirmButtonText: "确定",
+                  callback: (action) => {
+                    this.$message({
+                      type: "info",
+                      message: `action: ${action}`,
+                    });
+                  },
+                }
+              );
+            }
+          });
+      } else {
+        axios
+          .post("http://49.234.18.247:8080/api/OAuth/" + this.form.verifycode, {
+            useR_ID: this.form.tele_NUMBER,
+            useR_NAME: this.form.user_NAME,
+            iD_NUMBER: this.form.id_number,
+            telE_NUMBER: this.form.tele_NUMBER,
+            mailboX_ID: this.form.mail,
+            uprofile: "http://49.234.47.118:8080/pictures/user_uprofile_0.jpg",
+            upassword: this.form.Password,
+            gender: this.form.Gender,
+            ulocation: this.location,
+            motto: null,
+          })
+          .then((response) => {
+            if (response.status == "204") {
+              this.$message.error("验证码错误");
+            } else if (response.status == "409") {
+              //验证码正确 userid重复
+            } else {
+              //成功注册
+              this.$message.success("注册成功");
+              this.$alert(
+                "用户id: " +
+                  this.form.user_ID +
+                  "  密码: " +
+                  this.form.Password,
+                "确认账户",
+                {
+                  confirmButtonText: "确定",
+                  callback: (action) => {
+                    this.$message({
+                      type: "info",
+                      message: `action: ${action}`,
+                    });
+                  },
+                }
+              );
+            }
+          });
+      }
     },
-      onCancel(){
+    onCancel() {
       this.$message({
         message: "cancel!",
         type: "warning",
       }),
-          this.$router.push("/Login");
+        this.$router.push("/Login");
     },
     //打开选择地区
     onChangeProvince(data) {
-      this.province= data.value
+      this.province = data.value;
     },
     onChangeCity(data) {
-      this.city= data.value
+      this.city = data.value;
     },
     onChangeArea(data) {
-      this.area= data.value
-      this.location=this.province+this.city+this.area;
+      this.area = data.value;
+      this.location = this.province + this.city + this.area;
     },
-    sendMailVerifyCode()
-    {
-      axios.post("http://49.234.18.247:8080/api/Email/"+this.form.mail+"&register");
-      this.mailVerifyStatus=true;
+    sendMailVerifyCode() {
+      axios.post(
+        "http://49.234.18.247:8080/api/Email/" + this.form.mail + "&register"
+      );
+      this.mailVerifyStatus = true;
     },
-    sendPhoneVerifyCode()
-    {
-      axios.post("http://49.234.18.247:8080/api/CellphoneCode/86"+this.form.tele_NUMBER+"&register")
-      this.phoneVerifyStatus=true;
-    }
+    sendPhoneVerifyCode() {
+      axios.post(
+        "http://49.234.18.247:8080/api/CellphoneCode/86" +
+          this.form.tele_NUMBER +
+          "&register"
+      );
+      this.phoneVerifyStatus = true;
+    },
   },
   created() {
-      this.setUserID();
-      this.setMailBoxID();
+    this.setUserID();
+    this.setMailBoxID();
   },
-  mounted: function () {
-  },
+  mounted: function () {},
 };
 </script>
 
@@ -249,28 +265,28 @@ h1 {
   padding: 0;
 }
 .bgc {
-  background: url("../assets/img/login-bg.jpg") no-repeat;
-  background-position: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
   height: 100%;
   width: 100%;
-  background-size: cover;
-  position: fixed;
 }
 .dashboard-container {
+  padding-top: 10px;
   width: 550px;
   height: 650px;
-  margin:70px auto;
-  background-color: rgba(99, 126, 147, 0.58);
+  margin: 0px auto;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
 }
 .title {
   text-align: center;
-  color: white;
+  color: #2d8cf0;
 }
 .el-form /deep/ .el-form-item__label {
-  color: white;
+  color: #2d8cf0;
 }
 .el-form /deep/ .el-radio__label {
-  color: white;
+  color: #2d8cf0;
 }
 /*省市区三级联动*/
 .divwrap {
