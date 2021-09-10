@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="20">
       <el-col :span="8">
-        <el-card shadow="hover" class="mgb20" style="height:252px;">
+        <el-card shadow="hover" class="mgb20" style="height: 252px">
           <div class="user-info">
             <img :src="pictrue" class="user-avator" alt />
             <div class="user-info-cont">
@@ -19,7 +19,7 @@
             <span>上海</span>
           </div>
         </el-card>
-        <el-card shadow="hover" style="height:252px;">
+        <el-card shadow="hover" style="height: 252px">
           <template #header>
             <div class="clearfix">
               <span>近几个月历史订单</span>
@@ -32,13 +32,13 @@
         </el-card>
       </el-col>
       <el-col :span="16">
-        <el-card shadow="hover" style="height:525px;">
+        <el-card shadow="hover" style="height: 525px">
           <template #header>
             <div class="clearfix">
               <span>通知大厅</span>
             </div>
           </template>
-          <el-table :show-header="false" :data="todoList" style="width:100%;">
+          <el-table :show-header="false" :data="todoList" style="width: 100%">
             <el-table-column width="40">
               <template #default="scope">
                 <el-checkbox v-model="scope.row.status"></el-checkbox>
@@ -46,9 +46,14 @@
             </el-table-column>
             <el-table-column>
               <template #default="scope">
-                <div class="todo-item" :class="{
-                                        'todo-item-del': scope.row.status,
-                                    }">{{ scope.row.title }}</div>
+                <div
+                  class="todo-item"
+                  :class="{
+                    'todo-item-del': scope.row.status,
+                  }"
+                >
+                  {{ scope.row.title }}
+                </div>
               </template>
             </el-table-column>
             <el-table-column width="60">
@@ -65,43 +70,49 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <el-card shadow="hover">
-          <schart ref="bar" class="schart" canvasId="bar" :options="options"></schart>
+          <schart
+            ref="bar"
+            class="schart"
+            canvasId="bar"
+            :options="options"
+          ></schart>
         </el-card>
       </el-col>
       <el-col :span="12">
         <el-card shadow="hover">
-          <mapDrag @drag="dragMap" class="mapbox"></mapDrag>
+          <div class="amap-wrap">
+            <el-amap vid="amapDemo" :zoom="zoom" :center="center"></el-amap>
+          </div>
         </el-card>
       </el-col>
     </el-row>
-
   </div>
 </template>
 
 <script>
 import Schart from "vue-schart";
-import mapDrag from '@/components/mapDrag'
 import "@/assets/css/main.css";
 import "@/assets/css/color-dark.css";
 import axios from "axios";
 export default {
   name: "dashboard",
-  components: { Schart,mapDrag },
-  data()
-  {
-    return{
+  components: { Schart },
+  data() {
+    return {
       dragData: {
         lng: null,
         lat: null,
         address: null,
         nearestJunction: null,
         nearestRoad: null,
-        nearestPOI: null
+        nearestPOI: null,
       },
-      name:"",
-      role:"",
-      pictrue:"",
-      options:{
+      zoom: 12,
+      center: [121.473701, 31.230416],
+      name: "",
+      role: "",
+      pictrue: "",
+      options: {
         type: "bar",
         title: {
           text: "最近几个月下单数据",
@@ -123,7 +134,7 @@ export default {
           },
         ],
       },
-      options2:{
+      options2: {
         type: "line",
         title: {
           text: "最近几个月各品类销售趋势图",
@@ -143,44 +154,46 @@ export default {
             data: [74, 118, 200, 235, 90],
           },
         ],
-      }
-
-    }
-  },
-  created(){
-    this.name=localStorage.getItem("ms_username");
-    this.pictrue=localStorage.getItem("pictrue");
-    axios.get("http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username"))
-        .then(
-            (response)=>
-            {
-              this.pictrue=response.data;
-            }
-        );
-    this.role= this.name === "admin" ? "超级管理员" : "普通用户";
-  },
-  methods:
-      {
-        createMap() {
-        },
-        dragMap (data) {
-          this.dragData = {
-            lng: data.position.lng,
-            lat: data.position.lat,
-            address: data.address,
-            nearestJunction: data.nearestJunction,
-            nearestRoad: data.nearestRoad,
-            nearestPOI: data.nearestPOI
-          }
-        }
       },
+    };
+  },
+  created() {
+    this.name = localStorage.getItem("ms_username");
+    this.pictrue = localStorage.getItem("pictrue");
+    axios
+      .get(
+        "http://49.234.18.247:8080/api/Portrait/" +
+          localStorage.getItem("ms_username")
+      )
+      .then((response) => {
+        this.pictrue = response.data;
+      });
+    this.role = this.name === "admin" ? "超级管理员" : "普通用户";
+  },
+  methods: {
+    createMap() {},
+    dragMap(data) {
+      this.dragData = {
+        lng: data.position.lng,
+        lat: data.position.lat,
+        address: data.address,
+        nearestJunction: data.nearestJunction,
+        nearestRoad: data.nearestRoad,
+        nearestPOI: data.nearestPOI,
+      };
+    },
+  },
   mounted() {
     this.createMap();
-  }
+  },
 };
 </script>
 
 <style scoped>
+.amap-wrap {
+  width: 100%;
+  height: 300px;
+}
 .el-row {
   margin-bottom: 20px;
 }
