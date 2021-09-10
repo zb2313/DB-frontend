@@ -5,8 +5,25 @@
     <div class="page">
       <el-card>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm"   label-width="100px" class="demo-ruleForm" style="width:900px">
+          <el-form-item label="收件人" prop="mailboxID">
+             <el-select v-model="ruleForm.mailboxID" filterable placeholder="请选择收件人">
+              <el-option
+              v-for="item in users"
+              :key="item.useR_ID"
+               :label="item.useR_NAME"
+               :value="item.mailboX_ID">
+              </el-option>
+           </el-select>
+          </el-form-item>
           <el-form-item label="收件人邮箱" prop="mailboxID">
-            <el-input maxlength="10" v-model="ruleForm.mailboxID" show-word-limit></el-input>
+            <el-select v-model="ruleForm.mailboxID" filterable placeholder="请选择收件人邮箱">
+              <el-option
+              v-for="item in users"
+              :key="item.useR_ID"
+               :label="item.mailboX_ID"
+               :value="item.mailboX_ID">
+              </el-option>
+           </el-select>
           </el-form-item>
           <el-form-item label="通知类型" prop="type">
             <el-radio-group v-model="ruleForm.type">
@@ -34,6 +51,7 @@ import axios from 'axios';
     data() {
       return {
         MailList:[],
+        users:[],
         ruleForm: {
           mailboxID: '',
           type: '',
@@ -51,6 +69,14 @@ import axios from 'axios';
           ]
         }
       };
+    },
+    created()
+    {
+          axios.get("http://49.234.18.247:8080/api/Users")
+          .then(res=>
+          {
+            this.users=res.data;
+          })
     },
     methods: {
       createID()
@@ -110,7 +136,7 @@ import axios from 'axios';
                 {
                   this.$message({
                     type: 'error',
-                    message: '服务器内部错误!'
+                    message: '发送失败!'
                   });
                 });
               })

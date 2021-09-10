@@ -21,7 +21,7 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" placeholder="password" v-model="param.password">
+          <el-input type="password" placeholder="password" v-model="param.password" show-password>
             <template #prepend>
               <el-button icon="el-icon-lock"></el-button>
             </template>
