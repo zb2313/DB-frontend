@@ -111,9 +111,14 @@ export default {
       this.$router.go(-1);
     },
   },
-  created() {
-    this.coverImgUrl = localStorage.getItem("pictrue");
-      this.coverImgUrl="http://49.234.47.118:8080/pictures/user_uprofile_3.jpg";
+  created() {this.$axios
+      .get(
+        "http://49.234.18.247:8080/api/Portrait/" +
+          localStorage.getItem("ms_username")
+      )
+      .then((response) => {
+        this.coverImgUrl = response.data;
+      });
   },
 };
 </script>

@@ -4,6 +4,19 @@
       <div class="title"><h1>修改个人信息</h1></div>
       <br />
       <el-form ref="form" :model="form" label-width="100px">
+        <el-form-item label="用户头像">
+          <el-upload
+          class="avatar-uploader"
+          ref="upload"
+        :action="avaurl"
+        :before-upload="beforeAvatarUpload"
+        :on-success="handleAvatarSuccess"
+        :on-error="handleAvatarError"
+        list-type="picture-card"
+        :limit="1">
+        <img  :src="imageUrl"  class="avatar">
+      </el-upload>
+        </el-form-item>
         <el-form-item label="用户昵称">
           <el-input style="width: 380px" v-model="form.user_NAME" />
         </el-form-item>
@@ -56,6 +69,8 @@ export default {
         Password: "待修改",//密码 待修改
         tele_NUMBER: "待修改",//电话号码 待修改
       },
+      imageUrl:"",
+      avaurl:"",
       userid:"",
       userInfo:{},
       testInfo: "",
@@ -69,9 +84,19 @@ export default {
     };
   },
   methods: {
+      handleAvatarSuccess(res,file){
+  this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      handleAvatarError(res,file){
+  this.imageUrl = URL.createObjectURL(file.raw);
+      },
     deleteFormal()
     {
       axios.delete("http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username"));
+    },
+    beforeAvatarUpload()
+    {
+      this.deleteFormal()
     },
     getUrl(){
       return "http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username");
@@ -84,14 +109,14 @@ export default {
     },
     onSubmit() {
       let n=localStorage.getItem("ms_username");
-      axios.put("http://49.234.18.247:8080/api/Users/"+n,
+     axios.put("http://49.234.18.247:8080/api/Users/"+n,
           {
             "useR_ID": n,
             "useR_NAME": this.form.user_NAME,
             "iD_NUMBER": this.userInfo[0].iD_NUMBER,
             "telE_NUMBER":this.form.tele_NUMBER,
             "mailboX_ID": n,
-            "uprofile": this.userInfo[0].uprofile,
+            "uprofile": this.imageUrl,
             "upassword": this.form.Password,
             "gender": this.userInfo[0].gender,
             "ulocation": this.location,
@@ -130,7 +155,9 @@ export default {
           this.form.user_NAME=this.userInfo[0].useR_NAME;
           this.form.Password=this.userInfo[0].upassword;
           this.form.tele_NUMBER=this.userInfo[0].telE_NUMBER;
+          this.imageUrl=this.userInfo[0].uprofile;
         });
+      this.avaurl="http://49.234.18.247:8080/api/Portrait/"+this.userid;
   },
 };
 </script>
@@ -158,6 +185,11 @@ h1 {
   text-align: center;
   color: white;
 }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 .el-form /deep/ .el-form-item__label {
   color: white;
 }
