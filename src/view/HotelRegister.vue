@@ -7,6 +7,8 @@
         <el-form-item label="商家ID">
           <el-input style="width: 380px" v-model="form.hotel_id" />
         </el-form-item>
+        <span>请填入10位数字</span>
+
         <el-form-item label="商家名称">
           <el-input style="width: 380px" v-model="form.hotel_name" />
         </el-form-item>
@@ -28,12 +30,12 @@
 
         <el-upload
             class="upload-demo"
-            :action="getUploadUrl"
+            :action="getUploadUr"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :file-list="fileList"
             list-type="string">
-          <el-button size="small" type="primary">点击上传资质证明</el-button>
+          <el-button size="small" type="primary" @click="getUploadUrl()">点击上传资质证明</el-button>
           <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </el-upload>
 
@@ -83,11 +85,12 @@ export default {
       show: false,
       verifyStatus:false,
       fileList: [],
+      getUploadUr:"",
     };
   },
   methods: {
     getUploadUrl()
-    {
+    {this.getUploadUr="http://49.234.18.247:8080/api/HotelLicense/"+this.form.hotel_id;
       return "http://49.234.18.247:8080/api/HotelLicense/"+this.form.hotel_id;
     },
     handleRemove(file, fileList) {
