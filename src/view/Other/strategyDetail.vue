@@ -566,7 +566,12 @@ export default {
       })
       .then((res) => {
         this.useR_NAME = res[0].useR_NAME;
-        this.uprofile = res[0].uprofile;
+      });
+
+    this.$axios
+      .get("http://49.234.18.247:8080/api/Portrait/" + this.useR_ID)
+      .then((response) => {
+        this.uprofile = response.data;
       });
 
     this.myUserId = localStorage.getItem("ms_username");

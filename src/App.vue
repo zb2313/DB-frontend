@@ -6,7 +6,23 @@
 
 <script>
 export default {
-
+  mounted() {
+    window.onload = function () {
+      console.log(window.sessionStorage["ISlogin"]);
+      if (!window.sessionStorage["ISlogin"]) {
+        // 关闭浏览器
+        window.localStorage.removeItem("ms_username");
+      } else {
+        // 刷新
+      }
+    };
+    window.onunload = function () {
+      window.sessionStorage["ISlogin"] = true;
+    };
+    window.onbeforeunload = function () {
+      window.sessionStorage["ISlogin"] = true;
+    };
+  },
 };
 </script>
 

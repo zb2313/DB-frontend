@@ -1046,10 +1046,11 @@ export default {
           // 获取评论用户的头像
           this.$axios
             .get(
-              "http://49.234.18.247:8080/api/Users/" + this.comments[_i].userId
+              "http://49.234.18.247:8080/api/Portrait/" +
+                this.comments[_i].userId
             )
             .then((response) => {
-              this.comments[_i].userAvatar = response.data[0].uprofile;
+              this.comments[_i].userAvatar = response.data;
             });
 
           this.comments[i].userName = response.data[i].useR_NAME;

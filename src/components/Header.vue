@@ -168,7 +168,6 @@ export default {
     };
   },
   mounted() {
-    console.log(localStorage.getItem("ms_username"));
     this.$axios
       .get(
         "http://49.234.18.247:8080/api/Portrait/" +

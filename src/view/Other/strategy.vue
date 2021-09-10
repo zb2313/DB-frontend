@@ -321,7 +321,7 @@ export default {
       }
       this.plans = tmp;
     },
-    async getUserInfoById(id) {
+    async getUserNameById(id) {
       return fetch("http://49.234.18.247:8080/api/Users/" + id)
         .then(function (response) {
           return response.json();
@@ -330,6 +330,13 @@ export default {
           var useR_NAME = res[0].useR_NAME;
           var uprofile = res[0].uprofile;
           return { useR_NAME: useR_NAME, uprofile: uprofile };
+        });
+    },
+    async getAvatar(id) {
+      return this.$axios
+        .get("http://49.234.18.247:8080/api/Portrait/" + id)
+        .then((res) => {
+          return res.data;
         });
     },
     toDetail(useR_ID, plaN_ID) {
@@ -367,24 +374,28 @@ export default {
           }
         }
 
-        this.getUserInfoById(response.data[i].useR_ID).then((res) => {
+        this.getUserNameById(response.data[i].useR_ID).then((res) => {
           let picture = JSON.parse(response.data[i].plan);
           picture = picture[0][0].picture;
-          let plan = {
-            useR_ID: response.data[i].useR_ID,
-            useR_NAME: res.useR_NAME,
-            uprofile: res.uprofile,
-            plaN_ID: response.data[i].plaN_ID,
-            picture: picture,
-            plaN_STAR: response.data[i].plaN_STAR,
-            plaN_TITLE: response.data[i].plaN_TITLE,
-            plaN_DESC:
-              response.data[i].plaN_DESC.length < 200
-                ? response.data[i].plaN_DESC
-                : response.data[i].plaN_DESC.slice(0, 200) + "……",
-          };
-          this.plans.push(plan);
-          this.originData.push(plan);
+
+          this.getAvatar(response.data[i].useR_ID).then((avatar) => {
+            console.log(avatar);
+            let plan = {
+              useR_ID: response.data[i].useR_ID,
+              useR_NAME: res.useR_NAME,
+              uprofile: avatar,
+              plaN_ID: response.data[i].plaN_ID,
+              picture: picture,
+              plaN_STAR: response.data[i].plaN_STAR,
+              plaN_TITLE: response.data[i].plaN_TITLE,
+              plaN_DESC:
+                response.data[i].plaN_DESC.length < 200
+                  ? response.data[i].plaN_DESC
+                  : response.data[i].plaN_DESC.slice(0, 200) + "……",
+            };
+            this.plans.push(plan);
+            this.originData.push(plan);
+          });
         });
       }
     });

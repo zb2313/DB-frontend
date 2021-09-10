@@ -1,6 +1,6 @@
 <template>
   <el-header height="100px">
-    <router-link to="/hotel"><div class="logo">LVDAO</div></router-link>
+    <router-link to="/homepage"><div class="logo">LVDAO</div></router-link>
 
     <div class="nav1">
       <ul>
