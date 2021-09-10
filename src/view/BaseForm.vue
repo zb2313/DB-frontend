@@ -25,6 +25,18 @@
           <el-button type="primary" @click="onSubmit">保存</el-button>
         </div>
       </el-form>
+
+      <el-upload
+          class="upload-demo"
+          :action="getUrl()"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          list-type="string">
+        <el-button size="small" type="primary" @click="deleteFormal()">点击上传新头像</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      </el-upload>
+
     </div>
   </div>
 </template>
@@ -53,10 +65,23 @@ export default {
       area: "",
       location:" ",
       show: false,
+      fileList: [],
     };
   },
   methods: {
-
+    deleteFormal()
+    {
+      axios.delete("http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username"));
+    },
+    getUrl(){
+      return "http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username");
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
     onSubmit() {
       let n=localStorage.getItem("ms_username");
       axios.put("http://49.234.18.247:8080/api/Users/"+n,

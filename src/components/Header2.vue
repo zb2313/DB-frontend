@@ -44,6 +44,7 @@
 <script>
  import "@/assets/css/main.css";
  import "@/assets/css/color-dark.css";
+ import axios from "axios"
 export default {
     data()
     {
@@ -57,6 +58,13 @@ export default {
       this.username=localStorage.getItem("ms_username");
       this.pictrue=localStorage.getItem("pictrue");
       this.pictrue="http://49.234.47.118:8080/pictures/user_uprofile_3.jpg";
+      axios.get("http://49.234.18.247:8080/api/Portrait/"+localStorage.getItem("ms_username"))
+      .then(
+          (response)=>
+          {
+            this.pictrue=response.data;
+          }
+      );
     },
     methods: {
       handleCommand(command)
