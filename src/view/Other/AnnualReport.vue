@@ -14,40 +14,114 @@
     <el-carousel indicator-position="outside" :autoplay="false" height="500px">
       <el-carousel-item>
         <div class="css1">
-          在这一年里，你一共在旅道消费了{{
-            flight_order_num + train_order_num + attraction_order_num
-          }}笔订单
+          <div class="css11">
+            <div>在这一年里，</div>
+            <div>
+              你一共在旅道支付了<i style="font-size: 70px">{{
+                flight_order_num +
+                train_order_num +
+                attraction_order_num +
+                hotel_order_num
+              }}</i
+              >笔订单
+            </div>
+          </div>
         </div>
       </el-carousel-item>
 
       <el-carousel-item>
         <div class="css2">
-          你点亮了{{ unique_cities.size }}个城市
-          <div v-for="(item, index) in unique_cities" :key="index">
-            {{ item }}
+          <div style="margin: 0 auto">
+            <p class="css21">
+              你点亮了<i style="font-size: 90px">{{ unique_cities.size }}</i
+              >个城市
+            </p>
+
+            <span
+              v-for="(item, index) in unique_cities"
+              :key="index"
+              style="
+                font-weight: 700;
+                font-size: 20px;
+                margin: 0 6px;
+                color: gold;
+              "
+            >
+              {{ item }}
+            </span>
+
+            <p class="css21">
+              乘坐<i style="font-size: 70px">{{ flight_order_num }}</i
+              >次飞机、<i style="font-size: 70px">{{ train_order_num }}</i
+              >次火车
+            </p>
           </div>
-          <br />
-          乘坐{{ flight_order_num }}次飞机
-          <br />
-          {{ train_order_num }}次火车
         </div>
       </el-carousel-item>
 
       <el-carousel-item>
-        旅行距离共计{{ journey_length }}公里 相当于跑了{{
-          journey_length / 42.195
-        }}个全程马拉松
+        <div class="css3">
+          <p style="top: 68%">
+            旅行距离共计<i style="font-size: 60px">{{
+              journey_length.toFixed(2)
+            }}</i
+            >公里
+          </p>
+          <p style="top: 82%">
+            相当于跑了<i style="font-size: 60px">{{
+              (journey_length / 42.195).toFixed(2)
+            }}</i
+            >个全程马拉松
+          </p>
+        </div>
       </el-carousel-item>
 
       <el-carousel-item>
-        今年，你游玩了{{ attractions.length }}个景点
-        <div id="all_attractions"></div>
-        花费了{{ attraction_price }}元
+        <div class="css4">
+          <div class="css41">
+            <p>
+              今年，你游玩了<i style="font-size: 60px">{{
+                attractions.length
+              }}</i
+              >个景点
+            </p>
+
+            <div
+              v-for="item in attractions"
+              :key="item.index"
+              style="font-size: 16px; color: #f5f7fa"
+            >
+              {{ item.attractioN_NAME }}
+            </div>
+            <p style="margin-top: -10px">
+              花费了<i style="font-size: 60px">{{ attraction_price }}</i
+              >元
+            </p>
+          </div>
+        </div>
       </el-carousel-item>
 
       <el-carousel-item>
-        您已经撰写{{ plans.length }}篇攻略，收获了{{ like_num }}个赞
-        <div id="all_plans"></div>
+        <div class="css5">
+          <div class="css51">
+            <div class="css52">
+              您已经撰写<i style="font-size: 60px">{{ plans.length }}</i
+              >篇攻略
+            </div>
+            <div class="css52">
+              共收获了<i style="font-size: 60px">{{ like_num }}</i
+              >个赞
+            </div>
+            <div style="margin-top: 40%"></div>
+            <div
+              v-for="item in plans"
+              :key="item"
+              style="color: white; font-size: 16px"
+            >
+              {{ item.plaN_TITLE }}
+            </div>
+          </div>
+        </div>
       </el-carousel-item>
     </el-carousel>
   </div>
@@ -57,51 +131,91 @@
   width: 100%;
   height: 100%;
 }
-.el-carousel__item {
-  /* background-color: red; */
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.6);
-}
 .css1 {
+  position: relative;
   font-family: Georgia, "Times New Roman", Times, serif;
-  font-size: 25px;
-  height: 300px;
+  font-size: 30px;
+  color: #f4ff50;
+  font-weight: 900;
+  height: 100%;
   width: 100%;
-  text-align: center;
-  /* background-image: url("https://img.51miz.com/preview/element/00/01/12/89/E-1128995-486D7A32.jpg");
+  background-image: url("https://gtc.knt.co.jp/img/toppage/biz/http7004-kntgtcbizcompany_trip.jpg");
   background-size: 100% 100%;
-  background-repeat: no-repeat; */
+  background-repeat: no-repeat;
+}
+.css11 {
+  position: absolute;
+  top: 50px;
+  left: 30px;
 }
 .css2 {
+  display: flex;
+  align-items: center;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #f56c6c;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://tse1-mm.cn.bing.net/th/id/R-C.339733fa2b18f32989c6846936b5c718?rik=kDCEaro6YAG90Q&riu=http%3a%2f%2fimg95.699pic.com%2fphoto%2f50060%2f6195.jpg_wh860.jpg&ehk=DYbGkjCjKjKM62Yg%2buTF4sO52IR45Ve%2fuMCR5bltvq4%3d&risl=&pid=ImgRaw&r=0");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.css21 {
+  font-weight: 700;
+  font-size: 30px;
+}
+.css3 {
+  position: relative;
+  color: white;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://tse1-mm.cn.bing.net/th/id/R-C.874ed740eeb227cf6372d5fe2321ea37?rik=EyYHi0quXhXhTA&riu=http%3a%2f%2fimage.qianye88.com%2fpic%2fba1481efcede12d66fe42610a40e64dc&ehk=tqFw1sdUmA6IVucop3QbB8S1%2bpSfdJ5nig4g2zC62Sk%3d&risl=&pid=ImgRaw&r=0");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.css3 p {
   font-family: Georgia, "Times New Roman", Times, serif;
   font-size: 25px;
-  height: 300px;
+  position: absolute;
+  left: 30px;
+}
+.css4 {
+  display: flex;
+  align-items: center;
+  font-family: Georgia, "Times New Roman", Times, serif;
   width: 100%;
-  text-align: center;
-  /* background-image: url("https://img.tukuppt.com/ad_preview/00/15/58/5c99a64870021.jpg!/fw/780");
+  height: 100%;
+  color: #fca234;
+  font-size: 30px;
+  font-weight: 700;
+  background-image: url("https://img.zcool.cn/community/01166d59efef08a801202b0c13e9d9.jpg@1280w_1l_2o_100sh.jpg");
   background-size: 100% 100%;
-  background-repeat: no-repeat; */
+  background-repeat: no-repeat;
 }
-.tagcloud {
-  width: 500px;
-  height: 300px;
-  margin: 20px 20px;
+.css41 {
+  margin: 0 auto;
 }
-#all_plans {
-  width: 500px;
-  height: 500px;
-}
-#all_plans /deep/ tagcloud {
-  width: 500px;
-  height: 500px;
-}
-element.style {
+.css5 {
   position: relative;
-  width: 0px;
-  height: 500px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  background-image: url("https://uploadfile.bizhizu.cn/up/f3/c5/57/f3c5570fe4c8322d35ae5cc19da496a6.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.css51 {
+  position: absolute;
+  top: 20px;
+  margin-left: 30px;
+}
+.css52 {
+  font-size: 30px;
+  color: #135ead;
 }
 </style>
 <script>
-const TagCloud = require("TagCloud");
 export default {
   data() {
     return {
@@ -166,14 +280,20 @@ export default {
         .then((response) => {
           this.origin_flight = response;
         });
+      await this.$axios
+        .get(
+          "http://49.234.18.247:8080/api/FunGetHotelInfoByUserId/" +
+            localStorage.getItem("ms_username")
+        )
+        .then((response) => {
+          this.origin_hotels = response;
+        });
     },
     async filt(year) {
       //plan
-      console.log(this.origin_plans);
       this.plans = this.origin_plans.data.filter(function (value) {
         return value.plaY_TIME.slice(0, 4) == year;
       });
-      console.log(this.plans);
       //attraction
       this.attractions = this.origin_attractions.data.filter(function (value) {
         return value.ordeR_TIME.slice(0, 4) == year;
@@ -186,6 +306,10 @@ export default {
       this.flight = this.origin_flight.data.filter(function (value) {
         return value.flighT_DATE.slice(0, 4) == year;
       });
+      //hotel
+      this.hotels = this.origin_hotels.data.filter(function (value) {
+        return value.ordeR_TIME.slice(0, 4) == year;
+      });
     },
     async compute_data() {
       this.unique_cities = new Set();
@@ -197,14 +321,6 @@ export default {
         this.like_num += this.plans[i].plaN_STAR;
         temp[i] = this.plans[i].plaN_TITLE;
       }
-      let all_plans = document.getElementById("all_plans");
-
-      const options = {};
-
-      var box = document.getElementById("all_plans");
-      if (box) if (box) box.innerHTML = "";
-      //box.parentNode.removeChild(all_plans);
-      TagCloud(all_plans, temp, this.tagCloud);
 
       //attraction
 
@@ -216,11 +332,6 @@ export default {
         this.attraction_price += this.attractions[j].price;
         temp2[j] = this.attractions[j].attractioN_NAME;
       }
-      var box2 = document.getElementById("all_attraction");
-      if (box2) box2.innerHTML = "";
-      //box2.parentNode.removeChild(all_attraction);
-      let all_attraction = document.getElementById("all_attractions");
-      TagCloud(all_attraction, temp2, this.tagCloud);
 
       //trainticket
       //this.trainticket=this.origin_train.data;
@@ -238,7 +349,6 @@ export default {
         s.add(this.trainticket[i].starT_LOCATION);
         s.add(this.trainticket[i].enD_LOCATION);
       }
-
       for (let x of s) this.unique_cities.add(x);
       //flight
       this.flight_order_num = this.flight.length;
@@ -255,6 +365,8 @@ export default {
         s2.add(this.flight[i].enD_LOCATION);
       }
       for (let x of s2) this.unique_cities.add(x);
+      //hotel
+      this.hotel_order_num = this.hotels.length;
     },
     async compute_distance(s, t) {
       var l1, l2;
