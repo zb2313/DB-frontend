@@ -853,7 +853,7 @@ export default {
 
           for (let m = 10; m < 11; m++) {
             let _this = this;
-            window.setTimeout(_this.Pay, 4000 * m);
+            window.setTimeout(_this.Pay, 3000 * m);
           }
         });
     },
@@ -888,7 +888,7 @@ export default {
           qrCode.makeCode(this.qrcode);
           for (let m = 10; m < 11; m++) {
             let _this = this;
-            window.setTimeout(_this.Pay, 4000 * m);
+            window.setTimeout(_this.Pay, 3000 * m);
           }
         });
     },

@@ -163,4 +163,8 @@ a:visited {
   font-size: 14px;
   word-break: break-all;
 }
+
+.content-box {
+  padding-bottom: 0px !important;
+}
 </style>

@@ -471,12 +471,12 @@ export default {
               });
           });
 
-        if(i===this.form_Select.room_num-1){
+        if (i === this.form_Select.room_num - 1) {
           this.$message({
-                message: "恭喜你，成功预定本店房间！",
-                type: "success",
-              });
-              this.payVisible = false;
+            message: "恭喜你，成功预定本店房间！",
+            type: "success",
+          });
+          this.payVisible = false;
         }
       }
     },
@@ -487,7 +487,7 @@ export default {
       var specialID = this.timestampToTime(Now);
       this.orderId = specialID;
       var specialConst = "TJcfy";
-      var specialPrice = this.price.toString();
+      var specialPrice = this.storePrice.toString();
       var specialSign = md5(md5(specialID + specialPrice) + specialConst);
       console.log(specialSign);
       this.$axios
@@ -512,7 +512,7 @@ export default {
 
           for (let m = 10; m < 11; m++) {
             let _this = this;
-            window.setTimeout(_this.Pay, 4000 * m);
+            window.setTimeout(_this.Pay, 3000 * m);
           }
         });
     },
@@ -523,7 +523,7 @@ export default {
       var specialID = this.timestampToTime(Now);
       this.orderId = specialID;
       var specialConst = "TJcfy";
-      var specialPrice = this.price.toString();
+      var specialPrice = this.storePrice.toString();
       var specialSign = md5(md5(specialID + specialPrice) + specialConst);
       console.log(specialSign);
       this.$axios
@@ -549,7 +549,7 @@ export default {
 
           for (let m = 10; m < 11; m++) {
             let _this = this;
-            window.setTimeout(_this.Pay, 4000 * m);
+            window.setTimeout(_this.Pay, 3000 * m);
           }
         });
     },
