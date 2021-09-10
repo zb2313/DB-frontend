@@ -40,12 +40,12 @@ export default {
         {
           icon: "el-icon-s-comment",
           index: "/SellerInfo",
-          title: "商家信息",
+          title: "商家信息修改",
         },
         {
           icon: "el-icon-s-comment",
           index: "/SellerPost",
-          title: "商家发布",
+          title: "商家资质",
         },
         {
           icon: "el-icon-s-comment",
@@ -55,7 +55,7 @@ export default {
         {
           icon: "el-icon-s-comment",
           index: "/SellerDelete",
-          title: "商家删除",
+          title: "房间类型修改",
         }
       ],
       onRoutes:"",
