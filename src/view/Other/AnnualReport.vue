@@ -17,7 +17,7 @@
           <div class="css11">
             <div>在这一年里，</div>
             <div>
-              你一共在旅道支付了<i style="font-size: 70px">{{
+              你一共在旅道消费了<i style="font-size: 70px">{{
                 flight_order_num +
                 train_order_num +
                 attraction_order_num +
@@ -135,13 +135,14 @@
   position: relative;
   font-family: Georgia, "Times New Roman", Times, serif;
   font-size: 30px;
-  color: #f4ff50;
+  color: #ff5050;
   font-weight: 900;
   height: 100%;
   width: 100%;
-  background-image: url("https://gtc.knt.co.jp/img/toppage/biz/http7004-kntgtcbizcompany_trip.jpg");
+  background-image: url("https://tse1-mm.cn.bing.net/th/id/R-C.5c89b57e0d368870cbaf23d561faef73?rik=qXR%2fCDt0stAvcA&riu=http%3a%2f%2fupload-images.jianshu.io%2fupload_images%2f4068261-aa3140bb21cbbdd5.png&ehk=b%2fEM3qeM9fcKfTxv%2fO327%2bNjeG5Uaqs3ZEbEfZH9%2btg%3d&risl=&pid=ImgRaw&r=0");
   background-size: 100% 100%;
   background-repeat: no-repeat;
+
 }
 .css11 {
   position: absolute;
