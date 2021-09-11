@@ -339,6 +339,7 @@ export default {
       this.train_order_num = this.trainticket.length;
       var cities = [];
       var s = new Set();
+      var xx,yy;
       for (let i = 0; i < this.trainticket.length; i++) {
         this.journey_length += await this.compute_distance(
           this.trainticket[i].starT_LOCATION,
@@ -346,8 +347,28 @@ export default {
         );
         cities.push(this.trainticket[i].starT_LOCATION);
         cities.push(this.trainticket[i].enD_LOCATION);
-        s.add(this.trainticket[i].starT_LOCATION);
-        s.add(this.trainticket[i].enD_LOCATION);
+        await fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address=" +
+          this.trainticket[i].starT_LOCATION
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((response) => {
+          xx = response.geocodes[0].city;
+        });
+         await fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address=" +
+          this.trainticket[i].enD_LOCATION
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((response) => {
+          yy = response.geocodes[0].city;
+        });
+        s.add(xx);
+        s.add(yy);
       }
       for (let x of s) this.unique_cities.add(x);
       //flight
@@ -361,8 +382,29 @@ export default {
         );
         cities2.push(this.flight[i].starT_LOCATION);
         cities2.push(this.flight[i].enD_LOCATION);
-        s2.add(this.flight[i].starT_LOCATION);
-        s2.add(this.flight[i].enD_LOCATION);
+         await fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address=" +
+          this.flight[i].starT_LOCATION
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((response) => {
+          xx = response.geocodes[0].city;
+        });
+         await fetch(
+        "https://restapi.amap.com/v3/geocode/geo?key=f7171076bbd21882cf1c0a5ae7be2725&address=" +
+          this.flight[i].enD_LOCATION
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then((response) => {
+          yy = response.geocodes[0].city;
+        });
+        s2.add(xx);
+        s2.add(yy);
+ 
       }
       for (let x of s2) this.unique_cities.add(x);
       //hotel
