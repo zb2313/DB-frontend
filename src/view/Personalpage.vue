@@ -14,7 +14,7 @@
   </el-form-item>
  <el-form-item>
   <div id="input">管理员密码：
-<el-input v-model="password" :disabled="true"></el-input>
+<el-input v-model="password" :disabled="true" show-password></el-input>
   </div>
   </el-form-item>
  </el-form>
@@ -76,8 +76,13 @@ export default {
     created()
     {
           this.AdministratorID=localStorage.getItem("ms_username")
-          this.password=localStorage.getItem("password");
-          this.editpassword=this.password;
+          axios.get("http://49.234.18.247:8080/api/Administrator/"+this.AdministratorID)
+          .then(res=>
+          {
+            this.password=res.data[0].password;
+            this.editpassword=this.password;
+          })
+         
     },
     methods: {
      submit()
